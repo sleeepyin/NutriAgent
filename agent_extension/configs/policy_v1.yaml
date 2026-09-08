@@ -1,0 +1,11 @@
+name: caia-mm-v1
+t_max: 2
+lambda: 0.15
+eta: 0.25
+z_lcb: 0.5
+alpha: 0.10
+budget: 4.0
+seeds: [42]
+policy: myopic_voi
+two_step_keep_if_gain_gt: 0.02
+min_mondrian_group: 50

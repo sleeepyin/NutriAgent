@@ -1,0 +1,77 @@
+[2026-09-04T05:00:54Z] [INFO] MM_CFA_ROOT=/home/mm-cfa-repro python=/opt/miniconda3/envs/nutri/bin/python
+[2026-09-04T05:00:54Z] [INFO] launch background e01: /opt/miniconda3/envs/nutri/bin/python -m agent_extension.experiments.e01_clean_rgb_rgbd --epochs 100
+[2026-09-04T05:00:54Z] [INFO] ==== e00_literature attempt 1/3: Phase0 literature matrix ====
+[2026-09-04T05:00:54Z] [INFO] exec: /opt/miniconda3/envs/nutri/bin/python -m agent_extension.experiments.e00_literature
+[2026-09-04T05:00:54Z] [INFO] status e00_literature ok=True
+[2026-09-04T05:00:54Z] [INFO] ==== e00_prereg attempt 1/3: Phase0 preregistration + hash ====
+[2026-09-04T05:00:54Z] [INFO] exec: /opt/miniconda3/envs/nutri/bin/python -m agent_extension.experiments.e00_prereg
+[2026-09-04T05:00:54Z] [INFO] status e00_prereg ok=True
+[2026-09-04T05:00:54Z] [INFO] ==== e00_tests attempt 1/3: Finite-sample q + MAPE/WAPE unit tests ====
+[2026-09-04T05:00:54Z] [INFO] exec: /opt/miniconda3/envs/nutri/bin/python -m agent_extension.experiments.e00_tests
+[2026-09-04T05:00:54Z] [INFO] status e00_tests ok=True
+[2026-09-04T05:00:54Z] [INFO] ==== e00_audit attempt 1/3: E0 asset / checksum / protocol audit ====
+[2026-09-04T05:00:54Z] [INFO] exec: /opt/miniconda3/envs/nutri/bin/python -m agent_extension.experiments.e00_asset_audit
+[2026-09-04T05:01:21Z] [INFO] status e00_asset_audit ok=True
+[2026-09-04T05:01:21Z] [INFO] E00 missing_critical=[] mismatches=[]
+[2026-09-04T05:01:21Z] [INFO] ==== e00_manifest attempt 1/3: Rebuild group manifests ====
+[2026-09-04T05:01:21Z] [INFO] exec: /opt/miniconda3/envs/nutri/bin/python -m agent_extension.experiments.e00_manifest
+[2026-09-04T05:01:24Z] [INFO] manifests written -> /home/mm-cfa-repro/agent_extension/results/manifests
+[2026-09-04T05:01:24Z] [INFO] status e00_manifest ok=True
+[2026-09-04T05:01:24Z] [INFO] ==== e02_action_table attempt 1/3: Build paired action table (public data) ====
+[2026-09-04T05:01:24Z] [INFO] exec: /opt/miniconda3/envs/nutri/bin/python -m agent_extension.experiments.e02_action_table
+[2026-09-04T05:01:30Z] [INFO] infer 3ch/4ch on X_test n=652 device=cuda:0
+[2026-09-04T05:01:34Z] [INFO] status e02_action_table ok=True
+[2026-09-04T05:01:34Z] [INFO] E02 wrote 1648 episodes: {'ecustfd': {'n': 146, 'splits': {'policy': 58, 'calibration': 51, 'test': 37}}, 'mf3d': {'n': 625, 'splits': {'policy': 249, 'calibration': 218, 'test': 158}}, 'n5k': {'n': 652, 'splits': {'policy': 260, 'calibration': 228, 'test': 164}}, 'nvreal': {'n': 225, 'splits': {'policy': 90, 'calibration': 78, 'test': 57}}}
+[2026-09-04T05:01:35Z] [INFO] ==== e03_tool_value attempt 1/3: Tool value + Go/No-Go ====
+[2026-09-04T05:01:35Z] [INFO] exec: /opt/miniconda3/envs/nutri/bin/python -m agent_extension.experiments.e03_tool_value
+[2026-09-04T05:01:36Z] [INFO] status e03_tool_value ok=True
+[2026-09-04T05:01:36Z] [INFO] E03 gates={'unified_agent': True, 'degrade': None, 'reasons': ['>=2 actions each beat RGB-only by >=5% MAPE or WAPE on their native dataset']}
+[2026-09-04T05:01:36Z] [INFO] Go: heterogeneous tool value — keep unified myopic VOI (still Level A / feasibility)
+[2026-09-04T05:01:36Z] [INFO] ==== e04_train_policy attempt 1/3: Fit myopic VOI on D_policy ====
+[2026-09-04T05:01:36Z] [INFO] exec: /opt/miniconda3/envs/nutri/bin/python -m agent_extension.experiments.e04_train_policy --policy myopic_voi --max-steps 2
+[2026-09-04T05:06:56Z] [WARN] e04_train_policy rc=-15
+[2026-09-04T05:06:58Z] [INFO] ==== e04_train_policy attempt 2/3: Fit myopic VOI on D_policy ====
+[2026-09-04T05:06:58Z] [INFO] exec: /opt/miniconda3/envs/nutri/bin/python -m agent_extension.experiments.e04_train_policy --policy myopic_voi --max-steps 2
+[2026-09-04T05:08:35Z] [WARN] e04_train_policy rc=-9
+[2026-09-04T05:08:39Z] [INFO] ==== e04_train_policy attempt 3/3: Fit myopic VOI on D_policy ====
+[2026-09-04T05:08:39Z] [INFO] exec: /opt/miniconda3/envs/nutri/bin/python -m agent_extension.experiments.e04_train_policy --policy myopic_voi --max-steps 2
+[2026-09-04T05:08:41Z] [INFO] status e04_train_policy ok=True
+[2026-09-04T05:08:41Z] [INFO] E04 oof_r2={'REQUEST_DEPTH': -0.01133457228083623, 'REQUEST_VIEW': -0.016348251279657333, 'REQUEST_REFERENCE': -0.01181810629653568, 'ASK_SEMANTIC': -0.010590463818385576} weak=True
+[2026-09-04T05:08:42Z] [INFO] ==== e05_terminal attempt 1/3: Frozen-policy terminal conformal ====
+[2026-09-04T05:08:42Z] [INFO] exec: /opt/miniconda3/envs/nutri/bin/python -m agent_extension.experiments.e05_terminal_conformal --alpha 0.10 --split calibration
+[2026-09-04T05:08:44Z] [INFO] status e05_terminal_conformal ok=True
+[2026-09-04T05:08:44Z] [INFO] E05 terminal q=7.092198581560284 n=575 (cal audit is not a test result)
+[2026-09-04T05:08:44Z] [INFO] ==== e06_all_state attempt 1/3: All-tool-state joint envelope ====
+[2026-09-04T05:08:44Z] [INFO] exec: /opt/miniconda3/envs/nutri/bin/python -m agent_extension.experiments.e06_all_state_conformal --alpha 0.10
+[2026-09-04T05:08:44Z] [INFO] status e06_all_state_conformal ok=True
+[2026-09-04T05:08:44Z] [INFO] E06 all-state calibrators for ['n5k', 'nvreal', 'ecustfd', 'mf3d', 'n5k_weight_only_note']
+[2026-09-04T05:08:44Z] [INFO] ==== e07_benchmark attempt 1/3: One-shot test benchmark (locked) ====
+[2026-09-04T05:08:44Z] [INFO] exec: /opt/miniconda3/envs/nutri/bin/python -m agent_extension.experiments.e07_main_benchmark --split test --locked
+[2026-09-04T05:08:45Z] [INFO] E07 always_stop: cov=0.885 nw=4.280 cost=0.00
+[2026-09-04T05:08:45Z] [INFO] E07 always_depth: cov=0.882 nw=4.288 cost=1.18
+[2026-09-04T05:08:45Z] [INFO] E07 always_view: cov=0.887 nw=4.304 cost=1.21
+[2026-09-04T05:08:45Z] [INFO] E07 always_reference: cov=0.887 nw=4.266 cost=0.27
+[2026-09-04T05:08:45Z] [INFO] E07 always_semantic: cov=0.930 nw=3.776 cost=0.91
+[2026-09-04T05:08:45Z] [INFO] E07 always_abstain: cov=0.885 nw=4.280 cost=1.00
+[2026-09-04T05:08:45Z] [INFO] E07 triage: cov=0.887 nw=4.266 cost=3.21
+[2026-09-04T05:08:46Z] [INFO] E07 myopic_voi: cov=0.887 nw=4.264 cost=0.53
+[2026-09-04T05:08:46Z] [INFO] status e07_main_benchmark ok=True
+[2026-09-04T05:08:46Z] [INFO] ==== e08_xdomain attempt 1/3: Cross-domain + few-shot recovery ====
+[2026-09-04T05:08:46Z] [INFO] exec: /opt/miniconda3/envs/nutri/bin/python -m agent_extension.experiments.e08_cross_domain --target-calibration-sizes 0,25,50,100,200
+[2026-09-04T05:08:47Z] [INFO] status e08_cross_domain ok=True
+[2026-09-04T05:08:47Z] [INFO] E08 zero-shot coverage=0.614 (no 90% claim)
+[2026-09-04T05:08:47Z] [INFO] ==== e09_llm attempt 1/3: LLM ablation (0 API default) ====
+[2026-09-04T05:08:47Z] [INFO] exec: /opt/miniconda3/envs/nutri/bin/python -m agent_extension.experiments.e09_llm_ablation
+[2026-09-04T05:08:47Z] [INFO] status e09_llm_ablation ok=True
+[2026-09-04T05:08:47Z] [INFO] E09 LLM ablation complete (0 API by default)
+[2026-09-04T05:08:48Z] [INFO] ==== e10_figures attempt 1/3: Figures ====
+[2026-09-04T05:08:48Z] [INFO] exec: /opt/miniconda3/envs/nutri/bin/python -m agent_extension.experiments.e10_make_figures
+[2026-09-04T05:08:49Z] [INFO] status e10_figures ok=True
+[2026-09-04T05:08:49Z] [INFO] E10 figures -> /home/mm-cfa-repro/agent_extension/results/e10_figures
+[2026-09-04T05:08:49Z] [INFO] ==== e11_sop attempt 1/3: Phase3/4 Interact SOP (no physical collect) ====
+[2026-09-04T05:08:49Z] [INFO] exec: /opt/miniconda3/envs/nutri/bin/python -m agent_extension.experiments.e11_pilot_sop
+[2026-09-04T05:08:49Z] [INFO] status e11_pilot_sop ok=True
+[2026-09-04T05:08:49Z] [INFO] ==== e12_draft attempt 1/3: Phase8 paper integration notes ====
+[2026-09-04T05:08:49Z] [INFO] exec: /opt/miniconda3/envs/nutri/bin/python -m agent_extension.experiments.e12_paper_draft
+[2026-09-04T05:08:50Z] [INFO] status e12_paper_draft ok=True
+[2026-09-04T05:08:50Z] [INFO] PIPELINE COMPLETE — see agent_extension/results/FINAL_REPORT.md

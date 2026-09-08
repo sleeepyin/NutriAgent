@@ -1,0 +1,13 @@
+mm_cfa_root_env: MM_CFA_ROOT
+search_roots:
+  - ${MM_CFA_ROOT}
+  - /home/mm-cfa-repro
+  - /home/Nutri_0811
+  - /home/nvreal
+  - /home/ecustfd
+  - /home/metafood3d
+  - /home/nutrition5k
+protocol: A
+notes:
+  - All new code resolves paths from MM_CFA_ROOT with fallbacks.
+  - X_train is D_base only and never enters Agent final test.
