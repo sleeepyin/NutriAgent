@@ -1,0 +1,20 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# agent_extension pipeline runtime outputs
+/agent_extension/results/
+/agent_extension/traces/
+/agent_extension/logs/*.log
+/agent_extension/logs/COMPLETE
+/agent_extension/logs/FATAL
+/agent_extension/logs/STOP
+/agent_extension/logs/*.pid
+/agent_extension/logs/heartbeat.json
+/agent_extension/logs/pipeline_state.json
+
+# pytest
+.pytest_cache/
+
+# local pip caches / venvs (in case a contributor uses one)
+.venv/
