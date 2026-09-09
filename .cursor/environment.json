@@ -1,0 +1,4 @@
+{
+  "name": "NutriAgent / MM-CFA (CPU)",
+  "install": "bash .cursor/install.sh"
+}
