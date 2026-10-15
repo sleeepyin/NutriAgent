@@ -32,6 +32,7 @@ v2 优化 (三个新信号):
   results/nutrient_conformal_results.pkl     全部指标
   models/nutrient_conformal_calibrator.pkl   部署用获胜校准器
 """
+import math
 import os, time, warnings
 import numpy as np
 import torch, torch.nn as nn
@@ -45,7 +46,7 @@ warnings.filterwarnings('ignore')
 SEED = 42
 ALPHA = 0.10
 N_TRIALS = 10
-TAU = 30                          # 贝叶斯收缩强度 (与重量版 AEC-S 一致)
+TAU = 30                          # 经验收缩强度 (与重量版 AEC-S 的 τ 一致)
 BINS = [0, 50, 100, 200, 500, np.inf]
 BIN_LABELS = ['0-50g', '50-100g', '100-200g', '200-500g', '500g+']
 NUTR = ['Cal', 'Fat', 'Carb', 'Prot']
@@ -213,15 +214,27 @@ def nutrient_disagreement(cache):
     return np.abs(w * cache['d_direct'] - w * cache['d_knn'])
 
 # ==================== 共形工具 ====================
+def _order_stat_at_level(scores, level):
+    """k-th order statistic at level, k = ceil((n+1)*level). No interpolation."""
+    s = np.asarray(scores, dtype=float).reshape(-1)
+    s = s[np.isfinite(s)]
+    n = int(s.size)
+    if n == 0:
+        return float('inf')
+    k = int(math.ceil((n + 1) * float(level)))
+    if k > n:
+        return float('inf')
+    if k <= 0:
+        return float(np.min(s))
+    return float(np.partition(s, k - 1)[k - 1])
+
 def qhat(scores, alpha=ALPHA):
-    n = len(scores)
-    return float(np.quantile(scores, min(1.0, np.ceil((n + 1) * (1 - alpha)) / n)))
+    return _order_stat_at_level(scores, 1.0 - alpha)
 
 def qhat_side(s, a, side):
-    """单侧分位数: side='lo' 取 a 分位, side='hi' 取 1-a 分位 (有限样本修正)"""
-    n = len(s)
+    """单侧顺序统计量: side='lo' 取 level=a, side='hi' 取 level=1-a。"""
     lvl = a if side == 'lo' else (1 - a)
-    return float(np.quantile(s, min(1.0, np.ceil((n + 1) * lvl) / n)))
+    return _order_stat_at_level(s, lvl)
 
 def winkler_mean(y, l, u, alpha=ALPHA):
     w = u - l
@@ -366,7 +379,7 @@ class NutrientConformalCalibrator:
                                        self.n_iter_global, rng)
             self.w_global[i] = _refine(Lc[:, i, :], Uc[:, i, :], n_true[:, i], w0)
 
-        # --- 每 bin 权重 (贝叶斯收缩 τ) ---
+        # --- 每 bin 权重 (经验收缩 τ) ---
         self.weights = [[None] * n_out for _ in range(self.n_bins)]
         for bi in range(self.n_bins):
             for i in range(n_out):

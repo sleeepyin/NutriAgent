@@ -1,0 +1,19 @@
+# Weights, caches, and raw datasets. Do not commit.
+models/
+**/*.pth
+**/*.pt
+**/*.onnx
+**/*.ckpt
+**/*.npz
+**/*.npy
+**/*.pkl
+nvreal/
+data/
+datasets/
+**/__pycache__/
+*.pyc
+.venv/
+*.zip
+*.tar
+*.tar.gz
+*.7z

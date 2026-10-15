@@ -262,7 +262,7 @@ def main():
     print("RESULTS")
     print("=" * 80)
     w_mae = mean_absolute_error(y_w, result['weight'])
-    print(f"Weight: MAE={w_mae:.1f}g, PMAE={w_mae/y_w.mean()*100:.1f}%, "
+    print(f"Weight: MAE={w_mae:.1f}g, WAPE={w_mae/y_w.mean()*100:.1f}%, "
           f"R²={r2_score(y_w, result['weight']):.3f}")
 
     for i, name in enumerate(NUTRIENT_NAMES):
@@ -275,12 +275,12 @@ def main():
         ]:
             n_pred = result['weight'].reshape(-1, 1) * d_pred
             mae = mean_absolute_error(y_true, n_pred[:, i])
-            pmae = mae / y_true.mean() * 100
-            print(f"  {approach:<25s}: MAE={mae:7.1f}, PMAE={pmae:6.1f}%")
+            wape = mae / y_true.mean() * 100
+            print(f"  {approach:<25s}: MAE={mae:7.1f}, WAPE={wape:6.1f}%")
 
         mae_bl = mean_absolute_error(y_true, n_baseline[:, i])
-        pmae_bl = mae_bl / y_true.mean() * 100
-        print(f"  {'Weight→Nutrient':<25s}: MAE={mae_bl:7.1f}, PMAE={pmae_bl:6.1f}%")
+        wape_bl = mae_bl / y_true.mean() * 100
+        print(f"  {'Weight→Nutrient':<25s}: MAE={mae_bl:7.1f}, WAPE={wape_bl:6.1f}%")
 
     # ====================== AEC-S 营养素共形区间 ======================
     if not args.no_conformal:

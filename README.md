@@ -1,8 +1,10 @@
 # MM-CFA 可复现包
 
-**Multimodal Conformal Food Analysis: Hierarchical Adaptive Ensemble Conformal Prediction for Food Weight Estimation**
+**从不确定性到行动：共形估计、信息诊断与主动获取**
 
-本包复现论文全部核心结果：域内重量/营养素共形预测（§5.1–5.7）、跨域零样本评测（§5.8）、外部数据集分析（§6.2–6.4）。
+正文在 `docs/paper_cn.md` 与 `docs/paper.md`。主结果使用诚实协议：AEC-S 覆盖率 90.4%、宽度 74 g；严格 hold-out 四通道 MAPE 22.0%。不再把 MAPE 与 WAPE 都称作 PMAE。开发口径 9.44% 不进入摘要。
+
+本包复现三层结果：域内估计、四数据集诊断、公开数据上的行动层可行性评测。权重、裁剪缓存和原始大数据不入库。
 
 ## 1. 布局
 
@@ -64,9 +66,9 @@ GPU 训练在单卡 RTX 3090 (24GB) 上验证；CPU 可跑全部推理与评测�
 
 | 步骤 | 命令 (cwd=Nutri_0811) | 预期结果 |
 |---|---|---|
-| 1. 生产推理+区间验证 | `python test_100_samples_final.py` | 覆盖 91.1%，PMAE ~9.4% (10折口径) |
-| 2. 重量共形实验 | `python conformal_deep_experiment_final.py` | Split 90.1%/78g 等 |
-| 3. AEC-S 诚实协议 | `python aec_s_v2_experiment.py` | AEC-S2m 90.4%/76g/Winkler 171 |
+| 1. 生产推理+区间验证 | `python test_100_samples_final.py` | 打印 WAPE（MAE/均值），不是 MAPE |
+| 2. 重量共形实验 | `python conformal_deep_experiment_final.py` | 全局权重只在校准集上拟合；分位数为顺序统计量 |
+| 3. AEC-S 诚实协议 | `python aec_s_v2_experiment.py` | 诚实 AEC-S 90.4%/74g；AEC-S2m 90.4%/76g/Winkler 171 |
 | 4. 营养素共形 (AEC-S2m-N) | `python nutrient_conformal_final.py` | 覆盖 89.7–90.6%，nWinkler 2.42 |
 | 5. CQR 基线（可选） | `python nutrient_cqr_experiment.py` | 最好 2.55（被 2.42 支配） |
 | 6. 加权共形基线（可选） | `python nutrient_weighted_conformal_experiment.py` | 被 AEC-S2m-5W 支配（表 9） |

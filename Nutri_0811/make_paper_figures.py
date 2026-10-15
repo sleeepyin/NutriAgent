@@ -76,7 +76,7 @@ def fig_error_budget():
     # (a) 密度误差 ≈ 整个问题难度
     ax = axes[0]
     labels = ['Within-category\ndensity dispersion\n|log(ρ/ρ_LOO)|',
-              'Monocular RGB-D\nproblem difficulty\n(§5.1, 4ch PMAE)']
+              'Monocular RGB-D\nproblem difficulty\n(§4, 4ch hold-out MAPE)']
     vals = [disp, mono]
     bars = ax.bar(labels, vals, color=[ORANGE, GREEN], width=0.55,
                   edgecolor='black', linewidth=0.5)
@@ -197,7 +197,7 @@ def fig_joint():
                     f'{b.get_height():.1f}', ha='center', fontsize=9)
     ax.axhline(31.4, color=BLUE, ls=':', lw=1)
     ax.set_xticks(x, cfgs)
-    ax.set_ylabel('Dish-level PMAE (%)')
+    ax.set_ylabel('Dish-level MAPE (%)')
     ax.set_title('Multi-domain joint training: win-win\n(zero source-domain cost)')
     ax.legend(frameon=False, fontsize=9)
     ax.set_ylim(0, 140)

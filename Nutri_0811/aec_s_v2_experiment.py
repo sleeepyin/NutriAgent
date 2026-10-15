@@ -32,7 +32,7 @@ ALPHA = 0.10
 N_TRIALS = 10
 BINS = [0, 50, 100, 200, 500, 10000]
 BIN_LABELS = ['0-50g', '50-100g', '100-200g', '200-500g', '500g+']
-TAU = 30                     # 贝叶斯收缩强度 (与原版一致)
+TAU = 30                     # 经验收缩强度 (与原版 τ 一致；不是贝叶斯后验)
 MODEL_DIR = '/home/Nutri_0811/models'
 OUT_DIR = '/home/Nutri_0811/results'
 CACHE_PATH = os.path.join(MODEL_DIR, 'aec_v2_pred_cache.npz')
@@ -247,7 +247,7 @@ def aec_apply(Lc, Uc, p_cal, Lt, Ut, p_te, weights):
 
 def aec_stratified(Lc, Uc, y_cal, p_cal, Lt, Ut, p_te, w_global,
                    objective='width', target=0.9, n_iter=5000, rng=None, do_refine=False):
-    """分层 AEC: 每 bin 局部搜索 + 贝叶斯收缩到全局先验 (与原版一致)"""
+    """分层 AEC: 每 bin 局部搜索 + 经验收缩到校准集全局先验"""
     weights = []
     for bi in range(len(BINS) - 1):
         lo, hi = BINS[bi], BINS[bi + 1]

@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
 """
 MM-CFA with Deep Ensemble Base Predictor
-Base predictor: ResNet18 + EfficientNet-B0 ensemble (PMAE=31.24%)
+Base predictor: ResNet18 + EfficientNet-B0 ensemble (earlier MAPE=31.24%;
+strict hold-out MAPE of the v2 weights is 22.0%).
 Conformal methods: Split, Normalized, Mondrian, AEC, MTC, MLNS (deep features)
+
+MAPE = mean(|e|/|y|). Do not report it as PMAE or as WAPE.
+Global ensemble weights are fit on calibration intervals only.
+Quantiles are finite-sample order statistics, k = ceil((n+1)(1-alpha)).
 """
+import math
 import os, sys, warnings, time, copy
 import numpy as np
 import torch, torch.nn as nn
@@ -30,6 +36,20 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 ALPHA = 0.10
 N_TRIALS = 10
+
+def finite_sample_q(scores, alpha=ALPHA):
+    """k-th order statistic, k = ceil((n+1)(1-alpha)). No linear interpolation."""
+    s = np.asarray(scores, dtype=float).reshape(-1)
+    s = s[np.isfinite(s)]
+    n = int(s.size)
+    if n == 0:
+        return float('inf')
+    k = int(math.ceil((n + 1) * (1.0 - alpha)))
+    if k > n:
+        return float('inf')
+    if k <= 0:
+        return float(np.min(s))
+    return float(np.partition(s, k - 1)[k - 1])
 BATCH_SIZE = 32
 DEVICE = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
@@ -107,14 +127,14 @@ def _build_result(y_test, lower, upper, y_pred, q_hat, scores):
 # --- Split ---
 def cp_split(y_cal, y_cal_pred, y_test, y_test_pred, alpha=ALPHA):
     scores = np.abs(y_cal - y_cal_pred)
-    q = np.quantile(scores, np.ceil((len(scores)+1)*(1-alpha))/len(scores))
+    q = finite_sample_q(scores, alpha)
     return _build_result(y_test, np.maximum(0, y_test_pred-q), y_test_pred+q, y_test_pred, q, scores)
 
 # --- Normalized ---
 def cp_normalized(y_cal, y_cal_pred, y_test, y_test_pred, alpha=ALPHA):
     eps = 1e-3
     scores = np.abs(y_cal - y_cal_pred) / (y_cal_pred + eps)
-    q = np.quantile(scores, np.ceil((len(scores)+1)*(1-alpha))/len(scores))
+    q = finite_sample_q(scores, alpha)
     return _build_result(y_test, np.maximum(0, y_test_pred*(1-q)), y_test_pred*(1+q), y_test_pred, q, scores)
 
 # --- Mondrian ---
@@ -124,14 +144,14 @@ def cp_mondrian(y_cal, y_cal_pred, y_test, y_test_pred, alpha=ALPHA):
     cal_b = bin_idx(y_cal_pred, MON_BINS); test_b = bin_idx(y_test_pred, MON_BINS)
     lower, upper = np.zeros_like(y_test_pred), np.zeros_like(y_test_pred)
     global_scores = np.abs(y_cal - y_cal_pred) / (y_cal_pred + eps)
-    global_q = np.quantile(global_scores, np.ceil((len(global_scores)+1)*(1-alpha))/len(global_scores))
+    global_q = finite_sample_q(global_scores, alpha)
     for i, (lo, hi) in enumerate(MON_BINS):
         cm, tm = cal_b == i, test_b == i
         if cm.sum() < 30:
             q = global_q * 1.15
         else:
             s = np.abs(y_cal[cm] - y_cal_pred[cm]) / (y_cal_pred[cm] + eps)
-            q = np.quantile(s, np.ceil((len(s)+1)*(1-alpha))/len(s))
+            q = finite_sample_q(s, alpha)
             q *= 1 + 0.03/np.sqrt(len(s))
         lower[tm] = np.maximum(0, y_test_pred[tm]*(1-q))
         upper[tm] = y_test_pred[tm]*(1+q)
@@ -168,7 +188,7 @@ def cp_mlns(y_cal, y_cal_pred, y_test, y_test_pred,
 
     # Cal scores with safety margin
     cal_scores = np.maximum(gbr.predict(Xs_cal), 1e-6) * 1.02
-    q = np.quantile(cal_scores, np.ceil((len(cal_scores)+1)*(1-alpha))/len(cal_scores))
+    q = finite_sample_q(cal_scores, alpha)
 
     test_scores = np.maximum(gbr.predict(Xs_te), 1e-6)
     lower = np.maximum(0, y_test_pred * (1 - q * test_scores / np.mean(test_scores)))
@@ -240,8 +260,10 @@ def cp_aec_unified(test_results, y_test, y_test_pred,
     ----------
     mode : str
         'global'     — one set of weights for all data (AEC)
-        'stratified' — per-bin weights with Bayesian shrinkage (AEC-S)
-    cal_lowers, cal_uppers, y_cal, y_cal_pred : required for 'stratified' mode
+        'stratified' — per-bin weights with empirical shrinkage (AEC-S)
+    cal_lowers, cal_uppers, y_cal, y_cal_pred : required.
+        Global weights are the shrinkage prior and are fit on calibration
+        intervals only. Searching them on the test set was the evaluation leak.
     """
     methods = list(test_results.keys())
     n_methods = len(methods)
@@ -250,8 +272,13 @@ def cp_aec_unified(test_results, y_test, y_test_pred,
     test_lowers = np.column_stack([test_results[m]['lower'] for m in methods])
     test_uppers = np.column_stack([test_results[m]['upper'] for m in methods])
 
-    # === Step 1: Compute global weights (always needed as shrinkage prior) ===
-    w_global, _ = _dirichlet_search(test_lowers, test_uppers, y_test, target)
+    if cal_lowers is None or cal_uppers is None or y_cal is None:
+        raise ValueError(
+            'AEC global weights must be fit on calibration intervals; '
+            'refusing to search on the test set.')
+    cal_l_g = np.column_stack([cal_lowers[m] for m in methods])
+    cal_u_g = np.column_stack([cal_uppers[m] for m in methods])
+    w_global, _ = _dirichlet_search(cal_l_g, cal_u_g, y_cal, target)
 
     if mode == 'global':
         final_lower = test_lowers @ w_global
@@ -280,7 +307,7 @@ def cp_aec_unified(test_results, y_test, y_test_pred,
             w_local, _ = _dirichlet_search(
                 cal_l[cal_mask], cal_u[cal_mask], y_cal[cal_mask], target)
 
-            # Bayesian shrinkage: blend local with global prior
+            # Empirical shrinkage toward the calibration-set global prior
             alpha_shrink = n_cal_bin / (n_cal_bin + AEC_SHRINK_TAU)
             w_shrunk = alpha_shrink * w_local + (1 - alpha_shrink) * w_global
             best_weights.append(w_shrunk)
@@ -336,7 +363,7 @@ def cp_mtc(y_cal, y_cal_pred, y_test, y_test_pred, alpha=ALPHA):
     task_results = {}
     for name, (tp, cp) in tasks.items():
         scores = np.abs(y_cal - cp) / (cp + eps)
-        q = np.quantile(scores, np.ceil((len(scores)+1)*(1-alpha/n_tasks))/len(scores))
+        q = finite_sample_q(scores, alpha / n_tasks)
         task_results[name] = (np.maximum(0, tp*(1-q)), tp*(1+q))
     return _build_result(y_test, task_results['weight'][0], task_results['weight'][1],
                          y_test_pred, {'n_tasks': n_tasks, 'holm': True}, None)
@@ -417,18 +444,12 @@ def run_trial(seed, X_all, y_all, rn, eff, mask_feat_all=None):
                                mlns_targets)
     results['MTC'] = cp_mtc(y_cal, y_cal_pred, y_te, y_te_pred)
 
-    # AEC: global mode (same as original AEC)
-    results['AEC'] = cp_aec_unified(
-        {k: results[k] for k in ['Normalized','Mondrian','MLNS']},
-        y_te, y_te_pred, mode='global')
-
-    # AEC-S: stratified mode with Bayesian shrinkage
-    # Build cal-side intervals for candidate methods
+    # Calibration-side intervals. Ensemble weights are fit here, never on y_te.
     eps = 1e-3
     split_q = results['Split']['q_hat']
     norm_q = results['Normalized']['q_hat']
     mond_scores = np.abs(y_cal - y_cal_pred) / (y_cal_pred + eps)
-    mond_q = np.quantile(mond_scores, np.ceil((len(mond_scores)+1)*(1-ALPHA))/len(mond_scores))
+    mond_q = finite_sample_q(mond_scores, ALPHA)
     cal_lowers = {
         'Split': np.maximum(0, y_cal_pred - split_q),
         'Normalized': np.maximum(0, y_cal_pred * (1 - norm_q)),
@@ -441,6 +462,14 @@ def run_trial(seed, X_all, y_all, rn, eff, mask_feat_all=None):
         'Mondrian': y_cal_pred * (1 + mond_q),
         'MLNS': y_cal_pred * (1 + mond_q),
     }
+
+    results['AEC'] = cp_aec_unified(
+        {k: results[k] for k in ['Normalized','Mondrian','MLNS']},
+        y_te, y_te_pred,
+        cal_lowers=cal_lowers, cal_uppers=cal_uppers,
+        y_cal=y_cal, y_cal_pred=y_cal_pred,
+        mode='global')
+
     results['AEC-S'] = cp_aec_unified(
         {k: results[k] for k in ['Split','Normalized','Mondrian','MLNS']},
         y_te, y_te_pred,
