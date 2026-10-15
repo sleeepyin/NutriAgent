@@ -1,0 +1,478 @@
+{
+  "table": {
+    "min_wape_drop": 0.05,
+    "min_n": 8,
+    "groups": {
+      "ecustfd|rigid": {
+        "dataset": "ecustfd",
+        "morphology": "rigid",
+        "n_policy": 58,
+        "action": "REQUEST_REFERENCE",
+        "source": "group",
+        "scores": {
+          "STOP": {
+            "n": 58,
+            "wape": 0.21716574477949507
+          },
+          "REQUEST_REFERENCE": {
+            "n": 58,
+            "wape": 0.07358910836645349
+          },
+          "REQUEST_VIEW": {
+            "n": 58,
+            "wape": 0.17829190652524146
+          },
+          "ASK_SEMANTIC": {
+            "n": 58,
+            "wape": 0.11090006885253688
+          }
+        }
+      },
+      "mf3d|liquid": {
+        "dataset": "mf3d",
+        "morphology": "liquid",
+        "n_policy": 8,
+        "action": "ASK_SEMANTIC",
+        "source": "group",
+        "scores": {
+          "STOP": {
+            "n": 8,
+            "wape": 0.6029567053854277
+          },
+          "REQUEST_REFERENCE": {
+            "n": 0,
+            "wape": null
+          },
+          "REQUEST_VIEW": {
+            "n": 0,
+            "wape": null
+          },
+          "ASK_SEMANTIC": {
+            "n": 8,
+            "wape": 0.21647307286166842
+          }
+        }
+      },
+      "mf3d|prepared": {
+        "dataset": "mf3d",
+        "morphology": "prepared",
+        "n_policy": 37,
+        "action": "ASK_SEMANTIC",
+        "source": "group",
+        "scores": {
+          "STOP": {
+            "n": 37,
+            "wape": 0.6538615981796279
+          },
+          "REQUEST_REFERENCE": {
+            "n": 0,
+            "wape": null
+          },
+          "REQUEST_VIEW": {
+            "n": 0,
+            "wape": null
+          },
+          "ASK_SEMANTIC": {
+            "n": 37,
+            "wape": 0.31147102128229154
+          }
+        }
+      },
+      "mf3d|rigid": {
+        "dataset": "mf3d",
+        "morphology": "rigid",
+        "n_policy": 49,
+        "action": "ASK_SEMANTIC",
+        "source": "group",
+        "scores": {
+          "STOP": {
+            "n": 49,
+            "wape": 0.6895210308777049
+          },
+          "REQUEST_REFERENCE": {
+            "n": 0,
+            "wape": null
+          },
+          "REQUEST_VIEW": {
+            "n": 0,
+            "wape": null
+          },
+          "ASK_SEMANTIC": {
+            "n": 49,
+            "wape": 0.3795283248237296
+          }
+        }
+      },
+      "mf3d|stacked": {
+        "dataset": "mf3d",
+        "morphology": "stacked",
+        "n_policy": 41,
+        "action": "ASK_SEMANTIC",
+        "source": "group",
+        "scores": {
+          "STOP": {
+            "n": 41,
+            "wape": 0.943927021709981
+          },
+          "REQUEST_REFERENCE": {
+            "n": 0,
+            "wape": null
+          },
+          "REQUEST_VIEW": {
+            "n": 0,
+            "wape": null
+          },
+          "ASK_SEMANTIC": {
+            "n": 41,
+            "wape": 0.35425250098561667
+          }
+        }
+      },
+      "mf3d|unknown": {
+        "dataset": "mf3d",
+        "morphology": "unknown",
+        "n_policy": 114,
+        "action": "ASK_SEMANTIC",
+        "source": "group",
+        "scores": {
+          "STOP": {
+            "n": 114,
+            "wape": 0.7275277166102601
+          },
+          "REQUEST_REFERENCE": {
+            "n": 0,
+            "wape": null
+          },
+          "REQUEST_VIEW": {
+            "n": 0,
+            "wape": null
+          },
+          "ASK_SEMANTIC": {
+            "n": 114,
+            "wape": 0.3119707623226529
+          }
+        }
+      }
+    },
+    "dataset_fallback": {
+      "ecustfd": {
+        "action": "REQUEST_REFERENCE",
+        "n": 58,
+        "scores": {
+          "STOP": {
+            "n": 58,
+            "wape": 0.21716574477949507
+          },
+          "REQUEST_REFERENCE": {
+            "n": 58,
+            "wape": 0.07358910836645349
+          },
+          "REQUEST_VIEW": {
+            "n": 58,
+            "wape": 0.17829190652524146
+          },
+          "ASK_SEMANTIC": {
+            "n": 58,
+            "wape": 0.11090006885253688
+          }
+        }
+      },
+      "mf3d": {
+        "action": "ASK_SEMANTIC",
+        "n": 249,
+        "scores": {
+          "STOP": {
+            "n": 249,
+            "wape": 0.7137728770190404
+          },
+          "REQUEST_REFERENCE": {
+            "n": 0,
+            "wape": null
+          },
+          "REQUEST_VIEW": {
+            "n": 0,
+            "wape": null
+          },
+          "ASK_SEMANTIC": {
+            "n": 249,
+            "wape": 0.32563874828581885
+          }
+        }
+      }
+    }
+  },
+  "modes": {
+    "gcaf": {
+      "q_by_dataset": {
+        "ecustfd": 31.128673930179986,
+        "mf3d": 187.0
+      },
+      "test": {
+        "ecustfd": {
+          "n": 37,
+          "mape": 0.12940715504001785,
+          "wape": 0.12701709422376825,
+          "mae": 15.690730609961554,
+          "cost": 3.0
+        },
+        "mf3d": {
+          "n": 158,
+          "mape": 1.8165442130522824,
+          "wape": 0.6112215287991414,
+          "mae": 97.31962025316456,
+          "cost": 1.0
+        }
+      },
+      "coverage": {
+        "ecustfd": {
+          "n": 37,
+          "coverage": 0.8918918918918919,
+          "mean_width": 62.10174638135949,
+          "median_width": 62.25734786035997,
+          "rel_width": 0.5027161301573723,
+          "winkler": 120.893889427346,
+          "nwinkler": 0.9786408884441775,
+          "n_covered": 33
+        },
+        "mf3d": {
+          "n": 158,
+          "coverage": 0.8924050632911392,
+          "mean_width": 291.003164556962,
+          "median_width": 303.0,
+          "rel_width": 1.827662280876098,
+          "winkler": 1081.9525316455697,
+          "nwinkler": 6.795265731208015,
+          "n_covered": 141
+        }
+      },
+      "macro_mape": 0.9729756840461501,
+      "macro_wape": 0.36911931151145483
+    },
+    "always_stop": {
+      "q_by_dataset": {
+        "ecustfd": 129.14447932346403,
+        "mf3d": 196.0
+      },
+      "test": {
+        "ecustfd": {
+          "n": 37,
+          "mape": 0.29296548632140973,
+          "wape": 0.27904974590995324,
+          "mae": 34.471693881908735,
+          "cost": 0.0
+        },
+        "mf3d": {
+          "n": 158,
+          "mape": 3.989381012364322,
+          "wape": 0.7273919783757999,
+          "mae": 115.81645569620254,
+          "cost": 0.0
+        }
+      },
+      "coverage": {
+        "ecustfd": {
+          "n": 37,
+          "coverage": 1.0,
+          "mean_width": 222.76412290053318,
+          "median_width": 244.87004922541615,
+          "rel_width": 1.803284518196278,
+          "winkler": 222.76412290053318,
+          "nwinkler": 1.803284518196278,
+          "n_covered": 37
+        },
+        "mf3d": {
+          "n": 158,
+          "coverage": 0.9177215189873418,
+          "mean_width": 290.0,
+          "median_width": 290.0,
+          "rel_width": 1.8213618475970903,
+          "winkler": 1122.1518987341772,
+          "nwinkler": 7.047740191596772,
+          "n_covered": 145
+        }
+      },
+      "macro_mape": 2.1411732493428657,
+      "macro_wape": 0.5032208621428766
+    },
+    "always_reference": {
+      "q_by_dataset": {
+        "ecustfd": 31.128673930179986,
+        "mf3d": 196.0
+      },
+      "test": {
+        "ecustfd": {
+          "n": 37,
+          "mape": 0.12940715504001785,
+          "wape": 0.12701709422376825,
+          "mae": 15.690730609961554,
+          "cost": 3.0
+        },
+        "mf3d": {
+          "n": 158,
+          "mape": 3.989381012364322,
+          "wape": 0.7273919783757999,
+          "mae": 115.81645569620254,
+          "cost": 0.0
+        }
+      },
+      "coverage": {
+        "ecustfd": {
+          "n": 37,
+          "coverage": 0.8918918918918919,
+          "mean_width": 62.10174638135949,
+          "median_width": 62.25734786035997,
+          "rel_width": 0.5027161301573723,
+          "winkler": 120.893889427346,
+          "nwinkler": 0.9786408884441775,
+          "n_covered": 33
+        },
+        "mf3d": {
+          "n": 158,
+          "coverage": 0.9177215189873418,
+          "mean_width": 290.0,
+          "median_width": 290.0,
+          "rel_width": 1.8213618475970903,
+          "winkler": 1122.1518987341772,
+          "nwinkler": 7.047740191596772,
+          "n_covered": 145
+        }
+      },
+      "macro_mape": 2.05939408370217,
+      "macro_wape": 0.4272045362997841
+    },
+    "always_semantic": {
+      "q_by_dataset": {
+        "ecustfd": 96.70000000000002,
+        "mf3d": 187.0
+      },
+      "test": {
+        "ecustfd": {
+          "n": 37,
+          "mape": 0.24559623188014781,
+          "wape": 0.16449340363620454,
+          "mae": 20.320270270270274,
+          "cost": 1.0
+        },
+        "mf3d": {
+          "n": 158,
+          "mape": 1.8165442130522824,
+          "wape": 0.6112215287991414,
+          "mae": 97.31962025316456,
+          "cost": 1.0
+        }
+      },
+      "coverage": {
+        "ecustfd": {
+          "n": 37,
+          "coverage": 0.9459459459459459,
+          "mean_width": 177.1054054054054,
+          "median_width": 193.40000000000003,
+          "rel_width": 1.4336753670116176,
+          "winkler": 183.59189189189192,
+          "nwinkler": 1.4861837355328509,
+          "n_covered": 35
+        },
+        "mf3d": {
+          "n": 158,
+          "coverage": 0.8924050632911392,
+          "mean_width": 291.003164556962,
+          "median_width": 303.0,
+          "rel_width": 1.827662280876098,
+          "winkler": 1081.9525316455697,
+          "nwinkler": 6.795265731208015,
+          "n_covered": 141
+        }
+      },
+      "macro_mape": 1.0310702224662152,
+      "macro_wape": 0.387857466217673
+    },
+    "always_view": {
+      "q_by_dataset": {
+        "ecustfd": 56.70287273069167,
+        "mf3d": 196.0
+      },
+      "test": {
+        "ecustfd": {
+          "n": 37,
+          "mape": 0.2136954481861288,
+          "wape": 0.2161846024431842,
+          "mae": 26.705809794244917,
+          "cost": 2.0
+        },
+        "mf3d": {
+          "n": 158,
+          "mape": 3.989381012364322,
+          "wape": 0.7273919783757999,
+          "mae": 115.81645569620254,
+          "cost": 0.0
+        }
+      },
+      "coverage": {
+        "ecustfd": {
+          "n": 37,
+          "coverage": 0.8648648648648649,
+          "mean_width": 105.48332625218907,
+          "median_width": 113.40574546138332,
+          "rel_width": 0.8538917608530413,
+          "winkler": 142.934625157997,
+          "nwinkler": 1.1570615290537312,
+          "n_covered": 32
+        },
+        "mf3d": {
+          "n": 158,
+          "coverage": 0.9177215189873418,
+          "mean_width": 290.0,
+          "median_width": 290.0,
+          "rel_width": 1.8213618475970903,
+          "winkler": 1122.1518987341772,
+          "nwinkler": 7.047740191596772,
+          "n_covered": 145
+        }
+      },
+      "macro_mape": 2.1015382302752252,
+      "macro_wape": 0.47178829040949205
+    }
+  },
+  "alpha": 0.1,
+  "ecustfd_mape_gap_semantic_minus_gcaf": {
+    "mean_gap_b_minus_a": 0.11640044321120331,
+    "ci95": [
+      -0.0013470465076630396,
+      0.2654722647742289
+    ]
+  },
+  "ecustfd_heldout_point": {
+    "n": 88,
+    "reference_mape": 0.12323096107621918,
+    "semantic_mape": 0.2621912804844696,
+    "stop_mape": 0.26941503238448977,
+    "gap_semantic_minus_reference": {
+      "mean_gap_b_minus_a": 0.13867230702364386,
+      "ci95": [
+        0.05332454855483053,
+        0.23919674993087098
+      ]
+    }
+  },
+  "item_gain_regression": {
+    "test_r2": 0.03495357892913242,
+    "threshold": 0.0,
+    "learned_on_test": {
+      "mape": 0.14562698791690404,
+      "wape": 0.13229536219608767,
+      "frac_reference": 0.972972972972973
+    },
+    "always_reference_on_test": {
+      "mape": 0.12940715504001785,
+      "wape": 0.12701709422376825
+    },
+    "learned_beats_always_reference": false
+  },
+  "success": {
+    "ecustfd_mape_gap": 0.11618907684012997,
+    "mf3d_wape_drop_vs_stop": 0.11617044957665856,
+    "macro_beats_fixed": true,
+    "coverage_at_least_0.80": true,
+    "pass": true
+  }
+}

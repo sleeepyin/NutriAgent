@@ -1,0 +1,12 @@
+{
+  "ok": true,
+  "ts": "2026-10-15T08:11:07Z",
+  "success": {
+    "ecustfd_mape_gap": 0.11618907684012997,
+    "mf3d_wape_drop_vs_stop": 0.11617044957665856,
+    "macro_beats_fixed": true,
+    "coverage_at_least_0.80": true,
+    "pass": true
+  },
+  "macro_mape": 0.9729756840461501
+}

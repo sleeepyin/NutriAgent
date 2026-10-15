@@ -2,6 +2,8 @@
 
 Unattended implementation of `Agent创新点_详细完整实施方案.md` (v1.2) on **Level A public data** (Protocol A).
 
+The myopic value-of-information policy did not beat the best fixed action: gain regressions had negative out-of-fold R², and the locked test normalized Winkler was 4.264 against 3.776 for always asking the semantic question. The replacement is group-conditional action freeze (GCAF), in `experiments/e13_group_freeze.py`. It freezes one action per dataset and morphology on the policy split, then calibrates a terminal quantile on a disjoint split. The write-up is `docs/实验结果/Agent_分组冻结动作实验.md`. The paper text is unchanged.
+
 ## What the autonomous runner does
 
 1. Phase 0: literature matrix (no first-claim), preregistration + SHA256, unit tests
