@@ -2,7 +2,7 @@
 
 Unattended implementation of `Agent创新点_详细完整实施方案.md` (v1.2) on **Level A public data** (Protocol A).
 
-The myopic value-of-information policy did not beat the best fixed action: gain regressions had negative out-of-fold R², and the locked test normalized Winkler was 4.264 against 3.776 for always asking the semantic question. The replacement is group-conditional action freeze (GCAF), in `experiments/e13_group_freeze.py`. It freezes one action per dataset and morphology on the policy split, then calibrates a terminal quantile on a disjoint split. The write-up is `docs/实验结果/Agent_分组冻结动作实验.md`. The paper text is unchanged.
+The myopic value-of-information policy did not beat the best fixed action. Group-conditional freeze (`experiments/e13_group_freeze.py`) only switches the action between datasets. `experiments/e14_llm_prior.py` asks the local Qwen3.8-27B server for a name-only mass prior and shrinks it toward the leave-one-out category median. On MetaFood3D the frozen rule lowers held-out WAPE and MAE and raises MAPE. On ECUSTFD the coin still wins. Write-ups: `docs/实验结果/Agent_千问类别先验实验.md` and section 16 of `docs/论文重构方案_完整版.md`. The paper text is unchanged. The API key is not stored in this repository.
 
 ## What the autonomous runner does
 
