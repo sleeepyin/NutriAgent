@@ -12,4 +12,4 @@ torch==2.11.0+cu128
 torchvision==0.26.0+cu128
 # SAM 3D 部分 (仅 §6.3 复现需要, 独立 conda env "sam3d", Python 3.11):
 #   torch==2.5.1+cu121, gsplat(源码编译 sm_86), setuptools<81
-#   环境安装脚本: metafood3d/setup_sam3d.sh
+#   环境安装脚本: experiments/diagnosis/d3_mf3d_sam3d/setup_sam3d.sh

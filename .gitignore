@@ -1,5 +1,20 @@
-# Weights, caches, and raw datasets. Do not commit.
-models/
+# Generated
+**/__pycache__/
+*.pyc
+
+# Datasets, weights, and the shared VLM cache.
+# Directory placeholders and their READMEs stay tracked.
+data/**
+!data/**/
+!data/**/README.md
+weights/**
+!weights/**/
+!weights/**/README.md
+cache/**
+!cache/**/
+!cache/**/README.md
+
+# Large artifacts outside those trees
 **/*.pth
 **/*.pt
 **/*.onnx
@@ -7,13 +22,9 @@ models/
 **/*.npz
 **/*.npy
 **/*.pkl
-nvreal/
-data/
-datasets/
-**/__pycache__/
-*.pyc
-.venv/
 *.zip
 *.tar
 *.tar.gz
 *.7z
+
+.venv/

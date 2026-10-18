@@ -1,0 +1,10 @@
+{
+  "blocked": true,
+  "reason": "nvreal/phase2b_per_image.csv is not on this machine. The abstention curve needs per-image predictions; published averages are not enough.",
+  "published_bound": {
+    "source_split_q_g": 108.5,
+    "zero_shot_coverage": 0.328,
+    "joint_training_mape_bound": 0.239,
+    "note": "23.9% is the published joint-training point MAPE, not a recapture coverage."
+  }
+}

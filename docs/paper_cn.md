@@ -312,15 +312,15 @@ NutritionVerse-Real 有 889 张手机照片、251 道菜，没有深度 [12]。�
 
 ## 附录 B. 架构与复现
 
-ResNet-18 与 EfficientNet-B0 的 4 通道改造、训练轮数和优化器与 `Nutri_0811/train_deep_v2_final.py` 一致。规范入口：
+ResNet-18 与 EfficientNet-B0 的 4 通道改造、训练轮数和优化器与 `experiments/estimation/train_weight_4ch.py` 一致。规范入口：
 
-- 重量共形：`Nutri_0811/conformal_deep_experiment_final.py`（全局权重在校准集；顺序统计量分位数）
-- 诚实变体对照：`Nutri_0811/aec_s_v2_experiment.py`
-- 营养素区间：`Nutri_0811/nutrient_conformal_final.py`
-- 诊断：`metafood3d/mf3d_phase1_oracle.py`、`mf3d_phase2_learned_density.py`、`mf3d_oracle6_sam3d.py`、`ecustfd/ecustfd_reference_experiment.py`
-- 行动层可行性：`agent_extension/`
+- 重量共形：`experiments/estimation/conformal_methods.py`（全局权重在校准集；顺序统计量分位数）
+- 诚实变体对照：`experiments/estimation/aec_s.py`
+- 营养素区间：`experiments/estimation/nutrient_intervals.py`
+- 诊断：`experiments/diagnosis/d1_mf3d_oracle/oracle.py`、`d2_mf3d_density/learned_density.py`、`d3_mf3d_sam3d/sam3d_volume.py`、`d4_ecustfd_scale/reference_scale.py`
+- 行动层：`experiments/action/a1_group_routing.py`、`a2_name_prior.py`
 
-权重、裁剪缓存和原始数据集不在本仓库中。Nutrition5K 主管线依赖 `models/deep_crops_cache.npz`。MetaFood3D 原始数据约 69 GB，SAM 3D 权重约 13 GB，NV-Real 约 1.1 GB。这些文件不应提交。已入库的是诊断 CSV 和运行日志中的汇总数字。`Nutri_0811/figures/` 里的旧图仍使用 PMAE 字样，本次没有重绘，因为缺少缓存。`make_paper_figures.py` 的坐标轴已改为 MAPE，供下次有缓存时出图。
+权重在 `weights/`，裁剪缓存在 `data/nutrition5k/cache/deep_crops_cache.npz`。这些文件当前不在本机，位置已经留好。MetaFood3D 原始渲染约 69 GB，SAM 3D 权重约 13 GB。NV-Real 原图已经在 `data/nvreal/`。已入库的是诊断 CSV 和运行记录。`figures/` 里的诊断图仍使用 PMAE 字样，缺少缓存时没有重绘。`experiments/figures/make_figures.py` 的坐标轴已改为 MAPE。
 
 ## 附录 C. 移出正文的对照
 

@@ -307,15 +307,15 @@ Coverage aggregated by true weight must be labeled as an audit.
 
 ## Appendix B. Reproduction
 
-Training matches `Nutri_0811/train_deep_v2_final.py`. Entrypoints:
+Training matches `experiments/estimation/train_weight_4ch.py`. Entrypoints:
 
-- Weight intervals: `Nutri_0811/conformal_deep_experiment_final.py` (calibration-set global weights; order-statistic quantiles)
-- Honest variants: `Nutri_0811/aec_s_v2_experiment.py`
-- Nutrient intervals: `Nutri_0811/nutrient_conformal_final.py`
-- Diagnosis: `metafood3d/mf3d_phase1_oracle.py`, `mf3d_phase2_learned_density.py`, `mf3d_oracle6_sam3d.py`, `ecustfd/ecustfd_reference_experiment.py`
-- Feasibility agent: `agent_extension/`
+- Weight intervals: `experiments/estimation/conformal_methods.py` (calibration-set global weights; order-statistic quantiles)
+- Honest variants: `experiments/estimation/aec_s.py`
+- Nutrient intervals: `experiments/estimation/nutrient_intervals.py`
+- Diagnosis: `experiments/diagnosis/d1_mf3d_oracle/oracle.py`, `d2_mf3d_density/learned_density.py`, `d3_mf3d_sam3d/sam3d_volume.py`, `d4_ecustfd_scale/reference_scale.py`
+- Action: `experiments/action/a1_group_routing.py`, `a2_name_prior.py`
 
-Weights, crop caches, and raw datasets are not in this repository. The Nutrition5K pipeline expects `models/deep_crops_cache.npz`. Raw MetaFood3D is about 69 GB, SAM 3D weights about 13 GB, and NV-Real about 1.1 GB. Those files must not be committed. What is stored are the diagnostic CSVs and the summarized log figures. Figures under `Nutri_0811/figures/` still say PMAE and were not regenerated. `make_paper_figures.py` now labels axes as MAPE for the next run that has the cache.
+Weights live under `weights/`. The Nutrition5K pipeline expects `data/nutrition5k/cache/deep_crops_cache.npz`; that cache is not on this machine. Raw MetaFood3D is about 69 GB and SAM 3D weights about 13 GB. NV-Real images are already in `data/nvreal/`. What is stored are the diagnostic CSVs and the summarized figures. Figures under `figures/` still say PMAE and were not regenerated. `experiments/figures/make_figures.py` now labels axes as MAPE.
 
 ## Appendix C. Moved out of the main text
 
