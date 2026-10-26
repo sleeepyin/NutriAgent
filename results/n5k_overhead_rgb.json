@@ -1,0 +1,23 @@
+{
+  "created_at": "2026-10-26T16:01:33+08:00",
+  "source_archive": "/var/tmp/nutri-downloads/nutrition5k/nutrition5k_dataset.tar.gz",
+  "extracted": "imagery/realsense_overhead/*/rgb.png",
+  "n_rgb": 3490,
+  "bytes": 1454144607,
+  "official_rgb_train": 4059,
+  "official_rgb_test": 709,
+  "covered_train": 2755,
+  "covered_test": 507,
+  "train_missing_rgb": 1304,
+  "test_missing_rgb": 202,
+  "outside_official_rgb_split": 228,
+  "depth_extracted": false,
+  "side_angles_extracted": false,
+  "smokes": {
+    "validate_schema_examples": "pass",
+    "fndds_retrieve_n_foods": 5624,
+    "rule_verify_toy_smoke": "pass",
+    "b1_toy_smoke": "5/5 schema-valid",
+    "eval_toy_smoke_energy_mae": 83.45
+  }
+}

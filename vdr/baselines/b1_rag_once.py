@@ -114,9 +114,12 @@ def predict_from_hypotheses(
             "mass_g": None,
         }
 
-    # Ensure required keys exist
-    for k in ("energy_kcal", "protein_g", "carb_g", "fat_g", "mass_g"):
-        n_agg.setdefault(k, None)
+    # Public n is the frozen macro vector. Extra FNDDS fields such as water_g
+    # stay on the evidence-node attrs, not on y.n.
+    n_agg = {
+        k: n_agg.get(k)
+        for k in ("energy_kcal", "protein_g", "carb_g", "fat_g", "mass_g")
+    }
 
     G = {"nodes": nodes, "edges": edges}
     state = {
@@ -175,19 +178,29 @@ def predict_from_hypotheses(
     }
 
 
+def _dish_id_from_image(image_path: str) -> str:
+    parent = Path(image_path).parent.name
+    if parent.startswith("dish_"):
+        return parent
+    return Path(image_path).stem
+
+
 def predict(image_path: str, **kwargs: Any) -> dict[str, Any]:
-    """Image entrypoint: requires hypotheses= until VLM is wired."""
+    """Image entrypoint. Uses given hypotheses, otherwise Qwen2.5-VL."""
     hypotheses = kwargs.get("hypotheses")
+    vlm_meta = None
     if not hypotheses:
-        raise NotImplementedError(
-            "b1_rag_once.predict: VLM perception not wired. "
-            "Pass hypotheses=[...] for no-VLM smoke, or wait for 4090D VLM setup."
-        )
-    dish_id = kwargs.get("dish_id") or Path(image_path).stem
-    return predict_from_hypotheses(
+        from vdr.perception.qwen25 import ingredient_hypotheses
+
+        hypotheses, vlm_meta = ingredient_hypotheses(image_path)
+    dish_id = kwargs.get("dish_id") or _dish_id_from_image(image_path)
+    pred = predict_from_hypotheses(
         dish_id=dish_id,
         hypotheses=hypotheses,
         catalog_path=kwargs.get("catalog_path"),
         top_k=int(kwargs.get("top_k", 5)),
         default_portion_g=float(kwargs.get("default_portion_g", 100.0)),
     )
+    if vlm_meta is not None:
+        pred.setdefault("meta", {})["vlm"] = vlm_meta
+    return pred

@@ -14,19 +14,19 @@
 - [x] B1 RAG-once（无 VLM，给定 hyp）+ `scripts/b1_toy_smoke.py`
 - [x] RuleVerify 骨架（≥3 规则）+ `scripts/rule_verify_toy_smoke.py`
 - [x] N5K **元数据+官方 split** 已在 box（全量 imagery 仍缺，需大盘）
-- [ ] **[人工]** 下载 N5K 全量/评测子集 **imagery**（大盘/4090D）
+- [x] 俯拍 RGB 已抽出（3490 张 `rgb.png`，1.35GB；未解侧视视频和深度）。官方 RGB split 只覆盖到 train 2755/4059、test 507/709
 - [x] FNDDS 2019–2020 已在 box；`foods.json` catalog 已构建（5624）
 - [x] 默认 catalog 优先 `data/fndds/2019-2020/foods.json`（toy 回退保留）
 - [x] FNDDS 检索索引冒烟（**真实 catalog** `data/fndds/2019-2020/foods.json`，5624；toy 仅回退）
-- [ ] B0/B1 接口对接真实 VLM（需 **[人工] 4090D 环境**）
+- [x] B0/B1 图像入口已接 Qwen2.5-VL-7B；单盘官方 test 冒烟通过（`results/b0_b1_image_smoke.json`）
 
 ## W2 评测脚本与 B1 冒烟
 
-- [ ] N5K 官方 split 读入 + MAE/MAPE 脚手架接通真实标签
+- [x] N5K 官方 split 读入 + MAE/MAPE 脚手架接通真实标签（`vdr/data/n5k.py`，`scripts/eval_n5k_subset.py`）
 - [x] `nutrition_lookup` + `fndds_retrieve` 最小可跑（toy）
 - [x] B1 RAG-once 在 toy 冒烟（无 VLM）
-- [ ] **[人工]** 确认 2×4090D 上开源 7B–8B VLM（如 Qwen2.5-VL）可推理
-- [ ] B1 在真实 N5K 小子集冒烟（需人工下载）
+- [x] Qwen2.5-VL-7B 在空闲的一张 4090D 上可推理（另一张卡上已有 llama-server，未占用）
+- [x] B0/B1 在真实 N5K 小子集跑完（官方 rgb_test 有图 507 盘里 seed=42 抽 50；能量 MAE：B0 98.2，B1 112.1）。不是全表
 - [ ] portion_grid 接上查表打分
 
 ## W3 规则老师与弱标签管道

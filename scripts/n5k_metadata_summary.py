@@ -92,11 +92,18 @@ def main() -> int:
             n_ing = sum(1 for _ in reader)
         print(f"=== ingredients_metadata.csv rows: {n_ing} ===")
 
-    imagery = N5K / "imagery"
-    print(
-        f"=== imagery dir present: {imagery.is_dir()} "
-        f"(full RGB dump not required for this summary) ==="
-    )
+    imagery = N5K / "imagery" / "realsense_overhead"
+    rgb_ids = {
+        p.parent.name
+        for p in imagery.glob("*/rgb.png")
+        if p.is_file()
+    }
+    rgb_train = set(count_ids(splits / "rgb_train_ids.txt"))
+    rgb_test = set(count_ids(splits / "rgb_test_ids.txt"))
+    print(f"=== overhead rgb.png: {len(rgb_ids)} ===")
+    print(f"  in official rgb_train: {len(rgb_ids & rgb_train)} / {len(rgb_train)}")
+    print(f"  in official rgb_test: {len(rgb_ids & rgb_test)} / {len(rgb_test)}")
+    print(f"  not in official rgb split: {len(rgb_ids - rgb_train - rgb_test)}")
     return 0
 
 

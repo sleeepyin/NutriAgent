@@ -1,0 +1,313 @@
+{
+  "dish_id": "dish_1565035746",
+  "image": "data/nutrition5k/imagery/realsense_overhead/dish_1565035746/rgb.png",
+  "label": {
+    "energy_kcal": 43.099998,
+    "mass_g": 149.0,
+    "fat_g": 0.369,
+    "carb_g": 9.01,
+    "protein_g": 2.409
+  },
+  "b1": {
+    "dish_id": "dish_1565035746",
+    "n": {
+      "energy_kcal": 108.0,
+      "protein_g": 2.92,
+      "carb_g": 10.92,
+      "fat_g": 6.48,
+      "mass_g": 150.0
+    },
+    "G": {
+      "nodes": [
+        {
+          "id": "dish",
+          "type": "dish",
+          "label": "dish_1565035746"
+        },
+        {
+          "id": "h0",
+          "type": "hyp",
+          "label": "cauliflower"
+        },
+        {
+          "id": "q0",
+          "type": "query",
+          "label": "cauliflower"
+        },
+        {
+          "id": "c0",
+          "type": "food_code",
+          "label": "Cauliflower, raw",
+          "attrs": {
+            "code": "75107000",
+            "cands": [
+              {
+                "code": "75107000",
+                "score": 1.0,
+                "name": "Cauliflower, raw"
+              },
+              {
+                "code": "75502010",
+                "score": 1.0,
+                "name": "Cauliflower, pickled"
+              },
+              {
+                "code": "75214020",
+                "score": 1.0,
+                "name": "Cauliflower, NS as to form, cooked"
+              },
+              {
+                "code": "99997535",
+                "score": 1.0,
+                "name": "Cauliflower, cooked, as ingredient"
+              },
+              {
+                "code": "75214027",
+                "score": 1.0,
+                "name": "Cauliflower, fresh, cooked with oil"
+              }
+            ]
+          }
+        },
+        {
+          "id": "p0",
+          "type": "portion_g",
+          "label": "100.0g",
+          "attrs": {
+            "portion_g": 100.0
+          }
+        },
+        {
+          "id": "n0",
+          "type": "nutrition",
+          "label": "cauliflower macros",
+          "attrs": {
+            "energy_kcal": 25.0,
+            "protein_g": 1.92,
+            "carb_g": 4.97,
+            "fat_g": 0.28,
+            "water_g": 92.1,
+            "mass_g": 100.0
+          }
+        },
+        {
+          "id": "h1",
+          "type": "hyp",
+          "label": "red onion"
+        },
+        {
+          "id": "q1",
+          "type": "query",
+          "label": "red onion"
+        },
+        {
+          "id": "c1",
+          "type": "food_code",
+          "label": "Onion dip, light",
+          "attrs": {
+            "code": "12350225",
+            "cands": [
+              {
+                "code": "12350225",
+                "score": 0.725,
+                "name": "Onion dip, light"
+              },
+              {
+                "code": "12350220",
+                "score": 0.725,
+                "name": "Onion dip, regular"
+              },
+              {
+                "code": "75608100",
+                "score": 0.725,
+                "name": "Onion soup, French"
+              },
+              {
+                "code": "11440030",
+                "score": 0.725,
+                "name": "Onion dip, yogurt based"
+              },
+              {
+                "code": "99997525",
+                "score": 0.725,
+                "name": "Red pepper, cooked, as ingredient"
+              }
+            ]
+          }
+        },
+        {
+          "id": "p1",
+          "type": "portion_g",
+          "label": "50.0g",
+          "attrs": {
+            "portion_g": 50.0
+          }
+        },
+        {
+          "id": "n1",
+          "type": "nutrition",
+          "label": "red onion macros",
+          "attrs": {
+            "energy_kcal": 83.0,
+            "protein_g": 1.0,
+            "carb_g": 5.95,
+            "fat_g": 6.2,
+            "water_g": 36.1,
+            "mass_g": 50.0
+          }
+        },
+        {
+          "id": "r_CODE_CONF_GAP",
+          "type": "rule",
+          "label": "CODE_CONF_GAP"
+        }
+      ],
+      "edges": [
+        {
+          "src": "c0",
+          "dst": "q0",
+          "type": "code<-query"
+        },
+        {
+          "src": "c0",
+          "dst": "h0",
+          "type": "code<-hyp"
+        },
+        {
+          "src": "p0",
+          "dst": "c0",
+          "type": "portion<-code"
+        },
+        {
+          "src": "n0",
+          "dst": "c0",
+          "type": "n<-code×portion",
+          "attrs": {
+            "via_portion": "p0",
+            "portion_g": 100.0
+          }
+        },
+        {
+          "src": "dish",
+          "dst": "n0",
+          "type": "n<-aggregate"
+        },
+        {
+          "src": "c1",
+          "dst": "q1",
+          "type": "code<-query"
+        },
+        {
+          "src": "c1",
+          "dst": "h1",
+          "type": "code<-hyp"
+        },
+        {
+          "src": "p1",
+          "dst": "c1",
+          "type": "portion<-code"
+        },
+        {
+          "src": "n1",
+          "dst": "c1",
+          "type": "n<-code×portion",
+          "attrs": {
+            "via_portion": "p1",
+            "portion_g": 50.0
+          }
+        },
+        {
+          "src": "dish",
+          "dst": "n1",
+          "type": "n<-aggregate"
+        },
+        {
+          "src": "r_CODE_CONF_GAP",
+          "dst": "dish",
+          "type": "rule_trigger",
+          "attrs": {
+            "code": "CODE_CONF_GAP"
+          }
+        }
+      ]
+    },
+    "s": "pass",
+    "tau": [
+      {
+        "t": 0,
+        "action": "RETRIEVE",
+        "obs": {
+          "n_components": 2,
+          "n_matched": 2,
+          "verify_codes": [
+            "CODE_CONF_GAP"
+          ]
+        },
+        "state_summary": "rag-once matched 2/2 components"
+      },
+      {
+        "t": 1,
+        "action": "STOP",
+        "obs": {
+          "s": "pass",
+          "verify_codes": [
+            "CODE_CONF_GAP"
+          ]
+        },
+        "state_summary": "emit pass"
+      }
+    ],
+    "abstain_reason": null,
+    "meta": {
+      "baseline": "b1_rag_once",
+      "verify_codes": [
+        "CODE_CONF_GAP"
+      ],
+      "catalog": "toy_or_env",
+      "vlm": {
+        "model_path": "/var/tmp/vdr-models/Qwen2.5-VL-7B-Instruct",
+        "raw": "```json\n[\n    {\n        \"name\": \"cauliflower\",\n        \"portion_g\": 100\n    },\n    {\n        \"name\": \"red onion\",\n        \"portion_g\": 50\n    }\n]\n```",
+        "n_hypotheses": 2
+      }
+    }
+  },
+  "b0": {
+    "dish_id": "dish_1565035746",
+    "n": {
+      "energy_kcal": 50.0,
+      "protein_g": 2.0,
+      "carb_g": 3.0,
+      "fat_g": 1.0,
+      "mass_g": 100.0
+    },
+    "G": {
+      "nodes": [
+        {
+          "id": "dish",
+          "type": "dish",
+          "label": "dish_1565035746"
+        }
+      ],
+      "edges": []
+    },
+    "s": "pass",
+    "tau": [
+      {
+        "t": 0,
+        "action": "STOP",
+        "obs": {
+          "baseline": "b0_direct_vlm"
+        },
+        "state_summary": "direct VLM nutrition, no tools"
+      }
+    ],
+    "abstain_reason": null,
+    "meta": {
+      "baseline": "b0_direct_vlm",
+      "vlm": {
+        "model_path": "/var/tmp/vdr-models/Qwen2.5-VL-7B-Instruct",
+        "raw": "```json\n{\n  \"energy_kcal\": 50,\n  \"protein_g\": 2,\n  \"carb_g\": 3,\n  \"fat_g\": 1,\n  \"mass_g\": 100\n}\n```"
+      }
+    }
+  }
+}
