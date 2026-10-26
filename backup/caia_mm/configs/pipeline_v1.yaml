@@ -1,9 +1,0 @@
-python_env: nutri
-heartbeat_sec: 20
-hang_sec: 900
-e01_hang_sec: 2400
-max_restarts_per_step: 3
-e01_background: true
-e01_epochs_default: 100
-bootstrap_default: 2000
-bootstrap_full: 10000

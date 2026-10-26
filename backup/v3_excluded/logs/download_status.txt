@@ -1,5 +1,0 @@
-2026-10-18 21:45:01
-dinov2: 0.09/0.09 GB (100.0%) done 0.00 MB/s
-ecustfd: 0.00 GB done 0.00 MB/s
-metafood3d: 0.00 GB done 0.00 MB/s
-nutrition5k: 194.80/194.80 GB (100.0%) scan-cache 0.00 MB/s

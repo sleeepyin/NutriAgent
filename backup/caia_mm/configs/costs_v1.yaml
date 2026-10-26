@@ -1,8 +1,0 @@
-prior_units:
-  STOP: 0
-  ASK_SEMANTIC: 1
-  REQUEST_VIEW: 2
-  REQUEST_REFERENCE: 3
-  REQUEST_DEPTH: 3
-  ABSTAIN: 1
-note: Main paper must also report real seconds and Likert burden when collected.
