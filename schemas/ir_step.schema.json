@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vdr-agent.local/schemas/ir_step.schema.json",
+  "title": "VDRIRStep",
+  "description": "Per-step Intermediate Representation (IR) for Verified Dietary Reasoning. Aligns with the scheme IR table.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "dish_id",
+    "step_i",
+    "hyp_i",
+    "code_i",
+    "cands_i",
+    "portion_g_i",
+    "portion_src_i",
+    "nutri_i",
+    "nutri_dish",
+    "verify_codes",
+    "evidence_edges",
+    "action_t",
+    "obs_t",
+    "s",
+    "abstain_reason"
+  ],
+  "properties": {
+    "dish_id": { "type": "string" },
+    "step_i": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Step index within a dish trajectory."
+    },
+    "component_i": {
+      "type": ["integer", "null"],
+      "description": "Optional component index when multi-item dish.",
+      "default": null
+    },
+    "hyp_i": {
+      "type": ["string", "null"],
+      "description": "Ingredient / region hypothesis text from perception VLM."
+    },
+    "code_i": {
+      "type": ["string", "null"],
+      "description": "Selected FNDDS food code (or null if unresolved)."
+    },
+    "cands_i": {
+      "type": "array",
+      "description": "Top-k FNDDS candidates with scores.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "score"],
+        "properties": {
+          "code": { "type": "string" },
+          "score": { "type": "number" },
+          "name": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "portion_g_i": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Estimated portion mass in grams."
+    },
+    "portion_src_i": {
+      "type": ["string", "null"],
+      "description": "Source of portion: vlm_guess | grid_search | fndds_default | human | other."
+    },
+    "nutri_i": {
+      "type": ["object", "null"],
+      "description": "Per-component nutrition after table lookup × portion scaling.",
+      "additionalProperties": { "type": ["number", "null"] }
+    },
+    "nutri_dish": {
+      "type": ["object", "null"],
+      "description": "Current dish-level aggregated nutrition at this step.",
+      "additionalProperties": { "type": ["number", "null"] }
+    },
+    "verify_codes": {
+      "type": "array",
+      "description": "Triggered rule verification codes (one-hot features for controller).",
+      "items": { "type": "string" }
+    },
+    "evidence_edges": {
+      "type": "array",
+      "description": "Evidence edges produced or confirmed at this step.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["src", "dst", "type"],
+        "properties": {
+          "src": { "type": "string" },
+          "dst": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": [
+              "code<-query",
+              "code<-hyp",
+              "portion<-code",
+              "n<-code×portion",
+              "n<-aggregate",
+              "rule_trigger",
+              "corrects",
+              "abstain_from"
+            ]
+          },
+          "attrs": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "action_t": {
+      "type": "string",
+      "description": "Controller action taken leaving this step (see actions.json)."
+    },
+    "obs_t": {
+      "type": "object",
+      "description": "Tool observation returned after action_t.",
+      "additionalProperties": true
+    },
+    "s": {
+      "type": ["string", "null"],
+      "enum": ["pass", "corrected", "abstain", null],
+      "description": "Terminal verification status if decided at this step; else null."
+    },
+    "abstain_reason": {
+      "type": ["string", "null"],
+      "description": "Why abstain, if s=abstain or action=ABSTAIN."
+    }
+  }
+}

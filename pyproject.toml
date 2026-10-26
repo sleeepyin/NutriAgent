@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vdr-agent"
+version = "0.1.0"
+description = "Verified Dietary Reasoning: multimodal tool-use agent with evidence binding and calibrated abstention"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "jsonschema>=4.20",
+  "pydantic>=2.5",
+  "numpy>=1.26",
+  "pandas>=2.1",
+  "tqdm>=4.66",
+]
+
+[project.optional-dependencies]
+# Install on 2x4090D hosts when ready: pip install -e ".[vlm]"
+vlm = [
+  "torch>=2.2",
+  "transformers>=4.45",
+  "accelerate",
+]
+
+[tool.setuptools.packages.find]
+include = ["vdr*"]

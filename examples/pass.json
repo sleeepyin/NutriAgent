@@ -1,0 +1,52 @@
+{
+  "dish_id": "toy_0001",
+  "n": {
+    "energy_kcal": 220.0,
+    "protein_g": 12.0,
+    "carb_g": 28.0,
+    "fat_g": 6.0,
+    "mass_g": 180.0
+  },
+  "G": {
+    "nodes": [
+      {"id": "q1", "type": "query", "label": "steamed white rice"},
+      {"id": "h1", "type": "hyp", "label": "white rice mound"},
+      {"id": "c1", "type": "food_code", "label": "FNDDS:26100100", "attrs": {"code": "26100100"}},
+      {"id": "p1", "type": "portion_g", "label": "150g", "attrs": {"portion_g": 150.0}},
+      {"id": "n1", "type": "nutrition", "label": "rice macros"},
+      {"id": "h2", "type": "hyp", "label": "cucumber slices"},
+      {"id": "c2", "type": "food_code", "label": "FNDDS:63101000", "attrs": {"code": "63101000"}},
+      {"id": "p2", "type": "portion_g", "label": "30g", "attrs": {"portion_g": 30.0}},
+      {"id": "n2", "type": "nutrition", "label": "cucumber macros"},
+      {"id": "dish", "type": "dish", "label": "toy_0001"}
+    ],
+    "edges": [
+      {"src": "c1", "dst": "q1", "type": "code<-query"},
+      {"src": "c1", "dst": "h1", "type": "code<-hyp"},
+      {"src": "p1", "dst": "c1", "type": "portion<-code"},
+      {"src": "n1", "dst": "c1", "type": "n<-code×portion", "attrs": {"via_portion": "p1"}},
+      {"src": "c2", "dst": "h2", "type": "code<-hyp"},
+      {"src": "p2", "dst": "c2", "type": "portion<-code"},
+      {"src": "n2", "dst": "c2", "type": "n<-code×portion", "attrs": {"via_portion": "p2"}},
+      {"src": "dish", "dst": "n1", "type": "n<-aggregate"},
+      {"src": "dish", "dst": "n2", "type": "n<-aggregate"}
+    ]
+  },
+  "s": "pass",
+  "tau": [
+    {
+      "t": 0,
+      "action": "RETRIEVE",
+      "obs": {"cands": [{"code": "26100100", "score": 0.91}], "selected_code": "26100100"},
+      "state_summary": "retrieved rice code; confidence high"
+    },
+    {
+      "t": 1,
+      "action": "STOP",
+      "obs": {"verify_codes": []},
+      "state_summary": "rules clean; emit pass"
+    }
+  ],
+  "abstain_reason": null,
+  "meta": {"baseline": "toy", "note": "fictional pass example"}
+}

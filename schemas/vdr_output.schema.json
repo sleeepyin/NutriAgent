@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vdr-agent.local/schemas/vdr_output.schema.json",
+  "title": "VDROutput",
+  "description": "Verified Dietary Reasoning final output y = (n, G, s, tau).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["dish_id", "n", "G", "s", "tau"],
+  "properties": {
+    "dish_id": {
+      "type": "string",
+      "description": "Sample / dish identifier (e.g. Nutrition5K dish_id)."
+    },
+    "n": {
+      "$ref": "#/$defs/NutritionVector"
+    },
+    "G": {
+      "$ref": "#/$defs/EvidenceGraph"
+    },
+    "s": {
+      "type": "string",
+      "enum": ["pass", "corrected", "abstain"],
+      "description": "Verification status: pass (accepted as-is), corrected (tools fixed something), abstain (refuse to answer)."
+    },
+    "tau": {
+      "type": "array",
+      "description": "Ordered trajectory of controller steps.",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/TrajectoryStep"
+      }
+    },
+    "abstain_reason": {
+      "type": ["string", "null"],
+      "description": "Required when s=abstain; otherwise null/omitted.",
+      "default": null
+    },
+    "meta": {
+      "type": "object",
+      "description": "Optional run metadata (model ids, seed, latency).",
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "NutritionVector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["energy_kcal", "protein_g", "carb_g", "fat_g", "mass_g"],
+      "properties": {
+        "energy_kcal": { "type": ["number", "null"], "minimum": 0 },
+        "protein_g": { "type": ["number", "null"], "minimum": 0 },
+        "carb_g": { "type": ["number", "null"], "minimum": 0 },
+        "fat_g": { "type": ["number", "null"], "minimum": 0 },
+        "mass_g": { "type": ["number", "null"], "minimum": 0 },
+        "micronutrients": {
+          "type": "object",
+          "description": "Optional FNDDS micronutrient map (name -> value). Nulls allowed when abstaining.",
+          "additionalProperties": { "type": ["number", "null"] }
+        }
+      }
+    },
+    "EvidenceGraph": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodes", "edges"],
+      "properties": {
+        "nodes": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/EvidenceNode" }
+        },
+        "edges": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/EvidenceEdge" }
+        }
+      }
+    },
+    "EvidenceNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": {
+          "type": "string",
+          "enum": [
+            "query",
+            "hyp",
+            "food_code",
+            "portion_g",
+            "nutrition",
+            "rule",
+            "dish"
+          ]
+        },
+        "label": { "type": ["string", "null"] },
+        "attrs": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "EvidenceEdge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["src", "dst", "type"],
+      "properties": {
+        "src": { "type": "string" },
+        "dst": { "type": "string" },
+        "type": {
+          "type": "string",
+          "description": "Edge semantics for evidence binding.",
+          "enum": [
+            "code<-query",
+            "code<-hyp",
+            "portion<-code",
+            "n<-code×portion",
+            "n<-aggregate",
+            "rule_trigger",
+            "corrects",
+            "abstain_from"
+          ]
+        },
+        "attrs": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "TrajectoryStep": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["t", "action", "obs", "state_summary"],
+      "properties": {
+        "t": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "0-based step index."
+        },
+        "action": {
+          "type": "string",
+          "description": "Discrete controller action name (see actions.json)."
+        },
+        "obs": {
+          "type": "object",
+          "description": "Tool observation / return payload.",
+          "additionalProperties": true
+        },
+        "state_summary": {
+          "type": "string",
+          "description": "Short human-readable state digest for logging and BC features."
+        }
+      }
+    }
+  }
+}

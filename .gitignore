@@ -1,34 +1,54 @@
-# Generated
-**/__pycache__/
-*.pyc
-
-# Datasets, weights, and the shared VLM cache.
-# Directory placeholders and their READMEs stay tracked.
-data/**
-!data/**/
-!data/**/README.md
-weights/**
-!weights/**/
-!weights/**/README.md
-cache/**
-!cache/**/
-!cache/**/README.md
-
-# The same local copies live under backup/ and are not in the paths above.
-backup/**/data/**
-backup/**/weights/**
-
-# Large artifacts outside those trees
-**/*.pth
-**/*.pt
-**/*.onnx
-**/*.ckpt
-**/*.npz
-**/*.npy
-**/*.pkl
-*.zip
-*.tar
-*.tar.gz
-*.7z
-
+# Python
 .venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+*.egg-info/
+dist/
+build/
+
+# Models / checkpoints — never commit legacy regression weights either
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.onnx
+*.ckpt
+
+# Nutrition5K bulky media (download on server only)
+data/nutrition5k/imagery/
+**/*.mp4
+**/*.avi
+**/nutrition5k_dataset.tar.gz
+*.tar.gz
+*.tar
+
+# FNDDS / FDC raw bulky sources (keep foods.json)
+data/fndds/2019-2020/FoodData_Central_survey_food_json_*.json
+data/fndds/2019-2020/*.zip
+# optional large excel dumps if re-downloaded as bulk; small At-a-Glance xlsx OK to track
+# data/fndds/2019-2020/*.xlsx
+
+# Local outputs (large); allow curated results/
+outputs/
+!results/
+!results/**/*.md
+!results/**/*.json
+!results/**/*.txt
+results/**/*.png
+results/**/*.jpg
+results/**/checkpoints/
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Secrets
+.env
+.env.*
+!.env.example

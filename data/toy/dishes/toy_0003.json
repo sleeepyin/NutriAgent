@@ -1,0 +1,18 @@
+{
+  "dish_id": "toy_0003",
+  "split": "toy",
+  "components": [
+    {
+      "name": "unknown stew with heavy sauce",
+      "portion_g": null
+    }
+  ],
+  "n_gt": {
+    "energy_kcal": null,
+    "protein_g": null,
+    "carb_g": null,
+    "fat_g": null,
+    "mass_g": null
+  },
+  "note": "abstain/sauce; fictional"
+}

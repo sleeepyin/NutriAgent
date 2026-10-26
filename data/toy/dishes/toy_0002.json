@@ -1,0 +1,22 @@
+{
+  "dish_id": "toy_0002",
+  "split": "toy",
+  "components": [
+    {
+      "name": "grilled chicken breast",
+      "portion_g": 180
+    },
+    {
+      "name": "broccoli",
+      "portion_g": 40
+    }
+  ],
+  "n_gt": {
+    "energy_kcal": 410,
+    "protein_g": 28,
+    "carb_g": 15,
+    "fat_g": 26,
+    "mass_g": 220
+  },
+  "note": "id-confusion candidate; fictional"
+}

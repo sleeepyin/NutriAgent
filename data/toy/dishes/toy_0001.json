@@ -1,0 +1,22 @@
+{
+  "dish_id": "toy_0001",
+  "split": "toy",
+  "components": [
+    {
+      "name": "white rice",
+      "portion_g": 150
+    },
+    {
+      "name": "cucumber",
+      "portion_g": 30
+    }
+  ],
+  "n_gt": {
+    "energy_kcal": 220,
+    "protein_g": 12,
+    "carb_g": 28,
+    "fat_g": 6,
+    "mass_g": 180
+  },
+  "note": "simple; fictional; no image"
+}

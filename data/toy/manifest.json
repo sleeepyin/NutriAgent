@@ -1,0 +1,11 @@
+{
+  "description": "Fictional toy dishes for pipeline smoke tests. No copyrighted images.",
+  "count": 5,
+  "dish_ids": [
+    "toy_0001",
+    "toy_0002",
+    "toy_0003",
+    "toy_0004",
+    "toy_0005"
+  ]
+}

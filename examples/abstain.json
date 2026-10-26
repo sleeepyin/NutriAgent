@@ -1,0 +1,48 @@
+{
+  "dish_id": "toy_0003",
+  "n": {
+    "energy_kcal": null,
+    "protein_g": null,
+    "carb_g": null,
+    "fat_g": null,
+    "mass_g": null
+  },
+  "G": {
+    "nodes": [
+      {"id": "h1", "type": "hyp", "label": "unknown mixed stew with heavy sauce"},
+      {"id": "q1", "type": "query", "label": "brown stew sauce opaque"},
+      {"id": "r1", "type": "rule", "label": "DB_GAP_HINT"},
+      {"id": "r2", "type": "rule", "label": "MULTI_CONFLICT"},
+      {"id": "dish", "type": "dish", "label": "toy_0003"}
+    ],
+    "edges": [
+      {"src": "r1", "dst": "q1", "type": "rule_trigger", "attrs": {"code": "DB_GAP_HINT"}},
+      {"src": "r2", "dst": "h1", "type": "rule_trigger", "attrs": {"code": "MULTI_CONFLICT"}},
+      {"src": "dish", "dst": "r1", "type": "abstain_from"},
+      {"src": "dish", "dst": "r2", "type": "abstain_from"}
+    ]
+  },
+  "s": "abstain",
+  "tau": [
+    {
+      "t": 0,
+      "action": "RETRIEVE",
+      "obs": {"cands": [], "selected_code": null},
+      "state_summary": "empty retrieve; sauce occludes ingredients"
+    },
+    {
+      "t": 1,
+      "action": "RE_DECOMPOSE",
+      "obs": {"hyp_count": 0, "note": "segmentation failed"},
+      "state_summary": "re-decompose failed"
+    },
+    {
+      "t": 2,
+      "action": "ABSTAIN",
+      "obs": {"verify_codes": ["DB_GAP_HINT", "MULTI_CONFLICT"]},
+      "state_summary": "calibrated abstain"
+    }
+  ],
+  "abstain_reason": "Heavy sauce occlusion + no reliable FNDDS match (db_gap/multi).",
+  "meta": {"baseline": "toy", "note": "fictional abstain example"}
+}
