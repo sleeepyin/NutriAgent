@@ -1,0 +1,18 @@
+{
+  "dish_id": "toy_0005",
+  "split": "toy",
+  "components": [
+    {
+      "name": "ramen bowl multi",
+      "portion_g": 450
+    }
+  ],
+  "n_gt": {
+    "energy_kcal": 520,
+    "protein_g": 22,
+    "carb_g": 65,
+    "fat_g": 18,
+    "mass_g": 450
+  },
+  "note": "multi; fictional"
+}

@@ -1,0 +1,22 @@
+{
+  "dish_id": "toy_0004",
+  "split": "toy",
+  "components": [
+    {
+      "name": "mixed salad",
+      "portion_g": 200
+    },
+    {
+      "name": "dressing",
+      "portion_g": 25
+    }
+  ],
+  "n_gt": {
+    "energy_kcal": 180,
+    "protein_g": 6,
+    "carb_g": 14,
+    "fat_g": 11,
+    "mass_g": 225
+  },
+  "note": "portion-sensitive; fictional"
+}

@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vdr-agent.local/schemas/actions.json",
+  "title": "VDRActionSpace",
+  "description": "Discrete controller action space for Verified Dietary Reasoning. Volume tools are OFF by default and not part of the core action set.",
+  "version": "0.1.0",
+  "core_actions": [
+    {
+      "name": "RETRIEVE",
+      "description": "Re-query FNDDS retrieval with refined text / multi-query expansion; update code_i and cands_i."
+    },
+    {
+      "name": "RE_PORTION",
+      "description": "Run portion grid search (or re-estimate grams) for current code; update portion_g_i."
+    },
+    {
+      "name": "RE_DECOMPOSE",
+      "description": "Ask perception to re-segment / re-hypothesize components; reset hyp_i for affected regions."
+    },
+    {
+      "name": "ABSTAIN",
+      "description": "Refuse to emit a grounded nutrition answer; set s=abstain and abstain_reason."
+    },
+    {
+      "name": "STOP",
+      "description": "Terminate episode; emit final (n, G, s) with s in {pass, corrected}."
+    }
+  ],
+  "optional_actions": [
+    {
+      "name": "CORRECT_CODE",
+      "description": "Directly set code_i to a chosen Top-k candidate without a full re-retrieve (finer than RETRIEVE).",
+      "enabled_by_default": true
+    },
+    {
+      "name": "VOLUME_ESTIMATE",
+      "description": "Monocular volume tool (SAM/depth). DEFAULT OFF per Tanabe failure mode; ablation only.",
+      "enabled_by_default": false
+    }
+  ],
+  "enums": {
+    "action": [
+      "RETRIEVE",
+      "RE_PORTION",
+      "RE_DECOMPOSE",
+      "ABSTAIN",
+      "STOP",
+      "CORRECT_CODE"
+    ],
+    "action_core_only": [
+      "RETRIEVE",
+      "RE_PORTION",
+      "RE_DECOMPOSE",
+      "ABSTAIN",
+      "STOP"
+    ]
+  },
+  "notes": [
+    "Do not load legacy nutrition-regression expert weights.",
+    "VOLUME_ESTIMATE must stay disabled unless an ablation flag is explicitly set.",
+    "Rule verify is a tool/prior feature source, not a controller action."
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "version": "toy-0.1",
+  "note": "Fictional FNDDS-like fragment for smoke tests ONLY. Replace with real USDA FNDDS 2019-2020 under data/fndds/2019-2020/ (see README).",
+  "foods": [
+    {"code": "T00100100", "name": "white rice steamed", "aliases": ["white rice", "steamed rice", "rice"], "per_100g": {"energy_kcal": 130.0, "protein_g": 2.7, "carb_g": 28.0, "fat_g": 0.3}},
+    {"code": "T00100200", "name": "brown rice cooked", "aliases": ["brown rice"], "per_100g": {"energy_kcal": 112.0, "protein_g": 2.3, "carb_g": 24.0, "fat_g": 0.9}},
+    {"code": "T00200100", "name": "cucumber raw", "aliases": ["cucumber", "cucumber slices"], "per_100g": {"energy_kcal": 15.0, "protein_g": 0.7, "carb_g": 3.6, "fat_g": 0.1}},
+    {"code": "T00300100", "name": "chicken breast grilled", "aliases": ["grilled chicken", "grilled chicken breast", "chicken breast"], "per_100g": {"energy_kcal": 165.0, "protein_g": 31.0, "carb_g": 0.0, "fat_g": 3.6}},
+    {"code": "T00300200", "name": "chicken fried breaded", "aliases": ["fried chicken", "fried chicken piece"], "per_100g": {"energy_kcal": 260.0, "protein_g": 18.0, "carb_g": 10.0, "fat_g": 16.0}},
+    {"code": "T00400100", "name": "broccoli steamed", "aliases": ["broccoli", "steamed broccoli"], "per_100g": {"energy_kcal": 35.0, "protein_g": 2.4, "carb_g": 7.0, "fat_g": 0.4}},
+    {"code": "T00500100", "name": "mixed green salad no dressing", "aliases": ["mixed salad", "green salad", "salad"], "per_100g": {"energy_kcal": 20.0, "protein_g": 1.5, "carb_g": 3.5, "fat_g": 0.2}},
+    {"code": "T00500200", "name": "salad dressing oil based", "aliases": ["dressing", "salad dressing", "vinaigrette"], "per_100g": {"energy_kcal": 450.0, "protein_g": 0.5, "carb_g": 4.0, "fat_g": 48.0}},
+    {"code": "T00600100", "name": "ramen noodles cooked", "aliases": ["ramen", "ramen noodles", "noodles"], "per_100g": {"energy_kcal": 138.0, "protein_g": 4.5, "carb_g": 26.0, "fat_g": 2.0}},
+    {"code": "T00600200", "name": "ramen broth pork", "aliases": ["ramen broth", "pork broth"], "per_100g": {"energy_kcal": 35.0, "protein_g": 2.0, "carb_g": 2.0, "fat_g": 2.0}},
+    {"code": "T00700100", "name": "egg scrambled", "aliases": ["scrambled egg", "egg"], "per_100g": {"energy_kcal": 148.0, "protein_g": 10.0, "carb_g": 1.5, "fat_g": 11.0}},
+    {"code": "T00800100", "name": "tofu firm", "aliases": ["tofu", "firm tofu"], "per_100g": {"energy_kcal": 144.0, "protein_g": 17.0, "carb_g": 3.0, "fat_g": 9.0}},
+    {"code": "T00900100", "name": "apple raw with skin", "aliases": ["apple", "raw apple"], "per_100g": {"energy_kcal": 52.0, "protein_g": 0.3, "carb_g": 14.0, "fat_g": 0.2}},
+    {"code": "T01000100", "name": "banana raw", "aliases": ["banana"], "per_100g": {"energy_kcal": 89.0, "protein_g": 1.1, "carb_g": 23.0, "fat_g": 0.3}},
+    {"code": "T01100100", "name": "unknown stew heavy sauce placeholder", "aliases": ["stew", "unknown stew", "brown stew"], "per_100g": {"energy_kcal": 120.0, "protein_g": 6.0, "carb_g": 8.0, "fat_g": 7.0}}
+  ]
+}

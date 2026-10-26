@@ -1,0 +1,15 @@
+# Minimal deps for W1 schema / I/O smoke
+jsonschema>=4.20
+pydantic>=2.5
+numpy>=1.26
+pandas>=2.1
+tqdm>=4.66
+
+# Reserved for W2+ on 2x4090D (keep commented until GPU env is ready)
+# torch>=2.2
+# torchvision
+# transformers>=4.45
+# accelerate
+# qwen-vl-utils
+# sentence-transformers
+# faiss-cpu

@@ -1,0 +1,59 @@
+{
+  "dish_id": "toy_0002",
+  "n": {
+    "energy_kcal": 410.0,
+    "protein_g": 28.0,
+    "carb_g": 15.0,
+    "fat_g": 26.0,
+    "mass_g": 220.0
+  },
+  "G": {
+    "nodes": [
+      {"id": "h1", "type": "hyp", "label": "grilled chicken"},
+      {"id": "c_wrong", "type": "food_code", "label": "fried chicken (wrong)", "attrs": {"code": "24122120"}},
+      {"id": "c_ok", "type": "food_code", "label": "grilled chicken breast", "attrs": {"code": "24120110"}},
+      {"id": "p1", "type": "portion_g", "label": "180g", "attrs": {"portion_g": 180.0}},
+      {"id": "n_final", "type": "nutrition", "label": "corrected macros"},
+      {"id": "r1", "type": "rule", "label": "CODE_CONF_GAP"},
+      {"id": "dish", "type": "dish", "label": "toy_0002"}
+    ],
+    "edges": [
+      {"src": "c_wrong", "dst": "h1", "type": "code<-hyp"},
+      {"src": "r1", "dst": "c_wrong", "type": "rule_trigger", "attrs": {"code": "CODE_CONF_GAP"}},
+      {"src": "c_ok", "dst": "c_wrong", "type": "corrects"},
+      {"src": "c_ok", "dst": "h1", "type": "code<-hyp"},
+      {"src": "p1", "dst": "c_ok", "type": "portion<-code"},
+      {"src": "n_final", "dst": "c_ok", "type": "n<-code×portion", "attrs": {"via_portion": "p1"}},
+      {"src": "dish", "dst": "n_final", "type": "n<-aggregate"}
+    ]
+  },
+  "s": "corrected",
+  "tau": [
+    {
+      "t": 0,
+      "action": "RETRIEVE",
+      "obs": {"cands": [{"code": "24122120", "score": 0.62}, {"code": "24120110", "score": 0.58}], "selected_code": "24122120"},
+      "state_summary": "initial retrieve picked fried variant; score gap small"
+    },
+    {
+      "t": 1,
+      "action": "CORRECT_CODE",
+      "obs": {"from": "24122120", "to": "24120110", "verify_codes": ["CODE_CONF_GAP"]},
+      "state_summary": "controller corrected code after rule prior"
+    },
+    {
+      "t": 2,
+      "action": "RE_PORTION",
+      "obs": {"portion_g": 180.0, "grid_best": 180.0},
+      "state_summary": "portion grid confirmed 180g"
+    },
+    {
+      "t": 3,
+      "action": "STOP",
+      "obs": {"s": "corrected"},
+      "state_summary": "emit corrected"
+    }
+  ],
+  "abstain_reason": null,
+  "meta": {"baseline": "toy", "note": "fictional corrected example"}
+}
