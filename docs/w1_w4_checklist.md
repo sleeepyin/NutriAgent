@@ -27,7 +27,7 @@
 - [x] B1 RAG-once 在 toy 冒烟（无 VLM）
 - [x] Qwen2.5-VL-7B 在空闲的一张 4090D 上可推理（另一张卡上已有 llama-server，未占用）
 - [x] B0/B1 在真实 N5K 小子集跑完（官方 rgb_test 有图 507 盘里 seed=42 抽 50；能量 MAE：B0 98.2，B1 112.1）。不是全表
-- [ ] portion_grid 接上查表打分
+- [x] portion_grid 接上查表打分（B1 默认克重网格 + 去重 + 食材检索先验；`scripts/b1_harden_smoke.py`）
 
 ## W3 规则老师与弱标签管道
 
