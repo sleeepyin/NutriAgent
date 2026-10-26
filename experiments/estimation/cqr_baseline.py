@@ -48,7 +48,7 @@ from experiments.estimation.nutrient_intervals import (
 N_TRIALS = 10
 EPS = 1e-3
 CQR_CACHE = n5k('cqr_pred_cache.npz')
-OUT = str(Paths.resolve().results_estimation / "e5" / "nutrient_cqr_results.pkl")
+OUT = str(Paths.resolve().root / "backup" / "v3_excluded" / "results" / "estimation" / "e5" / "nutrient_cqr_results.pkl")
 VARIANTS = ['CQR-raw', 'CQR-abs', 'CQR-rel', 'CQR-bin', 'CQR-hyb', 'CQR-hyb-b',
             'AEC-S2m-5W']
 
@@ -196,6 +196,7 @@ def main():
     else:
         verdict = "所有 CQR 变体均未满足覆盖约束 → AEC-S2m-5W 保持获胜 ✗"
     print(f"\n结论: {verdict}")
+    os.makedirs(os.path.dirname(OUT), exist_ok=True)
     joblib.dump({'metrics': metrics, 'rank': rank, 'verdict': verdict,
                  'config': {'alpha': ALPHA, 'n_trials': N_TRIALS, 'taus': [0.1, 0.5, 0.9],
                             'date': '2026-08-20'}}, OUT)

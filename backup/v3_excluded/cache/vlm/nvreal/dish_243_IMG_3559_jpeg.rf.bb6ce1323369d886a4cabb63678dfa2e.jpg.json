@@ -1,0 +1,19 @@
+{
+  "food_name": "Fried chicken and french fries",
+  "form": "prepared",
+  "references": [],
+  "weight_guess_g": 150.0,
+  "scene": "White plate on a dark table",
+  "out_of_domain": true,
+  "meta": {
+    "dataset": "nvreal",
+    "sample_id": "dish_243_IMG_3559_jpeg.rf.bb6ce1323369d886a4cabb63678dfa2e.jpg",
+    "image": "/home/sdnu/nutriagent/data/nvreal/raw/nutritionverse-manual/nutritionverse-manual/images/dish_243_IMG_3559_jpeg.rf.bb6ce1323369d886a4cabb63678dfa2e.jpg",
+    "image_source": "official_val",
+    "width": 3024,
+    "height": 4032,
+    "model": "qwen3.8-27b",
+    "prompt_sha256": "bdc2f80bcb59614bf600495f23452886b642be58eb9e7c2dd21b223a0d78ad1b",
+    "finish_reason": "stop"
+  }
+}

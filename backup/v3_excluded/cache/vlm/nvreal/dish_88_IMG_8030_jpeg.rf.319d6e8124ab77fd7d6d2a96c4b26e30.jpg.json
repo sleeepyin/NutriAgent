@@ -1,0 +1,19 @@
+{
+  "food_name": "Apple and granola bars",
+  "form": "prepared",
+  "references": [],
+  "weight_guess_g": 250.0,
+  "scene": "White plate on a dark table",
+  "out_of_domain": true,
+  "meta": {
+    "dataset": "nvreal",
+    "sample_id": "dish_88_IMG_8030_jpeg.rf.319d6e8124ab77fd7d6d2a96c4b26e30.jpg",
+    "image": "/home/sdnu/nutriagent/data/nvreal/raw/nutritionverse-manual/nutritionverse-manual/images/dish_88_IMG_8030_jpeg.rf.319d6e8124ab77fd7d6d2a96c4b26e30.jpg",
+    "image_source": "official_val",
+    "width": 3024,
+    "height": 4032,
+    "model": "qwen3.8-27b",
+    "prompt_sha256": "bdc2f80bcb59614bf600495f23452886b642be58eb9e7c2dd21b223a0d78ad1b",
+    "finish_reason": "stop"
+  }
+}

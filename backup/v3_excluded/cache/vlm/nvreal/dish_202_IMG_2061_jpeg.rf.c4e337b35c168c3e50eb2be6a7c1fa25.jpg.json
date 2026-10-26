@@ -1,0 +1,19 @@
+{
+  "food_name": "Mixed meat and sushi plate",
+  "form": "prepared",
+  "references": [],
+  "weight_guess_g": 250.0,
+  "scene": "White plate on a black tablecloth",
+  "out_of_domain": true,
+  "meta": {
+    "dataset": "nvreal",
+    "sample_id": "dish_202_IMG_2061_jpeg.rf.c4e337b35c168c3e50eb2be6a7c1fa25.jpg",
+    "image": "/home/sdnu/nutriagent/data/nvreal/raw/nutritionverse-manual/nutritionverse-manual/images/dish_202_IMG_2061_jpeg.rf.c4e337b35c168c3e50eb2be6a7c1fa25.jpg",
+    "image_source": "official_val",
+    "width": 3024,
+    "height": 4032,
+    "model": "qwen3.8-27b",
+    "prompt_sha256": "bdc2f80bcb59614bf600495f23452886b642be58eb9e7c2dd21b223a0d78ad1b",
+    "finish_reason": "stop"
+  }
+}

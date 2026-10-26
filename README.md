@@ -1,63 +1,51 @@
 # MM-CFA
 
-单张食物图像估重不准，是因为缺信息，不是因为模型不够强。仓库按论文方案 v2.0 分成三层：估计（E1–E5）、诊断（D1–D6）、行动（A1–A5）。方案正文在 `docs/论文方案_v2.0_精简版.md`。
+单张食物图像的重量和营养素用区间来报。方案在 `docs/论文方案_v4.0.md`，已有数字和未跑实验的占位在 `docs/实验结果汇总_v4.0.md`。
 
-当前稿在 `docs/paper_cn.md` 与 `docs/paper.md`。实验笔记在 `docs/notes/`。
+两个贡献：
+
+1. AEC-S，只做共形预测。重量、营养素各一个对比和一个消融，共 4 个。定义与 v3.0 相同。C1、C2 已有数字。
+2. 视觉语言模型补尺度和密度。ECUSTFD、MetaFood3D、Nutrition5K 三个有条件的数据集上都做，样本用满。问法和融合系数冻住后，NutritionVerse-Real 做没有参照物、体积和深度时的外部验证。域偏移和数据集合并不做。这 21 对还没跑。
+
+v4.0 不使用的脚本、结果、权重和三维网格在 `backup/v3_excluded/`。v3.0 的方案和汇总在 `backup/论文方案_v3.0.md`、`backup/实验结果汇总_v3.0.md`。再上一版在 `backup/论文方案_v2.0_精简版.md`、`backup/实验结果汇总.md`。
 
 ## 目录
 
 ```
-experiments/estimation/     E1–E5 已有脚本。统一重跑（R0）还没写
-experiments/diagnosis/      D1–D4、D6 的 DINOv2 已有脚本
-experiments/action/         A1、A2a、A5 的 oracle 上界已有脚本
-experiments/appendix/       加权共形（附录）
-experiments/figures/        诊断图
-src/mmcfa/                  行动层共用的路径、指标、共形分位数和数据表
-third_party/dinov2/         DINOv2 代码
-data/                       四个数据集的位置。除 NV-Real 原图外都还空着
-weights/                    权重位置，目前是空的
-cache/vlm/                  一次看图推理的 JSON 缓存，D6 / A2b / A3 / A4 / A5 共用
-results/                    已有结果，以及待补实验的空位
-figures/                    已有诊断图
-backup/                     不再进入正文的旧方案和旧代码
+experiments/estimation/     贡献一。C1、C2 在 results/estimation/r0/
+experiments/diagnosis/      尺度和密度的已有对照，以及 W、N 实验要读的标签和预测
+src/mmcfa/                  路径、指标、共形分位数、数据表、本机 Qwen
+data/                       四个数据集。Nutrition5K 缓存是 2791/698
+weights/                    v4.0 还要加载的检查点
+cache/vlm_v4/               尺度和密度提示词的看图缓存
+results/v4/                 C3、C4 和 W、N、X 的输出目录
+backup/v3_excluded/         名称先验、拒答、路由、换骨干、三维重建、旧营养素区间
 ```
 
 路径都从仓库根目录解析，入口是 `src/mmcfa/paths.py`。
 
-## 已经能用的脚本
+## 还要用的脚本
 
 在仓库根目录执行。
 
 ```bash
 python experiments/diagnosis/d1_mf3d_oracle/oracle.py
-python -m experiments.action.a1_group_routing
-python -m experiments.action.a2_name_prior --skip-query
-python -m experiments.action.a5_oracle_bound --skip-query
-python experiments/figures/make_figures.py
+python experiments/diagnosis/d4_ecustfd_scale/reference_scale.py
 ```
 
-A2a 和 A5 的 `--skip-query` 读取 `results/action/a2_name_prior/category_cache.json`。重新问模型时去掉这个参数，本机服务密钥用环境变量 `QWEN_API_KEY_FILE` 指定。
+D1 只读标签表。D2 的折外密度已经在 `results/diagnosis/d2_density/density_pred_cache.npy`，MF3D 的密度臂直接用这份缓存和 `weights/metafood3d/`。D4 的汇总在 `results/diagnosis/`。D5 的跨域汇总留在原地，v4.0 不把它列为实验。
 
-估计层脚本在权重和 `data/nutrition5k/cache/deep_crops_cache.npz` 放回之前跑不起来。D2 需要 MetaFood3D 渲染图，D3 需要 SAM 3D 代码和权重，D4 重跑需要 ECUSTFD 原图和 `density.xls`。D1 和上面三条行动层命令只读仓库里的 CSV。
+## 还没完成的部分
 
-## 留着但还没写的部分
-
-| 位置 | 以后要放什么 |
-|---|---|
-| `experiments/estimation/` | R0：E1–E5 在严格 hold-out 上一次重跑。3 通道训练脚本原先不在这个仓库里 |
-| `experiments/diagnosis/d5_nvreal_shift/` | NV-Real 零样本、冻结共形、联合训练。脚本原先不在这个仓库里 |
-| `experiments/diagnosis/d6_capacity/` | VLM 直接看图估重。DINOv2 脚本已经在 |
-| `experiments/action/a3_auto_reference/` | A3，只做 ECUSTFD |
-| `experiments/action/a4_ood_reject/` | A4 |
-| `experiments/action/a5_mixed_flow/` | A5 端到端。oracle 上界是 `experiments/action/a5_oracle_bound.py` |
-| `cache/vlm/` | 四个留出集各问一次的 JSON |
-| `experiments/diagnosis/d4_ecustfd_scale/` | 从现有 CSV 补 WAPE 的脚本还没写。对照表已经在 |
+完成标准写在 `docs/论文方案_v4.0.md`。C3、C4 和 W、N、X 写到 `results/v4/`。看图写入 `cache/vlm_v4/`。旧提示词的 JSON 在 `backup/v3_excluded/cache/vlm/`，不读入 v4.0。
 
 ## 数据和权重
 
-Nutrition5K 的裁剪缓存、四通道和三通道权重、营养素权重都不在本机。MetaFood3D 渲染图、ECUSTFD 原图、SAM 3D 权重也不在。NV-Real 原图和压缩包在 `data/nvreal/`，缺的是菜品缓存和逐图预测。各目录里的 README 写了期望的文件名。
+重量和营养素中心在 `weights/nutrition5k/`。外部验证的三通道集成在 `weights/nvreal/deep_weight_*_3ch.pth`。MetaFood3D 的五折密度在 `weights/metafood3d/`。
 
-`results/estimation/previous/` 是重跑前的估计层输出，不能当作 v2.0 的表 1。`results/estimation/e5/` 是营养素区间的现有结果。
+C1、C2 来自 `results/estimation/r0/e2_intervals.json` 和 `e3_ablation.json`。同一次运行的点估计在 `e1_point.json`、`e5_point.json`。
+
+MetaFood3D 的 Blender 渲染留在 `data/metafood3d/`，密度臂和尺度臂都看这些图。三维网格在 `backup/v3_excluded/data/metafood3d_3d_mesh/`。NV-Real 的压缩包在 `backup/v3_excluded/data/nutritionverse-real.zip`，解压后的图在 `data/nvreal/raw/`。外部验证使用全部有标签的图像，不在三个数据集的融合系数写死之前打分。
 
 ## 环境
 
@@ -66,5 +54,3 @@ conda create -n nutri python=3.10 -y
 conda activate nutri
 pip install -r requirements.txt
 ```
-
-SAM 3D 用单独的环境，安装脚本是 `experiments/diagnosis/d3_mf3d_sam3d/setup_sam3d.sh`。代码放到 `third_party/sam3d/`，或用 `SAM3D_CODE` 指向别处。

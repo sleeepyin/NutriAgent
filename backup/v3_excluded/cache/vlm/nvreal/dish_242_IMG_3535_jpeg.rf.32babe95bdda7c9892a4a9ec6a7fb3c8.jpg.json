@@ -1,0 +1,19 @@
+{
+  "food_name": "Meat and fries",
+  "form": "prepared",
+  "references": [],
+  "weight_guess_g": 120.0,
+  "scene": "Plate on a dark table",
+  "out_of_domain": false,
+  "meta": {
+    "dataset": "nvreal",
+    "sample_id": "dish_242_IMG_3535_jpeg.rf.32babe95bdda7c9892a4a9ec6a7fb3c8.jpg",
+    "image": "/home/sdnu/nutriagent/data/nvreal/raw/nutritionverse-manual/nutritionverse-manual/images/dish_242_IMG_3535_jpeg.rf.32babe95bdda7c9892a4a9ec6a7fb3c8.jpg",
+    "image_source": "official_val",
+    "width": 4032,
+    "height": 3024,
+    "model": "qwen3.8-27b",
+    "prompt_sha256": "bdc2f80bcb59614bf600495f23452886b642be58eb9e7c2dd21b223a0d78ad1b",
+    "finish_reason": "stop"
+  }
+}

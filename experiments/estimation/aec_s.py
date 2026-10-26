@@ -48,13 +48,11 @@ def _boot():
 _boot()
 from mmcfa.paths import Paths, n5k
 
-OUT_DIR = str(Paths.resolve().results_estimation / "e2_aec_s")
-os.makedirs(OUT_DIR, exist_ok=True)
+OUT_DIR = str(Paths.resolve().root / "backup" / "v3_excluded" / "results" / "estimation" / "e2_aec_s")
 CACHE_PATH = n5k('aec_v2_pred_cache.npz')
 DEVICE = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 PAIRS = {
-    'old':   ('deep_weight_resnet18.pth', 'deep_weight_efficientnet.pth'),
     'final': ('deep_weight_resnet18_final.pth', 'deep_weight_efficientnet_final.pth'),
 }
 
@@ -481,6 +479,7 @@ def main():
         }
         print()
 
+    os.makedirs(OUT_DIR, exist_ok=True)
     joblib.dump(all_out, os.path.join(OUT_DIR, 'aec_v2_results.pkl'))
     print(f"结果已保存: {OUT_DIR}/aec_v2_results.pkl")
 

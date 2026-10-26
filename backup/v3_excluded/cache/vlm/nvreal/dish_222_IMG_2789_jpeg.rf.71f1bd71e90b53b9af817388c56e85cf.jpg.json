@@ -1,0 +1,19 @@
+{
+  "food_name": "Mixed plate with spring rolls, chicken, toast, and meat",
+  "form": "prepared",
+  "references": [],
+  "weight_guess_g": 250.0,
+  "scene": "White plate on a dark tablecloth",
+  "out_of_domain": true,
+  "meta": {
+    "dataset": "nvreal",
+    "sample_id": "dish_222_IMG_2789_jpeg.rf.71f1bd71e90b53b9af817388c56e85cf.jpg",
+    "image": "/home/sdnu/nutriagent/data/nvreal/raw/nutritionverse-manual/nutritionverse-manual/images/dish_222_IMG_2789_jpeg.rf.71f1bd71e90b53b9af817388c56e85cf.jpg",
+    "image_source": "official_val",
+    "width": 3024,
+    "height": 4032,
+    "model": "qwen3.8-27b",
+    "prompt_sha256": "bdc2f80bcb59614bf600495f23452886b642be58eb9e7c2dd21b223a0d78ad1b",
+    "finish_reason": "stop"
+  }
+}

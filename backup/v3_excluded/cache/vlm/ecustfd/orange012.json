@@ -1,0 +1,31 @@
+{
+  "food_name": "grapefruit",
+  "form": "rigid",
+  "references": [
+    {
+      "object": "coin",
+      "bbox": [
+        57.96,
+        83.92,
+        94.75,
+        121.34
+      ],
+      "size_mm": 25.0,
+      "conf": 0.9
+    }
+  ],
+  "weight_guess_g": 250.0,
+  "scene": "on a desk with measuring tools",
+  "out_of_domain": true,
+  "meta": {
+    "dataset": "ecustfd",
+    "sample_id": "orange012",
+    "image": "/home/sdnu/nutriagent/data/ecustfd/JPEGImages/orange012T(1).JPG",
+    "image_source": "top_view",
+    "width": 504,
+    "height": 378,
+    "model": "qwen3.8-27b",
+    "prompt_sha256": "bdc2f80bcb59614bf600495f23452886b642be58eb9e7c2dd21b223a0d78ad1b",
+    "finish_reason": "stop"
+  }
+}

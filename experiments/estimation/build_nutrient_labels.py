@@ -55,25 +55,31 @@ print(f"  Valid dishes: {len(dish_ids_ordered)}")
 print("[2/5] Loading nutrient metadata...")
 
 def parse_dish_metadata(filepath):
+    """Official columns: dish_id, calories, mass, fat, carb, protein."""
     dishes = {}
     with open(filepath, 'r') as f:
         reader = csv.reader(f)
-        next(reader)
         for row in reader:
+            if not row or not str(row[0]).startswith('dish_'):
+                continue
             dish_id = row[0]
-            total_mass = float(row[1])
+            calories = float(row[1])
+            total_mass = float(row[2])
+            fat_g = float(row[3])
+            carb_g = float(row[4])
+            protein_g = float(row[5])
             if total_mass <= 0:
                 continue
             dishes[dish_id] = {
                 'total_mass_g': total_mass,
-                'calories': float(row[2]),
-                'fat_g': float(row[3]),
-                'carb_g': float(row[4]),
-                'protein_g': float(row[5]),
-                'cal_g': float(row[2]) / total_mass,
-                'fat_density': float(row[3]) / total_mass,
-                'carb_density': float(row[4]) / total_mass,
-                'protein_density': float(row[5]) / total_mass,
+                'calories': calories,
+                'fat_g': fat_g,
+                'carb_g': carb_g,
+                'protein_g': protein_g,
+                'cal_g': calories / total_mass,
+                'fat_density': fat_g / total_mass,
+                'carb_density': carb_g / total_mass,
+                'protein_density': protein_g / total_mass,
             }
     return dishes
 
@@ -84,27 +90,32 @@ print(f"  Dishes with nutrient data: {len(nutri_meta)}")
 
 # ==================== Recreate train/test split ====================
 print("[3/5] Recreating train/test split...")
-unique_dishes = np.unique(dish_ids_ordered)
-train_dishes, test_dishes = train_test_split(unique_dishes, test_size=0.2, random_state=SEED)
-train_dishes = set(train_dishes)
-test_dishes = set(test_dishes)
-
-train_idx = [i for i, d in enumerate(dish_ids_ordered) if d in train_dishes]
-test_idx = [i for i, d in enumerate(dish_ids_ordered) if d in test_dishes]
-print(f"  Train dishes: {len(train_idx)}, Test dishes: {len(test_idx)}")
+cache_path = _P.n5k_cache / "deep_crops_cache.npz"
+if not cache_path.is_file():
+    cache_path = Path(BASE_DIR) / "deep_crops_cache.npz"
+data = np.load(cache_path)
+if "dish_id_train" in data.files:
+    train_ids = [str(v) for v in data["dish_id_train"].tolist()]
+    test_ids = [str(v) for v in data["dish_id_test"].tolist()]
+else:
+    unique_dishes = np.unique(dish_ids_ordered)
+    train_dishes, test_dishes = train_test_split(unique_dishes, test_size=0.2, random_state=SEED)
+    train_dishes = set(train_dishes)
+    test_dishes = set(test_dishes)
+    train_ids = [d for d in dish_ids_ordered if d in train_dishes]
+    test_ids = [d for d in dish_ids_ordered if d in test_dishes]
+print(f"  Train dishes: {len(train_ids)}, Test dishes: {len(test_ids)}")
 
 # ==================== Map crops to nutrients ====================
 print("[4/5] Mapping crops to nutrients...")
 
-data = np.load(os.path.join(BASE_DIR, 'deep_crops_cache.npz'))
 print(f"  X_train: {data['X_train'].shape}, y_train: {data['y_train'].shape}")
 print(f"  X_test: {data['X_test'].shape}, y_test: {data['y_test'].shape}")
 
-def build_labels(indices, density=False):
+def build_labels(dish_ids, density=False):
     labels = []
     missing = 0
-    for idx in indices:
-        dish_id = dish_ids_ordered[idx]
+    for dish_id in dish_ids:
         if dish_id in nutri_meta:
             n = nutri_meta[dish_id]
             if density:
@@ -119,12 +130,12 @@ def build_labels(indices, density=False):
     return np.array(labels, dtype=np.float32)
 
 # Absolute nutrients
-y_train_nutr = build_labels(train_idx)
-y_test_nutr = build_labels(test_idx)
+y_train_nutr = build_labels(train_ids)
+y_test_nutr = build_labels(test_ids)
 
 # Nutrient density
-y_train_density = build_labels(train_idx, density=True)
-y_test_density = build_labels(test_idx, density=True)
+y_train_density = build_labels(train_ids, density=True)
+y_test_density = build_labels(test_ids, density=True)
 
 # ==================== Save ====================
 print("[5/5] Saving...")

@@ -1,0 +1,19 @@
+{
+  "food_name": "Mixed meal with apple, meat, chicken, and sushi",
+  "form": "prepared",
+  "references": [],
+  "weight_guess_g": 450.0,
+  "scene": "White plate on a dark table",
+  "out_of_domain": true,
+  "meta": {
+    "dataset": "nvreal",
+    "sample_id": "dish_232_IMG_3147_jpeg.rf.795276e97e723592d075f4af8b058933.jpg",
+    "image": "/home/sdnu/nutriagent/data/nvreal/raw/nutritionverse-manual/nutritionverse-manual/images/dish_232_IMG_3147_jpeg.rf.795276e97e723592d075f4af8b058933.jpg",
+    "image_source": "official_val",
+    "width": 3024,
+    "height": 4032,
+    "model": "qwen3.8-27b",
+    "prompt_sha256": "bdc2f80bcb59614bf600495f23452886b642be58eb9e7c2dd21b223a0d78ad1b",
+    "finish_reason": "stop"
+  }
+}

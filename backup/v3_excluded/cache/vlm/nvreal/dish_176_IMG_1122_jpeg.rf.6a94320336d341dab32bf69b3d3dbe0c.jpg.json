@@ -1,0 +1,19 @@
+{
+  "food_name": "Assorted fried meat and tofu",
+  "form": "prepared",
+  "references": [],
+  "weight_guess_g": 250.0,
+  "scene": "White plate on a dark table",
+  "out_of_domain": true,
+  "meta": {
+    "dataset": "nvreal",
+    "sample_id": "dish_176_IMG_1122_jpeg.rf.6a94320336d341dab32bf69b3d3dbe0c.jpg",
+    "image": "/home/sdnu/nutriagent/data/nvreal/raw/nutritionverse-manual/nutritionverse-manual/images/dish_176_IMG_1122_jpeg.rf.6a94320336d341dab32bf69b3d3dbe0c.jpg",
+    "image_source": "official_val",
+    "width": 4032,
+    "height": 3024,
+    "model": "qwen3.8-27b",
+    "prompt_sha256": "bdc2f80bcb59614bf600495f23452886b642be58eb9e7c2dd21b223a0d78ad1b",
+    "finish_reason": "stop"
+  }
+}

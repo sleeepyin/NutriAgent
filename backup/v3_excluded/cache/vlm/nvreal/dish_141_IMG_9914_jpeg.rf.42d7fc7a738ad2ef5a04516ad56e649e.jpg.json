@@ -1,0 +1,19 @@
+{
+  "food_name": "Roast chicken and spring roll",
+  "form": "prepared",
+  "references": [],
+  "weight_guess_g": 250.0,
+  "scene": "White plate on a dark table",
+  "out_of_domain": true,
+  "meta": {
+    "dataset": "nvreal",
+    "sample_id": "dish_141_IMG_9914_jpeg.rf.42d7fc7a738ad2ef5a04516ad56e649e.jpg",
+    "image": "/home/sdnu/nutriagent/data/nvreal/raw/nutritionverse-manual/nutritionverse-manual/images/dish_141_IMG_9914_jpeg.rf.42d7fc7a738ad2ef5a04516ad56e649e.jpg",
+    "image_source": "official_val",
+    "width": 3024,
+    "height": 4032,
+    "model": "qwen3.8-27b",
+    "prompt_sha256": "bdc2f80bcb59614bf600495f23452886b642be58eb9e7c2dd21b223a0d78ad1b",
+    "finish_reason": "stop"
+  }
+}

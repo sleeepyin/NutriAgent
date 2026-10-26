@@ -1,0 +1,19 @@
+{
+  "food_name": "Fruit and nut snack plate",
+  "form": "prepared",
+  "references": [],
+  "weight_guess_g": 450.0,
+  "scene": "Red bowl of fruit and nuts on a table",
+  "out_of_domain": true,
+  "meta": {
+    "dataset": "n5k",
+    "sample_id": "dish_1558636980",
+    "image": "/var/tmp/nutri-vlm-images/n5k/dish_1558636980.jpg",
+    "image_source": "overhead",
+    "width": 640,
+    "height": 480,
+    "model": "qwen3.8-27b",
+    "prompt_sha256": "bdc2f80bcb59614bf600495f23452886b642be58eb9e7c2dd21b223a0d78ad1b",
+    "finish_reason": "stop"
+  }
+}

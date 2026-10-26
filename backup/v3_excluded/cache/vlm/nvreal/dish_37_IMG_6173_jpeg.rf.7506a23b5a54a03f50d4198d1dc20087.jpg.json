@@ -1,0 +1,19 @@
+{
+  "food_name": "Mixed meat and toast plate",
+  "form": "prepared",
+  "references": [],
+  "weight_guess_g": 350.0,
+  "scene": "White plate on a dark table",
+  "out_of_domain": false,
+  "meta": {
+    "dataset": "nvreal",
+    "sample_id": "dish_37_IMG_6173_jpeg.rf.7506a23b5a54a03f50d4198d1dc20087.jpg",
+    "image": "/home/sdnu/nutriagent/data/nvreal/raw/nutritionverse-manual/nutritionverse-manual/images/dish_37_IMG_6173_jpeg.rf.7506a23b5a54a03f50d4198d1dc20087.jpg",
+    "image_source": "official_val",
+    "width": 3024,
+    "height": 4032,
+    "model": "qwen3.8-27b",
+    "prompt_sha256": "bdc2f80bcb59614bf600495f23452886b642be58eb9e7c2dd21b223a0d78ad1b",
+    "finish_reason": "stop"
+  }
+}

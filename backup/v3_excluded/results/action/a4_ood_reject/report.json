@@ -1,0 +1,256 @@
+{
+  "n_cal": 349,
+  "n_test": 612,
+  "n_missing_vlm": 0,
+  "n_in_domain": 349,
+  "n_ood": 263,
+  "score_a": "absolute disagreement of the 3-channel ResNet and EfficientNet",
+  "score_b": "VLM out_of_domain",
+  "score_c": "max(disagreement / in-domain 95th percentile, out_of_domain)",
+  "disagreement_threshold_g": 81.34412231445287,
+  "split_q_g": 66.7996826171875,
+  "auroc": {
+    "disagreement": 0.8246156863172345,
+    "vlm_out_of_domain": 0.5142939631974026,
+    "or_score": 0.7266715330057633
+  },
+  "curves": {
+    "disagreement": [
+      {
+        "reject_rate": 0.0,
+        "n_kept": 612,
+        "wape": 0.31386186261984234,
+        "mae": 93.35544166689604,
+        "coverage": 0.6584967320261438,
+        "ood_fraction_kept": 0.4297385620915033
+      },
+      {
+        "reject_rate": 0.1,
+        "n_kept": 551,
+        "wape": 0.29315660565831514,
+        "mae": 82.01734400228234,
+        "coverage": 0.6987295825771325,
+        "ood_fraction_kept": 0.3720508166969147
+      },
+      {
+        "reject_rate": 0.2,
+        "n_kept": 490,
+        "wape": 0.2764439242785975,
+        "mae": 70.09489577157157,
+        "coverage": 0.7387755102040816,
+        "ood_fraction_kept": 0.3163265306122449
+      },
+      {
+        "reject_rate": 0.3,
+        "n_kept": 428,
+        "wape": 0.25975285863160524,
+        "mae": 60.39982242227715,
+        "coverage": 0.7850467289719626,
+        "ood_fraction_kept": 0.25934579439252337
+      },
+      {
+        "reject_rate": 0.4,
+        "n_kept": 367,
+        "wape": 0.22831929298717576,
+        "mae": 47.38962894824285,
+        "coverage": 0.8392370572207084,
+        "ood_fraction_kept": 0.21798365122615804
+      },
+      {
+        "reject_rate": 0.5,
+        "n_kept": 306,
+        "wape": 0.22023653389277206,
+        "mae": 41.399430281196544,
+        "coverage": 0.8627450980392157,
+        "ood_fraction_kept": 0.16993464052287582
+      },
+      {
+        "reject_rate": 0.6,
+        "n_kept": 245,
+        "wape": 0.2428735063732119,
+        "mae": 40.42902126701511,
+        "coverage": 0.8734693877551021,
+        "ood_fraction_kept": 0.1469387755102041
+      },
+      {
+        "reject_rate": 0.7,
+        "n_kept": 184,
+        "wape": 0.24926026685503905,
+        "mae": 38.79112902931545,
+        "coverage": 0.875,
+        "ood_fraction_kept": 0.14673913043478262
+      },
+      {
+        "reject_rate": 0.8,
+        "n_kept": 122,
+        "wape": 0.237802439273209,
+        "mae": 38.23356431429504,
+        "coverage": 0.8852459016393442,
+        "ood_fraction_kept": 0.16393442622950818
+      }
+    ],
+    "vlm_out_of_domain": [
+      {
+        "reject_rate": 0.0,
+        "n_kept": 612,
+        "wape": 0.31386186261984234,
+        "mae": 93.35544166689604,
+        "coverage": 0.6584967320261438,
+        "ood_fraction_kept": 0.4297385620915033
+      },
+      {
+        "reject_rate": 0.1,
+        "n_kept": 551,
+        "wape": 0.290960814983219,
+        "mae": 85.11105494836714,
+        "coverage": 0.6787658802177858,
+        "ood_fraction_kept": 0.4010889292196007
+      },
+      {
+        "reject_rate": 0.2,
+        "n_kept": 490,
+        "wape": 0.29335280511232964,
+        "mae": 85.82904398392658,
+        "coverage": 0.6693877551020408,
+        "ood_fraction_kept": 0.4163265306122449
+      },
+      {
+        "reject_rate": 0.3,
+        "n_kept": 428,
+        "wape": 0.3082707664114391,
+        "mae": 90.54733504535996,
+        "coverage": 0.6425233644859814,
+        "ood_fraction_kept": 0.4439252336448598
+      },
+      {
+        "reject_rate": 0.4,
+        "n_kept": 367,
+        "wape": 0.32894266553215873,
+        "mae": 100.2325050239667,
+        "coverage": 0.5994550408719346,
+        "ood_fraction_kept": 0.5177111716621253
+      },
+      {
+        "reject_rate": 0.5,
+        "n_kept": 306,
+        "wape": 0.3666948115492841,
+        "mae": 113.0174979477926,
+        "coverage": 0.545751633986928,
+        "ood_fraction_kept": 0.6209150326797386
+      },
+      {
+        "reject_rate": 0.6,
+        "n_kept": 245,
+        "wape": 0.37606257742375904,
+        "mae": 115.17799029447595,
+        "coverage": 0.5306122448979592,
+        "ood_fraction_kept": 0.636734693877551
+      },
+      {
+        "reject_rate": 0.7,
+        "n_kept": 184,
+        "wape": 0.33280716771325136,
+        "mae": 88.31327592808267,
+        "coverage": 0.625,
+        "ood_fraction_kept": 0.5163043478260869
+      },
+      {
+        "reject_rate": 0.8,
+        "n_kept": 122,
+        "wape": 0.37830406587722276,
+        "mae": 76.77091854908427,
+        "coverage": 0.6557377049180327,
+        "ood_fraction_kept": 0.4016393442622951
+      }
+    ],
+    "or_score": [
+      {
+        "reject_rate": 0.0,
+        "n_kept": 612,
+        "wape": 0.31386186261984234,
+        "mae": 93.35544166689604,
+        "coverage": 0.6584967320261438,
+        "ood_fraction_kept": 0.4297385620915033
+      },
+      {
+        "reject_rate": 0.1,
+        "n_kept": 551,
+        "wape": 0.29315660565831514,
+        "mae": 82.01734400228234,
+        "coverage": 0.6987295825771325,
+        "ood_fraction_kept": 0.3720508166969147
+      },
+      {
+        "reject_rate": 0.2,
+        "n_kept": 490,
+        "wape": 0.2764439242785975,
+        "mae": 70.09489577157157,
+        "coverage": 0.7387755102040816,
+        "ood_fraction_kept": 0.3163265306122449
+      },
+      {
+        "reject_rate": 0.3,
+        "n_kept": 428,
+        "wape": 0.26581661314043026,
+        "mae": 62.87680821106812,
+        "coverage": 0.7733644859813084,
+        "ood_fraction_kept": 0.2733644859813084
+      },
+      {
+        "reject_rate": 0.4,
+        "n_kept": 367,
+        "wape": 0.26649310977011004,
+        "mae": 63.07753941798405,
+        "coverage": 0.771117166212534,
+        "ood_fraction_kept": 0.2724795640326976
+      },
+      {
+        "reject_rate": 0.5,
+        "n_kept": 306,
+        "wape": 0.25923329125204136,
+        "mae": 57.90390672247394,
+        "coverage": 0.8006535947712419,
+        "ood_fraction_kept": 0.20588235294117646
+      },
+      {
+        "reject_rate": 0.6,
+        "n_kept": 245,
+        "wape": 0.24463009542892966,
+        "mae": 54.245974793726084,
+        "coverage": 0.8,
+        "ood_fraction_kept": 0.17959183673469387
+      },
+      {
+        "reject_rate": 0.7,
+        "n_kept": 184,
+        "wape": 0.2465460151325392,
+        "mae": 51.50131868279499,
+        "coverage": 0.7934782608695652,
+        "ood_fraction_kept": 0.16847826086956522
+      },
+      {
+        "reject_rate": 0.8,
+        "n_kept": 122,
+        "wape": 0.3142619040790609,
+        "mae": 62.61024459463651,
+        "coverage": 0.7377049180327869,
+        "ood_fraction_kept": 0.2540983606557377
+      }
+    ]
+  },
+  "always_3ch": {
+    "n": 612,
+    "mape": 0.4272597914476158,
+    "wape": 0.31386186261984234,
+    "mae": 93.35544166689604
+  },
+  "joint_when_flagged": {
+    "flag_rate": 0.8300653594771242,
+    "metrics": {
+      "n": 612,
+      "mape": 0.2832708200898723,
+      "wape": 0.21801855385546456,
+      "mae": 64.84769515118568
+    }
+  }
+}

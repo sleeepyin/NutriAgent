@@ -1,0 +1,255 @@
+2026-10-22 12:00:55 start pid=816743 gpu=1
+2026-10-22 12:00:55 start D1
+[*] 1 个物体类别内无同伴, LOO 用全局均值替代
+==============================================================================
+Phase 1 Oracle 误差预算 (MetaFood3D, n=625, 清洗后)
+==============================================================================
+
+[A] 全量物体 (对照: Nutrition5K 单目全 hold-out PMAE=22.0%)
+  Oracle-1: GT V × GT ρ (sanity)             MAPE=  0.00%  WAPE=  0.00%  MAE=   0.01g  log-bias= +0.00%  n=625
+  Oracle-2: GT V × LOO类别均值ρ                  MAPE= 25.03%  WAPE= 21.60%  MAE=  30.35g  log-bias= +3.19%  n=625
+  Oracle-2b: GT V × LOO类别中位ρ                 MAPE= 23.77%  WAPE= 20.37%  MAE=  28.63g  log-bias= +1.26%  n=625
+  Oracle-3: GT V × 全局均值ρ                     MAPE= 42.19%  WAPE= 35.47%  MAE=  49.85g  log-bias= +8.47%  n=625
+  Oracle-3b: GT V × 全局中位ρ                    MAPE= 43.56%  WAPE= 36.00%  MAE=  50.60g  log-bias=+11.81%  n=625
+
+[B] >=100g 子集 (对照: Nutrition5K 单目 18.4% 物理上限)
+  Oracle-2: GT V × LOO类别均值ρ                  MAPE= 23.41%  WAPE= 20.87%  MAE=  52.69g  log-bias= +3.20%  n=293
+  Oracle-2b: GT V × LOO类别中位ρ                 MAPE= 21.07%  WAPE= 19.52%  MAE=  49.29g  log-bias= +1.42%  n=293
+  Oracle-3: GT V × 全局均值ρ                     MAPE= 38.45%  WAPE= 32.34%  MAE=  81.65g  log-bias= +4.60%  n=293
+
+[C] Oracle-5 灵敏度: 体积误差 ε 对重量 MAPE 的影响 (LOO均值ρ)
+  ε=0% (交替±)  全量                             MAPE= 25.03%  WAPE= 21.60%  MAE=  30.35g  log-bias= +3.19%  n=625
+  ε=0% (交替±)  >=100g                         MAPE= 23.41%  WAPE= 20.87%  MAE=  52.69g  log-bias= +3.20%  n=293
+  ε=5% (交替±)  全量                             MAPE= 26.00%  WAPE= 22.62%  MAE=  31.79g  log-bias= +2.78%  n=625
+  ε=5% (交替±)  >=100g                         MAPE= 24.58%  WAPE= 21.91%  MAE=  55.32g  log-bias= +2.95%  n=293
+  ε=10% (交替±)  全量                            MAPE= 28.14%  WAPE= 23.23%  MAE=  32.65g  log-bias= +1.99%  n=625
+  ε=10% (交替±)  >=100g                        MAPE= 26.02%  WAPE= 22.25%  MAE=  56.19g  log-bias= +1.77%  n=293
+  ε=15% (交替±)  全量                            MAPE= 29.75%  WAPE= 26.03%  MAE=  36.58g  log-bias= +1.54%  n=625
+  ε=15% (交替±)  >=100g                        MAPE= 28.40%  WAPE= 25.28%  MAE=  63.83g  log-bias= +1.18%  n=293
+  ε=20% (交替±)  全量                            MAPE= 33.42%  WAPE= 28.87%  MAE=  40.57g  log-bias= +2.41%  n=625
+  ε=20% (交替±)  >=100g                        MAPE= 31.24%  WAPE= 27.75%  MAE=  70.05g  log-bias= +3.30%  n=293
+
+[D] 密度本身的离散度 (类别内 vs 全局, log 空间)
+  类别内 |log(ρ/ρ_LOO)| 均值: 21.78%  (密度查表的固有误差)
+  全局 |log(ρ/ρ_med)| 均值: 33.70%
+
+[saved] /home/sdnu/nutriagent/experiments/diagnosis/d1_mf3d_oracle/phase1_results.csv
+2026-10-22 12:00:55 done D1
+2026-10-22 12:00:55 start D4
+[data] 实例: 174 | 类别: 19 | 密度范围 0.16-1.46 g/ml
+[data] 图像样本: 2861 (每实例 T/S 多组) | 覆盖实例 146
+
+[E1 尺度歧义] mm/px 范围: 0.0836-8.3333 (变异 9867% → 没有定标时的尺度歧义)
+[E1] 顶视面积-体积 log-log r: 有定标 0.735 | 固定距离假设 0.585
+
+[E2 GT体积×LOO类别密度] 重量 MAPE: 7.9%  WAPE: 7.1%  MAE: 9.8g  (n=174)
+    全局密度 MAPE: 50.3%  WAPE: 24.1%
+    对照: MetaFood3D 同协议 25.0% | 单目上限 18.4%
+
+[E3 端到端: 硬币定标面积×LOO几何×LOO密度]
+    体积 MAPE: 13.9%
+    重量 MAPE: 12.9%  WAPE: 12.5%  MAE: 16.4g  (n=146)
+[E3 无硬币: 固定距离面积×同一 LOO 协议]
+    体积 MAPE: 27.7%
+    重量 MAPE: 26.9%  WAPE: 28.9%  MAE: 38.1g  (n=146)
+
+============================================================
+  [结论判定]
+  E2 (GT体积+LOO密度)  : 7.9%   ← 参照物路线的下界(体积完美)
+  E3 (定标几何+LOO密度): 12.9%   ← 端到端实际水平
+  E3 无硬币: 26.9%
+  单目上限 (Nutrition5K): 18.4%
+  ✓ E2 < 18.4%: 参照物路线在刚体域成立, 值得写进 future work 证据
+  注: ECUSTFD 全为刚体/天然食物 (MetaFood3D 分析中密度离散<15% 的子域)
+
+[save] /home/sdnu/nutriagent/experiments/diagnosis/d4_ecustfd_scale/reference_results.csv (2861 行)
+[save] /home/sdnu/nutriagent/results/diagnosis/d4_ecustfd/summary.json
+2026-10-22 12:01:05 done D4
+2026-10-22 12:01:05 start D5
+2026-10-22 12:01:10 D5 start device=cuda:0
+2026-10-22 12:01:35 crops 50/905 kept=49 elapsed=25s
+2026-10-22 12:02:00 crops 100/905 kept=99 elapsed=50s
+2026-10-22 12:02:23 crops 150/905 kept=144 elapsed=73s
+2026-10-22 12:02:47 crops 200/905 kept=193 elapsed=97s
+2026-10-22 12:03:10 crops 250/905 kept=242 elapsed=120s
+2026-10-22 12:03:31 crops 300/905 kept=288 elapsed=141s
+2026-10-22 12:03:53 crops 350/905 kept=335 elapsed=163s
+2026-10-22 12:04:17 crops 400/905 kept=385 elapsed=187s
+2026-10-22 12:04:41 crops 450/905 kept=435 elapsed=210s
+2026-10-22 12:05:05 crops 500/905 kept=485 elapsed=234s
+2026-10-22 12:05:29 crops 550/905 kept=534 elapsed=258s
+2026-10-22 12:05:52 crops 600/905 kept=583 elapsed=282s
+2026-10-22 12:06:17 crops 650/905 kept=632 elapsed=306s
+2026-10-22 12:06:41 crops 700/905 kept=681 elapsed=331s
+2026-10-22 12:07:06 crops 750/905 kept=730 elapsed=356s
+2026-10-22 12:07:32 crops 800/905 kept=779 elapsed=381s
+2026-10-22 12:07:56 crops 850/905 kept=826 elapsed=405s
+2026-10-22 12:08:30 wrote /home/sdnu/nutriagent/data/nvreal/cache/nvreal_dish_cache.npz n=880 skipped={'no_file': 16, 'no_meta': 0, 'empty_mask': 9}
+2026-10-22 12:08:30 NV images=880 val=263 train=617
+2026-10-22 12:08:52 n5k_test_3ch n=698 MAPE=17.5% WAPE=0.136 MAE=28.8g
+2026-10-22 12:08:52 nv_all_3ch n=880 MAPE=127.5% WAPE=0.538 MAE=224.4g
+2026-10-22 12:08:52 nv_val_3ch n=263 MAPE=76.4% WAPE=0.426 MAE=181.1g
+2026-10-22 12:08:52 nv_all_4ch_depth0 n=880 MAPE=128.3% WAPE=0.585 MAE=244.1g
+2026-10-22 12:08:52 nv_all_n5k_median n=880 MAPE=71.8% WAPE=0.647 MAE=270.1g
+2026-10-22 12:08:52   Split N5K held-out cov=92.0% width=129.9g n=349
+2026-10-22 12:08:52   Split NV-Real cov=24.2% width=133.4g n=880
+2026-10-22 12:08:52   Split NV-Real val cov=31.2% width=133.4g n=263
+2026-10-22 12:08:52   Normalized N5K held-out cov=92.0% width=156.7g n=349
+2026-10-22 12:08:52   Normalized NV-Real cov=46.5% width=328.2g n=880
+2026-10-22 12:08:52   Normalized NV-Real val cov=54.8% width=330.6g n=263
+2026-10-22 12:08:52   Mondrian N5K held-out cov=96.0% width=155.8g n=349
+2026-10-22 12:08:52   Mondrian NV-Real cov=42.7% width=313.9g n=880
+2026-10-22 12:08:52   Mondrian NV-Real val cov=54.0% width=316.2g n=263
+2026-10-22 12:08:57 train joint_resnet18_3ch.pth n=3408
+
+=======================================================
+Training: joint_resnet18_3ch.pth (IMAGENET pretrained, log-MSE)
+=======================================================
+Ep    TrLoss     ValLoss    ValPMAE    ValMAE     LR        
+------------------------------------------------------------
+5     0.1161     0.1337     30.17      59.2       9.94e-05  
+10    0.0459     0.0808     20.58      38.6       9.76e-05  
+15    0.0323     0.0893     24.24      39.9       9.46e-05  
+20    0.0232     0.0743     19.95      37.7       9.05e-05  
+25    0.0200     0.0735     20.69      36.5       8.55e-05  
+30    0.0178     0.0740     20.44      35.3       7.96e-05  
+35    0.0180     0.0723     19.76      36.5       7.30e-05  
+40    0.0165     0.0729     20.50      36.0       6.58e-05  
+45    0.0107     0.0723     19.90      35.8       5.82e-05  
+50    0.0124     0.0713     19.35      35.3       5.05e-05  
+55    0.0101     0.0747     20.09      36.8       4.28e-05  
+60    0.0080     0.0727     19.83      37.9       3.52e-05  
+65    0.0073     0.0684     19.32      34.1       2.80e-05  
+70    0.0074     0.0702     19.87      34.7       2.14e-05  
+75    0.0060     0.0706     19.59      35.3       1.55e-05  
+80    0.0058     0.0699     19.58      34.4       1.05e-05  
+85    0.0053     0.0695     19.39      34.3       6.40e-06  
+90    0.0055     0.0699     19.60      34.5       3.42e-06  
+95    0.0056     0.0702     19.69      34.7       1.61e-06  
+100   0.0058     0.0711     19.74      35.5       1.00e-06  
+  Best val: PMAE=19.32%, loss=0.0684
+2026-10-22 12:15:26 train joint_efficientnet_3ch.pth n=3408
+
+=======================================================
+Training: joint_efficientnet_3ch.pth (IMAGENET pretrained, log-MSE)
+=======================================================
+Ep    TrLoss     ValLoss    ValPMAE    ValMAE     LR        
+------------------------------------------------------------
+5     1.0281     0.7101     48.89      136.3      9.94e-05  
+10    0.2751     0.1411     25.32      51.8       9.76e-05  
+15    0.1159     0.0946     22.90      46.3       9.46e-05  
+20    0.1161     0.0844     22.05      43.9       9.05e-05  
+25    0.0841     0.1064     22.51      43.5       8.55e-05  
+30    0.0846     0.0771     20.51      41.1       7.96e-05  
+35    0.0592     0.0744     20.03      38.7       7.30e-05  
+40    0.0645     0.0696     20.02      39.0       6.58e-05  
+45    0.0394     0.0699     19.96      38.0       5.82e-05  
+50    0.0591     0.0692     19.38      37.5       5.05e-05  
+55    0.0480     0.0693     20.03      38.9       4.28e-05  
+60    0.0345     0.0685     19.13      37.4       3.52e-05  
+65    0.0375     0.0697     19.40      38.2       2.80e-05  
+70    0.0343     0.0714     19.21      38.5       2.14e-05  
+75    0.0316     0.0729     19.83      39.6       1.55e-05  
+80    0.0284     0.0738     19.62      40.6       1.05e-05  
+85    0.0291     0.0693     20.49      39.9       6.40e-06  
+90    0.0335     0.0682     19.65      38.3       3.42e-06  
+95    0.0282     0.0712     19.44      38.9       1.61e-06  
+100   0.0293     0.0693     19.45      38.5       1.00e-06  
+  Best val: PMAE=19.65%, loss=0.0682
+2026-10-22 12:26:36 joint nv_val n=263 MAPE=32.1% WAPE=0.245 MAE=104.1g
+2026-10-22 12:26:36 joint n5k_test n=698 MAPE=17.1% WAPE=0.128 MAE=27.1g
+2026-10-22 12:26:36 D5 complete /home/sdnu/nutriagent/results/diagnosis/d5_nvreal/summary.json
+2026-10-22 12:26:38 done D5
+2026-10-22 12:26:38 start D2
+[data] 12440 帧渲染图 | 622 物体 | 108 类别
+Traceback (most recent call last):
+  File "/home/sdnu/nutriagent/experiments/diagnosis/d2_mf3d_density/learned_density.py", line 117, in <module>
+    for x, y, _ in tr_loader:
+  File "/var/tmp/nutri-venv/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 741, in __next__
+    data = self._next_data()
+  File "/var/tmp/nutri-venv/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 1518, in _next_data
+    return self._process_data(data, worker_id)
+  File "/var/tmp/nutri-venv/lib/python3.10/site-packages/torch/utils/data/dataloader.py", line 1586, in _process_data
+    data.reraise()
+  File "/var/tmp/nutri-venv/lib/python3.10/site-packages/torch/_utils.py", line 785, in reraise
+    raise exception
+RuntimeError: Caught RuntimeError in DataLoader worker process 1.
+Original Traceback (most recent call last):
+  File "/var/tmp/nutri-venv/lib/python3.10/site-packages/torch/utils/data/_utils/worker.py", line 358, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+  File "/var/tmp/nutri-venv/lib/python3.10/site-packages/torch/utils/data/_utils/fetch.py", line 57, in fetch
+    return self.collate_fn(data)
+  File "/var/tmp/nutri-venv/lib/python3.10/site-packages/torch/utils/data/_utils/collate.py", line 401, in default_collate
+    return collate(batch, collate_fn_map=default_collate_fn_map)
+  File "/var/tmp/nutri-venv/lib/python3.10/site-packages/torch/utils/data/_utils/collate.py", line 214, in collate
+    return [
+  File "/var/tmp/nutri-venv/lib/python3.10/site-packages/torch/utils/data/_utils/collate.py", line 215, in <listcomp>
+    collate(samples, collate_fn_map=collate_fn_map)
+  File "/var/tmp/nutri-venv/lib/python3.10/site-packages/torch/utils/data/_utils/collate.py", line 155, in collate
+    return collate_fn_map[elem_type](batch, collate_fn_map=collate_fn_map)
+  File "/var/tmp/nutri-venv/lib/python3.10/site-packages/torch/utils/data/_utils/collate.py", line 273, in collate_tensor_fn
+    storage = elem._typed_storage()._new_shared(numel, device=elem.device)
+  File "/var/tmp/nutri-venv/lib/python3.10/site-packages/torch/storage.py", line 1210, in _new_shared
+    untyped_storage = torch.UntypedStorage._new_shared(
+  File "/var/tmp/nutri-venv/lib/python3.10/site-packages/torch/storage.py", line 414, in _new_shared
+    return cls._new_using_fd_cpu(size)
+RuntimeError: unable to allocate shared memory(shm) for file </torch_871016_2991865474_0>: Success (0)
+
+2026-10-22 12:26:50 FAILED D2 exit=1
+2026-10-22 12:26:50 other datasets finished
+2026-10-22 16:41:04 start D2 pid=1403276 gpu=1 workers=0
+[data] 12440 帧渲染图 | 622 物体 | 108 类别
+  fold0 ep05 loss=0.1027 test-density-MAPE=42.7%
+  fold0 ep10 loss=0.0430 test-density-MAPE=34.4%
+  fold0 ep15 loss=0.0185 test-density-MAPE=33.5%
+  fold0 ep20 loss=0.0107 test-density-MAPE=33.6%
+  fold0 ep25 loss=0.0074 test-density-MAPE=34.0%
+  fold0 ep30 loss=0.0065 test-density-MAPE=33.8%
+[fold0] 16914s | 密度MAPE: CNN 30.5% vs 类别均值 25.2% vs 全局 39.9%
+         重量MAPE(GT V×ρ): CNN 30.5% vs 类别 25.2% vs 全局 39.9%
+  fold1 ep05 loss=0.1080 test-density-MAPE=38.9%
+  fold1 ep10 loss=0.0500 test-density-MAPE=37.8%
+  fold1 ep15 loss=0.0210 test-density-MAPE=32.9%
+  fold1 ep20 loss=0.0105 test-density-MAPE=37.4%
+  fold1 ep25 loss=0.0076 test-density-MAPE=34.5%
+  fold1 ep30 loss=0.0065 test-density-MAPE=35.0%
+[fold1] 16511s | 密度MAPE: CNN 29.3% vs 类别均值 25.4% vs 全局 44.9%
+         重量MAPE(GT V×ρ): CNN 29.3% vs 类别 25.4% vs 全局 44.9%
+  fold2 ep05 loss=0.1096 test-density-MAPE=36.1%
+  fold2 ep10 loss=0.0507 test-density-MAPE=37.7%
+  fold2 ep15 loss=0.0197 test-density-MAPE=30.9%
+  fold2 ep20 loss=0.0109 test-density-MAPE=31.3%
+  fold2 ep25 loss=0.0072 test-density-MAPE=31.1%
+  fold2 ep30 loss=0.0065 test-density-MAPE=31.1%
+[fold2] 16499s | 密度MAPE: CNN 27.3% vs 类别均值 21.3% vs 全局 36.3%
+         重量MAPE(GT V×ρ): CNN 27.3% vs 类别 21.3% vs 全局 36.3%
+  fold3 ep05 loss=0.1083 test-density-MAPE=35.1%
+  fold3 ep10 loss=0.0480 test-density-MAPE=39.0%
+  fold3 ep15 loss=0.0198 test-density-MAPE=35.0%
+  fold3 ep20 loss=0.0115 test-density-MAPE=35.7%
+  fold3 ep25 loss=0.0079 test-density-MAPE=39.1%
+  fold3 ep30 loss=0.0067 test-density-MAPE=37.1%
+[fold3] 17668s | 密度MAPE: CNN 32.0% vs 类别均值 32.1% vs 全局 47.2%
+         重量MAPE(GT V×ρ): CNN 32.0% vs 类别 32.1% vs 全局 47.2%
+  fold4 ep05 loss=0.1053 test-density-MAPE=48.2%
+  fold4 ep10 loss=0.0444 test-density-MAPE=37.5%
+  fold4 ep15 loss=0.0182 test-density-MAPE=39.2%
+  fold4 ep20 loss=0.0108 test-density-MAPE=35.5%
+  fold4 ep25 loss=0.0075 test-density-MAPE=34.1%
+  fold4 ep30 loss=0.0068 test-density-MAPE=34.6%
+[fold4] 16469s | 密度MAPE: CNN 31.2% vs 类别均值 26.8% vs 全局 43.3%
+         重量MAPE(GT V×ρ): CNN 31.2% vs 类别 26.8% vs 全局 43.3%
+
+======================================================================
+Phase 2' 汇总 (5-fold 物体级 CV)
+======================================================================
+  密度 MAPE — CNN                     30.1% ±  1.6
+  密度 MAPE — 类别均值                    26.2% ±  3.5
+  重量 MAPE — GT V × CNN ρ            30.1% ±  1.6
+  重量 MAPE — GT V × 类别均值ρ            26.2% ±  3.5
+  重量 MAPE — GT V × 全局均值ρ            42.3% ±  3.8
+
+[GATE 2] CNN ✗ 输类别均值 → 学习式密度路线证伪, 范式全面闭合
+参照: 单目上限 18.4% (>=100g) / 22.0% (全量) | Oracle-2 查表 25.0%
+[saved] /home/sdnu/nutriagent/weights/metafood3d/mf3d_density_resnet18_fold{0-4}.pth + /home/sdnu/nutriagent/results/diagnosis/d2_density/density_pred_cache.npy
+2026-10-23 16:02:12 done D2

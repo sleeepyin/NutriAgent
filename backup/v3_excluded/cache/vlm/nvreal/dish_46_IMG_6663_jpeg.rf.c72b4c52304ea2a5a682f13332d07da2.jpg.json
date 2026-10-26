@@ -1,0 +1,19 @@
+{
+  "food_name": "Steak, chicken, and fries",
+  "form": "prepared",
+  "references": [],
+  "weight_guess_g": 350.0,
+  "scene": "Meal on a white plate on a dark table",
+  "out_of_domain": true,
+  "meta": {
+    "dataset": "nvreal",
+    "sample_id": "dish_46_IMG_6663_jpeg.rf.c72b4c52304ea2a5a682f13332d07da2.jpg",
+    "image": "/home/sdnu/nutriagent/data/nvreal/raw/nutritionverse-manual/nutritionverse-manual/images/dish_46_IMG_6663_jpeg.rf.c72b4c52304ea2a5a682f13332d07da2.jpg",
+    "image_source": "official_val",
+    "width": 3024,
+    "height": 4032,
+    "model": "qwen3.8-27b",
+    "prompt_sha256": "bdc2f80bcb59614bf600495f23452886b642be58eb9e7c2dd21b223a0d78ad1b",
+    "finish_reason": "stop"
+  }
+}

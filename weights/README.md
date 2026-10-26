@@ -1,29 +1,21 @@
 # 权重
 
-目录是空的。训练脚本会把新权写到对应子目录；旧校验和在 `backup/sha256sum.txt`。
+v4.0 还要加载的检查点。公开骨干和已经不用的检查点在 `backup/v3_excluded/weights/`。
 
 `weights/nutrition5k/`
 
 ```
 deep_weight_resnet18_final.pth
 deep_weight_efficientnet_final.pth
-deep_weight_resnet18.pth
-deep_weight_efficientnet.pth
 density_resnet18_final.pth
 density_efficientnet_final.pth
-density_resnet18.pth
-density_efficientnet.pth
-density_resnet18_v4.pth
-density_efficientnet_v4.pth
 density_resnet18_cqr.pth
 density_efficientnet_cqr.pth
-nutrient_conformal_calibrator.pkl
+weight_cqr_resnet18.pth
 ```
 
-`weights/nvreal/`：三通道重量权重 `deep_weight_resnet18_3ch.pth`、`deep_weight_efficientnet_3ch.pth`，以及联合训练和 NV-only 权重。
+四通道 `deep_weight_*_final.pth` 是 C1 的中心，也是 C3，以及 N5K 密度臂（深度保留）的重量。`density_*_final.pth` 是每克营养素。`density_*_cqr.pth` 只给 C3 的分位数回归对照。`weight_cqr_resnet18.pth` 是 C1 里那一行 CQR。
 
-`weights/metafood3d/`：D2 的 `mf3d_density_resnet18_fold{0-4}.pth`。
+`weights/nvreal/`：`deep_weight_resnet18_3ch.pth`、`deep_weight_efficientnet_3ch.pth`。这是在 Nutrition5K 上训的三通道集成。N5K 的尺度臂和 NV-Real 外部验证用它，不把深度填进第四通道。联合训练和 NV-only 的检查点已备份。
 
-`weights/dinov2/dinov2_vits14_pretrain.pth`：D6 的骨干。
-
-`weights/sam3d/checkpoints/`：SAM 3D 权重大约 13 GB。代码在 `third_party/sam3d/`。
+`weights/metafood3d/`：`mf3d_density_resnet18_fold{0-4}.pth`。MF3D 各重量臂用对应折的折外密度，不重训。

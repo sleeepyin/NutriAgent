@@ -1,6 +1,6 @@
 # NutritionVerse-Real
 
-原图和 `nutritionverse-real.zip` 已经在这里。`raw/` 里是手动标注图像、COCO 标注和 `nutritionverse_dish_metadata3.csv`。
+`raw/` 里是手动标注图像、COCO 标注和 `nutritionverse_dish_metadata3.csv`。压缩包在 `backup/v3_excluded/data/nutritionverse-real.zip`，和 `raw/` 是同一套 892 个文件。
 
 还缺这些派生文件，重做 D5 时放到对应位置：
 

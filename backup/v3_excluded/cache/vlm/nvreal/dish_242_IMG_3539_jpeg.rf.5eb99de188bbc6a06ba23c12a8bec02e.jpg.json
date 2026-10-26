@@ -1,0 +1,19 @@
+{
+  "food_name": "Meat patty with french fries",
+  "form": "prepared",
+  "references": [],
+  "weight_guess_g": 150.0,
+  "scene": "White plate on a black surface",
+  "out_of_domain": false,
+  "meta": {
+    "dataset": "nvreal",
+    "sample_id": "dish_242_IMG_3539_jpeg.rf.5eb99de188bbc6a06ba23c12a8bec02e.jpg",
+    "image": "/home/sdnu/nutriagent/data/nvreal/raw/nutritionverse-manual/nutritionverse-manual/images/dish_242_IMG_3539_jpeg.rf.5eb99de188bbc6a06ba23c12a8bec02e.jpg",
+    "image_source": "official_val",
+    "width": 4032,
+    "height": 3024,
+    "model": "qwen3.8-27b",
+    "prompt_sha256": "bdc2f80bcb59614bf600495f23452886b642be58eb9e7c2dd21b223a0d78ad1b",
+    "finish_reason": "stop"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "food_name": "apple and baby carrots",
+  "form": "prepared",
+  "references": [],
+  "weight_guess_g": 350.0,
+  "scene": "white plate on a dark table",
+  "out_of_domain": false,
+  "meta": {
+    "dataset": "nvreal",
+    "sample_id": "dish_229_IMG_3055_jpeg.rf.498edb92c91abb121b338d269d83503a.jpg",
+    "image": "/home/sdnu/nutriagent/data/nvreal/raw/nutritionverse-manual/nutritionverse-manual/images/dish_229_IMG_3055_jpeg.rf.498edb92c91abb121b338d269d83503a.jpg",
+    "image_source": "official_val",
+    "width": 4032,
+    "height": 3024,
+    "model": "qwen3.8-27b",
+    "prompt_sha256": "bdc2f80bcb59614bf600495f23452886b642be58eb9e7c2dd21b223a0d78ad1b",
+    "finish_reason": "stop"
+  }
+}

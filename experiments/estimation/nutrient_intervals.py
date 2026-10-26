@@ -71,10 +71,10 @@ def _boot():
 _boot()
 from mmcfa.paths import Paths, n5k
 
-OUT_DIR = str(Paths.resolve().results_estimation / "e5")
-os.makedirs(OUT_DIR, exist_ok=True)
+_paths = Paths.resolve()
+OUT_DIR = str(_paths.root / "backup" / "v3_excluded" / "results" / "estimation" / "e5")
 CACHE_PATH = n5k('nutrient_conformal_cache.npz')
-DEPLOY_PATH = n5k('nutrient_conformal_calibrator.pkl')
+DEPLOY_PATH = str(_paths.expect("calibrator"))
 DEVICE = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 # ==================== 模型定义 (与 test_100_samples_final.py 一致) ====================
@@ -629,6 +629,7 @@ def run_experiment():
         rank.append((m, min(covs)*100, np.mean(rw)*100, np.mean(nw), valid))
         print(f"{m:<14s} {min(covs)*100:>8.1f} {np.mean(rw)*100:>12.1f} {np.mean(nw):>13.2f} "
               f"{'✓' if valid else '✗'}")
+    os.makedirs(OUT_DIR, exist_ok=True)
     joblib.dump({'metrics': metrics, 'rank': rank,
                  'config': {'alpha': ALPHA, 'n_trials': N_TRIALS, 'tau': TAU,
                             'hybrid_alpha': HYBRID_ALPHA, 'bins': BINS[:-1],

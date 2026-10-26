@@ -1,0 +1,56 @@
+{
+  "n_manifest": 88,
+  "n_scored": 88,
+  "n_missing": 0,
+  "subset": "ECUSTFD hold-out, first top view, D4 leave-one-out geometry",
+  "annotated_coin": {
+    "name": "annotated",
+    "detection_rate_iou50": 1.0,
+    "n": 88,
+    "size_rel_error_on_hits": 0.0,
+    "n_size": 88,
+    "end_to_end": {
+      "n": 88,
+      "mape": 0.13433938664131437,
+      "wape": 0.1347811911481551,
+      "mae": 16.570122168109776
+    }
+  },
+  "vlm_coin": {
+    "name": "vlm",
+    "detection_rate_iou50": 1.0,
+    "n": 88,
+    "size_rel_error_on_hits": 0.03617021648297435,
+    "n_size": 88,
+    "end_to_end": {
+      "n": 88,
+      "mape": 0.1379782438012809,
+      "wape": 0.14095238635668622,
+      "mae": 17.328814517224057
+    }
+  },
+  "hough_coin": {
+    "name": "hough",
+    "detection_rate_iou50": 0.7727272727272727,
+    "n": 88,
+    "size_rel_error_on_hits": 0.21811200510860584,
+    "n_size": 86,
+    "end_to_end": {
+      "n": 88,
+      "mape": 0.331191601164903,
+      "wape": 0.30609147404562326,
+      "mae": 37.631164084145325
+    }
+  },
+  "no_coin": {
+    "end_to_end": {
+      "n": 88,
+      "mape": 0.2668457007643731,
+      "wape": 0.2937995641436272,
+      "mae": 36.11998550633038
+    }
+  },
+  "d4_full_set_coin_mape_pct": 12.884480925585517,
+  "hough_note": "",
+  "rule": "Food area and peer k, rho stay on the annotated top views. Only the test coin diameter changes. Hough keeps circles whose radius is between 12 px and 12% of the short side, and uses the strongest circle."
+}

@@ -1,0 +1,19 @@
+{
+  "food_name": "Green vegetable piece",
+  "form": "prepared",
+  "references": [],
+  "weight_guess_g": 10.0,
+  "scene": "Isolated object on black background",
+  "out_of_domain": false,
+  "meta": {
+    "dataset": "mf3d",
+    "sample_id": "new_bell_pepper_5",
+    "image": "/home/sdnu/nutriagent/data/metafood3d/data/Processed/Processed/Blender_render_images/Bell Pepper/new_bell_pepper_5/new_bell_pepper_5/Original/new_bell_pepper_5_000.png",
+    "image_source": "frame_000",
+    "width": 1024,
+    "height": 1024,
+    "model": "qwen3.8-27b",
+    "prompt_sha256": "bdc2f80bcb59614bf600495f23452886b642be58eb9e7c2dd21b223a0d78ad1b",
+    "finish_reason": "stop"
+  }
+}

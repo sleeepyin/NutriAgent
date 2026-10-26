@@ -1,0 +1,19 @@
+{
+  "food_name": "Mixed plate with roasted chicken, spring roll, and granola bar",
+  "form": "prepared",
+  "references": [],
+  "weight_guess_g": 350.0,
+  "scene": "Plate of food on a black tablecloth",
+  "out_of_domain": true,
+  "meta": {
+    "dataset": "nvreal",
+    "sample_id": "dish_143_IMG_9983_jpeg.rf.508befabfc380de12ee96e3b9bb7b3b2.jpg",
+    "image": "/home/sdnu/nutriagent/data/nvreal/raw/nutritionverse-manual/nutritionverse-manual/images/dish_143_IMG_9983_jpeg.rf.508befabfc380de12ee96e3b9bb7b3b2.jpg",
+    "image_source": "official_val",
+    "width": 3024,
+    "height": 4032,
+    "model": "qwen3.8-27b",
+    "prompt_sha256": "bdc2f80bcb59614bf600495f23452886b642be58eb9e7c2dd21b223a0d78ad1b",
+    "finish_reason": "stop"
+  }
+}

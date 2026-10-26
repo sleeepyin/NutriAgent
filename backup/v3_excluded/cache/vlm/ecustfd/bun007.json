@@ -1,0 +1,31 @@
+{
+  "food_name": "Steamed bun",
+  "form": "prepared",
+  "references": [
+    {
+      "object": "coin",
+      "bbox": [
+        195.84,
+        253.98,
+        257.04,
+        315.18
+      ],
+      "size_mm": 25.0,
+      "conf": 0.9
+    }
+  ],
+  "weight_guess_g": 100.0,
+  "scene": "On a wooden table",
+  "out_of_domain": true,
+  "meta": {
+    "dataset": "ecustfd",
+    "sample_id": "bun007",
+    "image": "/home/sdnu/nutriagent/data/ecustfd/JPEGImages/bun007T(1).JPG",
+    "image_source": "top_view",
+    "width": 816,
+    "height": 612,
+    "model": "qwen3.8-27b",
+    "prompt_sha256": "bdc2f80bcb59614bf600495f23452886b642be58eb9e7c2dd21b223a0d78ad1b",
+    "finish_reason": "stop"
+  }
+}

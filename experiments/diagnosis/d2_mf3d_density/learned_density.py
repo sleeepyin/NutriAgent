@@ -106,10 +106,11 @@ for k in range(K):
     model = model.to(DEVICE)
     opt = torch.optim.AdamW(model.parameters(), lr=1e-4, weight_decay=1e-4)
     sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, T_max=30)
+    # /dev/shm is 64MB, so worker processes cannot allocate a batch.
     tr_loader = DataLoader(RenderDS(train_items, train_tf), batch_size=64,
-                           shuffle=True, num_workers=8, pin_memory=True)
+                           shuffle=True, num_workers=0, pin_memory=True)
     te_loader = DataLoader(RenderDS(test_items, test_tf), batch_size=128,
-                           shuffle=False, num_workers=8, pin_memory=True)
+                           shuffle=False, num_workers=0, pin_memory=True)
 
     best_state, best_mape = None, 1e9
     for ep in range(30):
@@ -131,13 +132,18 @@ for k in range(K):
             print(f"  fold{k} ep{ep+1:02d} loss={tot/len(train_items):.4f} test-density-MAPE={m_:.1f}%")
 
     model.load_state_dict(best_state); model.eval()
-    # 最终预测: 逐物体聚合(对多视角取中位)
-    obj_preds = defaultdict(list); obj_truths = {}
+    # 最终预测: 逐物体聚合(对多视角取中位)。shuffle=False，按 batch 顺序对齐 test_items。
+    obj_preds = defaultdict(list)
+    offset = 0
     with torch.no_grad():
-        for x, y, d in te_loader:
+        for x, y, _d in te_loader:
             out = torch.exp(model(x.to(DEVICE))).squeeze(1).cpu().tolist()
-            for xi, di, oi in zip(out, d, [(s[1], s[2]) for s in test_items]):
-                obj_preds[oi].append(xi); obj_truths[oi] = di
+            batch = test_items[offset:offset + len(out)]
+            offset += len(out)
+            for xi, item in zip(out, batch):
+                obj_preds[(item[1], item[2])].append(xi)
+    if offset != len(test_items):
+        raise RuntimeError(f"fold{k} 预测条数 {offset} != 测试帧 {len(test_items)}")
 
     # ---- 评估: 密度 MAPE + 重量组合 MAPE (GT V × ρ) ----
     cnn_d, cat_d, glob_d, truth_d, gt_v, gt_w = [], [], [], [], [], []
@@ -175,6 +181,6 @@ for key, label in [("dens_mape_cnn", "密度 MAPE — CNN"), ("dens_mape_cat", "
 
 cnn_win = np.mean([r["w_mape_cnn"] for r in all_results]) < np.mean([r["w_mape_cat"] for r in all_results])
 print(f"\n[GATE 2] CNN {'✓ 赢' if cnn_win else '✗ 输'}类别均值 → 学习式密度路线{'可行, 进入体积测量+整合' if cnn_win else '证伪, 范式全面闭合'}")
-print(f"参照: 单目上限 18.4% (>=100g) / 22.0% (全量) | Oracle-2 查表 25.0%")
+print("参照: results/estimation/r0/e1_point.json | D1 Oracle-2 查表见 phase1_results.csv")
 np.save(CACHE_OUT, np.array(all_results, dtype=object), allow_pickle=True)
 print(f"[saved] {WEIGHT_DIR}/mf3d_density_resnet18_fold{{0-4}}.pth + {CACHE_OUT}")

@@ -1,0 +1,51 @@
+{
+  "steps": [
+    "global",
+    "stratified",
+    "shrinkage",
+    "recalibrated"
+  ],
+  "s2m": "six candidates, winkler search, then per-bin recalibration",
+  "summary": {
+    "global": {
+      "coverage_mean": 0.8945558739255013,
+      "coverage_std": 0.026702110800392066,
+      "width_mean": 122.54596485931162,
+      "width_std": 8.36216848433687,
+      "winkler_mean": 191.34831567679083,
+      "winkler_std": 9.474281110171392
+    },
+    "stratified": {
+      "coverage_mean": 0.8885386819484241,
+      "coverage_std": 0.03105061935244664,
+      "width_mean": 113.90211486816406,
+      "width_std": 6.858320642632764,
+      "winkler_mean": 171.37022094726564,
+      "winkler_std": 11.079408497100728
+    },
+    "shrinkage": {
+      "coverage_mean": 0.9083094555873925,
+      "coverage_std": 0.027283394187365254,
+      "width_mean": 116.87504043579102,
+      "width_std": 6.206827659235324,
+      "winkler_mean": 174.94684600830078,
+      "winkler_std": 10.366012302998719
+    },
+    "recalibrated": {
+      "coverage_mean": 0.8925501432664756,
+      "coverage_std": 0.03027110600141448,
+      "width_mean": 114.77432098388672,
+      "width_std": 6.800566578881106,
+      "winkler_mean": 173.49066772460938,
+      "winkler_std": 11.013121330468868
+    },
+    "s2m": {
+      "coverage_mean": 0.8942693409742122,
+      "coverage_std": 0.026346146981983034,
+      "width_mean": 117.68405609130859,
+      "width_std": 6.902062413372597,
+      "winkler_mean": 164.60190124511718,
+      "winkler_std": 7.104370877288053
+    }
+  }
+}

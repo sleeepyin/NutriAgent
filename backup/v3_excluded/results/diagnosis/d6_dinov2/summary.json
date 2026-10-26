@@ -1,0 +1,13 @@
+{
+  "n_test": 698,
+  "mape_raw_pct": 26.85653865337372,
+  "mae_raw_g": 57.77820587158203,
+  "mape_calibrated_pct": 19.366811215877533,
+  "baseline_4ch_ensemble_mape_pct": 17.49205303493449,
+  "baseline_3ch_ensemble_mape_pct": 17.49139304602402,
+  "log1p": true,
+  "epochs": 60,
+  "batch_size": 32,
+  "rgb": "imagenet-normalized from cache [0,1]",
+  "verdict": "\u5bb9\u91cf\u975e\u74f6\u9888 \u2192 DINOv2 \u672a\u8d85\u8fc7\u672c\u6b21 4 \u901a\u9053\u96c6\u6210"
+}

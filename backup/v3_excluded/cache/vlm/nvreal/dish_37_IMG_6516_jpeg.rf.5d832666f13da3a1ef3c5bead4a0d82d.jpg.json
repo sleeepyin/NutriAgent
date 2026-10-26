@@ -1,0 +1,19 @@
+{
+  "food_name": "Roasted chicken, toast, and cucumber",
+  "form": "prepared",
+  "references": [],
+  "weight_guess_g": 350.0,
+  "scene": "Meal on a white plate on a dark table",
+  "out_of_domain": true,
+  "meta": {
+    "dataset": "nvreal",
+    "sample_id": "dish_37_IMG_6516_jpeg.rf.5d832666f13da3a1ef3c5bead4a0d82d.jpg",
+    "image": "/home/sdnu/nutriagent/data/nvreal/raw/nutritionverse-manual/nutritionverse-manual/images/dish_37_IMG_6516_jpeg.rf.5d832666f13da3a1ef3c5bead4a0d82d.jpg",
+    "image_source": "official_val",
+    "width": 4032,
+    "height": 3024,
+    "model": "qwen3.8-27b",
+    "prompt_sha256": "bdc2f80bcb59614bf600495f23452886b642be58eb9e7c2dd21b223a0d78ad1b",
+    "finish_reason": "stop"
+  }
+}

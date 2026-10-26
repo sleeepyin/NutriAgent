@@ -1,0 +1,19 @@
+{
+  "food_name": "Mixed meat platter",
+  "form": "prepared",
+  "references": [],
+  "weight_guess_g": 450.0,
+  "scene": "Plate of assorted meats on a dark table",
+  "out_of_domain": true,
+  "meta": {
+    "dataset": "nvreal",
+    "sample_id": "dish_191_IMG_1647_jpeg.rf.78dc584189d18a7649c9b6653a8f5334.jpg",
+    "image": "/home/sdnu/nutriagent/data/nvreal/raw/nutritionverse-manual/nutritionverse-manual/images/dish_191_IMG_1647_jpeg.rf.78dc584189d18a7649c9b6653a8f5334.jpg",
+    "image_source": "official_val",
+    "width": 3024,
+    "height": 4032,
+    "model": "qwen3.8-27b",
+    "prompt_sha256": "bdc2f80bcb59614bf600495f23452886b642be58eb9e7c2dd21b223a0d78ad1b",
+    "finish_reason": "stop"
+  }
+}

@@ -1,1 +1,1 @@
-"""Experiment entry points, one directory per chapter of the paper."""
+"""Experiment entry points for the v4.0 protocol."""

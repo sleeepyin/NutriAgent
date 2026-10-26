@@ -1,0 +1,31 @@
+{
+  "food_name": "Nougat",
+  "form": "rigid",
+  "references": [
+    {
+      "object": "coin",
+      "bbox": [
+        104.45,
+        183.6,
+        169.73,
+        244.8
+      ],
+      "size_mm": 25.0,
+      "conf": 0.95
+    }
+  ],
+  "weight_guess_g": 40.0,
+  "scene": "White plate on a wooden table with a coin for scale",
+  "out_of_domain": false,
+  "meta": {
+    "dataset": "ecustfd",
+    "sample_id": "sachima003",
+    "image": "/home/sdnu/nutriagent/data/ecustfd/JPEGImages/sachima003T(1).JPG",
+    "image_source": "top_view",
+    "width": 816,
+    "height": 612,
+    "model": "qwen3.8-27b",
+    "prompt_sha256": "bdc2f80bcb59614bf600495f23452886b642be58eb9e7c2dd21b223a0d78ad1b",
+    "finish_reason": "stop"
+  }
+}

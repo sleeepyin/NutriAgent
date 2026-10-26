@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 MM-CFA with Deep Ensemble Base Predictor
-Base predictor: ResNet18 + EfficientNet-B0 ensemble (earlier MAPE=31.24%;
-strict hold-out MAPE of the v2 weights is 22.0%).
+Base predictor: ResNet18 + EfficientNet-B0 ensemble.
+Current point estimates are results/estimation/r0/e1_point.json.
 Conformal methods: Split, Normalized, Mondrian, AEC, MTC, MLNS (deep features)
 
 MAPE = mean(|e|/|y|). Do not report it as PMAE or as WAPE.
@@ -119,10 +119,10 @@ def extract_features(model, X, bs=BATCH_SIZE):
 def load_models():
     rn = WeightResNet().to(DEVICE)
     rn.load_state_dict(torch.load(
-        n5k('deep_weight_resnet18.pth'), map_location=DEVICE, weights_only=True))
+        n5k('deep_weight_resnet18_final.pth'), map_location=DEVICE, weights_only=True))
     eff = WeightEffNet().to(DEVICE)
     eff.load_state_dict(torch.load(
-        n5k('deep_weight_efficientnet.pth'), map_location=DEVICE, weights_only=True))
+        n5k('deep_weight_efficientnet_final.pth'), map_location=DEVICE, weights_only=True))
     return rn, eff
 
 def predict_ensemble(rn, eff, X):

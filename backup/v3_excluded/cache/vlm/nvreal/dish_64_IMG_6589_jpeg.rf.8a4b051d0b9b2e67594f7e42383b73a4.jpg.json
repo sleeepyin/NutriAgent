@@ -1,0 +1,19 @@
+{
+  "food_name": "Breakfast plate with toast, muffins, and pear",
+  "form": "prepared",
+  "references": [],
+  "weight_guess_g": 450.0,
+  "scene": "Breakfast on a white plate on a dark table",
+  "out_of_domain": false,
+  "meta": {
+    "dataset": "nvreal",
+    "sample_id": "dish_64_IMG_6589_jpeg.rf.8a4b051d0b9b2e67594f7e42383b73a4.jpg",
+    "image": "/home/sdnu/nutriagent/data/nvreal/raw/nutritionverse-manual/nutritionverse-manual/images/dish_64_IMG_6589_jpeg.rf.8a4b051d0b9b2e67594f7e42383b73a4.jpg",
+    "image_source": "official_val",
+    "width": 3024,
+    "height": 4032,
+    "model": "qwen3.8-27b",
+    "prompt_sha256": "bdc2f80bcb59614bf600495f23452886b642be58eb9e7c2dd21b223a0d78ad1b",
+    "finish_reason": "stop"
+  }
+}

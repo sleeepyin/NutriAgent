@@ -1,0 +1,19 @@
+{
+  "food_name": "Mixed meat and vegetable plate",
+  "form": "prepared",
+  "references": [],
+  "weight_guess_g": 350.0,
+  "scene": "White plate on a dark tablecloth",
+  "out_of_domain": true,
+  "meta": {
+    "dataset": "nvreal",
+    "sample_id": "dish_223_IMG_2846_jpeg.rf.a6425a42d64d8f85563ef44b3597c4d9.jpg",
+    "image": "/home/sdnu/nutriagent/data/nvreal/raw/nutritionverse-manual/nutritionverse-manual/images/dish_223_IMG_2846_jpeg.rf.a6425a42d64d8f85563ef44b3597c4d9.jpg",
+    "image_source": "official_val",
+    "width": 4032,
+    "height": 3024,
+    "model": "qwen3.8-27b",
+    "prompt_sha256": "bdc2f80bcb59614bf600495f23452886b642be58eb9e7c2dd21b223a0d78ad1b",
+    "finish_reason": "stop"
+  }
+}

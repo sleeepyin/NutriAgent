@@ -1,0 +1,31 @@
+{
+  "food_name": "Baked pastry",
+  "form": "prepared",
+  "references": [
+    {
+      "object": "utensil",
+      "bbox": [
+        6.4,
+        312.0,
+        115.2,
+        475.2
+      ],
+      "size_mm": 150.0,
+      "conf": 0.8
+    }
+  ],
+  "weight_guess_g": 120.0,
+  "scene": "Overhead view of a plate on a glass table",
+  "out_of_domain": false,
+  "meta": {
+    "dataset": "n5k",
+    "sample_id": "dish_1564160161",
+    "image": "/var/tmp/nutri-vlm-images/n5k/dish_1564160161.jpg",
+    "image_source": "overhead",
+    "width": 640,
+    "height": 480,
+    "model": "qwen3.8-27b",
+    "prompt_sha256": "bdc2f80bcb59614bf600495f23452886b642be58eb9e7c2dd21b223a0d78ad1b",
+    "finish_reason": "stop"
+  }
+}

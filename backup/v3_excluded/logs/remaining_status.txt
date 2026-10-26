@@ -1,0 +1,12 @@
+2026-10-23 16:51:11 start pid=695374 gpu=1
+2026-10-23 16:51:11 SAM 3D skipped: third_party/sam3d and weights/sam3d/checkpoints are empty
+2026-10-23 16:51:11 start A1
+2026-10-23 16:51:15 done A1
+2026-10-23 16:51:15 start A2
+2026-10-23 16:51:17 done A2
+2026-10-23 16:51:17 start A5
+2026-10-23 16:52:42 done A5
+2026-10-23 16:52:42 start weighted-conformal
+2026-10-23 16:52:54 done weighted-conformal
+2026-10-23 16:52:54 start D5-remaining
+2026-10-23 16:57:00 stopped: v2.0 drops ingredient-level NV-Real and does not retrain DINOv2

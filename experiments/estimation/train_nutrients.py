@@ -11,7 +11,8 @@ Init s_i = ½·log(MSE_i(first batch)) so every nutrient starts with equal
 effective gradient contribution, then weights adapt during training.
 
 Everything else matches v2 exactly (architecture, epochs, LR, WD, no aug).
-Saves models as density_resnet18_v4.pth / density_efficientnet_v4.pth.
+Standalone runs write density_*_v4.pth under backup/v3_excluded/weights/nutrition5k/.
+The checkpoints used by C3 stay at density_*_final.pth.
 """
 import os, sys, warnings
 from pathlib import Path
@@ -41,8 +42,7 @@ def _boot():
 _boot()
 from mmcfa.paths import Paths, n5k
 
-OUT_DIR = str(Paths.resolve().results_estimation / "e5")
-os.makedirs(OUT_DIR, exist_ok=True)
+OUT_DIR = str(Paths.resolve().root / "backup" / "v3_excluded" / "results" / "estimation" / "e5")
 
 BATCH, EPOCHS, LR, WD = 32, 100, 1e-4, 1e-4
 NAMES = ['Calories', 'Fat', 'Carbs', 'Protein']
@@ -165,10 +165,10 @@ def main():
     # weight prediction (frozen ensemble)
     from test_100_samples import WeightResNet, WeightEffNet
     w_rn = WeightResNet().to(DEVICE)
-    w_rn.load_state_dict(torch.load(n5k('deep_weight_resnet18.pth'),
+    w_rn.load_state_dict(torch.load(n5k('deep_weight_resnet18_final.pth'),
                                     map_location=DEVICE, weights_only=True)); w_rn.eval()
     w_eff = WeightEffNet().to(DEVICE)
-    w_eff.load_state_dict(torch.load(n5k('deep_weight_efficientnet.pth'),
+    w_eff.load_state_dict(torch.load(n5k('deep_weight_efficientnet_final.pth'),
                                      map_location=DEVICE, weights_only=True)); w_eff.eval()
     w_pred = np.maximum((predict(w_rn, X_test) + predict(w_eff, X_test)) / 2, 0)
     W = w_pred.reshape(-1, 1)
@@ -177,25 +177,27 @@ def main():
     y_train_log = np.log1p(y_train_d)
     loader = DataLoader(TensorDataset(torch.tensor(X_train, dtype=torch.float32),
                                       torch.tensor(y_train_log, dtype=torch.float32)),
-                        batch_size=BATCH, shuffle=True, num_workers=2, pin_memory=True)
+                        batch_size=BATCH, shuffle=True, num_workers=0, pin_memory=True)
 
     print("\n[1/3] Training DensityResNet18 (GBML)...")
     rn = train_gbml(DensityResNet(), loader, "RN18")
-    torch.save(rn.state_dict(), n5k('density_resnet18_v4.pth'))
+    v4_dir = Paths.resolve().root / "backup" / "v3_excluded" / "weights" / "nutrition5k"
+    v4_dir.mkdir(parents=True, exist_ok=True)
+    torch.save(rn.state_dict(), v4_dir / "density_resnet18_v4.pth")
 
     print("\n[2/3] Training DensityEffNet (GBML)...")
     eff = train_gbml(DensityEffNet(), loader, "Eff")
-    torch.save(eff.state_dict(), n5k('density_efficientnet_v4.pth'))
+    torch.save(eff.state_dict(), v4_dir / "density_efficientnet_v4.pth")
 
     # ---- evaluate v4 vs v2 ----
     print("\n[3/3] Evaluation — v4 vs v2 (ensemble, weight × density)")
     d_v4 = np.maximum(np.expm1((predict(rn, X_test) + predict(eff, X_test)) / 2), 0)
 
     d_rn2 = DensityResNet().to(DEVICE)
-    d_rn2.load_state_dict(torch.load(n5k('density_resnet18.pth'),
+    d_rn2.load_state_dict(torch.load(n5k('density_resnet18_final.pth'),
                                      map_location=DEVICE, weights_only=True)); d_rn2.eval()
     d_eff2 = DensityEffNet().to(DEVICE)
-    d_eff2.load_state_dict(torch.load(n5k('density_efficientnet.pth'),
+    d_eff2.load_state_dict(torch.load(n5k('density_efficientnet_final.pth'),
                                       map_location=DEVICE, weights_only=True)); d_eff2.eval()
     d_v2 = np.maximum(np.expm1((predict(d_rn2, X_test) + predict(d_eff2, X_test)) / 2), 0)
 
@@ -214,6 +216,7 @@ def main():
         print(f"{name:<10s} {p2:>8.1f}% {p4:>8.1f}% {p4-p2:>+7.1f}% | "
               f"{dm2:>10.4f} {dm4:>10.4f} | {r2:>7.3f} {r4:>7.3f}")
 
+    os.makedirs(OUT_DIR, exist_ok=True)
     np.savez(os.path.join(OUT_DIR, 'nutrient_v4_results.npz'),
              y_test_n=y_test_n, d_v2=d_v2, d_v4=d_v4, w_pred=w_pred)
     print(f"\nSaved: {OUT_DIR}/nutrient_v4_results.npz")

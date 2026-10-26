@@ -3,6 +3,8 @@
 Scripts should call `n5k()` or `Paths.resolve()` instead of hard-coding a
 machine path. A missing file stays missing: nothing here downloads data or
 creates weight files.
+
+Assets that v4.0 does not use resolve under ``backup/v3_excluded``.
 """
 from __future__ import annotations
 
@@ -72,15 +74,16 @@ class Paths:
     @classmethod
     def resolve(cls) -> "Paths":
         root = repo_root()
+        excluded = root / "backup" / "v3_excluded"
         data_n5k = root / "data" / "nutrition5k"
         n5k_cache = data_n5k / "cache"
         data_mf3d = root / "data" / "metafood3d"
         data_ecustfd = root / "data" / "ecustfd"
         data_nvreal = root / "data" / "nvreal"
         weights_n5k = root / "weights" / "nutrition5k"
-        weights_dinov2 = root / "weights" / "dinov2"
+        weights_dinov2 = excluded / "weights" / "dinov2"
         d1 = root / "experiments" / "diagnosis" / "d1_mf3d_oracle"
-        d3 = root / "experiments" / "diagnosis" / "d3_mf3d_sam3d"
+        d3 = excluded / "experiments" / "diagnosis" / "d3_mf3d_sam3d"
         derived = data_nvreal / "derived"
         paths = cls(
             root=root,
@@ -93,18 +96,18 @@ class Paths:
             weights_n5k=weights_n5k,
             weights_nvreal=root / "weights" / "nvreal",
             weights_mf3d=root / "weights" / "metafood3d",
-            weights_sam3d=root / "weights" / "sam3d",
+            weights_sam3d=excluded / "weights" / "sam3d",
             weights_dinov2=weights_dinov2,
-            dinov2_hub=root / "third_party" / "dinov2",
-            sam3d_code=_env_path("SAM3D_CODE", root / "third_party" / "sam3d"),
+            dinov2_hub=excluded / "third_party" / "dinov2",
+            sam3d_code=_env_path("SAM3D_CODE", excluded / "third_party" / "sam3d"),
             d1=d1,
             d3=d3,
             d4_csv=root / "experiments" / "diagnosis" / "d4_ecustfd_scale" / "reference_results.csv",
-            results_action=root / "results" / "action",
+            results_action=excluded / "results" / "action",
             results_estimation=root / "results" / "estimation",
             results_diagnosis=root / "results" / "diagnosis",
-            results_appendix=root / "results" / "appendix",
-            vlm_cache=root / "cache" / "vlm",
+            results_appendix=excluded / "results" / "appendix",
+            vlm_cache=excluded / "cache" / "vlm",
         )
         paths.extras = {
             "deep_crops": n5k_cache / "deep_crops_cache.npz",
@@ -114,7 +117,9 @@ class Paths:
             "nutrient_cache": n5k_cache / "nutrient_conformal_cache.npz",
             "cqr_cache": n5k_cache / "cqr_pred_cache.npz",
             "features_cache": n5k_cache / "features_cache_v3.pkl",
-            "calibrator": weights_n5k / "nutrient_conformal_calibrator.pkl",
+            "calibrator": excluded / "weights" / "nutrition5k" / "nutrient_conformal_calibrator.pkl",
+            "results_v3": root / "results" / "v3",
+            "vlm_cache_v3": root / "cache" / "vlm_v3",
             "w_rn4": weights_n5k / "deep_weight_resnet18_final.pth",
             "w_eff4": weights_n5k / "deep_weight_efficientnet_final.pth",
             "w_rn3": paths.weights_nvreal / "deep_weight_resnet18_3ch.pth",

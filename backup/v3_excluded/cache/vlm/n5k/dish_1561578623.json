@@ -1,0 +1,19 @@
+{
+  "food_name": "Mashed potatoes, roast potatoes, and meat with gravy",
+  "form": "prepared",
+  "references": [],
+  "weight_guess_g": 250.0,
+  "scene": "A meal on a white plate on a glass table, with a person's shoe visible in the background",
+  "out_of_domain": true,
+  "meta": {
+    "dataset": "n5k",
+    "sample_id": "dish_1561578623",
+    "image": "/var/tmp/nutri-vlm-images/n5k/dish_1561578623.jpg",
+    "image_source": "overhead",
+    "width": 640,
+    "height": 480,
+    "model": "qwen3.8-27b",
+    "prompt_sha256": "bdc2f80bcb59614bf600495f23452886b642be58eb9e7c2dd21b223a0d78ad1b",
+    "finish_reason": "stop"
+  }
+}

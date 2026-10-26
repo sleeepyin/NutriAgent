@@ -1,0 +1,31 @@
+{
+  "food_name": "toast",
+  "form": "prepared",
+  "references": [
+    {
+      "object": "coin",
+      "bbox": [
+        553.25,
+        149.94,
+        618.53,
+        215.42
+      ],
+      "size_mm": 25.0,
+      "conf": 0.95
+    }
+  ],
+  "weight_guess_g": 35.0,
+  "scene": "slice of toast on a white plate on a wooden table with a coin for scale",
+  "out_of_domain": true,
+  "meta": {
+    "dataset": "ecustfd",
+    "sample_id": "bread006",
+    "image": "/home/sdnu/nutriagent/data/ecustfd/JPEGImages/bread006T(1).JPG",
+    "image_source": "top_view",
+    "width": 816,
+    "height": 612,
+    "model": "qwen3.8-27b",
+    "prompt_sha256": "bdc2f80bcb59614bf600495f23452886b642be58eb9e7c2dd21b223a0d78ad1b",
+    "finish_reason": "stop"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "food_name": "Fried chicken wing",
+  "form": "prepared",
+  "references": [],
+  "weight_guess_g": 80.0,
+  "scene": "Single food item on a white plate",
+  "out_of_domain": false,
+  "meta": {
+    "dataset": "nvreal",
+    "sample_id": "dish_40_IMG_6569_jpeg.rf.36fc7605dcb426ddb276cc0d38ade0a2.jpg",
+    "image": "/home/sdnu/nutriagent/data/nvreal/raw/nutritionverse-manual/nutritionverse-manual/images/dish_40_IMG_6569_jpeg.rf.36fc7605dcb426ddb276cc0d38ade0a2.jpg",
+    "image_source": "official_val",
+    "width": 3024,
+    "height": 4032,
+    "model": "qwen3.8-27b",
+    "prompt_sha256": "bdc2f80bcb59614bf600495f23452886b642be58eb9e7c2dd21b223a0d78ad1b",
+    "finish_reason": "stop"
+  }
+}

@@ -1,5 +1,5 @@
 # D5 NV-Real 域偏移
 
-要回答的问题：零样本误差、冻结共形的覆盖、联合训练能否把误差拉回来。
+v4.0 不把域偏移列为实验。这里的汇总留在 `results/diagnosis/d5_nvreal/summary.json`，不写入 `docs/实验结果汇总_v4.0.md` 的 W、N、X 表。
 
-脚本原先不在这个仓库里，这里先不补写。原图在 `data/nvreal/`。权重放到 `weights/nvreal/`。逐图预测和阶段结果放到 `data/nvreal/derived/`。
+外部验证的无 VLM 重量仍用 `weights/nvreal/deep_weight_*_3ch.pth`。联合训练和 NV-only 的检查点在 `backup/v3_excluded/weights/nvreal/`，v4.0 不加载它们。

@@ -3,7 +3,7 @@
 ECUSTFD 参照物实验: 硬币定标消除尺度歧义后, 重量估计还剩多少误差?
 
 论证链定位:
-  - Nutrition5K 单目上限 18.4% (尺度歧义, R2=0.39)
+  - Nutrition5K 对照用 results/estimation/r0/e1_point.json，不用重跑前的数字
   - MetaFood3D: 密度离散 21.8% 是主导 (蓝莓悖论), 但刚体类 <15%
   - 本实验: 刚体类(ECUSTFD 全是) + 硬币参照物(25.0mm 一元硬币)
            → 参照物路线的实际上界测试
@@ -13,9 +13,9 @@ ECUSTFD 参照物实验: 硬币定标消除尺度歧义后, 重量估计还剩�
       对比: 有硬币定标 vs 无定标(假设固定拍摄距离) 的体积误差
   E2 (密度查表 + LOO): GT 体积 × LOO 类别均值密度 → 重量 MAPE (MetaFood3D 同款协议)
   E3 (全链路上界):     硬币定标体积估计(简单几何) × LOO 密度 → 端到端重量误差
-      对比单目 18.4% → 参照物路线值不值得, 一锤定音
+      和 R0 的 4 通道集成比，看参照物路线是否低于本次单目点估计
 """
-import glob, os, re, sys
+import glob, json, os, re, sys
 from pathlib import Path
 import numpy as np
 import pandas as pd
@@ -112,54 +112,99 @@ print(f"\n[E1 尺度歧义] mm/px 范围: {S['mmpp'].min():.4f}-{S['mmpp'].max()
       f"(变异 {100*(S['mmpp'].max()/S['mmpp'].min()-1):.0f}% → 没有定标时的尺度歧义)")
 print(f"[E1] 顶视面积-体积 log-log r: 有定标 {r_cal:.3f} | 固定距离假设 {r_fix:.3f}")
 
+def point_errors(pred, truth):
+    pred = np.asarray(pred, dtype=float)
+    truth = np.asarray(truth, dtype=float)
+    abs_err = np.abs(pred - truth)
+    return {
+        "mape": float(100 * np.mean(abs_err / truth)),
+        "wape": float(100 * np.sum(abs_err) / np.sum(np.abs(truth))),
+        "mae": float(np.mean(abs_err)),
+        "n": int(len(truth)),
+    }
+
 # ---------- E2: LOO 密度查表 (MetaFood3D 同款协议) ----------
-errs, errs_global = [], []
+e2_pred, e2g_pred = [], []
 for _, g in GT.iterrows():
     same = GT[GT["cat"] == g["cat"]]
     loo = same[same["inst"] != g["inst"]]
     rho_hat = loo["rho"].mean() if len(loo) else GT["rho"].mean()
-    errs.append(abs(g["vol_ml"] * rho_hat - g["wt_g"]) / g["wt_g"])
-    errs_global.append(abs(g["vol_ml"] * GT["rho"].mean() - g["wt_g"]) / g["wt_g"])
-e2 = 100 * np.mean(errs)
-e2g = 100 * np.mean(errs_global)
-print(f"\n[E2 GT体积×LOO类别密度] 重量 MAPE: {e2:.1f}%  (全局密度: {e2g:.1f}%)")
-print(f"    对照: MetaFood3D 同协议 25.0% | 单目上限 18.4%")
+    e2_pred.append(g["vol_ml"] * rho_hat)
+    e2g_pred.append(g["vol_ml"] * GT["rho"].mean())
+e2_block = point_errors(e2_pred, GT["wt_g"])
+e2g_block = point_errors(e2g_pred, GT["wt_g"])
+e2 = e2_block["mape"]
+print(f"\n[E2 GT体积×LOO类别密度] 重量 MAPE: {e2_block['mape']:.1f}%  "
+      f"WAPE: {e2_block['wape']:.1f}%  MAE: {e2_block['mae']:.1f}g  (n={e2_block['n']})")
+print(f"    全局密度 MAPE: {e2g_block['mape']:.1f}%  WAPE: {e2g_block['wape']:.1f}%")
+print("    对照: D1 Oracle-2 见 phase1_results.csv | Nutrition5K 见 results/estimation/r0/e1_point.json")
 
-# ---------- E3: 端到端 (定标面积 → 体积 → LOO 密度) ----------
-# 体积估计: 顶视定标面积 × 类别 LOO 高度先验 (height = vol / area 的类内均值)
-# 即 "面积已知 + 高度假设类内恒定" —— 最简单的几何基线, 上界由 E2 界定
-rows = []
-for inst, t in T.iterrows():
-    g = GT[GT["inst"] == inst].iloc[0]
-    same = GT[GT["cat"] == g["cat"]]
-    # LOO 面积→体积比例 (用同类其他实例的 顶视面积/体积)
-    peers = [i for i in T.index if i != inst and GT.set_index("inst").loc[i, "cat"] == g["cat"]]
-    if len(peers) < 1:
-        continue
-    k_hat = np.median([T.loc[p, "food_mm2_cal"] / GT.set_index("inst").loc[p, "vol_ml"] for p in peers])
-    vol_hat = t["food_mm2_cal"] / k_hat
-    loo_rho = same[same["inst"] != inst]["rho"].mean()
-    w_hat = vol_hat * loo_rho
-    rows.append(dict(inst=inst, cat=g["cat"], wt_gt=g["wt_g"], wt_hat=w_hat,
-                     vol_hat=vol_hat, vol_gt=g["vol_ml"]))
-E3 = pd.DataFrame(rows)
-E3["err"] = abs(E3["wt_hat"] - E3["wt_gt"]) / E3["wt_gt"]
-e3 = 100 * E3["err"].mean()
+# ---------- E3: 端到端 (面积 → 体积 → LOO 密度) ----------
+# 体积估计: 顶视面积 / k，k 为同类其他实例「面积/体积」的中位数
+# 有硬币用定标面积；无硬币用全局中位 mm/px，同一套留一协议
+def end_to_end(area_col):
+    rows = []
+    gt_by_inst = GT.set_index("inst")
+    for inst, t in T.iterrows():
+        g = gt_by_inst.loc[inst]
+        peers = [i for i in T.index if i != inst and gt_by_inst.loc[i, "cat"] == g["cat"]]
+        if len(peers) < 1:
+            continue
+        k_hat = np.median([T.loc[p, area_col] / gt_by_inst.loc[p, "vol_ml"] for p in peers])
+        vol_hat = t[area_col] / k_hat
+        loo_rho = GT[(GT["cat"] == g["cat"]) & (GT["inst"] != inst)]["rho"].mean()
+        rows.append(dict(inst=inst, cat=g["cat"], wt_gt=g["wt_g"], wt_hat=vol_hat * loo_rho,
+                         vol_hat=vol_hat, vol_gt=g["vol_ml"]))
+    return pd.DataFrame(rows)
+
+E3 = end_to_end("food_mm2_cal")
+E3_fix = end_to_end("food_mm2_fix")
+e3_block = point_errors(E3["wt_hat"], E3["wt_gt"])
+e3_fix_block = point_errors(E3_fix["wt_hat"], E3_fix["wt_gt"])
 vol_mape = 100 * (abs(E3["vol_hat"] - E3["vol_gt"]) / E3["vol_gt"]).mean()
+vol_mape_fix = 100 * (abs(E3_fix["vol_hat"] - E3_fix["vol_gt"]) / E3_fix["vol_gt"]).mean()
+e3 = e3_block["mape"]
 print(f"\n[E3 端到端: 硬币定标面积×LOO几何×LOO密度]")
 print(f"    体积 MAPE: {vol_mape:.1f}%")
-print(f"    重量 MAPE: {e3:.1f}%  (n={len(E3)})")
+print(f"    重量 MAPE: {e3_block['mape']:.1f}%  WAPE: {e3_block['wape']:.1f}%  MAE: {e3_block['mae']:.1f}g  (n={e3_block['n']})")
+print(f"[E3 无硬币: 固定距离面积×同一 LOO 协议]")
+print(f"    体积 MAPE: {vol_mape_fix:.1f}%")
+print(f"    重量 MAPE: {e3_fix_block['mape']:.1f}%  WAPE: {e3_fix_block['wape']:.1f}%  MAE: {e3_fix_block['mae']:.1f}g  (n={e3_fix_block['n']})")
 print(f"\n{'='*60}")
 print(f"  [结论判定]")
 print(f"  E2 (GT体积+LOO密度)  : {e2:.1f}%   ← 参照物路线的下界(体积完美)")
 print(f"  E3 (定标几何+LOO密度): {e3:.1f}%   ← 端到端实际水平")
-print(f"  单目上限 (Nutrition5K): 18.4%")
-if e2 < 18.4:
-    print(f"  ✓ E2 < 18.4%: 参照物路线在刚体域成立, 值得写进 future work 证据")
+print(f"  E3 无硬币: {e3_fix_block['mape']:.1f}%")
+e1_path = _P.results_estimation / "r0" / "e1_point.json"
+if e1_path.is_file():
+    e1 = json.loads(e1_path.read_text(encoding="utf-8"))
+    mono = float(e1["4ch_ensemble"]["mape_pct"])
+    mono100 = float(e1["4ch_ensemble"]["ge_100g"]["mape_pct"])
+    print(f"  R0 4通道集成 MAPE: {mono:.1f}% | ≥100g {mono100:.1f}%")
+    if e2 < mono100:
+        print(f"  E2 {e2:.1f}% < R0 ≥100g {mono100:.1f}%: 真值体积上的密度查表低于本次单目点估计")
+    else:
+        print(f"  E2 {e2:.1f}% >= R0 ≥100g {mono100:.1f}%")
 else:
-    print(f"  ✗ E2 >= 18.4%: 即使刚体+参照物, 密度查表仍不够")
+    print("  没有 R0 点估计文件，不做跨数据集门槛比较")
 print(f"  注: ECUSTFD 全为刚体/天然食物 (MetaFood3D 分析中密度离散<15% 的子域)")
 
 # ---------- 保存 ----------
 S.to_csv(CSV, index=False)
+summary = {
+    "e1_mmpp_min": float(S["mmpp"].min()),
+    "e1_mmpp_max": float(S["mmpp"].max()),
+    "e1_loglog_r_cal": float(r_cal),
+    "e1_loglog_r_fix": float(r_fix),
+    "e2_loo": e2_block,
+    "e2_global": e2g_block,
+    "e3_coin": {**e3_block, "volume_mape": float(vol_mape)},
+    "e3_no_coin": {**e3_fix_block, "volume_mape": float(vol_mape_fix)},
+    "n_images": int(len(S)),
+    "n_instances_top": int(T.shape[0]),
+}
+out = _P.results_diagnosis / "d4_ecustfd" / "summary.json"
+out.parent.mkdir(parents=True, exist_ok=True)
+out.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
 print(f"\n[save] {CSV} ({len(S)} 行)")
+print(f"[save] {out}")

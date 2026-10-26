@@ -41,8 +41,7 @@ from mmcfa.paths import Paths, n5k
 
 DEVICE = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 _P = Paths.resolve()
-OUT_DIR = str(_P.results_estimation / "e1_weight_4ch")
-os.makedirs(OUT_DIR, exist_ok=True)
+OUT_DIR = str(_P.root / "backup" / "v3_excluded" / "results" / "estimation" / "e1_weight_4ch")
 
 BATCH = 32
 EPOCHS = 100
@@ -65,27 +64,36 @@ def augment(x):
 
 # ====================== Models ======================
 class WeightNet(nn.Module):
-    def __init__(self, backbone='resnet18', dropout=0.3):
+    def __init__(self, backbone='resnet18', dropout=0.3, in_channels=4, pretrained=True):
         super().__init__()
+        weights = 'IMAGENET1K_V1' if pretrained else None
         if backbone == 'resnet18':
-            self.backbone = models.resnet18(weights='IMAGENET1K_V1')
-            old = self.backbone.conv1
-            new = nn.Conv2d(4, 64, kernel_size=7, stride=2, padding=3, bias=False)
-            new.weight.data[:, :3] = old.weight.data
-            new.weight.data[:, 3] = old.weight.data.mean(dim=1)
-            self.backbone.conv1 = new
+            self.backbone = models.resnet18(weights=weights)
+            if in_channels != 3:
+                old = self.backbone.conv1
+                new = nn.Conv2d(in_channels, 64, kernel_size=7, stride=2, padding=3, bias=False)
+                if pretrained:
+                    new.weight.data[:, :3] = old.weight.data
+                    extra = old.weight.data.mean(dim=1, keepdim=True)
+                    for c in range(3, in_channels):
+                        new.weight.data[:, c:c + 1] = extra
+                self.backbone.conv1 = new
             nf = self.backbone.fc.in_features
             self.backbone.fc = nn.Sequential(
                 nn.Dropout(dropout), nn.Linear(nf, 256), nn.ReLU(),
                 nn.Dropout(dropout * 0.5), nn.Linear(256, 64), nn.ReLU(),
                 nn.Linear(64, 1))
         elif backbone == 'efficientnet_b0':
-            self.backbone = models.efficientnet_b0(weights='IMAGENET1K_V1')
-            old = self.backbone.features[0][0]
-            new = nn.Conv2d(4, 32, kernel_size=3, stride=2, padding=1, bias=False)
-            new.weight.data[:, :3] = old.weight.data
-            new.weight.data[:, 3] = old.weight.data.mean(dim=1)
-            self.backbone.features[0][0] = new
+            self.backbone = models.efficientnet_b0(weights=weights)
+            if in_channels != 3:
+                old = self.backbone.features[0][0]
+                new = nn.Conv2d(in_channels, 32, kernel_size=3, stride=2, padding=1, bias=False)
+                if pretrained:
+                    new.weight.data[:, :3] = old.weight.data
+                    extra = old.weight.data.mean(dim=1, keepdim=True)
+                    for c in range(3, in_channels):
+                        new.weight.data[:, c:c + 1] = extra
+                self.backbone.features[0][0] = new
             nf = self.backbone.classifier[1].in_features
             self.backbone.classifier = nn.Sequential(
                 nn.Dropout(dropout), nn.Linear(nf, 128), nn.ReLU(),
@@ -227,9 +235,9 @@ def main():
     tr_ds = AugDS(Xtr, ytr, aug=True)
     vl_ds = AugDS(Xv, yv, aug=False)
     te_ds = AugDS(X_test, y_test, aug=False)
-    tr_ld = DataLoader(tr_ds, BATCH, shuffle=True, num_workers=2, pin_memory=True)
-    vl_ld = DataLoader(vl_ds, BATCH * 2, shuffle=False, num_workers=2, pin_memory=True)
-    te_ld = DataLoader(te_ds, BATCH * 2, shuffle=False, num_workers=2, pin_memory=True)
+    tr_ld = DataLoader(tr_ds, BATCH, shuffle=True, num_workers=0, pin_memory=True)
+    vl_ld = DataLoader(vl_ds, BATCH * 2, shuffle=False, num_workers=0, pin_memory=True)
+    te_ld = DataLoader(te_ds, BATCH * 2, shuffle=False, num_workers=0, pin_memory=True)
 
     # Train ResNet18
     rn = train_model('ResNet18', WeightNet('resnet18', 0.3), tr_ld, vl_ld)
@@ -286,6 +294,7 @@ def main():
     print(f"  Old baseline: 31.24%")
     print(f"  Improvement:  {31.24 - best_pmae:.2f}%")
 
+    os.makedirs(OUT_DIR, exist_ok=True)
     torch.save(rn.state_dict(), os.path.join(OUT_DIR, 'rn18_v2.pth'))
     torch.save(eff.state_dict(), os.path.join(OUT_DIR, 'eff_v2.pth'))
     np.savez(os.path.join(OUT_DIR, 'preds_v2.npz'),

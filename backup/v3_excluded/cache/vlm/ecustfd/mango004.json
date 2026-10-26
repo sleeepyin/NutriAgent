@@ -1,0 +1,31 @@
+{
+  "food_name": "Mango",
+  "form": "rigid",
+  "references": [
+    {
+      "object": "coin",
+      "bbox": [
+        93.84,
+        269.28,
+        163.2,
+        336.6
+      ],
+      "size_mm": 25.0,
+      "conf": 0.9
+    }
+  ],
+  "weight_guess_g": 150.0,
+  "scene": "Overhead view of a fruit on a white plate with a coin for scale on a wooden table",
+  "out_of_domain": false,
+  "meta": {
+    "dataset": "ecustfd",
+    "sample_id": "mango004",
+    "image": "/home/sdnu/nutriagent/data/ecustfd/JPEGImages/mango004T(1).JPG",
+    "image_source": "top_view",
+    "width": 816,
+    "height": 612,
+    "model": "qwen3.8-27b",
+    "prompt_sha256": "bdc2f80bcb59614bf600495f23452886b642be58eb9e7c2dd21b223a0d78ad1b",
+    "finish_reason": "stop"
+  }
+}

@@ -1,0 +1,109 @@
+2026-10-19 10:38:38 metadata dishes with mass=5006 ingredient_fallback=238
+2026-10-19 10:48:38 already running
+2026-10-19 10:49:05 start pid=4152653 gpu=1
+2026-10-19 10:49:05 install torch into /var/tmp/nutri-venv
+2026-10-19 10:49:06 metadata dishes with mass=5006 ingredient_fallback=238
+2026-10-19 10:49:06 scanning /var/tmp/nutri-downloads/nutrition5k/nutrition5k_dataset.tar.gz
+2026-10-19 10:49:18 scan 5.0 GB uncompressed, dishes=0 elapsed=11s
+2026-10-19 10:49:29 scan 10.0 GB uncompressed, dishes=0 elapsed=23s
+2026-10-19 10:49:40 scan 15.0 GB uncompressed, dishes=0 elapsed=34s
+2026-10-19 10:49:52 scan 20.0 GB uncompressed, dishes=0 elapsed=46s
+2026-10-19 10:50:03 scan 25.0 GB uncompressed, dishes=0 elapsed=57s
+2026-10-19 10:50:15 scan 30.1 GB uncompressed, dishes=0 elapsed=69s
+2026-10-19 10:50:26 scan 35.1 GB uncompressed, dishes=0 elapsed=80s
+2026-10-19 10:50:38 scan 40.1 GB uncompressed, dishes=0 elapsed=91s
+2026-10-19 10:50:49 scan 45.1 GB uncompressed, dishes=0 elapsed=103s
+2026-10-19 10:51:01 scan 50.1 GB uncompressed, dishes=0 elapsed=115s
+2026-10-19 10:51:13 scan 55.1 GB uncompressed, dishes=0 elapsed=127s
+2026-10-19 10:51:24 scan 60.1 GB uncompressed, dishes=0 elapsed=138s
+2026-10-19 10:51:36 scan 65.1 GB uncompressed, dishes=0 elapsed=150s
+2026-10-19 10:51:47 scan 70.1 GB uncompressed, dishes=0 elapsed=161s
+2026-10-19 10:51:59 scan 75.1 GB uncompressed, dishes=0 elapsed=173s
+2026-10-19 10:52:10 scan 80.1 GB uncompressed, dishes=0 elapsed=184s
+2026-10-19 10:52:21 scan 85.1 GB uncompressed, dishes=0 elapsed=195s
+2026-10-19 10:52:32 scan 90.1 GB uncompressed, dishes=0 elapsed=206s
+2026-10-19 10:52:44 scan 95.2 GB uncompressed, dishes=0 elapsed=218s
+2026-10-19 10:52:55 scan 100.2 GB uncompressed, dishes=0 elapsed=229s
+2026-10-19 10:53:06 scan 105.2 GB uncompressed, dishes=0 elapsed=240s
+2026-10-19 10:53:17 scan 110.2 GB uncompressed, dishes=0 elapsed=251s
+2026-10-19 10:53:28 scan 115.2 GB uncompressed, dishes=0 elapsed=262s
+2026-10-19 10:53:39 scan 120.2 GB uncompressed, dishes=0 elapsed=273s
+2026-10-19 10:53:51 scan 125.2 GB uncompressed, dishes=0 elapsed=284s
+2026-10-19 10:54:02 scan 130.2 GB uncompressed, dishes=0 elapsed=296s
+2026-10-19 10:54:13 scan 135.3 GB uncompressed, dishes=0 elapsed=307s
+2026-10-19 10:54:25 scan 140.3 GB uncompressed, dishes=0 elapsed=319s
+2026-10-19 10:54:36 scan 145.3 GB uncompressed, dishes=0 elapsed=330s
+2026-10-19 10:54:48 scan 150.3 GB uncompressed, dishes=0 elapsed=342s
+2026-10-19 10:54:59 scan 155.3 GB uncompressed, dishes=0 elapsed=353s
+2026-10-19 10:55:11 scan 160.3 GB uncompressed, dishes=0 elapsed=365s
+2026-10-19 10:55:23 scan 165.3 GB uncompressed, dishes=0 elapsed=377s
+2026-10-19 10:55:34 scan 170.3 GB uncompressed, dishes=0 elapsed=388s
+2026-10-19 10:55:46 scan 175.3 GB uncompressed, dishes=0 elapsed=400s
+2026-10-19 10:55:55 depth scale locked lo=0.0093 hi=0.5739 median=0.3534 n_pixels=1432466
+2026-10-19 10:55:55 first dishes stored n=32
+2026-10-19 10:56:00 stored dishes=200
+2026-10-19 10:56:07 stored dishes=400
+2026-10-19 10:56:14 stored dishes=600
+2026-10-19 10:56:16 skip dish_1564159636: UnidentifiedImageError: cannot identify image file <_io.BytesIO object at 0x7f2d952d9bc0>
+2026-10-19 10:56:20 stored dishes=800
+2026-10-19 10:56:27 stored dishes=1000
+2026-10-19 10:56:34 stored dishes=1200
+2026-10-19 10:56:40 stored dishes=1400
+2026-10-19 10:56:47 stored dishes=1600
+2026-10-19 10:56:54 stored dishes=1800
+2026-10-19 10:57:00 stored dishes=2000
+2026-10-19 10:57:05 scan 180.3 GB uncompressed, dishes=2134 elapsed=479s
+2026-10-19 10:57:07 stored dishes=2200
+2026-10-19 10:57:13 stored dishes=2400
+2026-10-19 10:57:20 stored dishes=2600
+2026-10-19 10:57:27 stored dishes=2800
+2026-10-19 10:57:33 stored dishes=3000
+2026-10-19 10:57:41 stored dishes=3200
+2026-10-19 10:57:47 stored dishes=3400
+2026-10-19 10:57:56 scan done dishes=3489 pending=0 skipped={'no_mass': 0, 'bad_image': 1, 'empty_depth': 0} elapsed=529s
+2026-10-19 10:57:56 split train=2791 test=698 seed=42
+2026-10-19 10:58:50 wrote /home/sdnu/nutriagent/data/nutrition5k/cache/deep_crops_cache.npz train=2791 test=698
+2026-10-19 12:20:19 pinned torch failed, installing latest cu128 wheel
+2026-10-19 12:59:24 waiting for cache pid=4152674
+2026-10-19 12:59:24 cache ready, start training
+2026-10-21 17:41:02 start pid=2705331 gpu=1
+2026-10-21 17:41:04 install torch 2.11.0+cu128 from Aliyun
+2026-10-21 17:41:20 cache exists, skip rebuild: /home/sdnu/nutriagent/data/nutrition5k/cache/deep_crops_cache.npz
+2026-10-21 23:57:15 waiting for cache pid=2705351
+2026-10-21 23:57:15 cache ready, start training
+2026-10-21 23:57:21 R0 start device=cuda:0 torch=2.11.0+cu128
+2026-10-21 23:57:29 cache train=2791 test=698 device=cuda:0
+2026-10-21 23:57:29 train deep_weight_resnet18_final.pth in_ch=4
+2026-10-22 09:03:24 start pid=444095 gpu=1
+2026-10-22 09:03:33 cache exists, skip rebuild: /home/sdnu/nutriagent/data/nutrition5k/cache/deep_crops_cache.npz
+2026-10-22 09:03:34 waiting for cache pid=444113
+2026-10-22 09:03:34 cache ready, start training
+2026-10-22 09:03:40 R0 start device=cuda:0 torch=2.11.0+cu128
+2026-10-22 09:03:45 cache train=2791 test=698 device=cuda:0
+2026-10-22 09:03:45 train deep_weight_resnet18_final.pth in_ch=4
+2026-10-22 09:09:55 train deep_weight_efficientnet_final.pth in_ch=4
+2026-10-22 09:19:25 train deep_weight_resnet18_3ch.pth in_ch=3
+2026-10-22 09:24:34 train deep_weight_efficientnet_3ch.pth in_ch=3
+2026-10-22 09:33:37 train weight CQR ResNet18
+2026-10-22 09:39:14 E1 4ch ensemble MAPE=17.49% WAPE=0.126 MAE=26.6g | 3ch MAPE=17.49%
+2026-10-22 09:39:14 extract train/test features for MLNS
+2026-10-22 09:39:37 E2 trial 1/10 AEC-S cov=0.940 width=120.9 CQR cov=0.926
+2026-10-22 09:39:42 E2 trial 2/10 AEC-S cov=0.903 width=117.1 CQR cov=0.897
+2026-10-22 09:39:48 E2 trial 3/10 AEC-S cov=0.917 width=119.1 CQR cov=0.951
+2026-10-22 09:39:53 E2 trial 4/10 AEC-S cov=0.851 width=102.6 CQR cov=0.885
+2026-10-22 09:39:59 E2 trial 5/10 AEC-S cov=0.928 width=117.9 CQR cov=0.891
+2026-10-22 09:40:04 E2 trial 6/10 AEC-S cov=0.891 width=117.1 CQR cov=0.934
+2026-10-22 09:40:10 E2 trial 7/10 AEC-S cov=0.934 width=124.3 CQR cov=0.914
+2026-10-22 09:40:16 E2 trial 8/10 AEC-S cov=0.891 width=111.6 CQR cov=0.903
+2026-10-22 09:40:22 E2 trial 9/10 AEC-S cov=0.897 width=115.2 CQR cov=0.865
+2026-10-22 09:40:28 E2 trial 10/10 AEC-S cov=0.931 width=122.8 CQR cov=0.926
+2026-10-22 09:40:28 E2–E4 done; best baseline Mondrian; AEC-S winkler=174.9
+2026-10-22 09:40:33 train density ResNet18
+2026-10-22 09:45:42 train density EfficientNet
+2026-10-22 09:55:35 E5 point estimates written
+2026-10-22 09:55:35 run nutrient_intervals.py
+2026-10-22 09:56:13 run train_density_cqr.py
+2026-10-22 10:12:35 run cqr_baseline.py
+2026-10-22 10:12:46 E5 interval scripts finished
+2026-10-22 10:12:47 R0 complete
+2026-10-22 10:12:48 R0 finished

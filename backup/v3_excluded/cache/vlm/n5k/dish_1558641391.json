@@ -1,0 +1,19 @@
+{
+  "food_name": "Cantaloupe",
+  "form": "prepared",
+  "references": [],
+  "weight_guess_g": 150.0,
+  "scene": "White plate on a wooden surface",
+  "out_of_domain": false,
+  "meta": {
+    "dataset": "n5k",
+    "sample_id": "dish_1558641391",
+    "image": "/var/tmp/nutri-vlm-images/n5k/dish_1558641391.jpg",
+    "image_source": "overhead",
+    "width": 640,
+    "height": 480,
+    "model": "qwen3.8-27b",
+    "prompt_sha256": "bdc2f80bcb59614bf600495f23452886b642be58eb9e7c2dd21b223a0d78ad1b",
+    "finish_reason": "stop"
+  }
+}

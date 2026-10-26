@@ -1,0 +1,31 @@
+{
+  "food_name": "Crab cake with broccoli and apple",
+  "form": "prepared",
+  "references": [
+    {
+      "object": "utensil",
+      "bbox": [
+        0.0,
+        360.0,
+        38.4,
+        480.0
+      ],
+      "size_mm": 180.0,
+      "conf": 0.9
+    }
+  ],
+  "weight_guess_g": 250.0,
+  "scene": "Restaurant table",
+  "out_of_domain": true,
+  "meta": {
+    "dataset": "n5k",
+    "sample_id": "dish_1563391959",
+    "image": "/var/tmp/nutri-vlm-images/n5k/dish_1563391959.jpg",
+    "image_source": "overhead",
+    "width": 640,
+    "height": 480,
+    "model": "qwen3.8-27b",
+    "prompt_sha256": "bdc2f80bcb59614bf600495f23452886b642be58eb9e7c2dd21b223a0d78ad1b",
+    "finish_reason": "stop"
+  }
+}

@@ -19,6 +19,10 @@ with open(os.path.join(DIR, "metafood3d_labels_clean.csv")) as f:
 def mape(preds, truths):
     return 100 * sum(abs(p-t)/t for p, t in zip(preds, truths)) / len(truths)
 
+def wape(preds, truths):
+    den = sum(abs(t) for t in truths)
+    return 100 * sum(abs(p-t) for p, t in zip(preds, truths)) / den
+
 def report(name, preds, truths, subset=None):
     """subset: 可选过滤函数"""
     if subset:
@@ -27,9 +31,11 @@ def report(name, preds, truths, subset=None):
     else:
         pp, tt = preds, truths
     m = mape(pp, tt)
+    w = wape(pp, tt)
+    mae = sum(abs(p-t) for p, t in zip(pp, tt)) / len(tt)
     # log-space bias (系统性偏大/偏小)
-    bias = 100 * sum(math.log(p/t) for p, t in zip(pp, tt)) / len(tt)
-    print(f"  {name:42s} MAPE={m:6.2f}%  log-bias={bias:+6.2f}%  n={len(tt)}")
+    bias = 100 * sum(math.log(max(p, 1e-8)/t) for p, t in zip(pp, tt)) / len(tt)
+    print(f"  {name:42s} MAPE={m:6.2f}%  WAPE={w:6.2f}%  MAE={mae:7.2f}g  log-bias={bias:+6.2f}%  n={len(tt)}")
     return m
 
 # 类别分组
@@ -59,14 +65,14 @@ print("=" * 78)
 print("Phase 1 Oracle 误差预算 (MetaFood3D, n=%d, 清洗后)" % len(rows))
 print("=" * 78)
 
-print("\n[A] 全量物体 (对照: Nutrition5K 单目全 hold-out PMAE=22.0%)")
+print("\n[A] 全量物体 (Nutrition5K 对照: results/estimation/r0/e1_point.json)")
 report("Oracle-1: GT V × GT ρ (sanity)", [r["v"]*r["d"] for r in rows], W)
 report("Oracle-2: GT V × LOO类别均值ρ", [r["v"]*r["d_loo_mean"] for r in rows], W)
 report("Oracle-2b: GT V × LOO类别中位ρ", [r["v"]*r["d_loo_med"] for r in rows], W)
 report("Oracle-3: GT V × 全局均值ρ", [r["v"]*g_mean for r in rows], W)
 report("Oracle-3b: GT V × 全局中位ρ", [r["v"]*g_med for r in rows], W)
 
-print("\n[B] >=100g 子集 (对照: Nutrition5K 单目 18.4% 物理上限)")
+print("\n[B] >=100g 子集 (Nutrition5K 对照: e1_point.json 的 4ch_ensemble.ge_100g)")
 report("Oracle-2: GT V × LOO类别均值ρ", [r["v"]*r["d_loo_mean"] for r in rows], W, ge100)
 report("Oracle-2b: GT V × LOO类别中位ρ", [r["v"]*r["d_loo_med"] for r in rows], W, ge100)
 report("Oracle-3: GT V × 全局均值ρ", [r["v"]*g_mean for r in rows], W, ge100)

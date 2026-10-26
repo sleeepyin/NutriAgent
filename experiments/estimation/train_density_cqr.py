@@ -177,7 +177,7 @@ def main():
     loader = DataLoader(TensorDataset(
         torch.tensor(X_train, dtype=torch.float32),
         torch.tensor(y_train_log, dtype=torch.float32)),
-        batch_size=BATCH, shuffle=True, num_workers=2, pin_memory=True)
+        batch_size=BATCH, shuffle=True, num_workers=0, pin_memory=True)
 
     print("\n[1/2] Training QuantileResNet18 (pinball+GBML)...")
     rn = train_cqr(QuantileResNet(), loader, "RN18")

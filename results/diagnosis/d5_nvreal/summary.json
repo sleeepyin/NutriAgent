@@ -1,0 +1,138 @@
+{
+  "protocol": "coco-union dilate-20 zero-background bilinear-224 rgb-[0,1]",
+  "calibrator": "fit on half of Nutrition5K test dishes, seed 42; other half is the in-domain check",
+  "joint_train": "Nutrition5K train dishes plus official NV-Real Train dishes; scored on official Val",
+  "point": {
+    "n5k_test_3ch": {
+      "n": 698,
+      "mape_pct": 17.49139304602402,
+      "wape": 0.13606210069381022,
+      "mae_g": 28.774600188848282,
+      "r2": 0.9189035140824928,
+      "spearman": 0.9712357152455887,
+      "shrink": 1.0266127498969142
+    },
+    "nv_all_3ch": {
+      "n": 880,
+      "mape_pct": 127.4976777776924,
+      "wape": 0.5375883711364502,
+      "mae_g": 224.36556117317895,
+      "r2": -0.11874618584892338,
+      "spearman": 0.20858121832664692,
+      "shrink": 0.5060539561534738
+    },
+    "nv_val_3ch": {
+      "n": 263,
+      "mape_pct": 76.38348556550288,
+      "wape": 0.4264845638921925,
+      "mae_g": 181.14729149531956,
+      "r2": -0.05911337911568704,
+      "spearman": 0.31755752688799066,
+      "shrink": 0.5887425455215203
+    },
+    "nv_all_4ch_depth0": {
+      "n": 880,
+      "mape_pct": 128.30781587013834,
+      "wape": 0.58498244643361,
+      "mae_g": 244.1457477829673,
+      "r2": -0.27194641681349796,
+      "spearman": 0.24549225172496728,
+      "shrink": 0.6620332750835417
+    },
+    "nv_all_n5k_median": {
+      "n": 880,
+      "mape_pct": 71.75327599933826,
+      "wape": 0.6470745194991192,
+      "mae_g": 270.0602272727273,
+      "r2": -0.6497502925471077,
+      "spearman": NaN,
+      "shrink": 0.0
+    }
+  },
+  "frozen_intervals": [
+    {
+      "method": "Split",
+      "in_domain_heldout": {
+        "method": "Split N5K held-out",
+        "n": 349,
+        "coverage": 0.9197707736389685,
+        "width_g": 129.88579917842134
+      },
+      "nv_all": {
+        "method": "Split NV-Real",
+        "n": 880,
+        "coverage": 0.24204545454545454,
+        "width_g": 133.4451903776689
+      },
+      "nv_val": {
+        "method": "Split NV-Real val",
+        "n": 263,
+        "coverage": 0.311787072243346,
+        "width_g": 133.44519086482407
+      }
+    },
+    {
+      "method": "Normalized",
+      "in_domain_heldout": {
+        "method": "Normalized N5K held-out",
+        "n": 349,
+        "coverage": 0.9197707736389685,
+        "width_g": 156.74745409946388
+      },
+      "nv_all": {
+        "method": "Normalized NV-Real",
+        "n": 880,
+        "coverage": 0.4647727272727273,
+        "width_g": 328.21614893999964
+      },
+      "nv_val": {
+        "method": "Normalized NV-Real val",
+        "n": 263,
+        "coverage": 0.5475285171102662,
+        "width_g": 330.6261443366569
+      }
+    },
+    {
+      "method": "Mondrian",
+      "in_domain_heldout": {
+        "method": "Mondrian N5K held-out",
+        "n": 349,
+        "coverage": 0.9598853868194842,
+        "width_g": 155.8185194201319
+      },
+      "nv_all": {
+        "method": "Mondrian NV-Real",
+        "n": 880,
+        "coverage": 0.42727272727272725,
+        "width_g": 313.9430277239193
+      },
+      "nv_val": {
+        "method": "Mondrian NV-Real val",
+        "n": 263,
+        "coverage": 0.5399239543726235,
+        "width_g": 316.18208478340176
+      }
+    }
+  ],
+  "joint": {
+    "nv_val": {
+      "n": 263,
+      "mape_pct": 32.09171920767419,
+      "wape": 0.24517063669902783,
+      "mae_g": 104.13506267823193,
+      "r2": 0.6164259425516634,
+      "spearman": 0.8307044269744743,
+      "shrink": 0.6754438126515658
+    },
+    "n5k_test": {
+      "n": 698,
+      "mape_pct": 17.13809462233638,
+      "wape": 0.127954539459066,
+      "mae_g": 27.06000198812403,
+      "r2": 0.9238826653582852,
+      "spearman": 0.9718041599498995,
+      "shrink": 0.9742118043231047
+    }
+  },
+  "per_image_csv": "/home/sdnu/nutriagent/data/nvreal/derived/phase2b_per_image.csv"
+}

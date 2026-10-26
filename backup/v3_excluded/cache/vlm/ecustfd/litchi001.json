@@ -1,0 +1,31 @@
+{
+  "food_name": "lychee",
+  "form": "rigid",
+  "references": [
+    {
+      "object": "coin",
+      "bbox": [
+        115.87,
+        229.5,
+        191.76,
+        306.0
+      ],
+      "size_mm": 25.0,
+      "conf": 0.95
+    }
+  ],
+  "weight_guess_g": 15.0,
+  "scene": "single fruit on a wooden table with a coin for scale",
+  "out_of_domain": true,
+  "meta": {
+    "dataset": "ecustfd",
+    "sample_id": "litchi001",
+    "image": "/home/sdnu/nutriagent/data/ecustfd/JPEGImages/litchi001T(1).JPG",
+    "image_source": "top_view",
+    "width": 816,
+    "height": 612,
+    "model": "qwen3.8-27b",
+    "prompt_sha256": "bdc2f80bcb59614bf600495f23452886b642be58eb9e7c2dd21b223a0d78ad1b",
+    "finish_reason": "stop"
+  }
+}
