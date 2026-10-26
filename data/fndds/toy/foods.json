@@ -16,6 +16,12 @@
     {"code": "T00800100", "name": "tofu firm", "aliases": ["tofu", "firm tofu"], "per_100g": {"energy_kcal": 144.0, "protein_g": 17.0, "carb_g": 3.0, "fat_g": 9.0}},
     {"code": "T00900100", "name": "apple raw with skin", "aliases": ["apple", "raw apple"], "per_100g": {"energy_kcal": 52.0, "protein_g": 0.3, "carb_g": 14.0, "fat_g": 0.2}},
     {"code": "T01000100", "name": "banana raw", "aliases": ["banana"], "per_100g": {"energy_kcal": 89.0, "protein_g": 1.1, "carb_g": 23.0, "fat_g": 0.3}},
-    {"code": "T01100100", "name": "unknown stew heavy sauce placeholder", "aliases": ["stew", "unknown stew", "brown stew"], "per_100g": {"energy_kcal": 120.0, "protein_g": 6.0, "carb_g": 8.0, "fat_g": 7.0}}
+    {"code": "T01100100", "name": "unknown stew heavy sauce placeholder", "aliases": ["stew", "unknown stew", "brown stew"], "per_100g": {"energy_kcal": 120.0, "protein_g": 6.0, "carb_g": 8.0, "fat_g": 7.0}},
+    {"code": "T01200100", "name": "Onions, raw", "aliases": ["onions", "onion"], "per_100g": {"energy_kcal": 40.0, "protein_g": 1.1, "carb_g": 9.3, "fat_g": 0.1, "water_g": 89.0}},
+    {"code": "T01200200", "name": "Onion dip, light", "aliases": ["onion dip"], "per_100g": {"energy_kcal": 166.0, "protein_g": 2.0, "carb_g": 11.9, "fat_g": 12.4, "water_g": 36.0}},
+    {"code": "T01200300", "name": "Onion soup, French", "aliases": ["onion soup"], "per_100g": {"energy_kcal": 56.0, "protein_g": 2.0, "carb_g": 6.8, "fat_g": 1.6, "water_g": 90.0}},
+    {"code": "T01200400", "name": "Onions, cooked, no added fat", "aliases": ["cooked onions"], "per_100g": {"energy_kcal": 44.0, "protein_g": 1.4, "carb_g": 10.1, "fat_g": 0.2, "water_g": 88.0}},
+    {"code": "T01300100", "name": "Blueberries, raw", "aliases": ["blueberries"], "per_100g": {"energy_kcal": 57.0, "protein_g": 0.7, "carb_g": 14.5, "fat_g": 0.3, "water_g": 84.0}},
+    {"code": "T01300200", "name": "Blueberry juice", "aliases": ["blueberry juice"], "per_100g": {"energy_kcal": 45.0, "protein_g": 0.1, "carb_g": 11.5, "fat_g": 0.1, "water_g": 88.0}}
   ]
 }

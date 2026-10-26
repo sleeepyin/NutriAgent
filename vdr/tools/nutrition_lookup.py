@@ -9,6 +9,22 @@ from .fndds_catalog import foods_by_code
 
 _MACRO_KEYS = ("energy_kcal", "protein_g", "carb_g", "fat_g")
 
+# Frozen public nutrition vector. water_g and other FNDDS fields are not part of y.n.
+FROZEN_N_KEYS = ("energy_kcal", "protein_g", "carb_g", "fat_g", "mass_g")
+
+
+def freeze_nutrition_vector(nutri: dict[str, Any] | None) -> dict[str, float | None]:
+    """Keep only the schema fields of ``n``. Extra keys such as water_g are dropped."""
+    src = nutri or {}
+    out: dict[str, float | None] = {}
+    for key in FROZEN_N_KEYS:
+        value = src.get(key)
+        if value is None:
+            out[key] = None
+        else:
+            out[key] = float(value)
+    return out
+
 
 def lookup_per_100g(
     code: str,

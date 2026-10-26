@@ -1,6 +1,6 @@
 # Toy FNDDS fragment
 
-Fictional 15 food codes for unit/smoke tests. **Not** USDA data.
+Fictional FNDDS-like foods for unit/smoke tests, including a raw-onion vs dip/soup pair and a raw-blueberry vs juice pair. **Not** USDA data.
 
 ## Real FNDDS replacement path
 

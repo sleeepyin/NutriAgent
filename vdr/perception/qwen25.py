@@ -146,7 +146,16 @@ def ingredient_hypotheses(image_path: str | Path) -> tuple[list[dict[str, Any]],
         hyps.append({"name": str(name).strip(), "portion_g": portion})
         if len(hyps) >= 8:
             break
-    meta = {"model_path": str(vlm_path()), "raw": raw, "n_hypotheses": len(hyps)}
+    from vdr.perception.hypotheses import dedupe_hypotheses
+
+    n_raw = len(hyps)
+    hyps = dedupe_hypotheses(hyps)
+    meta = {
+        "model_path": str(vlm_path()),
+        "raw": raw,
+        "n_hypotheses_raw": n_raw,
+        "n_hypotheses": len(hyps),
+    }
     return hyps, meta
 
 
