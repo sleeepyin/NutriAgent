@@ -7,20 +7,35 @@
 
 ## 下一步（服务器立即执行）
 
-**没有新的 507 命令。** 有俯拍 RGB 的官方 `rgb_test` 池（507/709）已跑完，数字与配对分析在下面两节。不要重跑 `--n 507`，不要覆盖 `results/n5k_rgb_test_overhead_b0_b1.json` 与 `.jsonl`。默认的 `results/n5k_subset_b0_b1.json` 与 `.jsonl` 现在就是这一对，再跑脚本会截断覆盖。n=50 基线只在 `results/n5k_subset_b0_b1_n50_seed42.json` 与 `.jsonl`。
+**没有新的 507 命令。** 有俯拍 RGB 的官方 `rgb_test` 池（507/709）已跑完，数字与配对分析在下面两节。论文表这一格仍是已冻结的能量 MAE：B0 **97.03**（n=507）、B1 **110.72**（n=506）。中位约 63.5，两边一样。不要重跑 `--n 507`，不要覆盖 `results/n5k_rgb_test_overhead_b0_b1.json` 与 `.jsonl`。默认的 `results/n5k_subset_b0_b1.json` 与 `.jsonl` 现在就是这一对。n=50 基线只在 `results/n5k_subset_b0_b1_n50_seed42.json` 与 `.jsonl`。不要用这 507 盘的 test GT 调阈值、检索、克重或碎片合并。体积工具仍关。旧回归权重仍不接入。弱标签不改 B1 先验。
 
-论文表的这一格冻结为已跑完的能量 MAE：B0 **97.03**（n=507）、B1 **110.72**（n=506）。中位约 63.5，两边一样。B1 在全池上更差，差距在右尾；n=50 上 B1 更好是该子集的真实结果，不能外推。不要用这 507 盘的 test GT 调阈值、检索、克重或碎片合并。体积工具仍关。旧回归权重仍不接入。下面的弱标签命令不改 B1 先验。
-
-弱标签生成器已落地（`vdr/weak/teacher.py`，`scripts/gen_weak_steps_train.py`）。只接受官方 `rgb_train`。`--split rgb_test` 或 `depth_test` 直接退出码 2。不调用 VLM，不需要 GPU。假设是 train 元数据里的食材名（弱，不是感知输出）。动作用 **train** 食材的 kcal/g 和克重对照现有 FNDDS 检索与 100 g 盲提示的克重网格，发出 `RETRIEVE` / `CORRECT_CODE` / `RE_PORTION` / `ABSTAIN` / `STOP`。不发 `VOLUME_ESTIMATE`，这一版不发 `RE_DECOMPOSE`。阈值写死在老师里，没有用 test 拟合，也没有用上面的 507 分析去改。`sha256(dish_id)` 前 8 位十六进制模 10 为 0 的约 10% `rgb_train` 是 hold-out（`--pool holdout`），以后只许在那里看阈值。
-
-服务器现在只跑这条 CPU 冒烟。是 fit 池的前 8 盘，不是全量 4059，也不是 test：
+**n=8 冒烟已跑完**（2026-10-27 16:55–16:56 Asia/Shanghai，自托管 worker `gpu-12-container`，机器 `hostname` 为 `n012`）。CPU，进程里没有 `CUDA_VISIBLE_DEVICES`。解释器是仓库 `.venv` 的 Python 3.12（`jsonschema` 4.26）。`scripts/weak_steps_smoke.py` 通过（约 8 秒）。生成命令是 fit 池官方顺序的前 8 盘，约 15 秒，61 步：
 
 ```bash
+# 已完成，不要再执行
 python scripts/weak_steps_smoke.py
 python scripts/gen_weak_steps_train.py --split rgb_train --pool fit --n 8 --out results/weak_steps/rgb_train_fit_n8.jsonl
 ```
 
-解释器有 `jsonschema` 即可。仓库 `.venv` 或 `/var/tmp/nutri-venv/bin/python` 都可以，不要设 `CUDA_VISIBLE_DEVICES`。产物只有 `results/weak_steps/rgb_train_fit_n8.jsonl` 和同名 `.summary.json`。脚本会拒绝写入上面那些 507 / n=50 文件名。全量（去掉 `--n 8`）和 `--pool holdout` 先不要跑，等这 8 盘的 summary 回到仓库再改文首。
+summary（`results/weak_steps/rgb_train_fit_n8.summary.json`，teacher `0.1.0`）：
+
+- split / pool / n：`rgb_train` / `fit` / 8（无 seed）。有元数据的 fit 池共 **3679** 盘，hold-out **380** 盘。
+- 动作：`RETRIEVE` 29、`RE_PORTION` 22、`STOP` 7、`CORRECT_CODE` 2、`ABSTAIN` 1。
+- 终态：`corrected` 7、`abstain` 1。
+- train 能量审计（pass/corrected 行对照 **train** 盘标签，不是 test 分）：n_scored **7**，`train_energy_mae` **35.0188**。`dish_1565799617` 为 abstain，不进这个 MAE。
+- `uses_test_gt` false，`vlm` false，`volume_tool` false。JSONL 61 行均过 `ir_step` schema，没有 `VOLUME_ESTIMATE`。
+- 产物：`results/weak_steps/rgb_train_fit_n8.jsonl`（约 69KB）与同名 `.summary.json`。
+- 冻结文件未改：`results/n5k_rgb_test_overhead_b0_b1.jsonl` 的 sha256 仍是 `a4dfdd82e3a595f4…`。同目录 json 与 n=50 备份的 sha256 也与跑前一致。
+
+按这 15 秒线性外推，3679 盘的 fit 全量大约 2 小时、jsonl 大约 30MB。先不要去掉 `--n`，也不要跑 `--pool holdout`。
+
+下一步只生成同一 fit 前缀的 **256** 盘（无 seed，约 8 分钟、约 2MB，以实跑为准）。跑完把 wall time 和 summary 写回文首，再决定是否生成其余 fit 池。不要开体积工具，不要碰 rgb_test：
+
+```bash
+python scripts/gen_weak_steps_train.py --split rgb_train --pool fit --n 256 --out results/weak_steps/rgb_train_fit_n256.jsonl
+```
+
+解释器有 `jsonschema` 即可。本机仓库 `.venv` 或 `/var/tmp/nutri-venv/bin/python` 都可以，不要设 `CUDA_VISIBLE_DEVICES`。产物只有 `results/weak_steps/rgb_train_fit_n256.jsonl` 和同名 `.summary.json`。脚本会拒绝写入上面那些 507 / n=50 文件名。
 
 ### 俯拍 RGB 池结果（2026-10-27）
 
@@ -71,7 +86,7 @@ CUDA_VISIBLE_DEVICES=0 /var/tmp/nutri-venv/bin/python -u scripts/eval_n5k_subset
 W1 基础设施在这台 2×4090D 上已打通：**schema + 骨架 + toy 冒烟 + 真实 FNDDS catalog（5624）+ N5K 元数据/官方 split + 俯拍 RGB + Qwen2.5-VL-7B 单盘冒烟**。  
 B1 第二轮先验（菜品形态、未点名的仿肉、100 g 以上的高密度克重、Cheese+Crust 碎片合并）后，同一 50 盘子集已重跑：能量 MAE 为 B0 **98.3**、B1 **88.2**。上一轮是 97.4 / 107.9，硬化前是 98.2 / 112.1。  
 有俯拍 RGB 的官方 `rgb_test` 池已跑完：能量 MAE 为 B0 **97.03**、B1 **110.72**（中位 63.51 / 63.57）。配对 506 盘上中位差距约 +3.5 kcal，MAE 差距在右尾。50 盘子集仍是 B0 **98.3**、B1 **88.2**，是偏有利的一抽，不能代替这 507 盘。见「507 分析（助手）」。  
-**缺**：无俯拍 RGB 的官方 test 盘、弱标签全量、试标 30、BC 训练。侧视视频未解压。这 507 盘也不是 709 盘全表。
+**缺**：无俯拍 RGB 的官方 test 盘、弱标签 fit 池其余盘（前 8 盘已生成）、试标 30、BC 训练。侧视视频未解压。这 507 盘也不是 709 盘全表。
 
 ## 已完成（box）
 
@@ -88,7 +103,7 @@ B1 第二轮先验（菜品形态、未点名的仿肉、100 g 以上的高密�
 | Qwen2.5-VL-7B | 权重在 `/var/tmp/vdr-models/Qwen2.5-VL-7B-Instruct`（不进 Git）。B0/B1 图像入口已接。单盘冒烟：`results/b0_b1_image_smoke.json`。50 盘基线在 `results/n5k_subset_b0_b1_n50_seed42.json`（能量 MAE：B0 **98.3**，B1 **88.2**）。俯拍池 507 盘在 `results/n5k_rgb_test_overhead_b0_b1.json`（能量 MAE：B0 **97.03**，B1 **110.72**）。跑在 GPU 0；解释器是 `/var/tmp/nutri-venv`，不是没有 torch 的 `.venv`。GPU 1 上原有 llama-server 未动 |
 | B1 硬化（CPU，无 VLM） | 同名假设取中位数、不累加；`portion_grid` 默认克重网格接到查表；plain 果蔬查询压低 dip/soup/juice 等并偏向 raw；`CODE_CONF_GAP` 时先二次 `RETRIEVE`（仍是蘸酱/汤类）或确认性 `RE_PORTION` 再 `STOP`；终态 `n` 不含 `water_g`。冒烟：`scripts/b1_harden_smoke.py` |
 | B1 第二轮（CPU，无 VLM） | 查询里的 pudding/salad/pizza 等形态词不再落到短食材名；未写 meatless/vegetarian 时，培根这类肉类头不选仿肉。能量密度 ≥300 kcal/100g 且克重超过 100 g 才加连续惩罚，100 g 的一份坚果不动。`Cheese`+`Crust` 在检索前并成一次查询。体积仍关，不接旧回归权重。冒烟仍是 `scripts/b1_harden_smoke.py` |
-| 步骤弱标签老师（CPU，无 VLM） | `vdr/weak/teacher.py` + `scripts/gen_weak_steps_train.py`。只读 `rgb_train`。食材名作弱假设；train 营养对照决定 `RETRIEVE` / `CORRECT_CODE` / `RE_PORTION` / `ABSTAIN` / `STOP`。冒烟：`scripts/weak_steps_smoke.py`。全量还没跑 |
+| 步骤弱标签老师（CPU，无 VLM） | `vdr/weak/teacher.py` + `scripts/gen_weak_steps_train.py`。只读 `rgb_train`。食材名作弱假设；train 营养对照决定 `RETRIEVE` / `CORRECT_CODE` / `RE_PORTION` / `ABSTAIN` / `STOP`。冒烟：`scripts/weak_steps_smoke.py` 已在 `gpu-12-container` 通过。fit 池前 8 盘在 `results/weak_steps/rgb_train_fit_n8.jsonl`（61 步；train 能量审计 MAE **35.0188**，n_scored 7）。全量还没跑 |
 | 标注指南 v0 | `docs/annotation_guide_v0.md` |
 | 方案 MD | 根目录 `PLAN.md`（投稿/执行真源 MD 版） |
 
@@ -98,7 +113,7 @@ B1 第二轮先验（菜品形态、未点名的仿肉、100 g 以上的高密�
 |----|------|
 | 有俯拍 RGB 的官方 rgb_test（507/709） | **已完成。** 能量 MAE：B0 **97.03**，B1 **110.72**。不要重跑。50 盘基线仍是 B0 **98.3**、B1 **88.2** |
 | 无俯拍 RGB 的官方 test 盘 | 不进入这次命令，也不要写成 709 盘全表 |
-| 步骤弱标签全量（仅 train） | 生成器已落地，文首只跑 fit 池 `--n 8`。全量和 hold-out 还没跑。阈值只在 train hold-out 调，禁止用 test GT |
+| 步骤弱标签全量（仅 train） | fit 池前 8 盘已生成。文首下一步是同一前缀 `--n 256`。其余 fit 盘和 hold-out 还没跑。阈值只在 train hold-out 调，禁止用 test GT |
 | 试标 30 盘 + kappa≥0.6 | **人工** |
 | 200–500 金标准 | **人工** |
 | Ours-BC / RL | 依赖弱标签与特征管线 |
@@ -116,7 +131,7 @@ B1 第二轮先验（菜品形态、未点名的仿肉、100 g 以上的高密�
 7. 相对硬化前：B1 能量 MAE 112.1 → 107.9。22/50 盘的 B1 数字变了，其中 16 盘 VLM 原文相同。`dish_1557937335`（标签 47 kcal）五行重复红薯从 550 kcal / 500 g 收到 110 kcal / 100 g。`dish_1563898084`（标签 419 kcal）从 530 kcal 升到 845 kcal，质量仍是 380 g：`Chia Seed Pudding` 绑到了 Chia seeds。B0 有 16/50 盘与上次不同，能量 MAE 98.2 → 97.4，按重跑抖动看。体积工具仍关，没有接入旧回归权重。无俯拍 RGB 的官方 test 盘不在当时的命令里。弱标签仍只许用 train。  
 8. 第二轮先验的同一协议已重跑（2026-10-27 10:40 Asia/Shanghai，GPU 0，约 6 分钟，代码 `1d4da37`）：50/50 schema-valid，弃权 0。能量 MAE：B0 98.3 kcal（中位 64.5），B1 88.2 kcal（中位 51.6，MAPE 72%）。B1 脂肪 MAE 5.9 g，蛋白质 MAE 7.4 g，质量 MAE 64.8 g，碳水 MAE 8.1 g。9/50 盘的 B1 数字变了，VLM 原文相同的 2 盘都变好。`dish_1563305513`（标签 606 kcal）Cheese+Crust 并成 stuffed-crust 芝士披萨，1100 kcal / 350 g → 548 kcal / 200 g。`dish_1559849497`（标签 521 kcal）高密度克重从 990 kcal / 300 g 收到 692 kcal / 250 g。`dish_1563898084` 在同一假设列下不再绑 Chia seeds，改为 Pudding, rice（845 → 522 kcal）；这次 VLM 把布丁写成 75 g，最终 495 kcal。B0 有 13/50 盘与上一轮不同，能量 MAE 97.4 → 98.3，按重跑抖动看。  
 9. 俯拍 RGB 池已跑完（2026-10-27 11:18–12:15 Asia/Shanghai，GPU 0，约 57 分钟，代码 `1d4da37` / 启动日志 `260c4b0`）：507/507 schema-valid，弃权 0。能量 MAE：B0 97.03（中位 63.51），B1 110.72（中位 63.57，n=506）。无俯拍 RGB 的官方 test 盘没有补进这次。没有用这些数字改检索或克重。
-10. 助手已把 507 盘的配对分析写入「507 分析（助手）」和 `notes/2026-10-27-overhead-507-b0-b1.md`。没有用这些数字改 B1。弱标签老师已落地，服务器命令是文首的 train `--n 8`，不是 507。
+10. 助手已把 507 盘的配对分析写入「507 分析（助手）」和 `notes/2026-10-27-overhead-507-b0-b1.md`。没有用这些数字改 B1。弱标签老师已落地。`gpu-12-container` 已跑完文首当时的 train `--n 8`（2026-10-27 16:56）。下一步是文首的 fit `--n 256`，不是 507，也不是 fit 全量。
 
 ## 50 盘子集重跑（2026-10-27）
 
