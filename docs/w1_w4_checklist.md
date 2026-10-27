@@ -33,7 +33,7 @@
 ## W3 规则老师与弱标签管道
 
 - [x] 实现 `rule_verify` 初版（toy 阈值；**正式阈值仅在 train hold-out 调**）
-- [x] 步骤弱标签生成器（仅 train；禁止 test GT）。`scripts/weak_steps_smoke.py` 可在 CPU 上跑。全量 train 还没生成
+- [x] 步骤弱标签生成器（仅 train；禁止 test GT）。`scripts/weak_steps_smoke.py` 可在 CPU 上跑。fit 3679 与 hold-out 380 已生成
 - [ ] 标注指南定稿前试跑：`docs/annotation_guide_v0.md`
 - [ ] **[人工]** 双人试标 **30 盘**（公开 N5K 图额外标签）
 - [ ] **[人工]** 计算 Cohen's kappa；目标 **≥ 0.6**，否则修订指南
@@ -42,8 +42,8 @@
 
 - [ ] 分层抽样计划（简单/混菜/酱汁/高误差）锁定 200–500 盘池
 - [ ] **[人工]** 启动双人正式标注（第三人裁决流程写清）
-- [ ] 控制器特征 `features.py`：Top-k gap + verify one-hot + 步数预算
-- [ ] BC 数据管线：弱标签轨迹 → `(h, a)` JSONL
+- [x] 控制器特征 `features.py`：Top-k gap + verify one-hot + 步数预算。`build_features` 31 维，不读 `obs_t`
+- [x] BC 数据管线：弱标签轨迹 → `(h, a)`（`vdr/controller/bc_data.py` 在内存里组，不另写 jsonl）。`PolicyBC.fit` 目前是 numpy 逻辑回归玩具，不是 MLP
 - [ ] 体积工具保持关闭；不做旧回归重训
 
 ## 图例
