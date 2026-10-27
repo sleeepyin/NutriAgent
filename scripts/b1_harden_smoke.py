@@ -2,8 +2,9 @@
 """CPU smoke for B1 hardening. No VLM, no Nutrition5K imagery.
 
 Covers duplicate-hypothesis dedupe, portion-grid selection, produce retrieve
-(raw onion / blueberry over dip / juice), and a schema-valid B1 emit whose
-public ``n`` has no ``water_g``.
+(raw onion / blueberry over dip / juice), dish-form and faux-meat priors,
+a density penalty on large hints, cheese+crust fragment merge, and a
+schema-valid B1 emit whose public ``n`` has no ``water_g``.
 """
 
 from __future__ import annotations
@@ -22,7 +23,7 @@ from vdr.baselines.b1_rag_once import (  # noqa: E402
     predict,
     predict_from_hypotheses,
 )
-from vdr.perception.hypotheses import dedupe_hypotheses  # noqa: E402
+from vdr.perception.hypotheses import dedupe_hypotheses, merge_complementary_fragments  # noqa: E402
 from vdr.schemas import VDR_OUTPUT_SCHEMA_PATH, load_schema, validate_instance  # noqa: E402
 from vdr.tools.fndds_retrieve import retrieve  # noqa: E402
 from vdr.tools.nutrition_lookup import FROZEN_N_KEYS  # noqa: E402
@@ -326,6 +327,262 @@ def test_followup(schema: dict) -> bool:
     return ok
 
 
+def _live_codes(pred: dict) -> list[tuple[str | None, str | None]]:
+    out: list[tuple[str | None, str | None]] = []
+    for node in pred["G"]["nodes"]:
+        if node.get("type") != "food_code":
+            continue
+        if str(node.get("id", "")).endswith("_prev"):
+            continue
+        attrs = node.get("attrs") or {}
+        if not attrs.get("code"):
+            continue
+        out.append((attrs.get("code"), node.get("label")))
+    return out
+
+
+def test_dish_form_and_faux_meat(schema: dict) -> bool:
+    ok = True
+    if not REAL.is_file():
+        return check("real catalog present for dish-form smokes", False, str(REAL))
+    pudding = retrieve("Chia Seed Pudding", top_k=3, catalog_path=REAL)
+    pudding_name = (pudding.cands[0]["name"] if pudding.cands else "") or ""
+    ok &= check(
+        "Chia Seed Pudding does not select plain chia seeds",
+        pudding.selected_code != "43108010" and "pudding" in pudding_name.lower() and "chia seed" not in pudding_name.lower(),
+        pudding_name,
+    )
+    seeds = retrieve("chia seeds", top_k=1, catalog_path=REAL)
+    ok &= check(
+        "plain chia seeds still select chia seeds",
+        seeds.selected_code == "43108010",
+        str(seeds.cands[:1]),
+    )
+    bacon = retrieve("Bacon Strip", top_k=1, catalog_path=REAL)
+    bacon_name = (bacon.cands[0]["name"] if bacon.cands else "") or ""
+    ok &= check(
+        "Bacon Strip without a vegetarian token is not meatless",
+        "meatless" not in bacon_name.lower() and "vegetarian" not in bacon_name.lower() and "bacon" in bacon_name.lower(),
+        bacon_name,
+    )
+    asked = retrieve("bacon strip meatless", top_k=1, catalog_path=REAL)
+    asked_name = (asked.cands[0]["name"] if asked.cands else "") or ""
+    ok &= check(
+        "bacon strip meatless keeps the meatless code",
+        "meatless" in asked_name.lower(),
+        asked_name,
+    )
+    quiche = retrieve("cheese quiche", top_k=1, catalog_path=REAL)
+    quiche_name = (quiche.cands[0]["name"] if quiche.cands else "") or ""
+    ok &= check(
+        "cheese quiche stays a quiche, not a cheese block",
+        "cheese quiche" in quiche_name.lower(),
+        quiche_name,
+    )
+    pred = predict_from_hypotheses(
+        "smoke-pudding",
+        [{"name": "Chia Seed Pudding", "portion_g": 100}],
+        catalog_path=REAL,
+    )
+    live = _live_codes(pred)
+    ok &= check("pudding emit schema", _assert_frozen(pred, schema), str(pred["n"]))
+    ok &= check(
+        "pudding emit is not the seed code",
+        len(live) == 1 and live[0][0] != "43108010" and "pudding" in (live[0][1] or "").lower(),
+        str(live),
+    )
+    bacon_pred = predict_from_hypotheses(
+        "smoke-bacon",
+        [{"name": "Bacon Strip", "portion_g": 30}],
+        catalog_path=REAL,
+    )
+    bacon_live = _live_codes(bacon_pred)
+    ok &= check("bacon emit schema", _assert_frozen(bacon_pred, schema), str(bacon_pred["n"]))
+    ok &= check(
+        "bacon emit is not meatless",
+        len(bacon_live) == 1 and "meatless" not in (bacon_live[0][1] or "").lower(),
+        str(bacon_live),
+    )
+    return ok
+
+
+def test_dense_hint() -> bool:
+    ok = True
+    catalog = _write_catalog(
+        [
+            {"code": "DENSE", "name": "dense snack", "aliases": ["dense"], "per_100g": _per(600)},
+            {"code": "LIGHT", "name": "light vegetable", "aliases": ["light"], "per_100g": _per(80)},
+        ]
+    )
+    dense = search_portion("DENSE", hint_g=150, catalog_path=catalog)
+    light = search_portion("LIGHT", hint_g=150, catalog_path=catalog)
+    ok &= check(
+        "high-density 150 g hint snaps below the hint",
+        dense.portion_g < 150,
+        f"portion={dense.portion_g}",
+    )
+    ok &= check(
+        "low-density 150 g hint stays on the hint",
+        light.portion_g == 150,
+        f"portion={light.portion_g}",
+    )
+    if not REAL.is_file():
+        return check("real catalog present for dense-hint smokes", False, str(REAL))
+    almond_150 = search_portion("42100100", hint_g=150, catalog_path=REAL)
+    almond_100 = search_portion("42100100", hint_g=100, catalog_path=REAL)
+    cheese_150 = search_portion("14010000", hint_g=150, catalog_path=REAL)
+    ok &= check(
+        "almonds at 150 g snap down",
+        almond_150.portion_g < 150,
+        f"portion={almond_150.portion_g}",
+    )
+    ok &= check(
+        "almonds at 100 g stay on the handful",
+        almond_100.portion_g == 100,
+        f"portion={almond_100.portion_g}",
+    )
+    ok &= check(
+        "hard cheese at 150 g snaps down",
+        cheese_150.portion_g < 150,
+        f"portion={cheese_150.portion_g}",
+    )
+    return ok
+
+
+def test_fragment_merge(schema: dict) -> bool:
+    ok = True
+    merged = merge_complementary_fragments(
+        [
+            {"name": "Cheese", "portion_g": 150},
+            {"name": "Crust", "portion_g": 200},
+        ]
+    )
+    ok &= check(
+        "Cheese+Crust merges to one query at the larger hint",
+        len(merged) == 1 and merged[0]["name"] == "Cheese Crust" and merged[0]["portion_g"] == 200,
+        str(merged),
+    )
+    flipped = merge_complementary_fragments(
+        [
+            {"name": "Crust", "portion_g": 200},
+            {"name": "Cheese", "portion_g": 150},
+        ]
+    )
+    ok &= check(
+        "Crust+Cheese merges the same way",
+        len(flipped) == 1 and flipped[0]["portion_g"] == 200 and "cheese" in flipped[0]["name"].lower(),
+        str(flipped),
+    )
+    sides = merge_complementary_fragments(
+        [
+            {"name": "Cheese", "portion_g": 40},
+            {"name": "Broccoli", "portion_g": 80},
+        ]
+    )
+    ok &= check("Cheese+Broccoli stays split", len(sides) == 2, str(sides))
+    triple = merge_complementary_fragments(
+        [
+            {"name": "Cheese", "portion_g": 40},
+            {"name": "Crust", "portion_g": 80},
+            {"name": "Apple", "portion_g": 100},
+        ]
+    )
+    ok &= check("a side next to crust is not swallowed", len(triple) == 3, str(triple))
+    if not REAL.is_file():
+        return check("real catalog present for fragment smokes", False, str(REAL))
+    pred = predict_from_hypotheses(
+        "smoke-crust",
+        [
+            {"name": "Cheese", "portion_g": 150},
+            {"name": "Crust", "portion_g": 200},
+        ],
+        catalog_path=REAL,
+    )
+    live = _live_codes(pred)
+    ok &= check("fragment emit schema", _assert_frozen(pred, schema), str(pred["n"]))
+    ok &= check(
+        "Cheese+Crust binds one pizza, not a cheese block plus a pizza",
+        pred["meta"]["n_hypotheses"] == 1
+        and len(live) == 1
+        and live[0][0] != "14010000"
+        and "pizza" in (live[0][1] or "").lower(),
+        str(live),
+    )
+    ok &= check(
+        "merged portion is the crust hint, not the sum",
+        pred["n"]["mass_g"] == 200,
+        str(pred["n"]),
+    )
+    return ok
+
+
+def test_dish_form_followup(schema: dict) -> bool:
+    """Alias trap: exact 'chia seed pudding' on the seed still loses on the rewrite."""
+    ok = True
+    catalog = _write_catalog(
+        [
+            {
+                "code": "SEED",
+                "name": "Chia seeds",
+                "aliases": ["chia seed pudding"],
+                "per_100g": _per(486, 6),
+            },
+            {
+                "code": "PUD",
+                "name": "Pudding, rice",
+                "aliases": ["pudding"],
+                "per_100g": _per(108, 70),
+            },
+        ]
+    )
+    pred = predict_from_hypotheses(
+        "smoke-alias-pudding",
+        [{"name": "Chia Seed Pudding", "portion_g": 100}],
+        catalog_path=catalog,
+    )
+    actions = [step["action"] for step in pred["tau"]]
+    live = _live_codes(pred)
+    ok &= check("alias-pudding emit schema", _assert_frozen(pred, schema), str(pred["n"]))
+    ok &= check(
+        "CODE_CONF_GAP on a dense dish-form miss rewrites with RETRIEVE",
+        actions == ["RETRIEVE", "RETRIEVE", "STOP"] and pred["meta"]["followup"] == "RETRIEVE",
+        str(actions),
+    )
+    ok &= check(
+        "rewrite leaves the seed for a pudding",
+        len(live) == 1 and live[0][0] == "PUD" and "pudding" in (live[0][1] or "").lower(),
+        str(live),
+    )
+    crafted = {
+        "code": "SEED",
+        "query": "Chia Seed Pudding",
+        "selected_name": "Chia seeds",
+        "portion_g": 100.0,
+        "nutri_full": {"energy_kcal": 486.0, "mass_g": 100.0, "protein_g": 1, "carb_g": 1, "fat_g": 1},
+        "cands": [
+            {"code": "SEED", "name": "Chia seeds", "score": 0.80},
+            {"code": "PUD", "name": "Pudding, rice", "score": 0.725},
+        ],
+    }
+    already = {
+        "code": "PUD",
+        "query": "Chia Seed Pudding",
+        "selected_name": "Pudding, rice",
+        "portion_g": 100.0,
+        "nutri_full": {"energy_kcal": 108.0, "mass_g": 100.0, "protein_g": 1, "carb_g": 1, "fat_g": 1},
+        "cands": [
+            {"code": "PUD", "name": "Pudding, rice", "score": 0.80},
+            {"code": "SEED", "name": "Chia seeds", "score": 0.72},
+        ],
+    }
+    ok &= check(
+        "choose_followup prefers RETRIEVE only while top1 dropped the dish form",
+        choose_followup(["CODE_CONF_GAP"], [crafted]) == "RETRIEVE"
+        and choose_followup(["CODE_CONF_GAP"], [already]) == "RE_PORTION",
+    )
+    return ok
+
+
 def main() -> int:
     schema = load_schema(VDR_OUTPUT_SCHEMA_PATH)
     ok = True
@@ -339,6 +596,14 @@ def main() -> int:
     ok &= test_b1_emit(schema)
     print("followup")
     ok &= test_followup(schema)
+    print("dish form / faux meat")
+    ok &= test_dish_form_and_faux_meat(schema)
+    print("dense hint")
+    ok &= test_dense_hint()
+    print("fragment merge")
+    ok &= test_fragment_merge(schema)
+    print("dish-form followup")
+    ok &= test_dish_form_followup(schema)
     print("b1_harden_smoke:", "OK" if ok else "FAILED")
     return 0 if ok else 1
 

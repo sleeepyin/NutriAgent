@@ -19,6 +19,13 @@ Score (higher is better), for hint ``h`` and grid point ``g``:
 - if ``energy_kcal_per_100g * g / 100`` exceeds
   ``COMPONENT_ENERGY_SOFT_CAP_KCAL`` (800 kcal for one component), subtract
   a penalty that grows with the overflow, capped at 1.5
+- if the hint is at most ``DENSE_PENALTY_HINT_MAX_G`` (500 g, the top of the
+  default grid), the food is at least ``DENSE_KCAL_PER_100G`` (300 kcal/100 g),
+  and ``g`` is above ``DENSE_PORTION_FLOOR_G`` (100 g), subtract a second
+  penalty that grows with both the extra grams and the density. A 100 g hint
+  is unpenalized: a plate of almonds is often about that size, and crushing
+  it repeats the old mass error in the other direction. Hints above the grid
+  stay on the 800 kcal rule, which is what rejects a 5000 g runaway.
 
 The raw hint is not a candidate unless it already lies on the grid. Ties
 prefer the point closer to the hint, then the smaller gram value.
@@ -64,6 +71,15 @@ DEFAULT_PORTION_GRID_G: tuple[float, ...] = (
 # One component above this is treated as a runaway hint, not a plated side.
 COMPONENT_ENERGY_SOFT_CAP_KCAL = 800.0
 
+# Density-aware gram penalty. See the module docstring.
+# 300 kcal/100 g is above pizza, rice, eggs, and feta, and below hard cheese
+# (~368), seeds, and nuts. The floor is 100 g so a correct handful stays put
+# while a 150 g nut or hard-cheese hint is pulled down.
+DENSE_KCAL_PER_100G = 300.0
+DENSE_PORTION_FLOOR_G = 100.0
+DENSE_PORTION_SCALE = 3.2
+DENSE_PENALTY_HINT_MAX_G = 500.0
+
 
 @dataclass
 class PortionResult:
@@ -90,7 +106,23 @@ def score_portion_candidate(
     penalty = 0.0
     if kcal > energy_cap_kcal:
         penalty = min(1.5, (kcal - energy_cap_kcal) / energy_cap_kcal)
+    penalty += _dense_gram_penalty(float(portion_g), hint, float(energy_per_100g))
     return closeness - penalty
+
+
+def _dense_gram_penalty(portion_g: float, hint_g: float, energy_per_100g: float) -> float:
+    """Pull a large hint down when the code is energy-dense.
+
+    Zero at or below 100 g, and zero when the hint itself is past the default
+    grid (the 800 kcal cap owns that runaway). See the module docstring.
+    """
+    if hint_g > DENSE_PENALTY_HINT_MAX_G:
+        return 0.0
+    if energy_per_100g < DENSE_KCAL_PER_100G or portion_g <= DENSE_PORTION_FLOOR_G:
+        return 0.0
+    excess = (portion_g - DENSE_PORTION_FLOOR_G) / DENSE_PORTION_FLOOR_G
+    dens_factor = min(2.0, (energy_per_100g - DENSE_KCAL_PER_100G) / DENSE_KCAL_PER_100G)
+    return min(1.5, excess * dens_factor * DENSE_PORTION_SCALE)
 
 
 def search_portion(
