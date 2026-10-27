@@ -1,0 +1,129 @@
+{
+  "split": "rgb_test",
+  "seed": 42,
+  "n_requested": 50,
+  "n_pool_with_rgb_and_label": 507,
+  "n_subset": 50,
+  "dish_ids": [
+    "dish_1557937335",
+    "dish_1557937427",
+    "dish_1558031133",
+    "dish_1558114145",
+    "dish_1558375667",
+    "dish_1558376938",
+    "dish_1558461431",
+    "dish_1558639482",
+    "dish_1558639555",
+    "dish_1558639876",
+    "dish_1558720236",
+    "dish_1559233627",
+    "dish_1559233715",
+    "dish_1559238993",
+    "dish_1559841950",
+    "dish_1559849097",
+    "dish_1559849497",
+    "dish_1560444985",
+    "dish_1560801773",
+    "dish_1561574368",
+    "dish_1561574394",
+    "dish_1561662160",
+    "dish_1561663580",
+    "dish_1561739238",
+    "dish_1561741090",
+    "dish_1562008979",
+    "dish_1562099076",
+    "dish_1562168648",
+    "dish_1562172600",
+    "dish_1562617939",
+    "dish_1562690950",
+    "dish_1562774206",
+    "dish_1562776428",
+    "dish_1563305513",
+    "dish_1563551105",
+    "dish_1563565289",
+    "dish_1563898084",
+    "dish_1564689168",
+    "dish_1565020926",
+    "dish_1565123783",
+    "dish_1565638550",
+    "dish_1565894910",
+    "dish_1565896662",
+    "dish_1565896701",
+    "dish_1565898331",
+    "dish_1566414225",
+    "dish_1566414342",
+    "dish_1566849955",
+    "dish_1566851616",
+    "dish_1567785654"
+  ],
+  "n_b1_ok": 50,
+  "n_b0_ok": 50,
+  "n_b1_abstain": 0,
+  "b1": {
+    "energy_kcal": {
+      "n": 50,
+      "mae": 88.21,
+      "median_ae": 51.56,
+      "mape_pct": 71.75
+    },
+    "protein_g": {
+      "n": 50,
+      "mae": 7.36,
+      "median_ae": 1.9,
+      "mape_pct": 101.53
+    },
+    "carb_g": {
+      "n": 50,
+      "mae": 8.11,
+      "median_ae": 5.84,
+      "mape_pct": 73.81
+    },
+    "fat_g": {
+      "n": 50,
+      "mae": 5.93,
+      "median_ae": 2.42,
+      "mape_pct": 8500274.25
+    },
+    "mass_g": {
+      "n": 50,
+      "mae": 64.8,
+      "median_ae": 33.5,
+      "mape_pct": 66.09
+    }
+  },
+  "b0": {
+    "energy_kcal": {
+      "n": 50,
+      "mae": 98.29,
+      "median_ae": 64.52,
+      "mape_pct": 106.12
+    },
+    "protein_g": {
+      "n": 50,
+      "mae": 6.75,
+      "median_ae": 3.32,
+      "mape_pct": 166.3
+    },
+    "carb_g": {
+      "n": 50,
+      "mae": 12.56,
+      "median_ae": 8.2,
+      "mape_pct": 138.45
+    },
+    "fat_g": {
+      "n": 50,
+      "mae": 5.71,
+      "median_ae": 2.98,
+      "mape_pct": 4000378.99
+    },
+    "mass_g": {
+      "n": 50,
+      "mae": 65.44,
+      "median_ae": 43.0,
+      "mape_pct": 70.05
+    }
+  },
+  "b1_fat_mape_when_label_ge_1g": 72.67,
+  "b0_fat_mape_when_label_ge_1g": 76.93,
+  "note": "Seeded subset of official rgb_test dishes that have overhead RGB. Not the full test table. MAPE blows up when the label is near zero; use MAE and median absolute error for fat."
+}

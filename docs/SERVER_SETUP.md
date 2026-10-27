@@ -114,6 +114,8 @@ imagery 就绪后：自行抽若干 `realsense_overhead/*/rgb.png`（文件名�
 
 显存紧张时：降 batch=1、关 flash 以外的缓存、不要同时载两个 7B。控制器训练用小 MLP，勿回传进 VLM。
 
+本机仓库 `.venv` 没有 torch，不能用来跑 B0/B1。VLM 解释器是 `/var/tmp/nutri-venv/bin/python`。评测时用 `CUDA_VISIBLE_DEVICES=0`，让加载器的 `device_map="cuda:0"` 落在物理 GPU 0。不要把 `CUDA_VISIBLE_DEVICES` 设成 1。GPU 1 上若已有 llama-server，不要停。权重默认目录是 `/var/tmp/vdr-models/Qwen2.5-VL-7B-Instruct`。
+
 ## 6. 同步回 GitHub
 
 ```bash
