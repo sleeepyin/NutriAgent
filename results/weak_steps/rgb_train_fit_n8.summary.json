@@ -1,0 +1,223 @@
+{
+  "run_id": "weak_steps_rgb_train_fit",
+  "teacher_version": "0.1.0",
+  "split": "rgb_train",
+  "pool": "fit",
+  "n_requested": 8,
+  "seed": null,
+  "n_samples": 8,
+  "label_quality": "weak",
+  "hypothesis_source": "n5k_ingredient_metadata",
+  "uses_train_gt": true,
+  "uses_test_gt": false,
+  "vlm": false,
+  "volume_tool": false,
+  "legacy_regression_weights": false,
+  "actions": {
+    "RETRIEVE": 29,
+    "RE_PORTION": 22,
+    "STOP": 7,
+    "CORRECT_CODE": 2,
+    "ABSTAIN": 1
+  },
+  "terminal_s": {
+    "corrected": 7,
+    "abstain": 1
+  },
+  "thresholds": {
+    "mass_keep_g": 8.0,
+    "energy_keep_kcal": 8.0,
+    "blind_portion_hint_g": 100.0,
+    "top_k": 5,
+    "min_retrieve_score": 0.45,
+    "density_rel_ok": 0.4,
+    "density_gain": 0.15,
+    "density_rel_floor_kcal": 25.0,
+    "max_score_drop": 0.2,
+    "portion_rel_ok": 0.25,
+    "unresolved_energy_share": 0.4,
+    "holdout_mod": 10
+  },
+  "holdout_rule": "sha256(dish_id) hex[:8] % 10 == 0",
+  "supervision": "action_t on pre-action IR fields; obs_t is privileged",
+  "metrics": {
+    "note": "Train-split audit of emitted energy versus train dish GT on pass/corrected rows. Not a test score. Do not tune on rgb_test.",
+    "n_scored": 7,
+    "train_energy_mae": 35.0188
+  },
+  "dishes": [
+    {
+      "dish_id": "dish_1550862840",
+      "pool": "fit",
+      "s": "corrected",
+      "n_steps": 3,
+      "actions": [
+        "RETRIEVE",
+        "RE_PORTION",
+        "STOP"
+      ],
+      "n_kept": 1,
+      "n_unresolved": 0,
+      "emitted_energy_kcal": 15.0,
+      "grounded_energy_kcal": 15.0,
+      "train_gt_energy_kcal": 16.5,
+      "abs_err_kcal": 1.5
+    },
+    {
+      "dish_id": "dish_1562958721",
+      "pool": "fit",
+      "s": "corrected",
+      "n_steps": 12,
+      "actions": [
+        "RETRIEVE",
+        "RE_PORTION",
+        "RETRIEVE",
+        "RE_PORTION",
+        "RETRIEVE",
+        "RE_PORTION",
+        "RETRIEVE",
+        "CORRECT_CODE",
+        "RE_PORTION",
+        "RETRIEVE",
+        "RE_PORTION",
+        "STOP"
+      ],
+      "n_kept": 5,
+      "n_unresolved": 0,
+      "emitted_energy_kcal": 127.95,
+      "grounded_energy_kcal": 127.95,
+      "train_gt_energy_kcal": 125.724831,
+      "abs_err_kcal": 2.2252
+    },
+    {
+      "dish_id": "dish_1565799617",
+      "pool": "fit",
+      "s": "abstain",
+      "n_steps": 10,
+      "actions": [
+        "RETRIEVE",
+        "RE_PORTION",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RE_PORTION",
+        "RETRIEVE",
+        "RE_PORTION",
+        "RETRIEVE",
+        "RETRIEVE",
+        "ABSTAIN"
+      ],
+      "n_kept": 5,
+      "n_unresolved": 2,
+      "emitted_energy_kcal": null,
+      "grounded_energy_kcal": 88.2,
+      "train_gt_energy_kcal": 294.22171,
+      "abs_err_kcal": null
+    },
+    {
+      "dish_id": "dish_1561661806",
+      "pool": "fit",
+      "s": "corrected",
+      "n_steps": 8,
+      "actions": [
+        "RETRIEVE",
+        "RE_PORTION",
+        "RETRIEVE",
+        "RE_PORTION",
+        "RETRIEVE",
+        "RE_PORTION",
+        "RETRIEVE",
+        "STOP"
+      ],
+      "n_kept": 4,
+      "n_unresolved": 1,
+      "emitted_energy_kcal": 144.85,
+      "grounded_energy_kcal": 144.85,
+      "train_gt_energy_kcal": 183.475952,
+      "abs_err_kcal": 38.626
+    },
+    {
+      "dish_id": "dish_1562873264",
+      "pool": "fit",
+      "s": "corrected",
+      "n_steps": 13,
+      "actions": [
+        "RETRIEVE",
+        "RETRIEVE",
+        "RE_PORTION",
+        "RETRIEVE",
+        "RE_PORTION",
+        "RETRIEVE",
+        "RETRIEVE",
+        "RE_PORTION",
+        "RETRIEVE",
+        "RE_PORTION",
+        "RETRIEVE",
+        "RE_PORTION",
+        "STOP"
+      ],
+      "n_kept": 7,
+      "n_unresolved": 1,
+      "emitted_energy_kcal": 384.05,
+      "grounded_energy_kcal": 384.05,
+      "train_gt_energy_kcal": 503.60022,
+      "abs_err_kcal": 119.5502
+    },
+    {
+      "dish_id": "dish_1558373449",
+      "pool": "fit",
+      "s": "corrected",
+      "n_steps": 3,
+      "actions": [
+        "RETRIEVE",
+        "RE_PORTION",
+        "STOP"
+      ],
+      "n_kept": 1,
+      "n_unresolved": 0,
+      "emitted_energy_kcal": 448.5,
+      "grounded_energy_kcal": 448.5,
+      "train_gt_energy_kcal": 416.231995,
+      "abs_err_kcal": 32.268
+    },
+    {
+      "dish_id": "dish_1550773506",
+      "pool": "fit",
+      "s": "corrected",
+      "n_steps": 8,
+      "actions": [
+        "RETRIEVE",
+        "CORRECT_CODE",
+        "RE_PORTION",
+        "RETRIEVE",
+        "RE_PORTION",
+        "RETRIEVE",
+        "RE_PORTION",
+        "STOP"
+      ],
+      "n_kept": 3,
+      "n_unresolved": 0,
+      "emitted_energy_kcal": 152.2,
+      "grounded_energy_kcal": 152.2,
+      "train_gt_energy_kcal": 175.199997,
+      "abs_err_kcal": 23.0
+    },
+    {
+      "dish_id": "dish_1561480414",
+      "pool": "fit",
+      "s": "corrected",
+      "n_steps": 4,
+      "actions": [
+        "RETRIEVE",
+        "RE_PORTION",
+        "RETRIEVE",
+        "STOP"
+      ],
+      "n_kept": 2,
+      "n_unresolved": 0,
+      "emitted_energy_kcal": 97.2,
+      "grounded_energy_kcal": 97.2,
+      "train_gt_energy_kcal": 125.161995,
+      "abs_err_kcal": 27.962
+    }
+  ]
+}

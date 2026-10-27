@@ -4,6 +4,8 @@
 
 **先文档、后执行（2026-10-27 起）。** 助手决定下一步服务器动作、改跑法或改方案时：先改仓库文档并 **push 到 GitHub**，再请人跑。可执行步骤写在 [`docs/STATUS.md`](STATUS.md) 文首「下一步」，不要只留在聊天。服务器上的人或 AI：`git pull --ff-only`，读该节再执行。聊天不是 runbook。
 
+执行助手可以在自托管 worker `gpu-12-container` 与 `gpu-12` 上跑文首已经写明的命令。结果仍落回本仓库（`results/` 与 `docs/STATUS.md`），再经 PR 同步。聊天不是另一份 runbook。
+
 ## 1. 仓库用途
 
 | 可进库 | 禁止进库 |
