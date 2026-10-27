@@ -97,6 +97,7 @@ python scripts/n5k_metadata_summary.py
 python scripts/rule_verify_toy_smoke.py
 python scripts/b1_toy_smoke.py
 python scripts/eval_toy_smoke.py
+python scripts/weak_steps_smoke.py
 ```
 
 期望：schema / rule / b1 / eval 通过；retrieve 显示 `n_foods=5624`；N5K 打印 rgb_train=4059、rgb_test=709。

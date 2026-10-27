@@ -42,6 +42,7 @@ python scripts/n5k_metadata_summary.py   # 期望 rgb_train=4059 / rgb_test=709
 python scripts/rule_verify_toy_smoke.py
 python scripts/b1_toy_smoke.py
 python scripts/eval_toy_smoke.py
+python scripts/weak_steps_smoke.py
 ```
 
 真实图像与 VLM：见 [docs/SERVER_SETUP.md](docs/SERVER_SETUP.md)。  
@@ -70,7 +71,7 @@ export VDR_FNDDS_PATH=/path/to/foods.json
 
 ```
 schemas/     冻结 JSON Schema
-vdr/         包：tools / baselines / controller / eval / ir
+vdr/         包：tools / baselines / controller / eval / ir / weak
 scripts/     校验、catalog 构建、冒烟
 examples/    pass / corrected / abstain
 data/toy/    冒烟假数据
