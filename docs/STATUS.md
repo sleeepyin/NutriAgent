@@ -129,7 +129,37 @@ python scripts/bc_mlp_smoke.py
 - `ABSTAIN` 仍然是 0。fit 上 236 行里 235 行和 `STOP` 的 31 维向量在四舍五入到 1e-6 后相同：老师写的都是空的 `hyp_i` / `code_i` / `cands_i` / `portion_g_i`，差别在 `obs_t` 和 `abstain_reason`，这两项不进特征。MLP 把 hold-out 的 24 个弃权步全部判成 `STOP`，和线性一样。不要为了抬 `ABSTAIN` 把 `obs_t` 放进特征。
 - 弱步骤 summary 仍是 `uses_test_gt` false，`vlm` false，`volume_tool` false。冻结文件未改。论文表能量 MAE 仍是 B0 **97.03** / B1 **110.72**。
 
-**小 MLP BC 已落地。** hold-out 动作准确率 **0.9700**（2688/2771）；线性基线 **0.9206**（2551/2771）。**没有新的服务器命令。** 剩下的是 DAgger、RL、试标 30。论文表能量 MAE 仍是 B0 **97.03** / B1 **110.72**。体积工具仍关。Transformer 不在这一步，服务器不要为它开训。
+**DAgger 第 1 轮已落地（助手，CPU，无 GPU）。** 专家是现有的 train-only 规则老师（`vdr/weak/teacher.py`，`0.1.0`）。学习者是 `PolicyMLP`，超参与上一节相同（31→64→64→6，dropout 0，L2 `1e-4`，Adam 学习率 `1e-2`，batch 512，80 epoch，种子 0），没有在 hold-out 或 rgb_test 上搜。先在 `results/weak_steps/rgb_train_fit_all.jsonl` 上拟合纯 BC MLP，再只在 fit 池上展开。环境走老师同一套工具：FNDDS 检索、盲 100 g 克重网格、`choose_code`、按老师规则的 `RE_PORTION` 和终态。学习者的动作驱动转移，标签始终是该状态上老师的 `action_t`。特征仍只来自 `build_features` 的动作前字段。`obs_t` 不进特征。没有 `VOLUME_ESTIMATE`。不开体积工具。不读 rgb_test / depth_test。不改 fit / hold-out jsonl，不改 507 文件。不需要 7B。
+
+fit 行上预测已经和老师一致的盘不再展开：确定性的学习者和老师每步都一致时，会留在老师轨迹上，没有新状态。展开的盘里，访问到的状态在两种情况下追加进聚合：31 维特征键（四舍五入到 1e-6）不在 fit 矩阵里，或者学习者动作 ≠ 老师动作。已经在 BC 里、而且学习者判对的状态不重复追加。步数上限 48，连续 3 步除 `step_i` 外公开字段不变就停。这两个上限是固定护栏，不是 hold-out 搜出来的。老师轨迹最多 32 步。train 食材克重和 kcal 只留在老师查询里，用来决定 `a*` 和内部记账；下一步的 `portion_g_i` 不写入老师贴上去的克重。
+
+冒烟不写结果文件。全池这一轮已在助手 CPU 上跑完，墙钟 **535** 秒（含前 8 盘专家轨迹与 `generate_dish_steps` 的对照，以及纯 BC 与聚合后各一次 MLP 拟合）。命令已完成，不要把它当成新的服务器任务，也不要设 `CUDA_VISIBLE_DEVICES`：
+
+```bash
+# 已完成，不要再执行
+python scripts/dagger_smoke.py
+python scripts/dagger_smoke.py --n 32
+python scripts/dagger_smoke.py --all-fit
+```
+
+全池（这一轮要报的数）：
+
+- 盘：fit **3679**。其中 **2913** 盘与老师一致，跳过。展开 **766** 盘，访问 **6061** 步，学习者动作 ≠ 老师 **1401** 步。
+- 新行 **1490**（聚合 25864+1490=**27354**）。特征键是新的 **117** 行；其余 **1373** 行是学习者犯错的状态，特征键已经在 BC 里，再记一份老师标签。其中 **4** 行的旧标签集合里没有这次的老师动作。
+- 新行的动作：`RETRIEVE` 145、`RE_PORTION` 945、`CORRECT_CODE` 201、`ABSTAIN` 196、`STOP` 3。没有 `RE_DECOMPOSE`，没有 `VOLUME_ESTIMATE`。
+- hold-out 动作准确率：纯 BC MLP **0.9700**（2688/2771）→ DAgger **0.9592**（2658/2771）。线性基线仍是 **0.9206**（2551/2771）。少了 30 步。
+- hold-out recall（命中/该类行数）：`RETRIEVE` 1285/1285（纯 BC 1273/1285），`RE_PORTION` 900/949（纯 BC 917/949），`STOP` 356/356，`CORRECT_CODE` 117/157（纯 BC 142/157），`ABSTAIN` 仍是 0/24。`RE_DECOMPOSE` 仍是 0 行。
+- 边界往 `RETRIEVE` 和再记进去的 `RE_PORTION` 靠，`CORRECT_CODE` 少了 25 个命中。这不是改规则的依据。不要为了把准确率拉回去改特征、改 MLP 常数，或在 hold-out 上挑聚合方式。
+- `ABSTAIN` 新行有 196 条，hold-out 仍然 0/24。动作前特征和 `STOP` 撞在一起，差别在 `obs_t` 和 `abstain_reason`。不要为了抬 `ABSTAIN` 把 `obs_t` 放进特征。
+
+同一条代码的前缀（不是另一套超参）：
+
+- `--n 8`：展开 3 盘，新行 5（全是犯错副本，novel 0）。hold-out **2677/2771**。`CORRECT_CODE` 145/157，`RE_PORTION` 896/949，`RETRIEVE` 1280/1285，`ABSTAIN` 0/24。
+- `--n 32`：展开 8 盘，新行 11（novel 1 + 副本 10）。hold-out **2671/2771**。`CORRECT_CODE` 148/157，`RE_PORTION` 889/949，`RETRIEVE` 1278/1285，`ABSTAIN` 0/24。
+
+`uses_test_gt` false，`vlm` false，`volume_tool` false。冻结文件未改。`results/weak_steps/rgb_train_fit_all.jsonl` 的 sha256 仍是 `ed47f9239bfecb3c…`，`results/n5k_rgb_test_overhead_b0_b1.jsonl` 仍是 `a4dfdd82e3a595f4…`。论文表能量 MAE 仍是 B0 **97.03** / B1 **110.72**。
+
+**DAgger 第 1 轮已落地。** 全池 hold-out 动作准确率 **0.9592**（2658/2771），纯 BC MLP 是 **0.9700**（2688/2771），线性基线 **0.9206**（2551/2771）。新行 **1490**。**没有新的服务器命令。** 剩下的是更多 DAgger 轮、RL、试标 30。论文表能量 MAE 仍是 B0 **97.03** / B1 **110.72**。体积工具仍关。不要为了再跑一轮开 GPU，也不要重跑 `--n 507`。
 
 ### 俯拍 RGB 池结果（2026-10-27）
 
@@ -180,7 +210,7 @@ CUDA_VISIBLE_DEVICES=0 /var/tmp/nutri-venv/bin/python -u scripts/eval_n5k_subset
 W1 基础设施在这台 2×4090D 上已打通：**schema + 骨架 + toy 冒烟 + 真实 FNDDS catalog（5624）+ N5K 元数据/官方 split + 俯拍 RGB + Qwen2.5-VL-7B 单盘冒烟**。  
 B1 第二轮先验（菜品形态、未点名的仿肉、100 g 以上的高密度克重、Cheese+Crust 碎片合并）后，同一 50 盘子集已重跑：能量 MAE 为 B0 **98.3**、B1 **88.2**。上一轮是 97.4 / 107.9，硬化前是 98.2 / 112.1。  
 有俯拍 RGB 的官方 `rgb_test` 池已跑完：能量 MAE 为 B0 **97.03**、B1 **110.72**（中位 63.51 / 63.57）。配对 506 盘上中位差距约 +3.5 kcal，MAE 差距在右尾。50 盘子集仍是 B0 **98.3**、B1 **88.2**，是偏有利的一抽，不能代替这 507 盘。见「507 分析（助手）」。  
-**缺**：无俯拍 RGB 的官方 test 盘、试标 30、DAgger、RL。小 MLP BC 已落地（hold-out 动作准确率 **0.9700**，线性基线 **0.9206**）。`ABSTAIN` 的 recall 仍是 0，动作前特征分不开它和 `STOP`。侧视视频未解压。这 507 盘也不是 709 盘全表。
+**缺**：无俯拍 RGB 的官方 test 盘、试标 30、更多 DAgger 轮、RL。DAgger 第 1 轮已落地（全池 hold-out 动作准确率 **0.9592**，纯 BC MLP **0.9700**，新行 1490）。`ABSTAIN` 的 recall 仍是 0，动作前特征分不开它和 `STOP`。侧视视频未解压。这 507 盘也不是 709 盘全表。
 
 ## 已完成（box）
 
@@ -200,6 +230,7 @@ B1 第二轮先验（菜品形态、未点名的仿肉、100 g 以上的高密�
 | 步骤弱标签老师（CPU，无 VLM） | `vdr/weak/teacher.py` + `scripts/gen_weak_steps_train.py`。只读 `rgb_train`。fit 全池在 `results/weak_steps/rgb_train_fit_all.jsonl`（3679 盘、25864 步、5930 秒；train 能量审计 MAE **29.5844**）。hold-out 在 `rgb_train_holdout_all.jsonl`（380 盘、2771 步、631 秒；train 能量审计 MAE **30.7085**）。两份 dish_id 不相交，并集 4059 |
 | BC 特征 + 线性基线（CPU） | `build_features` **31** 维，只读动作前字段，不读 `obs_t`。`load_bc_rows` 从 fit jsonl 组 `(h, a)`。`PolicyBC.fit` 是 numpy 多项逻辑回归。hold-out 动作准确率 **0.9206**（2551/2771）；多数类基线 0.4637。`CORRECT_CODE` 与 `ABSTAIN` 的 recall 是 0。冒烟：`scripts/bc_features_smoke.py` |
 | BC 小 MLP（CPU） | `PolicyMLP` 31→64→64→6，numpy，只在 fit 行上训练。hold-out 动作准确率 **0.9700**（2688/2771）。`CORRECT_CODE` 142/157，`RE_PORTION` 917/949，`ABSTAIN` 仍是 0/24。不读 `obs_t`，没有 `VOLUME_ESTIMATE`。冒烟：`scripts/bc_mlp_smoke.py` |
+| DAgger 第 1 轮（CPU） | 规则老师当专家，`PolicyMLP` 当学习者。只在 fit 池展开。全池新行 **1490**（novel 117 + 犯错副本 1373）。hold-out 动作准确率 **0.9592**（2658/2771），低于纯 BC **0.9700**。`CORRECT_CODE` 117/157，`RETRIEVE` 1285/1285，`ABSTAIN` 仍是 0/24。不读 `obs_t`，没有 `VOLUME_ESTIMATE`。冒烟：`scripts/dagger_smoke.py` |
 | 标注指南 v0 | `docs/annotation_guide_v0.md` |
 | 方案 MD | 根目录 `PLAN.md`（投稿/执行真源 MD 版） |
 
@@ -212,7 +243,7 @@ B1 第二轮先验（菜品形态、未点名的仿肉、100 g 以上的高密�
 | 步骤弱标签全量（仅 train） | **已完成。** fit 3679 + hold-out 380。没有新的生成命令。阈值仍只许在 hold-out 上看，禁止用 test GT |
 | 试标 30 盘 + kappa≥0.6 | **人工** |
 | 200–500 金标准 | **人工** |
-| Ours-BC / RL | 线性基线 hold-out **0.9206**，小 MLP hold-out **0.9700**。`ABSTAIN` 仍是 0（不要把 `obs_t` 放进特征）。仍缺 DAgger、RL、试标 30。没有新的服务器训练命令 |
+| Ours-BC / RL | 线性基线 hold-out **0.9206**，小 MLP hold-out **0.9700**。DAgger 第 1 轮全池 hold-out **0.9592**（新行 1490）。`ABSTAIN` 仍是 0（不要把 `obs_t` 放进特征）。仍缺更多 DAgger 轮、RL、试标 30。没有新的服务器训练命令 |
 | 体积工具 | **保持默认关闭**（刻意不做） |
 | 旧回归权重 | **禁止接入** |
 
@@ -227,7 +258,7 @@ B1 第二轮先验（菜品形态、未点名的仿肉、100 g 以上的高密�
 7. 相对硬化前：B1 能量 MAE 112.1 → 107.9。22/50 盘的 B1 数字变了，其中 16 盘 VLM 原文相同。`dish_1557937335`（标签 47 kcal）五行重复红薯从 550 kcal / 500 g 收到 110 kcal / 100 g。`dish_1563898084`（标签 419 kcal）从 530 kcal 升到 845 kcal，质量仍是 380 g：`Chia Seed Pudding` 绑到了 Chia seeds。B0 有 16/50 盘与上次不同，能量 MAE 98.2 → 97.4，按重跑抖动看。体积工具仍关，没有接入旧回归权重。无俯拍 RGB 的官方 test 盘不在当时的命令里。弱标签仍只许用 train。  
 8. 第二轮先验的同一协议已重跑（2026-10-27 10:40 Asia/Shanghai，GPU 0，约 6 分钟，代码 `1d4da37`）：50/50 schema-valid，弃权 0。能量 MAE：B0 98.3 kcal（中位 64.5），B1 88.2 kcal（中位 51.6，MAPE 72%）。B1 脂肪 MAE 5.9 g，蛋白质 MAE 7.4 g，质量 MAE 64.8 g，碳水 MAE 8.1 g。9/50 盘的 B1 数字变了，VLM 原文相同的 2 盘都变好。`dish_1563305513`（标签 606 kcal）Cheese+Crust 并成 stuffed-crust 芝士披萨，1100 kcal / 350 g → 548 kcal / 200 g。`dish_1559849497`（标签 521 kcal）高密度克重从 990 kcal / 300 g 收到 692 kcal / 250 g。`dish_1563898084` 在同一假设列下不再绑 Chia seeds，改为 Pudding, rice（845 → 522 kcal）；这次 VLM 把布丁写成 75 g，最终 495 kcal。B0 有 13/50 盘与上一轮不同，能量 MAE 97.4 → 98.3，按重跑抖动看。  
 9. 俯拍 RGB 池已跑完（2026-10-27 11:18–12:15 Asia/Shanghai，GPU 0，约 57 分钟，代码 `1d4da37` / 启动日志 `260c4b0`）：507/507 schema-valid，弃权 0。能量 MAE：B0 97.03（中位 63.51），B1 110.72（中位 63.57，n=506）。无俯拍 RGB 的官方 test 盘没有补进这次。没有用这些数字改检索或克重。
-10. 助手已把 507 盘的配对分析写入「507 分析（助手）」和 `notes/2026-10-27-overhead-507-b0-b1.md`。没有用这些数字改 B1。弱标签老师已落地。`gpu-12-container` 已跑完 fit 全池（2026-10-27 19:17）和 hold-out 全池（2026-10-27 19:30，631 秒，380 盘）。BC 特征与 numpy 逻辑回归基线已落地，hold-out 动作准确率 0.9206。小 MLP BC 已在助手侧用 CPU 跑完，hold-out 动作准确率 0.9700。没有新的服务器命令。剩下 DAgger、RL、试标 30。下一步不是 507，也不是开训。
+10. 助手已把 507 盘的配对分析写入「507 分析（助手）」和 `notes/2026-10-27-overhead-507-b0-b1.md`。没有用这些数字改 B1。弱标签老师已落地。`gpu-12-container` 已跑完 fit 全池（2026-10-27 19:17）和 hold-out 全池（2026-10-27 19:30，631 秒，380 盘）。BC 特征与 numpy 逻辑回归基线已落地，hold-out 动作准确率 0.9206。小 MLP BC 已在助手侧用 CPU 跑完，hold-out 动作准确率 0.9700。DAgger 第 1 轮也已在助手 CPU 上跑完（全池 535 秒，新行 1490，hold-out 动作准确率 0.9592）。没有新的服务器命令。剩下更多 DAgger 轮、RL、试标 30。下一步不是 507，也不是开训。
 
 ## 50 盘子集重跑（2026-10-27）
 

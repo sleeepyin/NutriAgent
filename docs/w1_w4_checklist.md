@@ -44,6 +44,7 @@
 - [ ] **[人工]** 启动双人正式标注（第三人裁决流程写清）
 - [x] 控制器特征 `features.py`：Top-k gap + verify one-hot + 步数预算。`build_features` 31 维，不读 `obs_t`
 - [x] BC 数据管线：弱标签轨迹 → `(h, a)`（`vdr/controller/bc_data.py` 在内存里组，不另写 jsonl）。`PolicyBC` 是 numpy 逻辑回归基线（hold-out 动作准确率 0.9206）。`PolicyMLP` 是 31→64→64 的小 MLP（hold-out 0.9700；`CORRECT_CODE` recall 142/157；`ABSTAIN` 仍是 0/24）。冒烟：`scripts/bc_features_smoke.py`、`scripts/bc_mlp_smoke.py`
+- [x] DAgger 第 1 轮：规则老师当专家，`PolicyMLP` 当学习者，只在 fit 池展开（`vdr/controller/dagger.py`）。全池新行 1490。hold-out 动作准确率 0.9592（2658/2771），低于纯 BC 0.9700。`ABSTAIN` 仍是 0/24。冒烟：`scripts/dagger_smoke.py`
 - [ ] 体积工具保持关闭；不做旧回归重训
 
 ## 图例
