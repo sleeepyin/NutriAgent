@@ -62,69 +62,68 @@
   "b1": {
     "energy_kcal": {
       "n": 50,
-      "mae": 112.07,
-      "median_ae": 56.98,
-      "mape_pct": 95.96
+      "mae": 107.92,
+      "median_ae": 48.84,
+      "mape_pct": 73.93
     },
     "protein_g": {
       "n": 50,
-      "mae": 8.22,
-      "median_ae": 2.63,
-      "mape_pct": 130.43
+      "mae": 8.21,
+      "median_ae": 2.36,
+      "mape_pct": 104.54
     },
     "carb_g": {
       "n": 50,
-      "mae": 9.51,
-      "median_ae": 6.18,
-      "mape_pct": 93.81
+      "mae": 7.77,
+      "median_ae": 5.54,
+      "mape_pct": 70.38
     },
     "fat_g": {
       "n": 50,
-      "mae": 8.51,
-      "median_ae": 3.8,
-      "mape_pct": 8500746.06
+      "mae": 7.83,
+      "median_ae": 3.32,
+      "mape_pct": 8500280.88
     },
     "mass_g": {
       "n": 50,
-      "mae": 72.02,
-      "median_ae": 34.5,
-      "mape_pct": 88.94
+      "mae": 65.58,
+      "median_ae": 36.0,
+      "mape_pct": 67.9
     }
   },
   "b0": {
     "energy_kcal": {
       "n": 50,
-      "mae": 98.22,
-      "median_ae": 61.62,
-      "mape_pct": 96.6
+      "mae": 97.43,
+      "median_ae": 60.91,
+      "mape_pct": 105.05
     },
     "protein_g": {
       "n": 50,
-      "mae": 6.84,
-      "median_ae": 3.32,
-      "mape_pct": 166.48
+      "mae": 6.64,
+      "median_ae": 3.22,
+      "mape_pct": 162.03
     },
     "carb_g": {
       "n": 50,
-      "mae": 12.2,
-      "median_ae": 7.76,
-      "mape_pct": 135.8
+      "mae": 12.3,
+      "median_ae": 8.11,
+      "mape_pct": 137.37
     },
     "fat_g": {
       "n": 50,
-      "mae": 5.69,
-      "median_ae": 3.27,
-      "mape_pct": 4000318.48
+      "mae": 5.65,
+      "median_ae": 2.7,
+      "mape_pct": 4000378.59
     },
     "mass_g": {
       "n": 50,
-      "mae": 64.64,
-      "median_ae": 41.5,
-      "mape_pct": 69.18
+      "mae": 62.02,
+      "median_ae": 35.0,
+      "mape_pct": 66.61
     }
   },
-  "note": "Seeded subset of official rgb_test dishes that have overhead RGB. Not the full test table. MAPE blows up when the label is near zero; use MAE and median absolute error for fat. fat MAPE restricted to label >= 1 g is stored separately.",
-  "b1_fat_mape_when_label_ge_1g": 88.91,
-  "b0_fat_mape_when_label_ge_1g": 78.61,
-  "n_fat_label_ge_1g": 36
+  "b1_fat_mape_when_label_ge_1g": 83.71,
+  "b0_fat_mape_when_label_ge_1g": 74.66,
+  "note": "Seeded subset of official rgb_test dishes that have overhead RGB. Not the full test table. MAPE blows up when the label is near zero; use MAE and median absolute error for fat."
 }
