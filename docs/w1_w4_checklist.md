@@ -26,7 +26,8 @@
 - [x] `nutrition_lookup` + `fndds_retrieve` 最小可跑（toy）
 - [x] B1 RAG-once 在 toy 冒烟（无 VLM）
 - [x] Qwen2.5-VL-7B 在空闲的一张 4090D 上可推理（另一张卡上已有 llama-server，未占用）
-- [x] B0/B1 在真实 N5K 小子集跑完（官方 rgb_test 有图 507 盘里 seed=42 抽 50）。第二轮先验后重跑：能量 MAE 为 B0 98.3、B1 88.2（上一轮 97.4 / 107.9，硬化前 98.2 / 112.1）。不是全表
+- [x] B0/B1 在真实 N5K 小子集跑完（官方 rgb_test 有图 507 盘里 seed=42 抽 50）。第二轮先验后重跑：能量 MAE 为 B0 98.3、B1 88.2（上一轮 97.4 / 107.9，硬化前 98.2 / 112.1）。50 盘数字保留
+- [ ] **已授权的下一步** 有俯拍 RGB 的官方 rgb_test 全池 B0/B1（507/709）。备份名、命令和禁止事项在 [`STATUS.md`](STATUS.md)「下一步（服务器立即执行）」。无俯拍 RGB 的官方 test 盘不在这次里。体积工具仍关。本轮不做弱标签
 - [x] portion_grid 接上查表打分（B1 默认克重网格 + 去重 + 食材检索先验；`scripts/b1_harden_smoke.py`）
 
 ## W3 规则老师与弱标签管道

@@ -66,7 +66,7 @@ export VDR_FNDDS_PATH=/path/on/server/fndds/2019-2020/foods.json
 
 1. 通过 GitHub（或用户粘贴的 diff/文件）读取 `results/`、`notes/`、`STATUS.md`。  
 2. 改代码、补脚本、修订 `PLAN.md` / 标注指南；**不**假设能进内网。  
-3. 需要用户跑的命令写进 `docs/SERVER_SETUP.md` 或 `notes/` 的「请服务器执行」段落。  
+3. 需要用户跑的命令写进 `docs/SERVER_SETUP.md` 或 `notes/` 的「请服务器执行」段落。当前评测命令在 [`STATUS.md`](STATUS.md) 文首「下一步（服务器立即执行）」：先备份 n=50 的 `results/n5k_subset_b0_b1.json` 与 `.jsonl`，再对官方 `rgb_test` 有俯拍 RGB 的池（507）跑 B0/B1。  
 4. 不创建/代替用户开仓库；仓库 URL 由用户发来后继续协作。
 
 ## 6. 结果文件最小规范
