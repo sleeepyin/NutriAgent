@@ -3,13 +3,21 @@
 No VLM required when hypotheses are provided via `hypotheses`.
 The image path (``predict``) calls Qwen2.5-VL when hypotheses are omitted.
 
-Before lookup, duplicate hypotheses are merged (median portion, not a sum)
-and each matched code's grams are chosen on ``portion_grid`` instead of
-trusting the raw VLM number. If ``CODE_CONF_GAP`` fires, one follow-up runs
-before STOP: a second RETRIEVE when the selected name is still a prepared
-form (dip/soup/sauce/...) for a plain produce query, otherwise one
-RE_PORTION that re-scores the same grid. The follow-up does not shrink a
-portion that the grid already accepted.
+Before lookup, duplicate hypotheses are merged (median portion, not a sum),
+then a cheese+crust style fragment pair is collapsed into one query.
+Each matched code's grams are chosen on ``portion_grid`` instead of trusting
+the raw VLM number. The grid adds a density penalty above 100 g so a large
+hint on nuts or hard cheese cannot sit on the hint; a 100 g hint is kept.
+
+If ``CODE_CONF_GAP`` fires, one follow-up runs before STOP:
+
+- a second RETRIEVE when the selected name is still a prepared form
+  (dip/soup/sauce/...) for a plain produce query
+- a second RETRIEVE when the query named a dish form, the selected code is
+  energy-dense, and a candidate that keeps the dish form is sitting behind it
+- otherwise one RE_PORTION that re-scores the same grid
+
+The follow-up does not shrink a portion that the grid already accepted.
 """
 
 from __future__ import annotations
@@ -17,13 +25,17 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Sequence
 
-from vdr.perception.hypotheses import dedupe_hypotheses
+from vdr.perception.hypotheses import dedupe_hypotheses, merge_complementary_fragments
 from vdr.tools.fndds_retrieve import (
+    name_has_lemmas,
     name_is_prepared,
     query_asks_prepared,
+    query_dish_forms,
     retrieve,
+    rewrite_dish_form_query,
     rewrite_plain_query,
 )
+from vdr.tools.portion_grid import DENSE_KCAL_PER_100G
 from vdr.tools.nutrition_lookup import (
     aggregate_dish,
     freeze_nutrition_vector,
@@ -55,15 +67,16 @@ def _as_hyp_list(
 def choose_followup(verify_codes: Sequence[str], components: Sequence[dict[str, Any]]) -> str | None:
     """One extra action after the first retrieve, or None.
 
-    CODE_CONF_GAP on a prepared-form hit for a plain produce query gets a
-    second RETRIEVE. Any other CODE_CONF_GAP gets one confirmatory
-    RE_PORTION. Tied raw variants are the common case: another retrieve would
-    not change the code, and shrinking those portions would bias mass.
+    CODE_CONF_GAP on a prepared-form hit for a plain produce query, or on a
+    high-density ingredient that beat a dish-form candidate, gets a second
+    RETRIEVE. Any other CODE_CONF_GAP gets one confirmatory RE_PORTION. Tied
+    raw variants are the common case: another retrieve would not change the
+    code, and shrinking those portions would bias mass.
     """
     if "CODE_CONF_GAP" not in verify_codes:
         return None
     for comp in components:
-        if _needs_second_retrieve(comp):
+        if _needs_second_retrieve(comp) or _needs_dish_form_retrieve(comp):
             return "RETRIEVE"
     return "RE_PORTION"
 
@@ -76,6 +89,54 @@ def _needs_second_retrieve(comp: dict[str, Any]) -> bool:
     if query_asks_prepared(query) or not name_is_prepared(name):
         return False
     return rewrite_plain_query(query) is not None
+
+
+def _kcal_per_100g(comp: dict[str, Any]) -> float | None:
+    full = comp.get("nutri_full") or {}
+    mass = full.get("mass_g")
+    if mass is None:
+        mass = comp.get("portion_g")
+    energy = full.get("energy_kcal")
+    try:
+        mass_f = float(mass)
+        energy_f = float(energy)
+    except (TypeError, ValueError):
+        return None
+    if mass_f <= 0:
+        return None
+    return energy_f * 100.0 / mass_f
+
+
+def _dish_form_alternatives(comp: dict[str, Any]) -> list[str]:
+    forms = query_dish_forms(str(comp.get("query") or ""))
+    if not forms:
+        return []
+    selected = str(comp.get("selected_name") or "")
+    if name_has_lemmas(selected, set(forms)):
+        return []
+    names: list[str] = []
+    for cand in comp.get("cands") or []:
+        if cand.get("code") == comp.get("code"):
+            continue
+        name = str(cand.get("name") or "")
+        if name_has_lemmas(name, set(forms)):
+            names.append(name)
+    return names
+
+
+def _needs_dish_form_retrieve(comp: dict[str, Any]) -> bool:
+    """High-density top1 lost a dish-form candidate that the query asked for."""
+    if not comp.get("code"):
+        return False
+    if not _dish_form_alternatives(comp):
+        return False
+    density = _kcal_per_100g(comp)
+    if density is None or density < DENSE_KCAL_PER_100G:
+        return False
+    return rewrite_dish_form_query(
+        str(comp.get("query") or ""),
+        _dish_form_alternatives(comp),
+    ) is not None
 
 
 def _tightest_cands(components: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -156,36 +217,76 @@ def _resolve_component(
     return comp
 
 
+def _accept_requery(
+    comp: dict[str, Any],
+    rr: Any,
+    *,
+    catalog_path: str | Path | None,
+    accept,
+) -> bool:
+    if not rr.selected_code or not rr.cands:
+        return False
+    new_name = str(rr.cands[0].get("name") or "")
+    old_name = str(comp.get("selected_name") or "")
+    if rr.selected_code == comp.get("code") or not accept(new_name, old_name):
+        return False
+    comp["previous_code"] = comp.get("code")
+    comp["previous_name"] = old_name
+    _bind_hit(comp, rr, float(comp["hint_g"]), catalog_path)
+    return True
+
+
+def _second_retrieve_summary(components: Sequence[dict[str, Any]], changed: bool) -> str:
+    kinds = {comp.get("requery_kind") for comp in components if comp.get("requery")}
+    if "dish_form" in kinds and "prepared" in kinds:
+        target = "a prepared-form code and a dense dish-form miss"
+    elif "dish_form" in kinds:
+        target = "a dense code that dropped the queried dish form"
+    else:
+        target = "a prepared-form code"
+    if changed:
+        return f"second retrieve after CODE_CONF_GAP on {target}"
+    return f"second retrieve after CODE_CONF_GAP; {target} unchanged"
+
+
+def _prepared_rewrite_ok(new_name: str, old_name: str) -> bool:
+    """Leave a dip/soup/sauce hit. Switching dip → soup is not a correction."""
+    return name_is_prepared(old_name) and not name_is_prepared(new_name)
+
+
 def _second_retrieve(
     components: list[dict[str, Any]],
     *,
     catalog_path: str | Path | None,
     top_k: int,
 ) -> bool:
-    """Re-query prepared-form hits. Return True if any code changes."""
+    """Re-query prepared-form or dish-form misses. Return True if any code changes."""
     changed = False
     for comp in components:
-        if not _needs_second_retrieve(comp):
+        if _needs_second_retrieve(comp):
+            rewritten = rewrite_plain_query(str(comp.get("query") or ""))
+            kind = "prepared"
+            accept = _prepared_rewrite_ok
+        elif _needs_dish_form_retrieve(comp):
+            forms = set(query_dish_forms(str(comp.get("query") or "")))
+            rewritten = rewrite_dish_form_query(
+                str(comp.get("query") or ""),
+                _dish_form_alternatives(comp),
+            )
+            kind = "dish_form"
+
+            def accept(new_name: str, _old_name: str, forms: set[str] = forms) -> bool:
+                return name_has_lemmas(new_name, forms)
+
+        else:
             continue
-        rewritten = rewrite_plain_query(str(comp.get("query") or ""))
         comp["requery"] = rewritten
+        comp["requery_kind"] = kind
         if not rewritten:
             continue
         rr = retrieve(rewritten, top_k=top_k, catalog_path=catalog_path)
-        if not rr.selected_code or not rr.cands:
-            continue
-        new_name = str(rr.cands[0].get("name") or "")
-        old_name = str(comp.get("selected_name") or "")
-        # Only leave a dip/soup/sauce/… hit. Switching to another prepared
-        # form (dip → soup) is not a correction.
-        if name_is_prepared(new_name) or rr.selected_code == comp.get("code"):
-            continue
-        if not name_is_prepared(old_name):
-            continue
-        comp["previous_code"] = comp.get("code")
-        comp["previous_name"] = old_name
-        _bind_hit(comp, rr, float(comp["hint_g"]), catalog_path)
-        changed = True
+        if _accept_requery(comp, rr, catalog_path=catalog_path, accept=accept):
+            changed = True
     return changed
 
 
@@ -312,7 +413,8 @@ def predict_from_hypotheses(
 ) -> dict[str, Any]:
     """Retrieve+aggregate from component hypotheses (no VLM)."""
     hyps_in = _as_hyp_list(hypotheses)
-    hyps = dedupe_hypotheses(hyps_in)
+    hyps_deduped = dedupe_hypotheses(hyps_in)
+    hyps = merge_complementary_fragments(hyps_deduped)
     components = [
         _resolve_component(
             hyp,
@@ -368,12 +470,14 @@ def predict_from_hypotheses(
                 "n_components": len(hyps),
                 "n_hypotheses_in": len(hyps_in),
                 "n_matched": len(matched),
-                "dropped_duplicates": len(hyps_in) - len(hyps),
+                "dropped_duplicates": len(hyps_in) - len(hyps_deduped),
+                "merged_fragments": len(hyps_deduped) - len(hyps),
                 "verify_codes": first_vcodes,
             },
             "state_summary": (
                 f"rag-once matched {len(matched)}/{len(hyps)} components"
-                f" after dedupe {len(hyps_in)}->{len(hyps)}"
+                f" after dedupe {len(hyps_in)}->{len(hyps_deduped)}"
+                f" merge {len(hyps_deduped)}->{len(hyps)}"
             ),
         }
     ]
@@ -396,11 +500,7 @@ def predict_from_hypotheses(
                     ],
                     "changed": changed_code,
                 },
-                "state_summary": (
-                    "second retrieve after CODE_CONF_GAP on a prepared-form code"
-                    if changed_code
-                    else "second retrieve after CODE_CONF_GAP; prepared-form code unchanged"
-                ),
+                "state_summary": _second_retrieve_summary(components, changed_code),
             }
         )
     elif followup == "RE_PORTION":
@@ -447,6 +547,7 @@ def predict_from_hypotheses(
             "catalog": "toy_or_env",
             "n_hypotheses_in": len(hyps_in),
             "n_hypotheses": len(hyps),
+            "merged_fragments": len(hyps_deduped) - len(hyps),
             "hypotheses": hyps,
             "followup": followup,
             "portion_grid_g": list(DEFAULT_PORTION_GRID_G),

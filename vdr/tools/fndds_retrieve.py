@@ -4,12 +4,12 @@ Default catalog: data/fndds/2019-2020/foods.json if present, else toy.
 Override with VDR_FNDDS_PATH.
 
 Plain produce queries ("red onion", "blueberry") used to lose to a shorter
-prepared food that shared one token (Onion dip, Blueberry juice). Two
-transparent adjustments sit on top of the token score:
+prepared food that shared one token (Onion dip, Blueberry juice). Transparent
+adjustments sit on top of the token score. None of them is a learned weight.
 
 1. Light singularization so onion/onions and blueberry/blueberries share a lemma.
-2. A lexical form prior, not a learned weight. The token score is capped at
-   1 before this prior so the bonus below is the only way past 1.
+2. A lexical form prior. The token score is capped at 1 before this prior so
+   the raw bonus below is the only way past 1.
    - If the query is a produce name or "rice", and it does not itself name a
      prepared form, foods whose name contains dip/soup/sauce/gravy/juice/milk/
      oil/pickled/fried/candied/creamed/flavored/rings lose ``PREP_PENALTY``
@@ -17,11 +17,20 @@ transparent adjustments sit on top of the token score:
      "sauce" there lets an unrelated tempura code win.
    - If the query is a produce name and the food is raw/fresh — not merely
      "from raw" or "from fresh" — add ``RAW_BONUS`` (0.10).
+   - If the query names a dish form (pudding, salad, pizza, ...), a food whose
+     name drops that form loses ``DISH_FORM_PENALTY`` (0.20). Head F1 otherwise
+     prefers the short ingredient ("Chia seeds" over any pudding).
+   - A meat-analog qualifier (meatless, vegetarian, vegan, imitation) on a
+     meat head ("Bacon strip, meatless") loses ``FAUX_MEAT_PENALTY`` (0.25)
+     unless the query itself asked for that qualifier. Dishes that are merely
+     meatless (cheese quiche, lasagna) are not meat heads, so they stay.
 
 0.10 is just above ``rule_verify.CODE_CONF_GAP`` (0.08), so a raw produce code
 separates from an exact-tied cooked sibling. 0.20 is large enough that a
-substring win for dip/juice does not survive. Query text that already says
-"dip" or "juice" is not penalized.
+substring win for dip/juice, or for chia seeds over pudding, does not survive.
+0.25 drops an exact alias hit (1.0) under the real-bacon head match (~0.78).
+Query text that already says "dip", "juice", "pudding", or "meatless" keeps
+that reading.
 """
 
 from __future__ import annotations
@@ -29,7 +38,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Sequence
 
 from .fndds_catalog import iter_foods
 
@@ -143,9 +152,55 @@ PRODUCE_LEMMAS = frozenset(
 # lets an unrelated tempura or sandwich code win.
 PENALTY_QUERY_LEMMAS = PRODUCE_LEMMAS | {"rice"}
 
+# Dish forms. Head F1 scores a short ingredient that covers part of the query
+# above the dish those words were naming ("Chia seeds" at 0.83 vs any pudding
+# at 0.725). The penalty has to clear that gap.
+DISH_FORM_TOKENS = frozenset(
+    {
+        "pudding",
+        "salad",
+        "pizza",
+        "sandwich",
+        "omelet",
+        "omelette",
+        "smoothie",
+        "stew",
+        "casserole",
+    }
+)
+
+# Faux-meat qualifiers. Applied only when they mark a meat head (bacon,
+# chicken, hot dog, ...). "Lasagna, meatless" and "Cheese quiche, meatless"
+# use the same word for a dish that simply has no meat; those heads are not
+# in FAUX_MEAT_HEADS, so a blanket penalty would bind "cheese quiche" to a
+# cheese block.
+MEAT_ALTERNATIVE_TOKENS = frozenset({"meatless", "vegetarian", "vegan", "imitation"})
+FAUX_MEAT_HEADS = frozenset(
+    {
+        "bacon",
+        "sausage",
+        "chicken",
+        "beef",
+        "pork",
+        "turkey",
+        "ham",
+        "meatball",
+        "steak",
+        "burger",
+        "salami",
+        "pepperoni",
+        "crab",
+        "frank",
+        "wiener",
+        "bratwurst",
+    }
+)
+
 # Flat score shifts. See module docstring for why these magnitudes.
 PREP_PENALTY = 0.20
 RAW_BONUS = 0.10
+DISH_FORM_PENALTY = 0.20
+FAUX_MEAT_PENALTY = 0.25
 
 
 def _lemma(token: str) -> str:
@@ -177,6 +232,87 @@ def query_asks_prepared(query: str) -> bool:
 
 def name_is_prepared(name: str) -> bool:
     return bool(_lemmas(name) & PREPARED_FORM_TOKENS)
+
+
+def query_dish_forms(query: str) -> list[str]:
+    """Dish-form lemmas in query order, without duplicates."""
+    forms: list[str] = []
+    for token in _TOKEN_RE.findall(query or ""):
+        lemma = _lemma(token)
+        if lemma in DISH_FORM_TOKENS and lemma not in forms:
+            forms.append(lemma)
+    return forms
+
+
+def name_has_lemmas(name: str, lemmas: set[str] | frozenset[str]) -> bool:
+    return bool(_lemmas(name) & set(lemmas))
+
+
+def rewrite_dish_form_query(
+    query: str,
+    alternative_names: Sequence[str] = (),
+) -> str | None:
+    """Corrective retrieve text when a dish-form query bound a dense ingredient.
+
+    Reordering the original words keeps the same lemmas, so a second retrieve
+    would repeat the first ranking. The rewrite is the dish-form word itself
+    ("pudding"), which is the form the query already named.
+    """
+    forms = query_dish_forms(query)
+    if not forms:
+        return None
+    alt: set[str] = set()
+    for name in alternative_names:
+        alt |= _lemmas(name)
+    for form in forms:
+        if form in alt:
+            return form
+    return forms[0]
+
+
+def _head_lemmas(name: str) -> set[str]:
+    return _lemmas((name or "").split(",")[0])
+
+
+def _has_meat_alternative_qualifier(name: str) -> bool:
+    """True when meatless/vegetarian/vegan/imitation is a label, not a side note.
+
+    FNDDS writes it as its own comma segment ("Bacon strip, meatless") or as
+    the first word ("Imitation crab meat"). "made with imitation crab" inside
+    a salad name is not that label.
+    """
+    parts = [part.strip() for part in (name or "").split(",") if part.strip()]
+    if not parts:
+        return False
+    allowed = MEAT_ALTERNATIVE_TOKENS | {"nfs"}
+    for part in parts[1:]:
+        tokens = _lemmas(part)
+        if tokens and tokens <= allowed and (tokens & MEAT_ALTERNATIVE_TOKENS):
+            return True
+    first_tokens = _TOKEN_RE.findall(parts[0])
+    if first_tokens and _lemma(first_tokens[0]) in MEAT_ALTERNATIVE_TOKENS:
+        return True
+    return False
+
+
+def _is_faux_meat_head(name: str) -> bool:
+    head = _head_lemmas(name)
+    if head & FAUX_MEAT_HEADS:
+        return True
+    return {"hot", "dog"} <= head
+
+
+def query_asks_meat_alternative(query: str) -> bool:
+    return bool(_lemmas(query) & MEAT_ALTERNATIVE_TOKENS)
+
+
+def name_is_unrequested_faux_meat(query: str, name: str) -> bool:
+    """Meat analog selected for a query that did not ask for one."""
+    if query_asks_meat_alternative(query):
+        return False
+    if not _has_meat_alternative_qualifier(name):
+        return False
+    return _is_faux_meat_head(name)
 
 
 def rewrite_plain_query(query: str) -> str | None:
@@ -249,6 +385,11 @@ def _apply_form_prior(query: str, food: dict[str, Any], base: float) -> float:
         and content_overlap
     ):
         score += RAW_BONUS
+    q_forms = q_lemmas & DISH_FORM_TOKENS
+    if q_forms and not (name_lemmas & q_forms):
+        score -= DISH_FORM_PENALTY
+    if name_is_unrequested_faux_meat(query, name):
+        score -= FAUX_MEAT_PENALTY
     return max(0.0, score)
 
 
