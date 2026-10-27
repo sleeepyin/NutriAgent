@@ -6,8 +6,9 @@ numpy. It does not load torch, does not touch the 7B VLM, and does not
 read ``obs_t``.
 
 ``LOGISTIC_EPOCHS``, ``LOGISTIC_LR``, and ``LOGISTIC_L2`` are fixed. They
-were not selected on the train hold-out or on rgb_test. A later MLP or
-Transformer can replace ``_NumpyLogistic`` without changing ``build_features``.
+were not selected on the train hold-out or on rgb_test. The linear head stays
+the baseline. The small MLP sibling is ``vdr.controller.policy_mlp.PolicyMLP``
+and uses the same ``build_features`` vector.
 """
 
 from __future__ import annotations
