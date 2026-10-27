@@ -52,13 +52,11 @@ B1 第二轮先验（菜品形态、未点名的仿肉、100 g 以上的高密�
 
 ## 50 盘子集重跑（2026-10-27）
 
-协议（已跑完，结果覆盖 `results/n5k_subset_b0_b1.json` 与 `.jsonl`）：
+协议已跑完。代码为 `9687a8c`，数字留在提交 `a14f6a3`。当前 `results/n5k_subset_b0_b1.json` 与 `.jsonl` 已是下面的第二轮结果。
 
 ```bash
 python scripts/eval_n5k_subset.py --n 50 --seed 42 --split rgb_test
 ```
-
-代码为 `9687a8c`。同一次拉代码后，CPU 回归已通过：`b1_harden_smoke`、`validate_schema_examples`、`fndds_retrieve_smoke`、`rule_verify_toy_smoke`、`b1_toy_smoke`（5/5）、`eval_toy_smoke`。
 
 ## 第二轮 50 盘（2026-10-27 10:40）
 
