@@ -1,13 +1,13 @@
 # 执行状态（STATUS）
 
 > 供 GitHub 同步：服务器跑完实验后，请在本文件更新。`notes/` 历史周报已删除，见 [`notes/README.md`](../notes/README.md)。执行助手据此继续改代码/方案。  
-> **截止日期（文档写入时）**：2026-11-04（Asia/Shanghai）。文首「下一步」于本日改成：额度未回时先跑离线 P0 冒烟，再做忠实 B1 / B2 脚手架；闭环训练仍等额度。Canvas「VDR — Evidence-Aware Closed-Loop Tool Control」的锁不变。2026-10-27 的跑数仍留在后文，日期不改。  
+> **截止日期（文档写入时）**：2026-11-04（Asia/Shanghai）。文首「下一步」于本日改成：离线 P0 冒烟已跑完；额度未回时做忠实 B1 / B2 脚手架；闭环训练仍等额度。Canvas「VDR — Evidence-Aware Closed-Loop Tool Control」的锁不变。2026-10-27 的跑数仍留在后文，日期不改。  
 > **可执行的下一步只在本文件。** 聊天不是 runbook。助手改下一步、跑法或方案时，先更新文档并推到 GitHub；服务器上的人或 AI 先 `git pull --ff-only`，再读「下一步」执行。  
 > **服务器执行看「下一步」。** 这一节没有新命令。文中的 `--n 50`、俯拍池 `--n 507`、弱标签 jsonl、开环 BC / DAgger 冒烟都是已经跑完的记录，不要再执行。
 
 ## 下一步（立即执行）
 
-> 真源：根目录 [`PLAN.md`](../PLAN.md)、Canvas「VDR — Evidence-Aware Closed-Loop Tool Control」、[`docs/VDR_P0.md`](VDR_P0.md)。**额度或方案允许之前，不训练闭环。** `CLOSED_LOOP_READY` 在此之前保持 **false**。开环 31 维只作消融 **B5**。冻结结果不重写、不覆盖。**旧 Ours-BC 已停**：先前把它当成闭环主方法，实际是不读 `o_{t-1}` 的开环 31 维 BC / MLP / DAgger。**不上 RL。不开 fast Cloud Agent**（额度策略按用户约定）。**现在先跑离线 P0 冒烟（不占额度、不需 GPU）。** 忠实 B1 / B2 脚手架排在这轮冒烟之后，仍不占额度。
+> 真源：根目录 [`PLAN.md`](../PLAN.md)、Canvas「VDR — Evidence-Aware Closed-Loop Tool Control」、[`docs/VDR_P0.md`](VDR_P0.md)。**额度或方案允许之前，不训练闭环。** `CLOSED_LOOP_READY` 保持 **false**。开环 31 维只作消融 **B5**。冻结结果不重写、不覆盖。**旧 Ours-BC 已停**：先前把它当成闭环主方法，实际是不读 `o_{t-1}` 的开环 31 维 BC / MLP / DAgger。**不上 RL。不开 fast Cloud Agent**（额度策略按用户约定）。**离线 P0 冒烟已跑完（见下），不要再当服务器任务。** 现在做忠实 B1 / B2 脚手架，仍不占额度。
 
 ### 服务器
 
@@ -18,23 +18,28 @@
 - n=50 基线 `results/n5k_subset_b0_b1_n50_seed42.json` 与 `.jsonl`
 - `results/weak_steps/rgb_train_fit_all.jsonl`（sha256 前缀 `ed47f9239bfecb3c…`）与 `results/weak_steps/rgb_train_holdout_all.jsonl`
 
-不要用这 507 盘的 test GT 调阈值、检索、克重或碎片合并。体积工具仍关。旧回归权重仍不接入。弱标签不改 B1 先验。脚手架的 dry-run / fake-run **不要**把主表数字写进 `results/`。
+不要用这 507 盘的 test GT 调阈值、检索、克重或碎片合并。体积工具仍关。旧回归权重仍不接入。弱标签不改 B1 先验。脚手架的 dry-run / fake-run **不要**把主表数字写进 `results/`。离线 P0 脚本可以再冒烟，**除非另有要求，不要当成服务器任务重跑。**
 
 历史 B0 能量 MAE **97.03**（n=507）可作 Direct-VLM 锚点。历史 B1 能量 MAE **110.72**（n=506）**不是忠实 DietAI24**，主表须按官方协议重做后再进。中位约 63.5 只描述这次冻结跑数，不是新的服务器任务。
 
+### 助手进度
+
+**P0 冒烟已跑完**（2026-11-04 Asia/Shanghai）。Cloud agent `bc-b11b6f0a`，代码在 `33ad5e3` 一带（#19 之后；#20 没有改这些脚本）。冒烟本身没有单独 PR。冻结 `results/` 的 sha256 未改。`CLOSED_LOOP_READY` 仍是 **false**。没有训练，没有闭环，没有写入上面列出的冻结 `results/` 路径。
+
+- Confusion `--demo`：Acc **0.9700**（2688/2771）；**ABSTAIN 0/24，F1=0**。**红警仍在**，这不是方法证明。
+- Provenance：mock **2 pass / 2 fail**；真实目录钉在 FNDDS **2019–2020**，**5624** 条码。
+- Selective：Coverage **0.50**，Selective MAE **2.50**，AURC **≈3.61**。
+
 ### 助手 / 本地（优先）
 
-1. **立即（不占额度，不需 GPU）：离线 P0 冒烟。** 跑 `scripts/action_confusion_matrix.py`、`scripts/provenance_validity.py`、`scripts/selective_metrics.py`，以及 `python scripts/p0_eval_smoke.py`。只做冒烟。**不要**写入上面列出的冻结 `results/` 路径。这不是训练，也不是闭环。不是新的服务器命令。
-   - 索引：[`docs/VDR_P0.md`](VDR_P0.md)。设计：[`docs/STATE_FEATURE_DESIGN.md`](STATE_FEATURE_DESIGN.md)、[`docs/ACTION_CONFUSION.md`](ACTION_CONFUSION.md)
-   - mock：`tests/fixtures/fndds_mock_foods.json`（真目录仍是 `data/fndds/2019-2020/`，5624）
-   - 开环 31 维 `build_features` 仍是消融 **B5**。闭环草图 `build_state_features(h_t, o_prev, b_t)` 在 `vdr/controller/state_features.py`，`CLOSED_LOOP_READY` 为 **false**，策略头仍只吃 `build_features`。hold-out **ABSTAIN 0/24 仍是红警**；`--demo` 复现 Acc≈**0.9700** 且 ABSTAIN F1=0。**不要**把这些冒烟当成开训。
-2. **P0 冒烟之后（仍不占额度）：忠实 B1 / B2 脚手架。** 只做接口和 dry-run / fake-run 协议（冒烟只走 API 形状）。**不要**把主表指标写入 `results/`。**不要**训练闭环 / state-aware 策略。
+1. **立即（不占额度，不需 GPU）：忠实 B1（DietAI24）+ B2（FoodAgent）脚手架。** 只做接口和 dry-run / fake-run 协议。**不要**把主表指标写入 `results/`。**不要**做闭环训练。
    - **B1（DietAI24）**：按官方协议搭调用形状。历史冻结 B1 **110.72 不是忠实 DietAI24**，不能当这一格的结果。
    - **B2（FoodAgent）**：动态专家路由。做不全就标诚实 approx，**不要**标成 Fixed-MoE。
    - 在本文件和对应 PR 里写清：哪些调用是忠实复现，哪些仍是 approx。
-3. **额度回来之前挡住**：State-aware 闭环训练 `π(a_t|h_t,o_{t-1},b_t)`。`CLOSED_LOOP_READY` 保持 **false**。在此之前不评主表闭环。
+2. **离线 P0 脚本仍在，可再冒烟。** `scripts/action_confusion_matrix.py`、`scripts/provenance_validity.py`、`scripts/selective_metrics.py`、`python scripts/p0_eval_smoke.py`。索引 [`docs/VDR_P0.md`](VDR_P0.md)。**除非另有要求，不要当成服务器任务重跑。** 再跑也只是冒烟：不写冻结 `results/`，不开训，不闭环。
+3. **额度回来之前挡住**：State-aware 闭环训练 `π(a_t|h_t,o_{t-1},b_t)`。`CLOSED_LOOP_READY` 保持 **false**。在此之前不评主表闭环。开环 31 维 `build_features` 仍是消融 **B5**。草图 `build_state_features(h_t, o_prev, b_t)` 在 `vdr/controller/state_features.py`，策略头仍只吃 `build_features`。
 4. **P2 人工（稍后）**：试标指南按新标签表改（Visibility / Code Match / Portion Confidence / Evidence Completeness / Should Abstain / Conflict）。kappa 门禁 **0.7–0.8**，不作 0.6 凑合。试标 30。`docs/annotation_guide_v0.md` 文首已标明：字段是 v0，相对 PLAN P2 **部分过时**，试标可用，不是最终协议。扩成新标签集仍留到人工试标。
-5. **禁止**：把 0.97 Acc 写成方法证明；盲目多轮 DAgger；上 RL；用 test GT 调参；开体积工具；接旧回归权重；覆盖上面列出的冻结文件；把 dry-run 数字写进主表 `results/`；把未完成的 B2 写成 Fixed-MoE。
+5. **禁止**：把 0.97 Acc 或这次 P0 冒烟写成方法证明；hold-out **ABSTAIN 0/24、F1=0 仍是红警**；盲目多轮 DAgger；上 RL；开 fast Cloud Agent；用 test GT 调参；开体积工具；接旧回归权重；覆盖上面列出的冻结文件；把 dry-run 数字写进主表 `results/`；把历史 B1 **110.72** 当成忠实 DietAI24；把未完成的 B2 写成 Fixed-MoE；在 `CLOSED_LOOP_READY` 仍为 false 时开闭环训练。
 
 ### 协作
 
@@ -251,7 +256,7 @@ B1 第二轮先验（菜品形态、未点名的仿肉、100 g 以上的高密�
 | DAgger 第 1 轮（CPU） | **开环 v2。旧 Ours-BC 已停，暂不上 RL。** 规则老师当专家，`PolicyMLP` 当学习者。只在 fit 池展开。全池新行 **1490**（novel 117 + 犯错副本 1373）。hold-out 动作准确率 **0.9592**（2658/2771），低于纯 BC **0.9700**。`CORRECT_CODE` 117/157，`RETRIEVE` 1285/1285，`ABSTAIN` 仍是 **0/24（红警）**。不读 `obs_t`，没有 `VOLUME_ESTIMATE`。冒烟：`scripts/dagger_smoke.py` |
 | 标注指南 v0 | `docs/annotation_guide_v0.md`。文首横幅：字段是 v0，相对 PLAN P2（Visibility / Code Match / …，kappa 0.7–0.8）部分过时；试标可用，不是最终协议 |
 | 方案 MD | 根目录 `PLAN.md`（2026-11-04 起与 Canvas「VDR — Evidence-Aware Closed-Loop Tool Control」对齐） |
-| P0 离线脚手架（未训练） | 设计 `docs/STATE_FEATURE_DESIGN.md`；混淆 / Provenance / Selective 脚本在 `scripts/`；mock `tests/fixtures/fndds_mock_foods.json`；草图 `vdr/controller/state_features.py`（`CLOSED_LOOP_READY` 假）。开环 31 维仍是 B5。冒烟 `scripts/p0_eval_smoke.py`。没有新的训练命令。索引 [`docs/VDR_P0.md`](VDR_P0.md) |
+| P0 离线脚手架（未训练） | 设计 `docs/STATE_FEATURE_DESIGN.md`；混淆 / Provenance / Selective 脚本在 `scripts/`；mock `tests/fixtures/fndds_mock_foods.json`；草图 `vdr/controller/state_features.py`（`CLOSED_LOOP_READY` 假）。开环 31 维仍是 B5。**2026-11-04 离线冒烟已跑完**（数字在文首「助手进度」；不是方法证明，不是训练）。索引 [`docs/VDR_P0.md`](VDR_P0.md) |
 
 ## 明确未完成
 
