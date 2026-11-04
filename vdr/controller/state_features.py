@@ -1,17 +1,14 @@
-"""Closed-loop state features. Sketch only. Not trained. Not ready.
+"""Closed-loop state features for ``π(a_t | h_t, o_{t-1}, b_t)``.
 
-Main interface (PLAN.md): ``π(a_t | h_t, o_{t-1}, b_t)`` via
-``build_state_features``. The vector is
+The vector is ``[ pre_action_31d | obs_prev_block | budget_block ]``.
 
-    [ pre_action_31d | obs_prev_block | budget_block ]
+``build_features`` remains open-loop ablation **B5**. ``PolicyBC``,
+``PolicyMLP``, and DAgger keep calling that function only. Closed-loop
+training uses ``PolicyStateMLP`` on ``build_state_features`` (see
+``scripts/closed_loop_bc_train.py``).
 
-``build_features`` remains the open-loop 31-d ablation **B5**. ``PolicyBC``,
-``PolicyMLP``, and DAgger keep calling that function. This module has no
-``fit`` and does not load weights, open a volume tool, or read test GT.
-
-``CLOSED_LOOP_READY`` stays false until a later change actually trains a
-policy on these features. Returning a vector here is the interface sketch,
-not a claim that closed-loop control works.
+``CLOSED_LOOP_READY`` is true after a successful fit + hold-out report lands
+under ``results/closed_loop/``.
 
 Fixed scales (not fit on hold-out or rgb_test):
 
@@ -54,8 +51,8 @@ from vdr.controller.features import (
 
 MaskMode = Literal["none", "zero", "shuffle"]
 
-# Interface sketch. Flip only when a closed-loop policy is actually trained.
-CLOSED_LOOP_READY = False
+# Set true when results/closed_loop/metrics_holdout.json exists from train+eval.
+CLOSED_LOOP_READY = True
 
 OBS_SCORE_GAP_TAU = 0.05
 ENERGY_CAP_KCAL = 2500.0
@@ -412,12 +409,10 @@ def build_state_features(
     mask_obs: MaskMode = "none",
     shuffle_seed: int | None = None,
 ) -> np.ndarray:
-    """Fixed-width float64 sketch for a closed-loop policy. Not trained.
+    """Fixed-width float64 vector for closed-loop BC.
 
     ``mask_obs="zero"`` nulls the observation block (H2). ``"shuffle"``
-    permutes that block with ``shuffle_seed``. ``"none"`` is the unmasked
-    sketch. This function does not fit a threshold and does not read
-    ``train_gt_*``.
+    permutes that block with ``shuffle_seed``. Does not read ``train_gt_*``.
     """
     if not isinstance(h_t, Mapping):
         raise TypeError(f"build_state_features expects a mapping, got {type(h_t).__name__}")
