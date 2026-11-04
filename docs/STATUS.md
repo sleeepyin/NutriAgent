@@ -1,13 +1,13 @@
 # 执行状态（STATUS）
 
 > 供 GitHub 同步：服务器跑完实验后，请在本文件更新。`notes/` 历史周报已删除，见 [`notes/README.md`](../notes/README.md)。执行助手据此继续改代码/方案。  
-> **截止日期（文档写入时）**：2026-11-04（Asia/Shanghai）。文首「下一步」于本日改成：离线 P0 冒烟已跑完；额度未回时做忠实 B1 / B2 脚手架；闭环训练仍等额度。Canvas「VDR — Evidence-Aware Closed-Loop Tool Control」的锁不变。2026-10-27 的跑数仍留在后文，日期不改。  
+> **截止日期（文档写入时）**：2026-11-04（Asia/Shanghai）。文首「下一步」于本日改成：B1/B2 脚手架已合进（PR #22）；闭环训练仍等 Cursor 额度；忠实 DietAI24 / FoodAgent 评测以后再做。Canvas「VDR — Evidence-Aware Closed-Loop Tool Control」的锁不变。2026-10-27 的跑数仍留在后文，日期不改。  
 > **可执行的下一步只在本文件。** 聊天不是 runbook。助手改下一步、跑法或方案时，先更新文档并推到 GitHub；服务器上的人或 AI 先 `git pull --ff-only`，再读「下一步」执行。  
 > **服务器执行看「下一步」。** 这一节没有新命令。文中的 `--n 50`、俯拍池 `--n 507`、弱标签 jsonl、开环 BC / DAgger 冒烟都是已经跑完的记录，不要再执行。
 
 ## 下一步（立即执行）
 
-> 真源：根目录 [`PLAN.md`](../PLAN.md)、Canvas「VDR — Evidence-Aware Closed-Loop Tool Control」、[`docs/VDR_P0.md`](VDR_P0.md)。**额度或方案允许之前，不训练闭环。** `CLOSED_LOOP_READY` 保持 **false**。开环 31 维只作消融 **B5**。冻结结果不重写、不覆盖。**旧 Ours-BC 已停**：先前把它当成闭环主方法，实际是不读 `o_{t-1}` 的开环 31 维 BC / MLP / DAgger。**不上 RL。不开 fast Cloud Agent**（额度策略按用户约定）。**离线 P0 冒烟已跑完（见下），不要再当服务器任务。** 现在做忠实 B1 / B2 脚手架，仍不占额度。
+> 真源：根目录 [`PLAN.md`](../PLAN.md)、Canvas「VDR — Evidence-Aware Closed-Loop Tool Control」、[`docs/VDR_P0.md`](VDR_P0.md)、[`docs/B1_B2_SCAFFOLD.md`](B1_B2_SCAFFOLD.md)。**额度或方案允许之前，不训练闭环。** `CLOSED_LOOP_READY` 保持 **false**。开环 31 维只作消融 **B5**。冻结结果不重写、不覆盖。**旧 Ours-BC 已停**：先前把它当成闭环主方法，实际是不读 `o_{t-1}` 的开环 31 维 BC / MLP / DAgger。**不上 RL。不开 fast Cloud Agent**（额度策略按用户约定）。**离线 P0 冒烟已跑完，B1/B2 脚手架已合进（PR #22）。** 都不要再当服务器任务。这一节没有新的落地命令。
 
 ### 服务器
 
@@ -30,16 +30,15 @@
 - Provenance：mock **2 pass / 2 fail**；真实目录钉在 FNDDS **2019–2020**，**5624** 条码。
 - Selective：Coverage **0.50**，Selective MAE **2.50**，AURC **≈3.61**。
 
+**B1/B2 脚手架已合进**（2026-11-04 Asia/Shanghai，PR #22）。路径：`vdr/baselines/dietai24`（fidelity=`scaffold`）、`vdr/baselines/foodagent`（fidelity=`approx`）、`docs/B1_B2_SCAFFOLD.md`、`scripts/b1_b2_scaffold_smoke.py`（CPU 通过）。历史 `b1_rag_once` 的 **110.72** 仍 **不是** 忠实 DietAI24。没有写入主表指标。没有闭环训练。`CLOSED_LOOP_READY=false`。B2 不是 Fixed-MoE。
+
 ### 助手 / 本地（优先）
 
-1. **立即（不占额度，不需 GPU）：忠实 B1（DietAI24）+ B2（FoodAgent）脚手架。** 只做接口和 dry-run / fake-run 协议。**不要**把主表指标写入 `results/`。**不要**做闭环训练。
-   - **B1（DietAI24）**：按官方协议搭调用形状。历史冻结 B1 **110.72 不是忠实 DietAI24**，不能当这一格的结果。
-   - **B2（FoodAgent）**：动态专家路由。做不全就标诚实 approx，**不要**标成 Fixed-MoE。
-   - 在本文件和对应 PR 里写清：哪些调用是忠实复现，哪些仍是 approx。
-2. **离线 P0 脚本仍在，可再冒烟。** `scripts/action_confusion_matrix.py`、`scripts/provenance_validity.py`、`scripts/selective_metrics.py`、`python scripts/p0_eval_smoke.py`。索引 [`docs/VDR_P0.md`](VDR_P0.md)。**除非另有要求，不要当成服务器任务重跑。** 再跑也只是冒烟：不写冻结 `results/`，不开训，不闭环。
-3. **额度回来之前挡住**：State-aware 闭环训练 `π(a_t|h_t,o_{t-1},b_t)`。`CLOSED_LOOP_READY` 保持 **false**。在此之前不评主表闭环。开环 31 维 `build_features` 仍是消融 **B5**。草图 `build_state_features(h_t, o_prev, b_t)` 在 `vdr/controller/state_features.py`，策略头仍只吃 `build_features`。
-4. **P2 人工（稍后）**：试标指南按新标签表改（Visibility / Code Match / Portion Confidence / Evidence Completeness / Should Abstain / Conflict）。kappa 门禁 **0.7–0.8**，不作 0.6 凑合。试标 30。`docs/annotation_guide_v0.md` 文首已标明：字段是 v0，相对 PLAN P2 **部分过时**，试标可用，不是最终协议。扩成新标签集仍留到人工试标。
-5. **禁止**：把 0.97 Acc 或这次 P0 冒烟写成方法证明；hold-out **ABSTAIN 0/24、F1=0 仍是红警**；盲目多轮 DAgger；上 RL；开 fast Cloud Agent；用 test GT 调参；开体积工具；接旧回归权重；覆盖上面列出的冻结文件；把 dry-run 数字写进主表 `results/`；把历史 B1 **110.72** 当成忠实 DietAI24；把未完成的 B2 写成 Fixed-MoE；在 `CLOSED_LOOP_READY` 仍为 false 时开闭环训练。
+1. **额度回来之前挡住（Blocked until Cursor quota）：** State-aware 闭环训练 `π(a_t|h_t,o_{t-1},b_t)`。`CLOSED_LOOP_READY` 保持 **false**。在此之前不评主表闭环。开环 31 维 `build_features` 仍是消融 **B5**。草图 `build_state_features(h_t, o_prev, b_t)` 在 `vdr/controller/state_features.py`，策略头仍只吃 `build_features`。
+2. **稍后（需要线上 API / 权重，不是这次落地）：** 忠实 DietAI24 评测，以及忠实 FoodAgent（Omni+MFP3D+NutritionX）。在此之前 B1 保持 scaffold，B2 保持 approx。不要把主表行写进冻结的 `results/n5k_*`。
+3. **离线 P0 脚本仍在，可再冒烟。** `scripts/action_confusion_matrix.py`、`scripts/provenance_validity.py`、`scripts/selective_metrics.py`、`python scripts/p0_eval_smoke.py`。索引 [`docs/VDR_P0.md`](VDR_P0.md)。**除非另有要求，不要当成服务器任务重跑。** 再跑也只是冒烟：不写冻结 `results/`，不开训，不闭环。
+4. **P2 标注指南升级稍后 / 人工：** 试标指南按新标签表改（Visibility / Code Match / Portion Confidence / Evidence Completeness / Should Abstain / Conflict）。kappa 门禁 **0.7–0.8**，不作 0.6 凑合。试标 30。`docs/annotation_guide_v0.md` 文首已标明：字段是 v0，相对 PLAN P2 **部分过时**，试标可用，不是最终协议。扩成新标签集仍留到人工试标。
+5. **禁止**：把 0.97 Acc 或这次 P0 冒烟写成方法证明；hold-out **ABSTAIN 0/24、F1=0 仍是红警**；盲目多轮 DAgger；上 RL；开 fast Cloud Agent；用 test GT 调参；开体积工具；接旧回归权重；覆盖上面列出的冻结文件；把 dry-run 数字或脚手架数字写进主表 `results/`（含冻结 `results/n5k_*`）；把历史 B1 **110.72** 当成忠实 DietAI24；把 B2（现为 approx）写成 Fixed-MoE；在 `CLOSED_LOOP_READY` 仍为 false 时开闭环训练。
 
 ### 协作
 
