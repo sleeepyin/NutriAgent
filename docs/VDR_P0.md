@@ -2,7 +2,7 @@
 
 Offline scaffolding for **Verified Dietary Reasoning**. Truth sources: [`PLAN.md`](../PLAN.md) and [`docs/STATUS.md`](STATUS.md) after `#17` / `7ad3cfb`.
 
-**No closed-loop training in this landing.** No DAgger/BC re-run. No RL. No volume tool. No legacy regressor weights. No test-GT supervision. Frozen `results/n5k_*` and `results/weak_steps/*.jsonl` stay as they are.
+**Closed-loop BC train landed (2026-11-04).** Fit/hold-out weak steps via `scripts/closed_loop_bc_train.py`; metrics under `results/closed_loop/`. Still no RL. Frozen `results/n5k_*` and `results/weak_steps/*.jsonl` stay as they are.
 
 - Method center: Evidence-Aware Closed-Loop Tool Control
 - Main policy (not trained here): \(\pi(a_t \mid h_t, o_{t-1}, b_t)\) — must read the tool observation
@@ -18,10 +18,13 @@ FNDDS release pinned: **2019–2020** (5624 codes) when a real catalog is loaded
 
 | Path | Role |
 |------|------|
-| [`docs/STATE_FEATURE_DESIGN.md`](STATE_FEATURE_DESIGN.md) | Closed-loop feature interface. Sketch is untrained |
+| [`docs/STATE_FEATURE_DESIGN.md`](STATE_FEATURE_DESIGN.md) | Closed-loop feature interface (79-d); trained via `PolicyStateMLP` |
 | [`docs/ACTION_CONFUSION.md`](ACTION_CONFUSION.md) | Confusion-matrix notes |
 | `vdr/controller/features.py` | Open-loop B5 `build_features` (31-d) |
-| `vdr/controller/state_features.py` | `build_state_features` sketch. `CLOSED_LOOP_READY` is false |
+| `vdr/controller/state_features.py` | `build_state_features`; `CLOSED_LOOP_READY` true after closed-loop train |
+| `vdr/controller/closed_loop_data.py` | Weak-step loader for `(h_t, o_prev, b_t)` |
+| `vdr/controller/policy_state_mlp.py` | Closed-loop MLP head (79 → 64 → 64 → 6) |
+| `scripts/closed_loop_bc_train.py` | Fit on fit pool; hold-out PR/F1 + mask ablations → `results/closed_loop/` |
 | `vdr/eval/action_metrics.py` | Per-class PR/F1 + confusion matrix |
 | `vdr/eval/provenance.py` | `n == code × portion/100 × per100g`, release pin |
 | `vdr/eval/selective.py` | Coverage, Selective MAE, AURC |
@@ -42,7 +45,7 @@ build_state_features(h_t, o_prev, b_t, *, mask_obs="none"|"zero"|"shuffle") -> n
 build_features(state)  # existing 31-d → B5-only path
 ```
 
-`PolicyBC`, `PolicyMLP`, and DAgger still call `build_features` only.
+`PolicyBC`, `PolicyMLP`, and DAgger still call `build_features` only. Closed-loop training uses `PolicyStateMLP` + `build_state_features`.
 
 ---
 

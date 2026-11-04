@@ -1,0 +1,215 @@
+{
+  "policy": "PolicyStateMLP",
+  "input_dim": 79,
+  "open_loop_b5_dim": 31,
+  "hidden": [
+    64,
+    64
+  ],
+  "epochs": 80,
+  "batch_size": 512,
+  "lr": 0.01,
+  "seed": 0,
+  "fit_path": "results/weak_steps/rgb_train_fit_all.jsonl",
+  "holdout_path": "results/weak_steps/rgb_train_holdout_all.jsonl",
+  "fit_rows": 25864,
+  "fit_dishes": 3679,
+  "holdout_rows": 2771,
+  "holdout_dishes": 380,
+  "fit_limit": null,
+  "fit_seconds": 13.51,
+  "obs_block_step0_mean_norm": 0.0,
+  "obs_block_step_gt0_mean_norm": 2.687688874265399,
+  "evaluations": {
+    "none": {
+      "mask_obs": "none",
+      "overall_accuracy": 0.9606640202093107,
+      "per_class": {
+        "RETRIEVE": {
+          "precision": 0.9968944099378882,
+          "recall": 0.9992217898832685,
+          "f1": 0.998056743101438,
+          "support": 1285.0,
+          "tp": 1284.0,
+          "fp": 4.0,
+          "fn": 1.0
+        },
+        "CORRECT_CODE": {
+          "precision": 0.6857142857142857,
+          "recall": 0.9171974522292994,
+          "f1": 0.784741144414169,
+          "support": 157.0,
+          "tp": 144.0,
+          "fp": 66.0,
+          "fn": 13.0
+        },
+        "RE_PORTION": {
+          "precision": 0.986562150055991,
+          "recall": 0.928345626975764,
+          "f1": 0.9565689467969598,
+          "support": 949.0,
+          "tp": 881.0,
+          "fp": 12.0,
+          "fn": 68.0
+        },
+        "RE_DECOMPOSE": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 0.0,
+          "tp": 0.0,
+          "fp": 0.0,
+          "fn": 0.0
+        },
+        "ABSTAIN": {
+          "precision": 0.45161290322580644,
+          "recall": 0.5833333333333334,
+          "f1": 0.509090909090909,
+          "support": 24.0,
+          "tp": 14.0,
+          "fp": 17.0,
+          "fn": 10.0
+        },
+        "STOP": {
+          "precision": 0.9713467048710601,
+          "recall": 0.952247191011236,
+          "f1": 0.9617021276595744,
+          "support": 356.0,
+          "tp": 339.0,
+          "fp": 10.0,
+          "fn": 17.0
+        }
+      },
+      "abstain_f1": 0.509090909090909,
+      "abstain_recall": 0.5833333333333334,
+      "abstain_support": 24.0
+    },
+    "zero": {
+      "mask_obs": "zero",
+      "overall_accuracy": 0.7037170696499458,
+      "per_class": {
+        "RETRIEVE": {
+          "precision": 1.0,
+          "recall": 0.9696498054474708,
+          "f1": 0.9845910707230343,
+          "support": 1285.0,
+          "tp": 1246.0,
+          "fp": 0.0,
+          "fn": 39.0
+        },
+        "CORRECT_CODE": {
+          "precision": 0.2122905027932961,
+          "recall": 0.7261146496815286,
+          "f1": 0.3285302593659942,
+          "support": 157.0,
+          "tp": 114.0,
+          "fp": 423.0,
+          "fn": 43.0
+        },
+        "RE_PORTION": {
+          "precision": 0.9177631578947368,
+          "recall": 0.5879873551106428,
+          "f1": 0.7167630057803468,
+          "support": 949.0,
+          "tp": 558.0,
+          "fp": 50.0,
+          "fn": 391.0
+        },
+        "RE_DECOMPOSE": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 0.0,
+          "tp": 0.0,
+          "fp": 0.0,
+          "fn": 0.0
+        },
+        "ABSTAIN": {
+          "precision": 0.06451612903225806,
+          "recall": 1.0,
+          "f1": 0.12121212121212122,
+          "support": 24.0,
+          "tp": 24.0,
+          "fp": 348.0,
+          "fn": 0.0
+        },
+        "STOP": {
+          "precision": 1.0,
+          "recall": 0.02247191011235955,
+          "f1": 0.04395604395604395,
+          "support": 356.0,
+          "tp": 8.0,
+          "fp": 0.0,
+          "fn": 348.0
+        }
+      },
+      "abstain_f1": 0.12121212121212122,
+      "abstain_recall": 1.0,
+      "abstain_support": 24.0
+    },
+    "shuffle": {
+      "mask_obs": "shuffle",
+      "overall_accuracy": 0.6607722843738723,
+      "per_class": {
+        "RETRIEVE": {
+          "precision": 0.8203414996288048,
+          "recall": 0.8599221789883269,
+          "f1": 0.8396656534954408,
+          "support": 1285.0,
+          "tp": 1105.0,
+          "fp": 242.0,
+          "fn": 180.0
+        },
+        "CORRECT_CODE": {
+          "precision": 0.061855670103092786,
+          "recall": 0.03821656050955414,
+          "f1": 0.04724409448818898,
+          "support": 157.0,
+          "tp": 6.0,
+          "fp": 91.0,
+          "fn": 151.0
+        },
+        "RE_PORTION": {
+          "precision": 0.6746849942726232,
+          "recall": 0.6206533192834562,
+          "f1": 0.6465422612513722,
+          "support": 949.0,
+          "tp": 589.0,
+          "fp": 284.0,
+          "fn": 360.0
+        },
+        "RE_DECOMPOSE": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "support": 0.0,
+          "tp": 0.0,
+          "fp": 0.0,
+          "fn": 0.0
+        },
+        "ABSTAIN": {
+          "precision": 0.04918032786885246,
+          "recall": 0.375,
+          "f1": 0.08695652173913043,
+          "support": 24.0,
+          "tp": 9.0,
+          "fp": 174.0,
+          "fn": 15.0
+        },
+        "STOP": {
+          "precision": 0.45018450184501846,
+          "recall": 0.34269662921348315,
+          "f1": 0.38915470494417864,
+          "support": 356.0,
+          "tp": 122.0,
+          "fp": 149.0,
+          "fn": 234.0
+        }
+      },
+      "abstain_f1": 0.08695652173913043,
+      "abstain_recall": 0.375,
+      "abstain_support": 24.0
+    }
+  },
+  "not_main_table_proof": "Hold-out action metrics only. Not Full-set MAE / AURC main-table proof."
+}

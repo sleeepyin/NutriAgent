@@ -4,7 +4,7 @@
 > Method center = **Evidence-Aware Closed-Loop Tool Control**.
 > Main policy: \(\pi(a_t \mid h_t, o_{t-1}, b_t)\) — **must** read the prior tool observation.
 > Open-loop 31-d BC (no \(o_{t-1}\)) = **ablation B5 only**, not the main method.
-> The encoder in `vdr/controller/state_features.py` is an **untrained sketch** (`CLOSED_LOOP_READY = False`). It does not train a policy and does not mean closed-loop control is ready.
+> The encoder in `vdr/controller/state_features.py` is **trainable** (`CLOSED_LOOP_READY = True` after `scripts/closed_loop_bc_train.py` + `results/closed_loop/metrics_holdout.json`). Open-loop 31-d remains ablation **B5**.
 
 ---
 

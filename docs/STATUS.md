@@ -1,48 +1,50 @@
 # 执行状态（STATUS）
 
 > 供 GitHub 同步：服务器跑完实验后，请在本文件更新。`notes/` 历史周报已删除，见 [`notes/README.md`](../notes/README.md)。执行助手据此继续改代码/方案。  
-> **截止日期（文档写入时）**：2026-11-04（Asia/Shanghai）。文首「下一步」于本日改成：B1/B2 脚手架已合进（PR #22）；闭环训练仍等 Cursor 额度；忠实 DietAI24 / FoodAgent 评测以后再做。Canvas「VDR — Evidence-Aware Closed-Loop Tool Control」的锁不变。2026-10-27 的跑数仍留在后文，日期不改。  
+> **截止日期（文档写入时）**：2026-11-04（Asia/Shanghai）。**Cursor 额度已恢复**；闭环 State-aware BC 训练在本 PR 落地。开环 31 维仍只作消融 **B5**。  
 > **可执行的下一步只在本文件。** 聊天不是 runbook。助手改下一步、跑法或方案时，先更新文档并推到 GitHub；服务器上的人或 AI 先 `git pull --ff-only`，再读「下一步」执行。  
-> **服务器执行看「下一步」。** 这一节没有新命令。文中的 `--n 50`、俯拍池 `--n 507`、弱标签 jsonl、开环 BC / DAgger 冒烟都是已经跑完的记录，不要再执行。
+> **服务器执行看「下一步」。** 这一节没有新的弱标签 / 507 命令。历史 `--n 50`、俯拍池 `--n 507`、弱标签 jsonl、开环 BC 数字都是已完成记录，不要再执行。
 
 ## 下一步（立即执行）
 
-> 真源：根目录 [`PLAN.md`](../PLAN.md)、Canvas「VDR — Evidence-Aware Closed-Loop Tool Control」、[`docs/VDR_P0.md`](VDR_P0.md)、[`docs/B1_B2_SCAFFOLD.md`](B1_B2_SCAFFOLD.md)。**额度或方案允许之前，不训练闭环。** `CLOSED_LOOP_READY` 保持 **false**。开环 31 维只作消融 **B5**。冻结结果不重写、不覆盖。**旧 Ours-BC 已停**：先前把它当成闭环主方法，实际是不读 `o_{t-1}` 的开环 31 维 BC / MLP / DAgger。**不上 RL。不开 fast Cloud Agent**（额度策略按用户约定）。**离线 P0 冒烟已跑完，B1/B2 脚手架已合进（PR #22）。** 都不要再当服务器任务。这一节没有新的落地命令。
+> 真源：根目录 [`PLAN.md`](../PLAN.md)、Canvas「VDR — Evidence-Aware Closed-Loop Tool Control」、[`docs/VDR_P0.md`](VDR_P0.md)、[`docs/STATE_FEATURE_DESIGN.md`](STATE_FEATURE_DESIGN.md)。**2026-11-04（Asia/Shanghai）Cursor 额度恢复后，闭环 `π(a_t|h_t,o_{t-1},b_t)` 已在本 PR 实现 + 训练 + hold-out 评测。** `CLOSED_LOOP_READY=true`（见 `vdr/controller/state_features.py`）。开环 31 维 `build_features` 仍是消融 **B5**（`PolicyMLP` / `scripts/bc_mlp_smoke.py` 不变）。**不上 RL。不开 fast Cloud Agent。** 冻结结果不重写。
 
 ### 服务器
 
-**没有新的 507 / 弱标签重跑 / 旧闭环命令。** 冻结文件勿覆盖，也不要重跑：
+**没有新的 507 / 弱标签重跑命令。** 冻结文件勿覆盖，也不要重跑：
 
 - `results/n5k_rgb_test_overhead_b0_b1.json` 与 `.jsonl`（sha256 前缀 `a4dfdd82e3a595f4…`）
 - 默认的 `results/n5k_subset_b0_b1.json` 与 `.jsonl`（现在就是上面这一对）
 - n=50 基线 `results/n5k_subset_b0_b1_n50_seed42.json` 与 `.jsonl`
 - `results/weak_steps/rgb_train_fit_all.jsonl`（sha256 前缀 `ed47f9239bfecb3c…`）与 `results/weak_steps/rgb_train_holdout_all.jsonl`
 
-不要用这 507 盘的 test GT 调阈值、检索、克重或碎片合并。体积工具仍关。旧回归权重仍不接入。弱标签不改 B1 先验。脚手架的 dry-run / fake-run **不要**把主表数字写进 `results/`。离线 P0 脚本可以再冒烟，**除非另有要求，不要当成服务器任务重跑。**
+不要用这 507 盘的 test GT 调阈值、检索、克重或碎片合并。体积工具仍关。旧回归权重仍不接入。弱标签不改 B1 先验。
 
-历史 B0 能量 MAE **97.03**（n=507）可作 Direct-VLM 锚点。历史 B1 能量 MAE **110.72**（n=506）**不是忠实 DietAI24**，主表须按官方协议重做后再进。中位约 63.5 只描述这次冻结跑数，不是新的服务器任务。
+历史 B0 能量 MAE **97.03**（n=507）可作 Direct-VLM 锚点。历史 B1 能量 MAE **110.72**（n=506）**不是忠实 DietAI24**，主表须按官方协议重做后再进。
 
 ### 助手进度
 
-**P0 冒烟已跑完**（2026-11-04 Asia/Shanghai）。Cloud agent `bc-b11b6f0a`，代码在 `33ad5e3` 一带（#19 之后；#20 没有改这些脚本）。冒烟本身没有单独 PR。冻结 `results/` 的 sha256 未改。`CLOSED_LOOP_READY` 仍是 **false**。没有训练，没有闭环，没有写入上面列出的冻结 `results/` 路径。
+**闭环 State-aware BC 已落地**（2026-11-04 Asia/Shanghai，自托管 `gpu-12-container`，分支 `cursor/closed-loop-bc-20261104`）。
 
-- Confusion `--demo`：Acc **0.9700**（2688/2771）；**ABSTAIN 0/24，F1=0**。**红警仍在**，这不是方法证明。
-- Provenance：mock **2 pass / 2 fail**；真实目录钉在 FNDDS **2019–2020**，**5624** 条码。
-- Selective：Coverage **0.50**，Selective MAE **2.50**，AURC **≈3.61**。
+- 数据：`vdr/controller/closed_loop_data.py`（fit / hold-out 弱步骤；`o_prev` 为上一步 IR；`b_t.tools_used=step_i`）。
+- 策略：`vdr/controller/policy_state_mlp.py`（79-d → 64 → 64 → 6，与 B5 容量对齐）。
+- 训练/评测：`scripts/closed_loop_bc_train.py`；冒烟 `scripts/closed_loop_smoke.py` + `scripts/bc_mlp_smoke.py`（B5 路径仍 31-d）。
+- 产物（**新路径**，未改冻结 weak_steps / n5k）：`results/closed_loop/metrics_holdout.json`、`report_holdout.txt`、`policy_state_mlp.npz`。
+- **Full fit** 25864 行 / hold-out 2771 行，CPU ~14s fit。Hold-out（mask none）：overall Acc **0.9607**（次要）；**ABSTAIN F1=0.5091**（14/24）；per-class PR/F1 见 json。**H2 mask-zero**：Acc **0.7037**，**ABSTAIN F1=0.1212**（obs 块有关）。mask-shuffle ABSTAIN F1 **0.0870**。这不是 Full-set MAE / AURC 主表证明。
+- `CLOSED_LOOP_READY=true`。B5 开环 MLP hold-out Acc **0.9700** / ABSTAIN F1=0 仍是消融对照，不是主方法。
 
-**B1/B2 脚手架已合进**（2026-11-04 Asia/Shanghai，PR #22）。路径：`vdr/baselines/dietai24`（fidelity=`scaffold`）、`vdr/baselines/foodagent`（fidelity=`approx`）、`docs/B1_B2_SCAFFOLD.md`、`scripts/b1_b2_scaffold_smoke.py`（CPU 通过）。历史 `b1_rag_once` 的 **110.72** 仍 **不是** 忠实 DietAI24。没有写入主表指标。没有闭环训练。`CLOSED_LOOP_READY=false`。B2 不是 Fixed-MoE。
+**P0 冒烟 / B1-B2 脚手架**（#19 / #22）仍有效：`CLOSED_LOOP_READY` 以前为 false 的记录保留在历史段。B1 scaffold / B2 approx 仍等 live API。
 
 ### 助手 / 本地（优先）
 
-1. **额度回来之前挡住（Blocked until Cursor quota）：** State-aware 闭环训练 `π(a_t|h_t,o_{t-1},b_t)`。`CLOSED_LOOP_READY` 保持 **false**。在此之前不评主表闭环。开环 31 维 `build_features` 仍是消融 **B5**。草图 `build_state_features(h_t, o_prev, b_t)` 在 `vdr/controller/state_features.py`，策略头仍只吃 `build_features`。
-2. **稍后（需要线上 API / 权重，不是这次落地）：** 忠实 DietAI24 评测，以及忠实 FoodAgent（Omni+MFP3D+NutritionX）。在此之前 B1 保持 scaffold，B2 保持 approx。不要把主表行写进冻结的 `results/n5k_*`。
-3. **离线 P0 脚本仍在，可再冒烟。** `scripts/action_confusion_matrix.py`、`scripts/provenance_validity.py`、`scripts/selective_metrics.py`、`python scripts/p0_eval_smoke.py`。索引 [`docs/VDR_P0.md`](VDR_P0.md)。**除非另有要求，不要当成服务器任务重跑。** 再跑也只是冒烟：不写冻结 `results/`，不开训，不闭环。
-4. **P2 标注指南升级稍后 / 人工：** 试标指南按新标签表改（Visibility / Code Match / Portion Confidence / Evidence Completeness / Should Abstain / Conflict）。kappa 门禁 **0.7–0.8**，不作 0.6 凑合。试标 30。`docs/annotation_guide_v0.md` 文首已标明：字段是 v0，相对 PLAN P2 **部分过时**，试标可用，不是最终协议。扩成新标签集仍留到人工试标。
-5. **禁止**：把 0.97 Acc 或这次 P0 冒烟写成方法证明；hold-out **ABSTAIN 0/24、F1=0 仍是红警**；盲目多轮 DAgger；上 RL；开 fast Cloud Agent；用 test GT 调参；开体积工具；接旧回归权重；覆盖上面列出的冻结文件；把 dry-run 数字或脚手架数字写进主表 `results/`（含冻结 `results/n5k_*`）；把历史 B1 **110.72** 当成忠实 DietAI24；把 B2（现为 approx）写成 Fixed-MoE；在 `CLOSED_LOOP_READY` 仍为 false 时开闭环训练。
+1. **闭环 BC（本 PR 已完成）：** `build_state_features(h_t,o_prev,b_t)` + `PolicyStateMLP`；结果在 `results/closed_loop/`。后续迭代（DAgger、阈值、主表 MAE/AURC）另开 PR，仍禁止 RL / test GT / 体积 / 旧回归 / 覆盖冻结 jsonl。
+2. **稍后（需要线上 API / 权重）：** 忠实 DietAI24 与 FoodAgent（Omni+MFP3D+NutritionX）。不要把 scaffold 数字写进冻结 `results/n5k_*`。
+3. **P2 标注指南升级稍后 / 人工：** kappa **0.7–0.8**；试标 30。`docs/annotation_guide_v0.md` 仍是 v0。
+4. **禁止**：单独用 overall Acc 当方法证明；忽视 hold-out **ABSTAIN** per-class PR/F1；上 RL；开 fast Cloud Agent；用 test GT 调参；开体积工具；接旧回归权重；覆盖上面列出的冻结文件；把 **110.72** 当成忠实 DietAI24；把 B2 approx 写成 Fixed-MoE。
 
 ### 协作
 
-docs-first：改下一步先改本文件并推仓。以后真正要跑的命令可以用自托管 `gpu-12-container`。Cloud Agent **永远不开 fast**。
+docs-first：改下一步先改本文件并推仓。Cloud Agent **永远不开 fast**。
 
 ## 历史跑数（开环 v2 / 非主方法）
 

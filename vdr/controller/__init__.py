@@ -1,8 +1,8 @@
-"""Learnable controller: open-loop B5 features, BC policies, one DAgger round.
+"""Learnable controller: open-loop B5, closed-loop state BC, DAgger round.
 
-``build_state_features`` is an untrained closed-loop sketch
-(``CLOSED_LOOP_READY`` is false). Policies in this package keep calling
-``build_features``.
+Open-loop ``PolicyBC`` / ``PolicyMLP`` call ``build_features`` only.
+Closed-loop ``PolicyStateMLP`` uses ``build_state_features`` when
+``CLOSED_LOOP_READY`` is true.
 """
 
 from vdr.controller.dagger import (

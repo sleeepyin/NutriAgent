@@ -1,0 +1,20 @@
+{
+  "weights": "results/closed_loop/policy_state_mlp.npz",
+  "metrics": "results/closed_loop/metrics_holdout.json",
+  "class_weight": {
+    "RETRIEVE": 0.7470758432309917,
+    "RE_PORTION": 0.8820311279099489,
+    "RE_DECOMPOSE": 0.0,
+    "ABSTAIN": 5.341169447722285,
+    "STOP": 1.3983756283669329,
+    "CORRECT_CODE": 2.1415554795926712
+  },
+  "actions": [
+    "RETRIEVE",
+    "RE_PORTION",
+    "RE_DECOMPOSE",
+    "ABSTAIN",
+    "STOP",
+    "CORRECT_CODE"
+  ]
+}

@@ -1,0 +1,9 @@
+Closed-loop BC hold-out summary
+fit_rows=25864 holdout_rows=2771
+STATE_FEATURE_DIM=79 (B5 open-loop=31)
+
+mask=none: acc=0.9607 ABSTAIN F1=0.5091 (R=0.5833, n=24)
+mask=zero: acc=0.7037 ABSTAIN F1=0.1212 (R=1.0000, n=24)
+mask=shuffle: acc=0.6608 ABSTAIN F1=0.0870 (R=0.3750, n=24)
+
+Hold-out action metrics only. Not Full-set MAE / AURC main-table proof.
