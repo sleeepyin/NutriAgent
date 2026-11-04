@@ -3,7 +3,8 @@
 Stage A in the plan is a small controller on top of a frozen perception
 model. This module is the CPU toy: multinomial logistic regression in
 numpy. It does not load torch, does not touch the 7B VLM, and does not
-read ``obs_t``.
+read ``obs_t``. It is the open-loop ablation B5 and stays on
+``build_features``. The closed-loop sketch is not used here.
 
 ``LOGISTIC_EPOCHS``, ``LOGISTIC_LR``, and ``LOGISTIC_L2`` are fixed. They
 were not selected on the train hold-out or on rgb_test. The linear head stays

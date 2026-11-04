@@ -1,4 +1,10 @@
-"""Pre-action state features h for behavior cloning.
+"""Pre-action state features h for open-loop behavior cloning.
+
+This module is ablation **B5** (PLAN.md §8): the 31-d vector from
+``build_features``. It does not read ``o_{t-1}``. The closed-loop sketch
+``build_state_features`` lives in ``vdr.controller.state_features`` and is
+not trained. ``PolicyBC``, ``PolicyMLP``, and DAgger keep calling
+``build_features``.
 
 The vector is built only from the fields the teacher exposes before the
 action: ``hyp_i``, ``code_i``, ``cands_i``, ``portion_g_i``, ``verify_codes``,
@@ -173,10 +179,12 @@ def _verify_flags(value: Any) -> tuple[list[float], float, float, float]:
 
 
 def build_features(state: Mapping[str, Any], **kwargs: Any) -> np.ndarray:
-    """Return h as a 1-d float64 vector. ``kwargs`` are ignored.
+    """Open-loop B5 vector. ``kwargs`` are ignored.
 
     Only ``PRE_ACTION_FIELDS`` are read. Passing ``obs_t`` or a train-GT
-    key on ``state`` does not change the vector.
+    key on ``state`` does not change the vector. Closed-loop callers use
+    ``vdr.controller.state_features.build_state_features``; that sketch is
+    not this function and is not trained.
     """
     del kwargs  # callers cannot inject obs_t or labels through kwargs
     if not isinstance(state, Mapping):

@@ -1,8 +1,28 @@
-"""Metric implementations for VDR primary tables (toy-ready)."""
+"""Metric implementations for VDR primary tables (toy-ready).
+
+P0 offline metrics are siblings, re-exported for callers that already
+import this module: action confusion, provenance (``n == code × portion/100
+× per100g``), and selective coverage / MAE / AURC. See ``action_metrics``,
+``provenance``, and ``selective``.
+"""
 
 from __future__ import annotations
 
 from typing import Any, Iterable, Mapping, Sequence
+
+from vdr.eval.action_metrics import (
+    ACTIONS as ACTION_LABELS,
+    confusion_matrix,
+    macro_f1,
+    overall_accuracy,
+    per_class_prf,
+)
+from vdr.eval.provenance import (
+    CatalogPinError,
+    check_record as check_provenance_record,
+    scale_expected,
+)
+from vdr.eval.selective import aurc, coverage_and_selective_mae
 
 
 def mae(
