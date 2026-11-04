@@ -16,7 +16,8 @@ weight 0 and is masked at prediction.
 
 The constants below were not selected on the train hold-out or on rgb_test.
 ``fit`` reads only the matrix it is given. It does not open a jsonl, does not
-read ``obs_t``, and does not load torch.
+read ``obs_t``, and does not load torch. This head is the open-loop ablation
+B5 and stays on ``build_features``. The closed-loop sketch is not used here.
 """
 
 from __future__ import annotations

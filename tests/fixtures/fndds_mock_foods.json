@@ -1,0 +1,36 @@
+{
+  "release": "2019-2020-MOCK",
+  "note": "Tiny mock catalog for provenance unit tests. Not the real 5624-code FNDDS.",
+  "foods": {
+    "11111000": {
+      "code": "11111000",
+      "name": "Mock milk, whole",
+      "per100g": {
+        "energy_kcal": 61.0,
+        "protein_g": 3.15,
+        "carb_g": 4.8,
+        "fat_g": 3.25
+      }
+    },
+    "24122120": {
+      "code": "24122120",
+      "name": "Mock chicken breast, grilled",
+      "per100g": {
+        "energy_kcal": 165.0,
+        "protein_g": 31.0,
+        "carb_g": 0.0,
+        "fat_g": 3.6
+      }
+    },
+    "75113000": {
+      "code": "75113000",
+      "name": "Mock apple, raw",
+      "per100g": {
+        "energy_kcal": 52.0,
+        "protein_g": 0.26,
+        "carb_g": 13.81,
+        "fat_g": 0.17
+      }
+    }
+  }
+}

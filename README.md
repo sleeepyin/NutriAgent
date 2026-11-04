@@ -21,6 +21,7 @@
 |------|------|
 | [PLAN.md](PLAN.md) | 完整实验方案（任务/基准/方法/基线/表/周程/MVP） |
 | [docs/STATUS.md](docs/STATUS.md) | **当前执行状态**（已完成 / 待办） |
+| [docs/VDR_P0.md](docs/VDR_P0.md) | P0 闭环脚手架（未训练）：31 维开环 = 消融 B5；ABSTAIN 0/24；无 RL |
 | [docs/COLLAB_GITHUB.md](docs/COLLAB_GITHUB.md) | **内网服务器 ↔ GitHub ↔ 助手**协作协议 |
 | [docs/SERVER_SETUP.md](docs/SERVER_SETUP.md) | 服务器下载数据、冒烟、VLM 注意 |
 | [docs/annotation_guide_v0.md](docs/annotation_guide_v0.md) | 人工标注指南 v0 |

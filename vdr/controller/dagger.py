@@ -6,7 +6,8 @@ and terminal rule. Train ingredient mass and kcal are used only inside that
 teacher query. They are not written into the feature dict.
 
 ``build_features`` still reads only the pre-action fields. ``obs_t`` is the
-tool return and is not a feature. ``VOLUME_ESTIMATE`` is not an action.
+tool return and is not a feature. This round is open-loop ablation B5.
+The closed-loop sketch is not used here. ``VOLUME_ESTIMATE`` is not an action.
 Rollouts stay on the ``rgb_train`` fit pool. This module does not open the
 hold-out jsonl, ``rgb_test``, or ``depth_test``.
 

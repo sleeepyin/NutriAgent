@@ -24,7 +24,12 @@
 
 ### 助手 / 本地（优先）
 
-1. **P0 代码**：控制器输入强制拼上 `o_{t-1}`（上一工具返回：候选、`verify_codes`、聚合营养、错误码）。开环 31 维路径只保留为消融 **B5**。补动作级混淆矩阵，尤其 ABSTAIN 的 PR/F1（hold-out **0/24 是红警**，overall Acc 不能当方法证明）。补 Provenance 复算器，以及 Coverage / Selective MAE / AURC 脚本。设计稿与本地脚本可先合。**额度回来前不开云端训闭环。**
+1. **P0 代码（脚本已进仓库，未训练）**：设计稿和离线脚本已落地。**没有**训练闭环策略，**没有**重跑 DAgger/BC。开环 31 维 `build_features` 仍是消融 **B5**。闭环草图 `build_state_features(h_t, o_prev, b_t)` 在 `vdr/controller/state_features.py`，`CLOSED_LOOP_READY` 为假，策略头仍只吃 `build_features`。动作混淆、Provenance（`n == code×portion/100×per100g`，真目录钉 FNDDS 2019–2020）、Coverage / Selective MAE / AURC 可离线跑，无 GPU。hold-out **ABSTAIN 0/24 仍是红警**；`--demo` 复现 Acc≈**0.9700** 且 ABSTAIN F1=0。**额度与方案允许之前不开云端训闭环。不上 RL。**
+
+   - 索引：[`docs/VDR_P0.md`](VDR_P0.md)。设计：[`docs/STATE_FEATURE_DESIGN.md`](STATE_FEATURE_DESIGN.md)、[`docs/ACTION_CONFUSION.md`](ACTION_CONFUSION.md)
+   - 脚本：`scripts/action_confusion_matrix.py`、`scripts/provenance_validity.py`、`scripts/selective_metrics.py`
+   - mock：`tests/fixtures/fndds_mock_foods.json`（真目录仍是 `data/fndds/2019-2020/`，5624）
+   - 冒烟（不要当训练，不写 `results/`）：`python scripts/p0_eval_smoke.py`
 2. **P0 文档**：本 STATUS 与根目录 `PLAN.md` 已与 Canvas 对齐（本轮）。
 3. **P1（额度回来）**：忠实 DietAI24（B1）；FoodAgent（B2）按动态专家路由做，做不全就写诚实 approx，不要写成 Fixed-MoE。然后做 State-aware Ours 闭环评测。
 4. **P2 人工**：试标指南按新标签表改（Visibility / Code Match / Portion Confidence / Evidence Completeness / Should Abstain / Conflict）。kappa 门禁 **0.7–0.8**，不作 0.6 凑合。试标 30。`docs/annotation_guide_v0.md` 仍是 v0 字段，扩标签留到下一步。
@@ -241,7 +246,7 @@ CUDA_VISIBLE_DEVICES=0 /var/tmp/nutri-venv/bin/python -u scripts/eval_n5k_subset
 W1 基础设施在这台 2×4090D 上已打通：**schema + 骨架 + toy 冒烟 + 真实 FNDDS catalog（5624）+ N5K 元数据/官方 split + 俯拍 RGB + Qwen2.5-VL-7B 单盘冒烟**。  
 B1 第二轮先验（菜品形态、未点名的仿肉、100 g 以上的高密度克重、Cheese+Crust 碎片合并）后，同一 50 盘子集已重跑：能量 MAE 为 B0 **98.3**、B1 **88.2**。上一轮是 97.4 / 107.9，硬化前是 98.2 / 112.1。  
 有俯拍 RGB 的官方 `rgb_test` 池已跑完：能量 MAE 为 B0 **97.03**（Direct-VLM 锚点）、B1 **110.72**（**不是忠实 DietAI24**；中位 63.51 / 63.57）。配对 506 盘上中位差距约 +3.5 kcal，MAE 差距在右尾。50 盘子集仍是 B0 **98.3**、B1 **88.2**，是偏有利的一抽，不能代替这 507 盘。见「507 分析（助手）」。  
-**现行缺口**在文首：读 `o_{t-1}` 的 State-aware 闭环、动作混淆矩阵、Provenance / Coverage / Selective MAE / AURC、忠实 DietAI24 与 FoodAgent（或诚实 approx）、试标 30（kappa **0.7–0.8**）。开环 DAgger 第 1 轮的数字留作 B5：全池 hold-out **0.9592**，纯 BC MLP **0.9700**，新行 1490；`ABSTAIN` **0/24 是红警**。**旧 Ours-BC 已停。暂不上 RL。** 无俯拍 RGB 的官方 test 盘仍不进命令。侧视视频未解压。这 507 盘也不是 709 盘全表。
+**现行缺口**在文首：读 `o_{t-1}` 的 State-aware 闭环**训练**仍未做（P0 草图和离线脚本已进仓库，见 [`VDR_P0.md`](VDR_P0.md)；`CLOSED_LOOP_READY` 为假）。忠实 DietAI24 与 FoodAgent（或诚实 approx）、试标 30（kappa **0.7–0.8**）仍缺。开环 DAgger 第 1 轮的数字留作 B5：全池 hold-out **0.9592**，纯 BC MLP **0.9700**，新行 1490；`ABSTAIN` **0/24 是红警**。**旧 Ours-BC 已停。暂不上 RL。** 无俯拍 RGB 的官方 test 盘仍不进命令。侧视视频未解压。这 507 盘也不是 709 盘全表。
 
 ## 已完成（box）
 
@@ -264,6 +269,7 @@ B1 第二轮先验（菜品形态、未点名的仿肉、100 g 以上的高密�
 | DAgger 第 1 轮（CPU） | **开环 v2。旧 Ours-BC 已停，暂不上 RL。** 规则老师当专家，`PolicyMLP` 当学习者。只在 fit 池展开。全池新行 **1490**（novel 117 + 犯错副本 1373）。hold-out 动作准确率 **0.9592**（2658/2771），低于纯 BC **0.9700**。`CORRECT_CODE` 117/157，`RETRIEVE` 1285/1285，`ABSTAIN` 仍是 **0/24（红警）**。不读 `obs_t`，没有 `VOLUME_ESTIMATE`。冒烟：`scripts/dagger_smoke.py` |
 | 标注指南 v0 | `docs/annotation_guide_v0.md`（字段仍是 v0；Visibility / Code Match 等与 kappa 0.7–0.8 见文首 P2，本轮不改指南） |
 | 方案 MD | 根目录 `PLAN.md`（2026-11-04 起与 Canvas「VDR — Evidence-Aware Closed-Loop Tool Control」对齐） |
+| P0 离线脚手架（未训练） | 设计 `docs/STATE_FEATURE_DESIGN.md`；混淆 / Provenance / Selective 脚本在 `scripts/`；mock `tests/fixtures/fndds_mock_foods.json`；草图 `vdr/controller/state_features.py`（`CLOSED_LOOP_READY` 假）。开环 31 维仍是 B5。冒烟 `scripts/p0_eval_smoke.py`。没有新的训练命令。索引 [`docs/VDR_P0.md`](VDR_P0.md) |
 
 ## 明确未完成
 
@@ -274,7 +280,7 @@ B1 第二轮先验（菜品形态、未点名的仿肉、100 g 以上的高密�
 | 步骤弱标签全量（仅 train） | **已完成。** fit 3679 + hold-out 380。没有新的生成命令。阈值仍只许在 hold-out 上看，禁止用 test GT |
 | 试标 30 + 新标签 / kappa 0.7–0.8 | **人工，P2。** 指南仍是 v0。下一步扩到 Visibility / Code Match 等。不作 0.6 凑合 |
 | 200–500 金标准 | **人工**，可分期；协议与 kappa 门禁不能省 |
-| 旧开环 Ours-BC / RL | **已停 / 暂不上。** 31 维开环只作消融 B5：线性 **0.9206**，MLP **0.9700**，DAgger r1 **0.9592**（新行 1490）。`ABSTAIN` **0/24 是红警**。没有新的服务器训练命令。现行 P0 是文首：控制器读 `o_{t-1}` |
+| 旧开环 Ours-BC / RL | **已停 / 暂不上。** 31 维开环只作消融 B5：线性 **0.9206**，MLP **0.9700**，DAgger r1 **0.9592**（新行 1490）。`ABSTAIN` **0/24 是红警**。没有新的服务器训练命令。P0 脚本与未训练草图已进仓库（文首）；闭环训练仍要等额度 |
 | 体积工具 | **保持默认关闭**（刻意不做） |
 | 旧回归权重 | **禁止接入** |
 
