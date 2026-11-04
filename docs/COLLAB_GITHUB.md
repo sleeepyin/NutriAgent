@@ -13,7 +13,7 @@
 | 代码、脚本、schema、文档（`PLAN.md` 等） | Nutrition5K **原始图像/视频**、深度图 |
 | 小结果：指标 JSON、表 Markdown、日志**摘要** | 完整 FNDDS/FDC **大 zip / 66MB raw JSON** |
 | 标注规范、dish_id 列表、人工标签 JSONL | 未脱敏隐私图；旧回归 `.pt` 权重 |
-| `notes/` 周报 | `outputs/` 下大体积中间文件（默认 gitignore） |
+| `docs/STATUS.md` 里的结论（`notes/` 历史周报已删除，见 [`notes/README.md`](../notes/README.md)） | `outputs/` 下大体积中间文件（默认 gitignore） |
 
 建议仓库设为 **private**（论文未投前）。
 
@@ -24,7 +24,7 @@ PLAN.md                 # 方案真源（MD）
 README.md               # 首页
 docs/                   # STATUS / 协作 / 服务器 / 标注 / schema…
 results/                # 可同步的小产物（指标、表、配置快照）
-notes/                  # 周报、决策记录（YYYY-MM-DD-*.md）
+notes/                  # 仅 README：历史周报已删除，见 docs/STATUS.md 冻结节
 schemas/ examples/ scripts/ vdr/
 data/
   toy/                  # 可进库
@@ -63,7 +63,7 @@ export VDR_FNDDS_PATH=/path/on/server/fndds/2019-2020/foods.json
 
 1. 在服务器跑实验 / 下数据（数据本身不进 Git）。  
 2. 把**可共享**产物写入 `results/`（例如 `results/2026-10-27_b1_smoke.json`、`results/tables/m1_draft.md`）。  
-3. 重要结论写一行到 `notes/YYYY-MM-DD.md`。  
+3. 重要结论写入 `docs/STATUS.md`。不要重建已删除的日期周报。  
 4. 更新 `docs/STATUS.md` 中「服务器进度」小节（可自增）。  
 5. `git add` → `commit` → `push`。  
 6. 在聊天里：**贴 PR/commit 链接**，或说「看 `main` 最新 / 看某 PR」。

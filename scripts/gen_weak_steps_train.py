@@ -7,8 +7,10 @@ test pool and will not write the frozen B0/B1 result files.
 Examples:
 
     python scripts/weak_steps_smoke.py
-    python scripts/gen_weak_steps_train.py --split rgb_train --pool fit --n 8 \\
-        --out results/weak_steps/rgb_train_fit_n8.jsonl
+
+Committed weak-step files are only ``results/weak_steps/rgb_train_fit_all``
+and ``results/weak_steps/rgb_train_holdout_all`` (plus their summaries).
+Do not overwrite them. Prefix dumps are not kept in git.
 """
 
 from __future__ import annotations

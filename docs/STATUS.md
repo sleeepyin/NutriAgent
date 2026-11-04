@@ -1,13 +1,13 @@
 # 执行状态（STATUS）
 
-> 供 GitHub 同步：服务器跑完实验后，请在本文件或 `notes/` 周报中更新；执行助手据此继续改代码/方案。  
+> 供 GitHub 同步：服务器跑完实验后，请在本文件更新。`notes/` 历史周报已删除，见 [`notes/README.md`](../notes/README.md)。执行助手据此继续改代码/方案。  
 > **截止日期（文档写入时）**：2026-11-04（Asia/Shanghai）。文首「下一步」于本日按 Canvas「VDR — Evidence-Aware Closed-Loop Tool Control」重写。2026-10-27 的跑数仍留在后文，日期不改。  
 > **可执行的下一步只在本文件。** 聊天不是 runbook。助手改下一步、跑法或方案时，先更新文档并推到 GitHub；服务器上的人或 AI 先 `git pull --ff-only`，再读「下一步」执行。  
 > **服务器执行看「下一步」。** 这一节没有新命令。文中的 `--n 50`、俯拍池 `--n 507`、弱标签 jsonl、开环 BC / DAgger 冒烟都是已经跑完的记录，不要再执行。
 
 ## 下一步（立即执行）
 
-> 真源：Canvas「VDR — Evidence-Aware Closed-Loop Tool Control」+ 根目录 [`PLAN.md`](../PLAN.md)。**旧 Ours-BC 已停**：先前把它当成闭环主方法，实际是不读 `o_{t-1}` 的开环 31 维 BC / MLP / DAgger，现只作消融 **B5**。**不上 RL。不开 fast Cloud Agent**（额度策略按用户约定）。
+> 真源：根目录 [`PLAN.md`](../PLAN.md)、Canvas「VDR — Evidence-Aware Closed-Loop Tool Control」、[`docs/VDR_P0.md`](VDR_P0.md)。**额度或方案允许之前，不训练闭环。** 开环 31 维只作消融 **B5**。冻结结果不重写、不覆盖。**旧 Ours-BC 已停**：先前把它当成闭环主方法，实际是不读 `o_{t-1}` 的开环 31 维 BC / MLP / DAgger。**不上 RL。不开 fast Cloud Agent**（额度策略按用户约定）。
 
 ### 服务器
 
@@ -32,7 +32,7 @@
    - 冒烟（不要当训练，不写 `results/`）：`python scripts/p0_eval_smoke.py`
 2. **P0 文档**：本 STATUS 与根目录 `PLAN.md` 已与 Canvas 对齐（本轮）。
 3. **P1（额度回来）**：忠实 DietAI24（B1）；FoodAgent（B2）按动态专家路由做，做不全就写诚实 approx，不要写成 Fixed-MoE。然后做 State-aware Ours 闭环评测。
-4. **P2 人工**：试标指南按新标签表改（Visibility / Code Match / Portion Confidence / Evidence Completeness / Should Abstain / Conflict）。kappa 门禁 **0.7–0.8**，不作 0.6 凑合。试标 30。`docs/annotation_guide_v0.md` 仍是 v0 字段，扩标签留到下一步。
+4. **P2 人工**：试标指南按新标签表改（Visibility / Code Match / Portion Confidence / Evidence Completeness / Should Abstain / Conflict）。kappa 门禁 **0.7–0.8**，不作 0.6 凑合。试标 30。`docs/annotation_guide_v0.md` 文首已标明：字段是 v0，相对 PLAN P2 **部分过时**，试标可用，不是最终协议。扩成新标签集仍留到人工试标。
 5. **禁止**：把 0.97 Acc 写成方法证明；盲目多轮 DAgger；上 RL；用 test GT 调参；开体积工具；接旧回归权重。
 
 ### 协作
@@ -43,59 +43,40 @@ docs-first：改下一步先改本文件并推仓。执行可用自托管 `gpu-1
 
 > 以下各段是 2026-10-27 已完成记录，命令都不要再执行。**开环 31 维 BC（线性 0.9206、MLP 0.9700、DAgger r1 0.9592）只是消融 B5**，不读 `o_{t-1}`，不是主方法，也不是方法证明。**旧 Ours-BC 已停。暂不上 RL。** 后文「不要把 `obs_t` 放进特征」是当时开环约束的原话，不是现行指令；现行主方法必须读 `o_{t-1}`。历史 B1 **110.72 不是忠实 DietAI24**。hold-out **ABSTAIN 0/24 是红警**。冻结文件引用保留，勿覆盖。
 
-**n=8 冒烟已跑完**（2026-10-27 16:55–16:56 Asia/Shanghai，自托管 worker `gpu-12-container`，机器 `hostname` 为 `n012`）。CPU，进程里没有 `CUDA_VISIBLE_DEVICES`。解释器是仓库 `.venv` 的 Python 3.12（`jsonschema` 4.26）。`scripts/weak_steps_smoke.py` 通过（约 8 秒）。生成命令是 fit 池官方顺序的前 8 盘，约 15 秒，61 步：
+**n=8 冒烟已跑完**（2026-10-27 16:55–16:56 Asia/Shanghai，自托管 worker `gpu-12-container`，机器 `hostname` 为 `n012`）。CPU，进程里没有 `CUDA_VISIBLE_DEVICES`。解释器是仓库 `.venv` 的 Python 3.12（`jsonschema` 4.26）。`scripts/weak_steps_smoke.py` 通过（约 8 秒）。当时生成的是 fit 池官方顺序的前 8 盘，约 15 秒，61 步。**这次中间 jsonl 与 summary 已删除，不要再执行生成命令。** 弱步骤只保留全池 `results/weak_steps/rgb_train_fit_all` 与 `results/weak_steps/rgb_train_holdout_all`（各自含 `.summary.json`）。
 
-```bash
-# 已完成，不要再执行
-python scripts/weak_steps_smoke.py
-python scripts/gen_weak_steps_train.py --split rgb_train --pool fit --n 8 --out results/weak_steps/rgb_train_fit_n8.jsonl
-```
-
-summary（`results/weak_steps/rgb_train_fit_n8.summary.json`，teacher `0.1.0`）：
+当时 summary（teacher `0.1.0`）的数字仍有效：
 
 - split / pool / n：`rgb_train` / `fit` / 8（无 seed）。有元数据的 fit 池共 **3679** 盘，hold-out **380** 盘。
 - 动作：`RETRIEVE` 29、`RE_PORTION` 22、`STOP` 7、`CORRECT_CODE` 2、`ABSTAIN` 1。
 - 终态：`corrected` 7、`abstain` 1。
 - train 能量审计（pass/corrected 行对照 **train** 盘标签，不是 test 分）：n_scored **7**，`train_energy_mae` **35.0188**。`dish_1565799617` 为 abstain，不进这个 MAE。
-- `uses_test_gt` false，`vlm` false，`volume_tool` false。JSONL 61 行均过 `ir_step` schema，没有 `VOLUME_ESTIMATE`。
-- 产物：`results/weak_steps/rgb_train_fit_n8.jsonl`（约 69KB）与同名 `.summary.json`。
+- `uses_test_gt` false，`vlm` false，`volume_tool` false。当时 JSONL 61 行均过 `ir_step` schema，没有 `VOLUME_ESTIMATE`。
 - 冻结文件未改：`results/n5k_rgb_test_overhead_b0_b1.jsonl` 的 sha256 仍是 `a4dfdd82e3a595f4…`。同目录 json 与 n=50 备份的 sha256 也与跑前一致。
 
-**n=256 已跑完**（2026-10-27 17:00:09–17:07:05 Asia/Shanghai，同一台 `gpu-12-container` / `hostname` `n012`）。CPU，进程里没有 `CUDA_VISIBLE_DEVICES`。解释器仍是仓库 `.venv`。墙钟 **416** 秒（约 7 分钟），1809 步。命令已完成，不要再执行：
+**n=256 已跑完**（2026-10-27 17:00:09–17:07:05 Asia/Shanghai，同一台 `gpu-12-container` / `hostname` `n012`）。CPU，进程里没有 `CUDA_VISIBLE_DEVICES`。解释器仍是仓库 `.venv`。墙钟 **416** 秒（约 7 分钟），1809 步。含上面那 8 盘。**这次中间 jsonl 与 summary 已删除。** 不要按前缀盘数重跑。保留文件仍只有上面两份全池。
 
-```bash
-# 已完成，不要再执行
-python scripts/gen_weak_steps_train.py --split rgb_train --pool fit --n 256 --out results/weak_steps/rgb_train_fit_n256.jsonl
-```
+当时 summary（teacher `0.1.0`）的数字仍有效：
 
-summary（`results/weak_steps/rgb_train_fit_n256.summary.json`，teacher `0.1.0`）：
-
-- split / pool / n：`rgb_train` / `fit` / 256（无 seed，含上面那 8 盘）。
+- split / pool / n：`rgb_train` / `fit` / 256（无 seed）。
 - 动作：`RETRIEVE` 850、`RE_PORTION` 611、`STOP` 238、`CORRECT_CODE` 92、`ABSTAIN` 18。
 - 终态：`corrected` 216、`pass` 22、`abstain` 18。
 - train 能量审计（pass/corrected 对照 **train** 标签，不是 test 分）：n_scored **238**，`train_energy_mae` **25.3065**。18 盘 abstain 不进这个 MAE。
-- `uses_test_gt` false，`vlm` false，`volume_tool` false。JSONL 1809 行均过 `ir_step` schema，没有 `VOLUME_ESTIMATE`。
-- 产物：`results/weak_steps/rgb_train_fit_n256.jsonl`（1809 行，约 2.0MB）与同名 `.summary.json`（约 122KB）。
+- `uses_test_gt` false，`vlm` false，`volume_tool` false。当时 JSONL 1809 行均过 `ir_step` schema，没有 `VOLUME_ESTIMATE`。
 - 冻结文件未改：`results/n5k_rgb_test_overhead_b0_b1.jsonl` 的 sha256 仍是 `a4dfdd82e3a595f4…`。同目录 json 与 n=50 备份的 sha256 也与跑前一致。冻结能量 MAE 仍是 B0 **97.03** / B1 **110.72**（B0 可作 Direct-VLM 锚点；B1 **不是忠实 DietAI24**）。
 
-**n=1024 已跑完**（2026-10-27 17:09:21–17:36:23 Asia/Shanghai，同一台 `gpu-12-container` / `hostname` `n012`）。CPU，进程里没有 `CUDA_VISIBLE_DEVICES`。解释器仍是仓库 `.venv`。墙钟 **1622** 秒（约 27 分钟），7128 步。前 256 个 dish_id 与 n=256 文件相同。命令已完成，不要再执行：
+**n=1024 已跑完**（2026-10-27 17:09:21–17:36:23 Asia/Shanghai，同一台 `gpu-12-container` / `hostname` `n012`）。CPU，进程里没有 `CUDA_VISIBLE_DEVICES`。解释器仍是仓库 `.venv`。墙钟 **1622** 秒（约 27 分钟），7128 步。前 256 个 dish_id 与 n=256 那次相同。**这次中间 jsonl 与 summary 已删除。** 不要按前缀盘数重跑。保留文件仍只有上面两份全池。
 
-```bash
-# 已完成，不要再执行
-python scripts/gen_weak_steps_train.py --split rgb_train --pool fit --n 1024 --out results/weak_steps/rgb_train_fit_n1024.jsonl
-```
-
-summary（`results/weak_steps/rgb_train_fit_n1024.summary.json`，teacher `0.1.0`）：
+当时 summary（teacher `0.1.0`）的数字仍有效：
 
 - split / pool / n：`rgb_train` / `fit` / 1024（无 seed）。
 - 动作：`RETRIEVE` 3315、`RE_PORTION` 2396、`STOP` 955、`CORRECT_CODE` 393、`ABSTAIN` 69。
 - 终态：`corrected` 859、`pass` 96、`abstain` 69。弃权比例 69/1024，与 n=256 的 18/256 接近。
 - train 能量审计（pass/corrected 对照 **train** 标签，不是 test 分）：n_scored **955**，`train_energy_mae` **29.7984**。n=256 同一审计是 **25.3065**（n_scored 238）。前缀变长后 MAE 仍在三十上下，没有崩。69 盘 abstain 不进这个 MAE。
-- `uses_test_gt` false，`vlm` false，`volume_tool` false。JSONL 7128 行均过 `ir_step` schema，没有 `VOLUME_ESTIMATE`。
-- 产物：`results/weak_steps/rgb_train_fit_n1024.jsonl`（7128 行，约 7.6MB）与同名 `.summary.json`（约 469KB）。
+- `uses_test_gt` false，`vlm` false，`volume_tool` false。当时 JSONL 7128 行均过 `ir_step` schema，没有 `VOLUME_ESTIMATE`。
 - 冻结文件未改。冻结能量 MAE 仍是 B0 **97.03** / B1 **110.72**（B0 可作 Direct-VLM 锚点；B1 **不是忠实 DietAI24**）。`results/n5k_rgb_test_overhead_b0_b1.jsonl` 的 sha256 仍是 `a4dfdd82e3a595f4…`。
 
-**fit 全量已跑完**（2026-10-27 17:38:33–19:17:23 Asia/Shanghai，同一台 `gpu-12-container` / `hostname` `n012`）。CPU，进程里没有 `CUDA_VISIBLE_DEVICES`。解释器仍是仓库 `.venv`。墙钟 **5930** 秒（约 1 小时 39 分钟），25864 步。前 1024 个 dish_id 与 n=1024 文件相同。命令已完成，不要再执行：
+**fit 全量已跑完**（2026-10-27 17:38:33–19:17:23 Asia/Shanghai，同一台 `gpu-12-container` / `hostname` `n012`）。CPU，进程里没有 `CUDA_VISIBLE_DEVICES`。解释器仍是仓库 `.venv`。墙钟 **5930** 秒（约 1 小时 39 分钟），25864 步。前 1024 个 dish_id 与 n=1024 那次相同（那次中间 jsonl 已删除）。命令已完成，不要再执行：
 
 ```bash
 # 已完成，不要再执行
@@ -221,7 +202,7 @@ CUDA_VISIBLE_DEVICES=0 /var/tmp/nutri-venv/bin/python -u scripts/eval_n5k_subset
 
 ### 507 分析（助手）
 
-只读 `results/n5k_rgb_test_overhead_b0_b1.jsonl`（与默认 `results/n5k_subset_b0_b1.jsonl` 的 sha256 同为 `a4dfdd82e3a595f4…`，492261 字节）。没有改结果文件。明细和归类列表在 [`notes/2026-10-27-overhead-507-b0-b1.md`](../notes/2026-10-27-overhead-507-b0-b1.md)。
+只读 `results/n5k_rgb_test_overhead_b0_b1.jsonl`（与默认 `results/n5k_subset_b0_b1.jsonl` 的 sha256 同为 `a4dfdd82e3a595f4…`，492261 字节）。没有改结果文件。配对明细就在本节。当时的周报已删除，不要再到 `notes/` 找那份列表。
 
 `dish_1557861216`（标签 0 kcal）B1 返回空列表，`n` 全是 null。能量和宏量的胜负只在 **506** 盘上比。summary 里 B0 能量 MAE **97.03** 含这盘（绝对误差 0，n=507）。同一 506 盘上 B0 能量 MAE 是 **97.22**。下面的差都用这 506 盘。
 
@@ -263,11 +244,11 @@ B1 第二轮先验（菜品形态、未点名的仿肉、100 g 以上的高密�
 | Qwen2.5-VL-7B | 权重在 `/var/tmp/vdr-models/Qwen2.5-VL-7B-Instruct`（不进 Git）。B0/B1 图像入口已接。单盘冒烟：`results/b0_b1_image_smoke.json`。50 盘基线在 `results/n5k_subset_b0_b1_n50_seed42.json`（能量 MAE：B0 **98.3**，B1 **88.2**）。俯拍池 507 盘在 `results/n5k_rgb_test_overhead_b0_b1.json`（能量 MAE：B0 **97.03**，B1 **110.72**）。跑在 GPU 0；解释器是 `/var/tmp/nutri-venv`，不是没有 torch 的 `.venv`。GPU 1 上原有 llama-server 未动 |
 | B1 硬化（CPU，无 VLM） | 同名假设取中位数、不累加；`portion_grid` 默认克重网格接到查表；plain 果蔬查询压低 dip/soup/juice 等并偏向 raw；`CODE_CONF_GAP` 时先二次 `RETRIEVE`（仍是蘸酱/汤类）或确认性 `RE_PORTION` 再 `STOP`；终态 `n` 不含 `water_g`。冒烟：`scripts/b1_harden_smoke.py` |
 | B1 第二轮（CPU，无 VLM） | 查询里的 pudding/salad/pizza 等形态词不再落到短食材名；未写 meatless/vegetarian 时，培根这类肉类头不选仿肉。能量密度 ≥300 kcal/100g 且克重超过 100 g 才加连续惩罚，100 g 的一份坚果不动。`Cheese`+`Crust` 在检索前并成一次查询。体积仍关，不接旧回归权重。冒烟仍是 `scripts/b1_harden_smoke.py` |
-| 步骤弱标签老师（CPU，无 VLM） | `vdr/weak/teacher.py` + `scripts/gen_weak_steps_train.py`。只读 `rgb_train`。fit 全池在 `results/weak_steps/rgb_train_fit_all.jsonl`（3679 盘、25864 步、5930 秒；train 能量审计 MAE **29.5844**）。hold-out 在 `rgb_train_holdout_all.jsonl`（380 盘、2771 步、631 秒；train 能量审计 MAE **30.7085**）。两份 dish_id 不相交，并集 4059 |
+| 步骤弱标签老师（CPU，无 VLM） | `vdr/weak/teacher.py` + `scripts/gen_weak_steps_train.py`。只读 `rgb_train`。fit 全池在 `results/weak_steps/rgb_train_fit_all.jsonl`（3679 盘、25864 步、5930 秒；train 能量审计 MAE **29.5844**）。hold-out 在 `rgb_train_holdout_all.jsonl`（380 盘、2771 步、631 秒；train 能量审计 MAE **30.7085**）。两份 dish_id 不相交，并集 4059。n=8 / n=256 / n=1024 的中间 jsonl **已删除** |
 | BC 特征 + 线性基线（CPU） | **开环 v2 / 消融 B5，非主方法。** `build_features` **31** 维，只读动作前字段，不读 `obs_t`。`load_bc_rows` 从 fit jsonl 组 `(h, a)`。`PolicyBC.fit` 是 numpy 多项逻辑回归。hold-out 动作准确率 **0.9206**（2551/2771）；多数类基线 0.4637。`CORRECT_CODE` 与 `ABSTAIN` 的 recall 是 0（**0/24 是红警**）。冒烟：`scripts/bc_features_smoke.py` |
 | BC 小 MLP（CPU） | **开环 v2 / 消融 B5。** `PolicyMLP` 31→64→64→6，numpy，只在 fit 行上训练。hold-out 动作准确率 **0.9700**（2688/2771），不能当方法证明。`CORRECT_CODE` 142/157，`RE_PORTION` 917/949，`ABSTAIN` 仍是 **0/24（红警）**。不读 `obs_t`，没有 `VOLUME_ESTIMATE`。冒烟：`scripts/bc_mlp_smoke.py` |
 | DAgger 第 1 轮（CPU） | **开环 v2。旧 Ours-BC 已停，暂不上 RL。** 规则老师当专家，`PolicyMLP` 当学习者。只在 fit 池展开。全池新行 **1490**（novel 117 + 犯错副本 1373）。hold-out 动作准确率 **0.9592**（2658/2771），低于纯 BC **0.9700**。`CORRECT_CODE` 117/157，`RETRIEVE` 1285/1285，`ABSTAIN` 仍是 **0/24（红警）**。不读 `obs_t`，没有 `VOLUME_ESTIMATE`。冒烟：`scripts/dagger_smoke.py` |
-| 标注指南 v0 | `docs/annotation_guide_v0.md`（字段仍是 v0；Visibility / Code Match 等与 kappa 0.7–0.8 见文首 P2，本轮不改指南） |
+| 标注指南 v0 | `docs/annotation_guide_v0.md`。文首横幅：字段是 v0，相对 PLAN P2（Visibility / Code Match / …，kappa 0.7–0.8）部分过时；试标可用，不是最终协议 |
 | 方案 MD | 根目录 `PLAN.md`（2026-11-04 起与 Canvas「VDR — Evidence-Aware Closed-Loop Tool Control」对齐） |
 | P0 离线脚手架（未训练） | 设计 `docs/STATE_FEATURE_DESIGN.md`；混淆 / Provenance / Selective 脚本在 `scripts/`；mock `tests/fixtures/fndds_mock_foods.json`；草图 `vdr/controller/state_features.py`（`CLOSED_LOOP_READY` 假）。开环 31 维仍是 B5。冒烟 `scripts/p0_eval_smoke.py`。没有新的训练命令。索引 [`docs/VDR_P0.md`](VDR_P0.md) |
 
@@ -278,7 +259,7 @@ B1 第二轮先验（菜品形态、未点名的仿肉、100 g 以上的高密�
 | 有俯拍 RGB 的官方 rgb_test（507/709） | **已完成（历史锚点）。** 能量 MAE：B0 **97.03**（Direct-VLM），B1 **110.72**（**非忠实 DietAI24**，主表须重做）。不要重跑。50 盘基线仍是 B0 **98.3**、B1 **88.2** |
 | 无俯拍 RGB 的官方 test 盘 | 不进入这次命令，也不要写成 709 盘全表 |
 | 步骤弱标签全量（仅 train） | **已完成。** fit 3679 + hold-out 380。没有新的生成命令。阈值仍只许在 hold-out 上看，禁止用 test GT |
-| 试标 30 + 新标签 / kappa 0.7–0.8 | **人工，P2。** 指南仍是 v0。下一步扩到 Visibility / Code Match 等。不作 0.6 凑合 |
+| 试标 30 + 新标签 / kappa 0.7–0.8 | **人工，P2。** 指南仍是 v0，文首已标明相对 PLAN P2 部分过时。正式协议仍要扩到 Visibility / Code Match 等。不作 0.6 凑合 |
 | 200–500 金标准 | **人工**，可分期；协议与 kappa 门禁不能省 |
 | 旧开环 Ours-BC / RL | **已停 / 暂不上。** 31 维开环只作消融 B5：线性 **0.9206**，MLP **0.9700**，DAgger r1 **0.9592**（新行 1490）。`ABSTAIN` **0/24 是红警**。没有新的服务器训练命令。P0 脚本与未训练草图已进仓库（文首）；闭环训练仍要等额度 |
 | 体积工具 | **保持默认关闭**（刻意不做） |
@@ -297,7 +278,7 @@ B1 第二轮先验（菜品形态、未点名的仿肉、100 g 以上的高密�
 7. 相对硬化前：B1 能量 MAE 112.1 → 107.9。22/50 盘的 B1 数字变了，其中 16 盘 VLM 原文相同。`dish_1557937335`（标签 47 kcal）五行重复红薯从 550 kcal / 500 g 收到 110 kcal / 100 g。`dish_1563898084`（标签 419 kcal）从 530 kcal 升到 845 kcal，质量仍是 380 g：`Chia Seed Pudding` 绑到了 Chia seeds。B0 有 16/50 盘与上次不同，能量 MAE 98.2 → 97.4，按重跑抖动看。体积工具仍关，没有接入旧回归权重。无俯拍 RGB 的官方 test 盘不在当时的命令里。弱标签仍只许用 train。  
 8. 第二轮先验的同一协议已重跑（2026-10-27 10:40 Asia/Shanghai，GPU 0，约 6 分钟，代码 `1d4da37`）：50/50 schema-valid，弃权 0。能量 MAE：B0 98.3 kcal（中位 64.5），B1 88.2 kcal（中位 51.6，MAPE 72%）。B1 脂肪 MAE 5.9 g，蛋白质 MAE 7.4 g，质量 MAE 64.8 g，碳水 MAE 8.1 g。9/50 盘的 B1 数字变了，VLM 原文相同的 2 盘都变好。`dish_1563305513`（标签 606 kcal）Cheese+Crust 并成 stuffed-crust 芝士披萨，1100 kcal / 350 g → 548 kcal / 200 g。`dish_1559849497`（标签 521 kcal）高密度克重从 990 kcal / 300 g 收到 692 kcal / 250 g。`dish_1563898084` 在同一假设列下不再绑 Chia seeds，改为 Pudding, rice（845 → 522 kcal）；这次 VLM 把布丁写成 75 g，最终 495 kcal。B0 有 13/50 盘与上一轮不同，能量 MAE 97.4 → 98.3，按重跑抖动看。  
 9. 俯拍 RGB 池已跑完（2026-10-27 11:18–12:15 Asia/Shanghai，GPU 0，约 57 分钟，代码 `1d4da37` / 启动日志 `260c4b0`）：507/507 schema-valid，弃权 0。能量 MAE：B0 97.03（中位 63.51），B1 110.72（中位 63.57，n=506；**不是忠实 DietAI24**）。无俯拍 RGB 的官方 test 盘没有补进这次。没有用这些数字改检索或克重。
-10. 助手已把 507 盘的配对分析写入「507 分析（助手）」和 `notes/2026-10-27-overhead-507-b0-b1.md`。没有用这些数字改 B1。弱标签老师已落地。`gpu-12-container` 已跑完 fit 全池（2026-10-27 19:17）和 hold-out 全池（2026-10-27 19:30，631 秒，380 盘）。BC 特征与 numpy 逻辑回归基线已落地，hold-out 动作准确率 0.9206。小 MLP BC 已在助手侧用 CPU 跑完，hold-out 动作准确率 0.9700。DAgger 第 1 轮也已在助手 CPU 上跑完（全池 535 秒，新行 1490，hold-out 动作准确率 0.9592）。没有新的服务器命令。这几项是开环 v2：31 维只作消融 B5，`ABSTAIN` 0/24 是红警。**旧 Ours-BC 已停。暂不上 RL。** 下一步见文首，不是 507，也不是再开一轮 DAgger 或 RL。
+10. 助手已把 507 盘的配对分析写入「507 分析（助手）」。当时的周报已删除，以该节为准。没有用这些数字改 B1。弱标签老师已落地。`gpu-12-container` 已跑完 fit 全池（2026-10-27 19:17）和 hold-out 全池（2026-10-27 19:30，631 秒，380 盘）。BC 特征与 numpy 逻辑回归基线已落地，hold-out 动作准确率 0.9206。小 MLP BC 已在助手侧用 CPU 跑完，hold-out 动作准确率 0.9700。DAgger 第 1 轮也已在助手 CPU 上跑完（全池 535 秒，新行 1490，hold-out 动作准确率 0.9592）。没有新的服务器命令。这几项是开环 v2：31 维只作消融 B5，`ABSTAIN` 0/24 是红警。**旧 Ours-BC 已停。暂不上 RL。** 下一步见文首，不是 507，也不是再开一轮 DAgger 或 RL。
 
 ## 50 盘子集重跑（2026-10-27）
 
@@ -319,4 +300,4 @@ python scripts/eval_n5k_subset.py --n 50 --seed 42 --split rgb_test
 
 这一轮在该子集上 B1 能量 MAE 低于 B0。俯拍池 507 盘已经另跑完，能量 MAE 是 B0 97.03、B1 110.72（B1 **不是忠实 DietAI24**）。体积工具仍关。弱标签仍只许用 train。现行下一步见文首。
 
-协作协议：[`COLLAB_GITHUB.md`](COLLAB_GITHUB.md)。人工清单：[`needs_human.md`](needs_human.md)。看板：[`w1_w4_checklist.md`](w1_w4_checklist.md)。
+协作协议：[`COLLAB_GITHUB.md`](COLLAB_GITHUB.md)。人工清单：[`needs_human.md`](needs_human.md)。W1–W4 看板已删除。进度以本文件、[`PLAN.md`](../PLAN.md) 与 [`VDR_P0.md`](VDR_P0.md) 为准。

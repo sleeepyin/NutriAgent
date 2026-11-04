@@ -1,6 +1,8 @@
 # VDR 人工标注指南 v0（约 2 页）
 
-面向 W3–W4 试标与金标准子集。只为**公开 Nutrition5K 图像**追加标签；**不新建私有采集**。营养硬标签沿用 N5K 官方，不要求标注员重估 kcal。
+> **横幅：** 下面的字段是 **v0**，相对 [`PLAN.md`](../PLAN.md) 第 6 节 P2 标签集（Visibility / Code Match / Portion Confidence / Evidence Completeness / Should Abstain / Conflict，kappa **0.7–0.8**）**部分过时**。本指南仍可用于试标，**不是最终协议**。
+
+面向试标与金标准子集。只为**公开 Nutrition5K 图像**追加标签；**不新建私有采集**。营养硬标签沿用 N5K 官方，不要求标注员重估 kcal。
 
 ## 1. 目标
 

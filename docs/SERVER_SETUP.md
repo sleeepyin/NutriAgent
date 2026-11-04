@@ -120,9 +120,10 @@ imagery 就绪后：自行抽若干 `realsense_overhead/*/rgb.png`（文件名�
 ## 6. 同步回 GitHub
 
 ```bash
-mkdir -p results notes
-# 写入 results/xxx.json 与 notes/YYYY-MM-DD.md
-git add results notes docs/STATUS.md
+mkdir -p results
+# 写入 results/xxx.json，结论写入 docs/STATUS.md
+# notes/ 历史周报已删除，见 notes/README.md，不要重建
+git add results docs/STATUS.md
 git commit -m "[smoke] server env ok; n5k imagery partial"
 git push
 ```
