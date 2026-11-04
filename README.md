@@ -3,7 +3,7 @@
 把膳食图像理解做成**可验证中间状态的多模态工具调用 Agent**测试床。
 
 输出 \(y=(n, G, s, \tau)\)：营养向量 + 证据图 + 核验状态（`pass` / `corrected` / `abstain`）+ 纠错轨迹。  
-主方法：可学习控制器（BC → DAgger → 可选小动作 RL）；规则仅先验/护栏。  
+主方法：**Evidence-Aware Closed-Loop**（state-aware 控制器 \(\pi(a_t \mid h_t, o_{t-1}, b_t)\)）。规则仅先验/护栏。开环 31 维 BC 只是消融 **B5**。旧 Ours-BC 已停。暂不上 RL。额度或方案允许之前不训练闭环。  
 **主投 ACM Multimedia（CCF-A）**；备选 AAAI/IJCAI。算力假设 **2×4090D 24GB**。
 
 > **方案真源（请先读）**：[PLAN.md](PLAN.md)
@@ -26,7 +26,6 @@
 | [docs/SERVER_SETUP.md](docs/SERVER_SETUP.md) | 服务器下载数据、冒烟、VLM 注意 |
 | [docs/annotation_guide_v0.md](docs/annotation_guide_v0.md) | 人工标注指南 v0 |
 | [docs/schema.md](docs/schema.md) | 输出/IR/证据绑定说明 |
-| [docs/w1_w4_checklist.md](docs/w1_w4_checklist.md) | W1–W4 看板 |
 | [docs/needs_human.md](docs/needs_human.md) | 需人工介入清单 |
 | [docs/data_acquisition.md](docs/data_acquisition.md) | 数据状态与许可 |
 
@@ -62,7 +61,7 @@ export VDR_FNDDS_PATH=/path/to/foods.json
 ## 与执行助手协作（内网）
 
 1. 本仓库设为 GitHub **private**（推荐）。  
-2. 服务器跑完 → 把指标/摘要写入 `results/`、`notes/` → push。  
+2. 服务器跑完 → 把指标/摘要写入 `results/`，结论写入 `docs/STATUS.md` → push。`notes/` 只留说明，历史周报已删除。  
 3. 聊天里发**仓库 URL**或「看 main / 某 PR」。  
 4. 助手**不能**进内网 SSH，只通过 GitHub 继续改代码与方案。  
 
@@ -77,7 +76,7 @@ scripts/     校验、catalog 构建、冒烟
 examples/    pass / corrected / abstain
 data/toy/    冒烟假数据
 results/     可同步小结果（初始为空）
-notes/       周报（初始为空）
+notes/       历史周报已删除；见 notes/README.md 与 docs/STATUS.md 冻结节
 ```
 
 ## 许可与伦理
