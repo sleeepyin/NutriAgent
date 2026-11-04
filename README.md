@@ -22,6 +22,7 @@
 | [PLAN.md](PLAN.md) | 完整实验方案（任务/基准/方法/基线/表/周程/MVP） |
 | [docs/STATUS.md](docs/STATUS.md) | **当前执行状态**（已完成 / 待办） |
 | [docs/VDR_P0.md](docs/VDR_P0.md) | P0 闭环脚手架（未训练）：31 维开环 = 消融 B5；ABSTAIN 0/24；无 RL |
+| [docs/B1_B2_SCAFFOLD.md](docs/B1_B2_SCAFFOLD.md) | B1 DietAI24 / B2 FoodAgent 脚手架：dry-run only，未跑主表。历史 B1 能量 MAE 110.72 不是忠实 DietAI24 |
 | [docs/COLLAB_GITHUB.md](docs/COLLAB_GITHUB.md) | **内网服务器 ↔ GitHub ↔ 助手**协作协议 |
 | [docs/SERVER_SETUP.md](docs/SERVER_SETUP.md) | 服务器下载数据、冒烟、VLM 注意 |
 | [docs/annotation_guide_v0.md](docs/annotation_guide_v0.md) | 人工标注指南 v0 |
@@ -43,6 +44,7 @@ python scripts/rule_verify_toy_smoke.py
 python scripts/b1_toy_smoke.py
 python scripts/eval_toy_smoke.py
 python scripts/weak_steps_smoke.py
+python scripts/b1_b2_scaffold_smoke.py   # B1/B2 协议干跑，不写 results/
 ```
 
 真实图像与 VLM：见 [docs/SERVER_SETUP.md](docs/SERVER_SETUP.md)。  

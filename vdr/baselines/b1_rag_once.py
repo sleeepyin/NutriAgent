@@ -1,4 +1,9 @@
-"""B1 RAG-once baseline — DietAI24-style retrieve + aggregate.
+"""Historical hardened RAG-once. Not a faithful DietAI24 run.
+
+The frozen overhead-pool energy MAE 110.72 was produced by this module.
+DietAI24's published protocol (GPT Vision, text-embedding-3-large,
+FNDDS portion descriptors, 65 nutrients) is the stub in
+``vdr.baselines.dietai24``. Do not treat this file's outputs as that baseline.
 
 No VLM required when hypotheses are provided via `hypotheses`.
 The image path (``predict``) calls Qwen2.5-VL when hypotheses are omitted.
