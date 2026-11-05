@@ -1,15 +1,15 @@
 # 执行状态（STATUS）
 
 > 供 GitHub 同步：服务器跑完实验后，请在本文件更新。`notes/` 历史周报已删除，见 [`notes/README.md`](../notes/README.md)。执行助手据此继续改代码/方案。  
-> **截止日期（文档写入时）**：2026-11-05（Asia/Shanghai）。**Cursor 额度已恢复**；闭环 State-aware BC 训练已落地（#24）；hold-out **FixRate** 主定义评测已落地（#26）。开环 31 维仍只作消融 **B5**。  
+> **截止日期（文档写入时）**：2026-11-05（Asia/Shanghai）。**Cursor 额度已恢复**；闭环 State-aware BC 训练已落地（#24）；hold-out **FixRate** 主定义评测已落地（#26）；hold-out **主表 MAE/AURC（离线 logged）** 已落地（#28，squash `e88afc8`）。开环 31 维仍只作消融 **B5**。  
 > **可执行的下一步只在本文件。** 聊天不是 runbook。助手改下一步、跑法或方案时，先更新文档并推到 GitHub；服务器上的人或 AI 先 `git pull --ff-only`，再读「下一步」执行。  
 > **服务器执行看「下一步」。** 这一节没有新的弱标签 / 507 命令。历史 `--n 50`、俯拍池 `--n 507`、弱标签 jsonl、开环 BC 数字都是已完成记录，不要再执行。
 
 ## 下一步（立即执行）
 
-**主表 MAE / AURC**（FixRate 已完成 #26）。
+**定下一跑方向（方案执行牵头；调研可共议）** — offline MAE/AURC 已完成 #28。
 
-> 真源：根目录 [`PLAN.md`](../PLAN.md)、Canvas「VDR — Evidence-Aware Closed-Loop Tool Control」、[`docs/VDR_P0.md`](VDR_P0.md)、[`docs/STATE_FEATURE_DESIGN.md`](STATE_FEATURE_DESIGN.md)。闭环 `π(a_t|h_t,o_{t-1},b_t)` 已实现 + 训练 + hold-out 动作评测（#24）；**FixRate** hold-out 主定义已评测（#26）。`CLOSED_LOOP_READY=true`（见 `vdr/controller/state_features.py`）。Hold-out 动作侧 **ABSTAIN F1=0.5091**（mask none）；H2 mask-zero **ABSTAIN F1=0.1212**；overall Acc **次要**。开环 31 维 `build_features` 仍是消融 **B5**（`PolicyMLP` / `scripts/bc_mlp_smoke.py` 不变）。**不上 RL。不开 fast Cloud Agent。** 冻结结果不重写。
+> 真源：根目录 [`PLAN.md`](../PLAN.md)、Canvas「VDR — Evidence-Aware Closed-Loop Tool Control」、[`docs/VDR_P0.md`](VDR_P0.md)、[`docs/STATE_FEATURE_DESIGN.md`](STATE_FEATURE_DESIGN.md)。闭环 `π(a_t|h_t,o_{t-1},b_t)` 已实现 + 训练 + hold-out 动作评测（#24）；**FixRate** hold-out 主定义已评测（#26，仍为正但**不能**单独当完整方法证明）；**主表 MAE/AURC（离线 logged）** 已评测（#28）。`CLOSED_LOOP_READY=true`（见 `vdr/controller/state_features.py`）。Hold-out 动作侧 **ABSTAIN F1=0.5091**（mask none）；H2 mask-zero **ABSTAIN F1=0.1212**；overall Acc **次要**。离线 force-answer 下 Full-set MAE **打平 30.7085 kcal**（同一 logged 终端热量）；**Ours AURC 58.37 > B5 32.15**（更差，弃权未对齐高误差盘）。开环 31 维 `build_features` 仍是消融 **B5**（`PolicyMLP` / `scripts/bc_mlp_smoke.py` 不变）。**不上 RL。不开 fast Cloud Agent。** 冻结结果不重写。
 
 ### 服务器
 
@@ -41,16 +41,28 @@
 - Hold-out：FixRate **0.7731**，WorsenRate **0.2177**，Δ **0.5554**，95% CI **[0.4818, 0.6280]**（ε=1 kcal，按 dish 聚类 bootstrap B=10000）。
 - 工具成本 K=32：mean **6.29** / median **5**；**380/380** 在预算内。
 - 产物：`results/closed_loop/fixrate_holdout.json`、`report_fixrate.txt`。
-- 说明：不是 Full-set 能量 MAE / Coverage·Selective MAE / AURC 主表；consecutive-IR 诊断不是主指标。
+- 说明：FixRate 不是 Full-set 能量 MAE / Coverage·Selective MAE / AURC 主表；consecutive-IR 诊断不是主指标。FixRate 为正仍**不能**单独当完整方法证明（须与 MAE/AURC 等一起看；MAE/AURC 主表见下段 #28）。
+
+**主表 MAE/AURC（离线 logged）已评测**（2026-11-05 Asia/Shanghai，#28，squash `e88afc8`）。
+
+- 主定义：`offline_logged_horizon_force_answer`（`vdr/eval/energy_selective.py`；脚本 `scripts/closed_loop_mae_aurc.py`，冒烟 `scripts/closed_loop_mae_aurc_smoke.py`）。
+- 人群：`rgb_train` hold-out 上 logged **STOP** 且终态 `s∈{pass,corrected}`，**n=356**（cafe **train** 标签能量；**不是** `rgb_test`）。**不是** on-policy VLM rollout。
+- 产物：`results/closed_loop/mae_aurc_holdout.json`、`report_mae_aurc.txt`。
+- 四行主表（kcal；**AURC 越低越好**）：
+  - **Ours（mask none）**：Full MAE **30.7085**，Coverage **0.9522**（339/356），Selective MAE **31.0032**，AURC **58.3726**
+  - **B5 开环**：Full MAE **30.7085**，Coverage **1.0**，Selective MAE **30.7085**，AURC **32.1474**
+  - **Ours mask-zero**：Full MAE **30.7085**，Coverage **0.0225**，Selective MAE **55.0052**，AURC **41.1197**
+  - **Ours mask-shuffle**：Full MAE **80.3964**（n=354），Coverage **0.6949**，Selective MAE **100.9028**，AURC **101.2660**（sanity 退化）
+- Force-answer kcal 在 Ours / B5 / mask-zero **相同**（同一 logged 终端总热量；0 次提前 STOP/ABSTAIN 决策）。老师终端 audit MAE 亦 **30.7085**。
+- **诚实解读**：Full-set MAE **打平**——本离线定义**不能**声称 Ours 在能量上优于 B5。Ours AURC **劣于** B5（弃权未对齐高误差菜）；Selective MAE 略高于 Full-set。**B0 97.03 / 非忠实 B1 110.72 不是本表行**（那是 rgb_test 冻结锚点）。overall Acc / FixRate **不是**本表指标；勿把 `offline_logged_horizon_force_answer` 写成 on-policy rollout。
 
 **P0 冒烟 / B1-B2 脚手架**（#19 / #22）仍有效：`CLOSED_LOOP_READY` 以前为 false 的记录保留在历史段。B1 scaffold / B2 approx 仍等 live API。
 
 ### 助手 / 本地（优先）
 
-1. **主表 MAE / AURC（立即）：** Full-set 能量 MAE + Coverage / Selective MAE / AURC，对比 Ours（closed-loop）与 B5（+ mask obs 消融）。用 `vdr/eval/selective.py` 与现有脚本；新产物只写在 `results/closed_loop/`。禁止用 test GT 调参。执行归属可记「营养论文代码编写」；本文件 STATUS 仍标 **方案执行**。
-2. **稍后 API：** 忠实 DietAI24 / FoodAgent（Omni+MFP3D+NutritionX）。不要把 scaffold 数字写进冻结 `results/n5k_*`。
-3. **P2 标注稍后：** kappa **0.7–0.8**；试标 30；指南仍 `docs/annotation_guide_v0.md` v0。
-4. **禁止**：单独用 overall Acc 当方法证明；忽视 hold-out **ABSTAIN** per-class PR/F1；**单独用 FixRate 当完整方法证明（须配 MAE/AURC 主表）**；**把 consecutive-IR 诊断当主指标**；上 RL；开 fast Cloud Agent；用 test GT 调参；开体积工具；接旧回归权重；覆盖上面列出的冻结文件；把 **110.72** 当成忠实 DietAI24；把 B2 approx 写成 Fixed-MoE。
+1. **立即（文档/方案，无新服务器命令）：** 定下一跑方向，择一写回本文件「下一步」后再派代码。候选：**(A) 弃权校准 / STOP-vs-ABSTAIN 再训**（针对 AURC 差于 B5）；**(B) on-policy VLM closed-loop 能量主表**（需写出与 offline IR 同形的轨迹，才能进 rgb_test 真能量）；**(C) 忠实 B1/B2 live API**（Omni+MFP3D+NutritionX；勿把 scaffold/110.72 当忠实）。在选定前，代码侧 **不要** 新开训练或 rgb_test 重跑。本文件 STATUS 仍标 **方案执行**。
+2. **稍后：** P2 试标 30（kappa **0.7–0.8**）；指南 `docs/annotation_guide_v0.md` v0。
+3. **禁止：** 把 Full-set MAE 打平说成闭环能量赢了 B5；把 Ours AURC 58.37 说成优于 B5；单独用 Acc / ABSTAIN F1 / FixRate 当完整方法证明；把 `offline_logged_horizon_force_answer` 写成 on-policy rollout；上 RL；开 fast Cloud Agent；用 test GT 调参；开体积工具；接旧回归权重；覆盖上面列出的冻结文件；把 **110.72** 当成忠实 DietAI24；把 B2 approx 写成 Fixed-MoE。
 
 ### 协作
 
