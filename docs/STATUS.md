@@ -1,23 +1,40 @@
 # 执行状态（STATUS）
 
 > 供 GitHub 同步：服务器跑完实验后，请在本文件更新。`notes/` 历史周报已删除，见 [`notes/README.md`](../notes/README.md)。执行助手据此继续改代码/方案。  
-> **截止日期（文档写入时）**：2026-11-05（Asia/Shanghai）。**Cursor 额度已恢复**；闭环 State-aware BC（#24）；hold-out **FixRate**（#26）；hold-out **主表 MAE/AURC 离线 logged**（#28，`e88afc8`）；**弃权校准 A 已完成**（#31，`aec2006`）——offline hold-out **n=356**：Full MAE **30.7085** 打平 B5，**Ours AURC 13.5311 ≤ B5 32.1474**（**不是** Full MAE 赢、**不是** on-policy）。**P1=B 已完成**（#34，merge `75b80a1`）——on-policy `rgb_test`：**primary n=488 STOP** 上 Full MAE **96.2769** 与 B5 **打平**（**勿声称** on-policy 能量赢）；Ours AURC **47.1737 ≤ B5 81.5857**。开环 31 维仍只作消融 **B5**。**下一步**：与 Triste + **营养论文调研与方案制作** 共议方向（勿自行发明新 P0）；C（忠实 B1/B2）并行不挡。**  
+> **截止日期（文档写入时）**：2026-11-05（Asia/Shanghai）。**方法真源已锁**：Canvas「**VDR — Evidence-Guided Active Multimodal Nutrition Estimation**」；Triste + 营养论文调研 **2026-11-05 锁定**。**技术中心**：Error-Aware Active Specialist Selection（**非** ABSTAIN/AURC/BC 补丁叙事）。旧「Evidence-Aware Closed-Loop Tool Control」→ **Ours-old / 纯控制器对照**，不作方法证明。  
+> **#24/#26/#28/#31/#34 数字保留**：offline **n=356** Full MAE **30.7085** 打平、Ours AURC **13.5311 ≤ B5 32.1474**；on-policy **n=488** Full MAE **96.2769** 打平 B5、Ours AURC **47.1737 ≤ B5 81.5857**（**勿声称** on-policy 能量赢；**勿混** offline 与 on-policy 人群）。弱 `abstain_score=clip(kcal/2500)` 已降权。  
+> **下一步（严格顺序，不可跳步）**：**① P0a 审计 traces 门禁** → **② P0b Mass Estimator** → **③ P0c U_* + Q_φ**；详见下文「下一步（立即执行）」。**禁止**未审计就开训 Mass。**  
 > **可执行的下一步只在本文件。** 聊天不是 runbook。助手改下一步、跑法或方案时，先更新文档并推到 GitHub；服务器上的人或 AI 先 `git pull --ff-only`，再读「下一步」执行。  
 > **服务器执行看「下一步」。** 这一节没有新的弱标签 / 507 命令。历史 `--n 50`、俯拍池 `--n 507`、弱标签 jsonl、开环 BC 数字都是已完成记录，不要再执行。
 
 ## 下一步（立即执行）
 
-**P0=A（弃权校准）已完成**（#31，squash `aec2006`）。**P1=B（on-policy rgb_test 能量主表）已完成**（#34，merge `75b80a1`）——定义 `on_policy_vlm_horizon_force_answer`；主表数字见「助手进度」**P1=B 已评测**；与 #28/#31 hold-out **offline logged**（`mae_aurc_holdout.json`，**n=356**）**分开报**，勿混表。
+**已完成（降为 Ours-old 对照，不是 Ours-new 方法证明）**：P0=A 弃权校准（#31）；P1=B on-policy rgb_test 主表（#34）；#24 闭环 BC、#26 FixRate、#28 offline MAE/AURC。数字见「助手进度」；**禁止**声称 on-policy Full MAE 赢 B5；**禁止**混 offline **n=356** 与 on-policy **n=488**。
 
-**当前不自行开新 P0。** 与 **Triste + 营养论文调研与方案制作** 对齐后再锁方向。待议分叉（并列列出，择一或组合由调研定）：
+**营养论文代码编写 — 严格顺序（前一步未落盘/未通过门禁，不得开始下一步）**
 
-1. **On-policy 能量 gap**：Full MAE 仍与 B5 **打平 96.2769 kcal**（primary **n=488** STOP）；可选后续 DAgger / 感知 / 克重等——**调研后再定**，勿现在擅自改规则或 test GT 调参。
-2. **C 并行**：忠实 **B1/B2 live API**（脚手架在 [`docs/B1_B2_SCAFFOLD.md`](B1_B2_SCAFFOLD.md)；历史 **110.72** 禁止当忠实 DietAI24）。**不挡** 论文向工作。
-3. **论文向冻结**：FixRate（#26）、offline A（#31）、on-policy B（#34）表冻结 + 写作。
+1. **P0a — 审计门禁（当前首项，必须先做）**  
+   - 数据源：hold-out logged traces（weak_steps / closed_loop 评测链）+ on-policy `results/closed_loop/on_policy_rgb_test.jsonl`（#34）。  
+   - 对象：每次 **CORRECT_CODE**、**RE_PORTION**（及同类改码/改份量工具）执行**前后**，终态营养向量 **n**（至少 dish 级 energy + mass）是否变化。  
+   - 必报：**变更率**、**无变化比例**、按动作类型分层；FixRate 高但 n 不变 → 记录为「纠错未传导至终态」风险。  
+   - **门禁**：审计摘要写入 `results/`（或 docs 引用路径）并 push 之前，**禁止**启动 Mass 训练、**禁止**把 Mass 与审计写成并行首项。
 
-**禁令（仍有效）**：不上 RL；不开 fast Cloud Agent；禁止 rgb_test GT 调参；勿覆盖冻结 n5k / weak_steps；勿把 offline logged 写成 on-policy；**勿声称** on-policy Full MAE 赢 B5；本机 Qwen closed-loop **≠** 忠实 C（DietAI24/FoodAgent）。
+2. **P0b — Mass Estimator（仅 P0a 门禁通过后）**  
+   - ViT-B/16 或 ResNet101；ImageNet 预训练 → Nutrition5K **rgb_train** 微调；**主表 RGB-only**（与 rgb_test 一致，禁 RGB-D 混主表）。  
+   - 多任务头 [M,E,P,C,F] + 不确定性 σ；工具接口 **`estimate_mass(image, candidates)`**；RE_PORTION 须接 Mass，**禁止空壳 RE_PORTION**。
 
-> 真源：根目录 [`PLAN.md`](../PLAN.md)、Canvas「VDR — Evidence-Aware Closed-Loop Tool Control」、[`docs/VDR_P0.md`](VDR_P0.md)、[`docs/STATE_FEATURE_DESIGN.md`](STATE_FEATURE_DESIGN.md)。闭环 `π(a_t|h_t,o_{t-1},b_t)` + hold-out 动作（#24）；FixRate（#26）；offline 主表（#28）+ 弃权 A（#31）；on-policy 主表（#34）。`CLOSED_LOOP_READY=true`。Offline **n=356**：Full MAE **30.7085** 打平；Ours AURC **13.5311 ≤ B5 32.1474**。On-policy **n=488**：Full MAE **96.2769** 打平 B5；Ours AURC **47.1737 ≤ B5 81.5857**（`abstain_score=clip(committed_kcal/2500,0,1)`，#31 fit-internal 锁定，**未**用 rgb_test GT）。开环 31 维仍是消融 **B5**。**不上 RL。不开 fast Cloud Agent。** 冻结结果不重写。
+3. **P0c — U_* + Q_φ（Mass wired 后）**  
+   - 定义 **U_id / U_mass / U_nutrient / U_evidence**（替换弱 kcal-proxy 作主叙事）。  
+   - 先规则启发式 utility，再监督 **Q_φ(z,a)=E[ΔL|z,a]**，**a*=argmax Q/Cost**；State-aware BC 仅 bootstrap/消融。**无 RL**。
+
+4. **P0d — 同预算评测（Ours-new）**  
+   - Ours-new（Mass + Q_φ）vs B5 / B0 / **Ours-old**；主报 **Full-set MAE@energy + mass MAE + Tool cost**；Coverage / AURC **辅助**。
+
+5. **P1（later，不挡、不替代 P0a）**：图文检索 + FNDDS 重排；忠实 B1/B2 live API（[`docs/B1_B2_SCAFFOLD.md`](B1_B2_SCAFFOLD.md)）可并行，**不得**跳过审计门禁。
+
+**禁令（仍有效）**：不上 RL；不开 fast Cloud Agent；禁止 rgb_test GT 调参；勿覆盖冻结 n5k / weak_steps；空壳 RE_PORTION；kcal-proxy AURC 作主 claim；本机 Qwen closed-loop **≠** 忠实 C；体积默认关。
+
+> 真源：[`PLAN.md`](../PLAN.md)、Canvas「**VDR — Evidence-Guided Active Multimodal Nutrition Estimation**」（https://cursor.com/canvas/store-745bdf38-f3d7-4313-8d66-08e4b6903e93/d7be617d-d37e-4fe1-a4b5-9da2c86b27a2）、[`docs/VDR_P0.md`](VDR_P0.md)、[`docs/STATE_FEATURE_DESIGN.md`](STATE_FEATURE_DESIGN.md)。`CLOSED_LOOP_READY=true` 指 **Ours-old** 脚手架就绪，**不是** Ours-new 已证明。**不上 RL。不开 fast Cloud Agent。** 冻结结果不重写。
 
 ### 服务器
 
@@ -34,7 +51,9 @@
 
 ### 助手进度
 
-**闭环 State-aware BC 已落地**（2026-11-04 Asia/Shanghai，自托管 `gpu-12-container`，分支 `cursor/closed-loop-bc-20261104`）。
+> **解读**：以下 #24–#34 段均为 **Ours-old（纯闭环控制器 / 弱弃权）对照**；支撑「#34 MAE 打平 → 需要 Mass + Q_φ」叙事，**不是** Ours-new 方法证明。主指标顺序见 [`PLAN.md`](../PLAN.md)：Full MAE + mass MAE + Tool cost 优先。
+
+**闭环 State-aware BC 已落地（Ours-old 组件）**（2026-11-04 Asia/Shanghai，自托管 `gpu-12-container`，分支 `cursor/closed-loop-bc-20261104`）。
 
 - 数据：`vdr/controller/closed_loop_data.py`（fit / hold-out 弱步骤；`o_prev` 为上一步 IR；`b_t.tools_used=step_i`）。
 - 策略：`vdr/controller/policy_state_mlp.py`（79-d → 64 → 64 → 6，与 B5 容量对齐）。
@@ -96,16 +115,15 @@
 
 ### 助手 / 本地（优先）
 
-1. **与 Triste + 营养论文调研与方案制作共议下一步**（勿自行发明新 P0）：见文首「下一步」三分叉（on-policy 能量 gap / 忠实 C / 论文冻结+写作）。
-2. **P1=B 已完成**（#34 / `75b80a1`）：on-policy rgb_test 主表已落盘；Full MAE **打平** B5 — 见上段诚实解读。
-3. **P0=A 已完成**（#31）：hold-out offline Ours AURC **13.5311 ≤ B5 32.1474**；Full MAE 仍 **30.7085** 打平。
-4. **P2 / 并行（可选）**：忠实 B1/B2 live API；禁止 **110.72** 当忠实。不挡论文向冻结。
-5. **稍后：** P2 试标 30（kappa **0.7–0.8**）；指南 `docs/annotation_guide_v0.md` v0。
-6. **禁止：** 把 on-policy 或 offline Full MAE 打平说成能量赢 B5；把 offline logged 写成 on-policy rgb_test 主表；混 #28/#31 与 #34 表；单独 Acc / ABSTAIN F1 / FixRate 当完整证明；上 RL；fast Cloud Agent；test GT 调参；体积；旧回归；覆盖冻结文件；**110.72** 当忠实 DietAI24；本机 Qwen closed-loop 当忠实 C；B2 approx 写成 Fixed-MoE。
+1. **P0a 审计 traces（门禁首项）**：见「下一步」第 1 条；**未完成不得开训 Mass**。
+2. **P0b → P0c → P0d**：Mass → U_* + Q_φ → 同预算 Ours-new 主表；顺序不可打乱。
+3. **#34 / #31 / #28 已冻结为 Ours-old 对照**；勿声称 on-policy 能量赢 B5。
+4. **P1 并行（可选）**：B1/B2 忠实 API；**不替代、不跳过 P0a**。
+5. **禁止：** 跳过审计直接 Mass；把 FixRate / AURC 当 Ours-new 主证明；混 offline n=356 与 on-policy n=488；空壳 RE_PORTION；RL；fast Cloud Agent；test GT 调参；覆盖冻结文件；**110.72** 当忠实 DietAI24。
 
 ### 协作
 
-docs-first：改下一步先改本文件并推仓。Cloud Agent **永远不开 fast**。**2026-11-05** P1=B（#34）已用本机 Qwen3.8-27B-VL 跑完 on-policy 主表；下一步等与 **营养论文调研与方案制作** 共议。
+docs-first：改下一步先改本文件并推仓。Cloud Agent **永远不开 fast**。**2026-11-05** Triste + 调研锁定新方法真源；**P0 Mass Estimator 方向已锁**；代码侧按「下一步」**先 P0a 审计门禁**，再 Mass / Q_φ。
 
 ## 历史跑数（开环 v2 / 非主方法）
 
@@ -295,7 +313,7 @@ CUDA_VISIBLE_DEVICES=0 /var/tmp/nutri-venv/bin/python -u scripts/eval_n5k_subset
 W1 基础设施在这台 2×4090D 上已打通：**schema + 骨架 + toy 冒烟 + 真实 FNDDS catalog（5624）+ N5K 元数据/官方 split + 俯拍 RGB + Qwen2.5-VL-7B 单盘冒烟**。  
 B1 第二轮先验（菜品形态、未点名的仿肉、100 g 以上的高密度克重、Cheese+Crust 碎片合并）后，同一 50 盘子集已重跑：能量 MAE 为 B0 **98.3**、B1 **88.2**。上一轮是 97.4 / 107.9，硬化前是 98.2 / 112.1。  
 有俯拍 RGB 的官方 `rgb_test` 池已跑完：能量 MAE 为 B0 **97.03**（Direct-VLM 锚点）、B1 **110.72**（**不是忠实 DietAI24**；中位 63.51 / 63.57）。配对 506 盘上中位差距约 +3.5 kcal，MAE 差距在右尾。50 盘子集仍是 B0 **98.3**、B1 **88.2**，是偏有利的一抽，不能代替这 507 盘。见「507 分析（助手）」。  
-**现行缺口**在文首：读 `o_{t-1}` 的 State-aware 闭环**训练**仍未做（P0 草图和离线脚本已进仓库，见 [`VDR_P0.md`](VDR_P0.md)；`CLOSED_LOOP_READY` 为假）。忠实 DietAI24 与 FoodAgent（或诚实 approx）、试标 30（kappa **0.7–0.8**）仍缺。开环 DAgger 第 1 轮的数字留作 B5：全池 hold-out **0.9592**，纯 BC MLP **0.9700**，新行 1490；`ABSTAIN` **0/24 是红警**。**旧 Ours-BC 已停。暂不上 RL。** 无俯拍 RGB 的官方 test 盘仍不进命令。侧视视频未解压。这 507 盘也不是 709 盘全表。
+**现行缺口**在文首「下一步」：**P0a 终态 n 审计门禁** → P0b Mass Estimator → P0c U_* + Q_φ → P0d Ours-new 主表。Ours-old（#24–#34）已落盘作对照。**禁止**跳过审计开训 Mass。忠实 B1/B2、试标 30（kappa **0.7–0.8**）为 P1 并行。开环 DAgger / BC 数字仅 B5。**暂不上 RL。**
 
 ## 已完成（box）
 
@@ -317,7 +335,7 @@ B1 第二轮先验（菜品形态、未点名的仿肉、100 g 以上的高密�
 | BC 小 MLP（CPU） | **开环 v2 / 消融 B5。** `PolicyMLP` 31→64→64→6，numpy，只在 fit 行上训练。hold-out 动作准确率 **0.9700**（2688/2771），不能当方法证明。`CORRECT_CODE` 142/157，`RE_PORTION` 917/949，`ABSTAIN` 仍是 **0/24（红警）**。不读 `obs_t`，没有 `VOLUME_ESTIMATE`。冒烟：`scripts/bc_mlp_smoke.py` |
 | DAgger 第 1 轮（CPU） | **开环 v2。旧 Ours-BC 已停，暂不上 RL。** 规则老师当专家，`PolicyMLP` 当学习者。只在 fit 池展开。全池新行 **1490**（novel 117 + 犯错副本 1373）。hold-out 动作准确率 **0.9592**（2658/2771），低于纯 BC **0.9700**。`CORRECT_CODE` 117/157，`RETRIEVE` 1285/1285，`ABSTAIN` 仍是 **0/24（红警）**。不读 `obs_t`，没有 `VOLUME_ESTIMATE`。冒烟：`scripts/dagger_smoke.py` |
 | 标注指南 v0 | `docs/annotation_guide_v0.md`。文首横幅：字段是 v0，相对 PLAN P2（Visibility / Code Match / …，kappa 0.7–0.8）部分过时；试标可用，不是最终协议 |
-| 方案 MD | 根目录 `PLAN.md`（2026-11-04 起与 Canvas「VDR — Evidence-Aware Closed-Loop Tool Control」对齐） |
+| 方案 MD | 根目录 `PLAN.md`（2026-11-05 起与 Canvas「VDR — Evidence-Guided Active Multimodal Nutrition Estimation」对齐） |
 | P0 离线脚手架（未训练） | 设计 `docs/STATE_FEATURE_DESIGN.md`；混淆 / Provenance / Selective 脚本在 `scripts/`；mock `tests/fixtures/fndds_mock_foods.json`；草图 `vdr/controller/state_features.py`（`CLOSED_LOOP_READY` 假）。开环 31 维仍是 B5。**2026-11-04 离线冒烟已跑完**（数字在文首「助手进度」；不是方法证明，不是训练）。索引 [`docs/VDR_P0.md`](VDR_P0.md) |
 
 ## 明确未完成
