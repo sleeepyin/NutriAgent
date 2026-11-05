@@ -1,0 +1,2140 @@
+{
+  "definition_id": "p0a_tool_pre_post_dish_n",
+  "definition": "For each executed CORRECT_CODE, RE_PORTION, RE_DECOMPOSE, or RETRIEVE step, compare nutri_dish on that row with nutri_dish on the next logged row. Changed means energy_kcal and/or mass_g moved by more than epsilon, including a finite value appearing or disappearing. Both sides missing is no change. A tool that is the last row has no post-state and is no_successor, not a change. Epsilon is half the 1e-4 nutrient rounding quantum. FixRate's 1 kcal threshold is not used. Cafe labels and rgb_test nutrition are not read.",
+  "scope": "P0a audit gate only. Mass Estimator was not trained. No new weights. No RL.",
+  "epsilon": {
+    "energy_kcal": 5e-05,
+    "mass_g": 5e-05,
+    "other_nutri": 5e-05,
+    "label": "5e-5",
+    "quantum": 0.0001,
+    "rule": "strictly greater than epsilon. A difference equal to epsilon is not a change.",
+    "source": "Half of the teacher _round_nutri quantum (4 decimal places, 1e-4). Not fit on hold-out or rgb_test.",
+    "fixrate_epsilon_kcal_not_used": 1.0
+  },
+  "comparison": "pre = nutri_dish on the tool row (state before action_t). post = nutri_dish on the next logged row (state after the tool, before the next action).",
+  "change_rule": "changed if |Δenergy| > ε or |Δmass| > ε, or exactly one side of a field is finite. Both sides missing is unchanged. no_successor is a separate outcome and is not a change.",
+  "actions": [
+    "CORRECT_CODE",
+    "RE_PORTION",
+    "RE_DECOMPOSE",
+    "RETRIEVE"
+  ],
+  "edit_actions": [
+    "CORRECT_CODE",
+    "RE_PORTION",
+    "RE_DECOMPOSE"
+  ],
+  "no_change_majority": 0.5,
+  "populations": {
+    "logged_holdout": {
+      "n_dishes": 380,
+      "n_rows": 2771,
+      "n_dishes_with_audited_tool": 380,
+      "energy_keys_seen": [
+        "energy_kcal"
+      ],
+      "mass_keys_seen": [
+        "mass_g"
+      ],
+      "overall": {
+        "n_executed": 2391,
+        "n_changed": 2336,
+        "n_unchanged": 55,
+        "n_no_successor": 0,
+        "n_energy_changed": 2336,
+        "n_mass_changed": 2179,
+        "n_energy_and_mass": 2179,
+        "n_energy_only": 157,
+        "n_mass_only": 0,
+        "n_value_edit": 1926,
+        "n_appear": 383,
+        "n_wipe": 27,
+        "wipe_next_action": {
+          "ABSTAIN": 20,
+          "RETRIEVE": 7
+        },
+        "n_null_flip": 410,
+        "n_macro_only": 0,
+        "n_dishes": 380,
+        "unchanged_reasons": {
+          "both_missing": 21,
+          "within_epsilon": 34
+        },
+        "tool_failed": {
+          "n": 0,
+          "n_changed": 0,
+          "n_unchanged": 0,
+          "n_no_successor": 0
+        },
+        "energy_abs_delta": {
+          "n_both_finite": 1960,
+          "n_gt_1": 1926,
+          "median_both_finite": 64.45,
+          "median_when_changed": 69.3,
+          "epsilon": 5e-05,
+          "gt_1_reference_kcal": 1.0
+        },
+        "mass_abs_delta": {
+          "n_both_finite": 1960,
+          "n_gt_1": 1769,
+          "median_both_finite": 95.0,
+          "median_when_changed": 95.0,
+          "epsilon": 5e-05,
+          "gt_1_reference_g": 1.0
+        },
+        "change_rate": 0.976997,
+        "no_change_rate": 0.023003,
+        "no_successor_rate": 0.0,
+        "energy_change_rate": 0.976997,
+        "mass_change_rate": 0.911334,
+        "n_with_post_state": 2391,
+        "change_rate_given_post_state": 0.976997,
+        "no_change_rate_given_post_state": 0.023003,
+        "no_change_dominates": false
+      },
+      "edit_actions": {
+        "n_executed": 1106,
+        "n_changed": 1106,
+        "n_unchanged": 0,
+        "n_no_successor": 0,
+        "n_energy_changed": 1106,
+        "n_mass_changed": 949,
+        "n_energy_and_mass": 949,
+        "n_energy_only": 157,
+        "n_mass_only": 0,
+        "n_value_edit": 1098,
+        "n_appear": 0,
+        "n_wipe": 8,
+        "wipe_next_action": {
+          "ABSTAIN": 8
+        },
+        "n_null_flip": 8,
+        "n_macro_only": 0,
+        "n_dishes": 342,
+        "unchanged_reasons": {},
+        "tool_failed": {
+          "n": 0,
+          "n_changed": 0,
+          "n_unchanged": 0,
+          "n_no_successor": 0
+        },
+        "energy_abs_delta": {
+          "n_both_finite": 1098,
+          "n_gt_1": 1098,
+          "median_both_finite": 51.5,
+          "median_when_changed": 51.5,
+          "epsilon": 5e-05,
+          "gt_1_reference_kcal": 1.0
+        },
+        "mass_abs_delta": {
+          "n_both_finite": 1098,
+          "n_gt_1": 941,
+          "median_both_finite": 60.0,
+          "median_when_changed": 70.0,
+          "epsilon": 5e-05,
+          "gt_1_reference_g": 1.0
+        },
+        "change_rate": 1.0,
+        "no_change_rate": 0.0,
+        "no_successor_rate": 0.0,
+        "energy_change_rate": 1.0,
+        "mass_change_rate": 0.858047,
+        "n_with_post_state": 1106,
+        "change_rate_given_post_state": 1.0,
+        "no_change_rate_given_post_state": 0.0,
+        "no_change_dominates": false
+      },
+      "by_action": {
+        "CORRECT_CODE": {
+          "n_executed": 157,
+          "n_changed": 157,
+          "n_unchanged": 0,
+          "n_no_successor": 0,
+          "n_energy_changed": 157,
+          "n_mass_changed": 0,
+          "n_energy_and_mass": 0,
+          "n_energy_only": 157,
+          "n_mass_only": 0,
+          "n_value_edit": 157,
+          "n_appear": 0,
+          "n_wipe": 0,
+          "wipe_next_action": {},
+          "n_null_flip": 0,
+          "n_macro_only": 0,
+          "n_dishes": 117,
+          "unchanged_reasons": {},
+          "tool_failed": {
+            "n": 0,
+            "n_changed": 0,
+            "n_unchanged": 0,
+            "n_no_successor": 0
+          },
+          "energy_abs_delta": {
+            "n_both_finite": 157,
+            "n_gt_1": 157,
+            "median_both_finite": 43.0,
+            "median_when_changed": 43.0,
+            "epsilon": 5e-05,
+            "gt_1_reference_kcal": 1.0
+          },
+          "mass_abs_delta": {
+            "n_both_finite": 157,
+            "n_gt_1": 0,
+            "median_both_finite": 0.0,
+            "median_when_changed": null,
+            "epsilon": 5e-05,
+            "gt_1_reference_g": 1.0
+          },
+          "change_rate": 1.0,
+          "no_change_rate": 0.0,
+          "no_successor_rate": 0.0,
+          "energy_change_rate": 1.0,
+          "mass_change_rate": 0.0,
+          "n_with_post_state": 157,
+          "change_rate_given_post_state": 1.0,
+          "no_change_rate_given_post_state": 0.0,
+          "no_change_dominates": false,
+          "mass_note": "mass_g stayed within ε on every executed step; energy_kcal moved on the changed steps. A same-gram code swap does not move mass.",
+          "action": "CORRECT_CODE"
+        },
+        "RE_PORTION": {
+          "n_executed": 949,
+          "n_changed": 949,
+          "n_unchanged": 0,
+          "n_no_successor": 0,
+          "n_energy_changed": 949,
+          "n_mass_changed": 949,
+          "n_energy_and_mass": 949,
+          "n_energy_only": 0,
+          "n_mass_only": 0,
+          "n_value_edit": 941,
+          "n_appear": 0,
+          "n_wipe": 8,
+          "wipe_next_action": {
+            "ABSTAIN": 8
+          },
+          "n_null_flip": 8,
+          "n_macro_only": 0,
+          "n_dishes": 336,
+          "unchanged_reasons": {},
+          "tool_failed": {
+            "n": 0,
+            "n_changed": 0,
+            "n_unchanged": 0,
+            "n_no_successor": 0
+          },
+          "energy_abs_delta": {
+            "n_both_finite": 941,
+            "n_gt_1": 941,
+            "median_both_finite": 55.2,
+            "median_when_changed": 55.2,
+            "epsilon": 5e-05,
+            "gt_1_reference_kcal": 1.0
+          },
+          "mass_abs_delta": {
+            "n_both_finite": 941,
+            "n_gt_1": 941,
+            "median_both_finite": 70.0,
+            "median_when_changed": 70.0,
+            "epsilon": 5e-05,
+            "gt_1_reference_g": 1.0
+          },
+          "change_rate": 1.0,
+          "no_change_rate": 0.0,
+          "no_successor_rate": 0.0,
+          "energy_change_rate": 1.0,
+          "mass_change_rate": 1.0,
+          "n_with_post_state": 949,
+          "change_rate_given_post_state": 1.0,
+          "no_change_rate_given_post_state": 0.0,
+          "no_change_dominates": false,
+          "action": "RE_PORTION"
+        },
+        "RE_DECOMPOSE": {
+          "n_executed": 0,
+          "n_changed": 0,
+          "n_unchanged": 0,
+          "n_no_successor": 0,
+          "n_energy_changed": 0,
+          "n_mass_changed": 0,
+          "n_energy_and_mass": 0,
+          "n_energy_only": 0,
+          "n_mass_only": 0,
+          "n_value_edit": 0,
+          "n_appear": 0,
+          "n_wipe": 0,
+          "wipe_next_action": {},
+          "n_null_flip": 0,
+          "n_macro_only": 0,
+          "n_dishes": 0,
+          "unchanged_reasons": {},
+          "tool_failed": {
+            "n": 0,
+            "n_changed": 0,
+            "n_unchanged": 0,
+            "n_no_successor": 0
+          },
+          "energy_abs_delta": {
+            "n_both_finite": 0,
+            "n_gt_1": 0,
+            "median_both_finite": null,
+            "median_when_changed": null,
+            "epsilon": 5e-05,
+            "gt_1_reference_kcal": 1.0
+          },
+          "mass_abs_delta": {
+            "n_both_finite": 0,
+            "n_gt_1": 0,
+            "median_both_finite": null,
+            "median_when_changed": null,
+            "epsilon": 5e-05,
+            "gt_1_reference_g": 1.0
+          },
+          "change_rate": null,
+          "no_change_rate": null,
+          "no_successor_rate": null,
+          "energy_change_rate": null,
+          "mass_change_rate": null,
+          "n_with_post_state": 0,
+          "change_rate_given_post_state": null,
+          "no_change_rate_given_post_state": null,
+          "no_change_dominates": false,
+          "action": "RE_DECOMPOSE"
+        },
+        "RETRIEVE": {
+          "n_executed": 1285,
+          "n_changed": 1230,
+          "n_unchanged": 55,
+          "n_no_successor": 0,
+          "n_energy_changed": 1230,
+          "n_mass_changed": 1230,
+          "n_energy_and_mass": 1230,
+          "n_energy_only": 0,
+          "n_mass_only": 0,
+          "n_value_edit": 828,
+          "n_appear": 383,
+          "n_wipe": 19,
+          "wipe_next_action": {
+            "ABSTAIN": 12,
+            "RETRIEVE": 7
+          },
+          "n_null_flip": 402,
+          "n_macro_only": 0,
+          "n_dishes": 380,
+          "unchanged_reasons": {
+            "both_missing": 21,
+            "within_epsilon": 34
+          },
+          "tool_failed": {
+            "n": 0,
+            "n_changed": 0,
+            "n_unchanged": 0,
+            "n_no_successor": 0
+          },
+          "energy_abs_delta": {
+            "n_both_finite": 862,
+            "n_gt_1": 828,
+            "median_both_finite": 94.0,
+            "median_when_changed": 96.0,
+            "epsilon": 5e-05,
+            "gt_1_reference_kcal": 1.0
+          },
+          "mass_abs_delta": {
+            "n_both_finite": 862,
+            "n_gt_1": 828,
+            "median_both_finite": 100.0,
+            "median_when_changed": 100.0,
+            "epsilon": 5e-05,
+            "gt_1_reference_g": 1.0
+          },
+          "change_rate": 0.957198,
+          "no_change_rate": 0.042802,
+          "no_successor_rate": 0.0,
+          "energy_change_rate": 0.957198,
+          "mass_change_rate": 0.957198,
+          "n_with_post_state": 1285,
+          "change_rate_given_post_state": 0.957198,
+          "no_change_rate_given_post_state": 0.042802,
+          "no_change_dominates": false,
+          "action": "RETRIEVE"
+        }
+      },
+      "n_step_gaps": 0
+    },
+    "on_policy_rgb_test": {
+      "n_dishes": 507,
+      "n_rows": 3822,
+      "n_dishes_with_audited_tool": 506,
+      "energy_keys_seen": [
+        "energy_kcal"
+      ],
+      "mass_keys_seen": [
+        "mass_g"
+      ],
+      "overall": {
+        "n_executed": 3325,
+        "n_changed": 3131,
+        "n_unchanged": 184,
+        "n_no_successor": 10,
+        "n_energy_changed": 3131,
+        "n_mass_changed": 2868,
+        "n_energy_and_mass": 2868,
+        "n_energy_only": 263,
+        "n_mass_only": 0,
+        "n_value_edit": 2618,
+        "n_appear": 505,
+        "n_wipe": 8,
+        "wipe_next_action": {
+          "ABSTAIN": 8
+        },
+        "n_null_flip": 513,
+        "n_macro_only": 2,
+        "n_dishes": 506,
+        "unchanged_reasons": {
+          "code_switched_same_nutri": 11,
+          "macro_only": 2,
+          "no_successor": 10,
+          "same_portion_grams": 77,
+          "tool_failed": 64,
+          "within_epsilon": 30
+        },
+        "tool_failed": {
+          "n": 67,
+          "n_changed": 0,
+          "n_unchanged": 64,
+          "n_no_successor": 3
+        },
+        "energy_abs_delta": {
+          "n_both_finite": 2800,
+          "n_gt_1": 2615,
+          "median_both_finite": 38.0,
+          "median_when_changed": 39.9,
+          "epsilon": 5e-05,
+          "gt_1_reference_kcal": 1.0
+        },
+        "mass_abs_delta": {
+          "n_both_finite": 2800,
+          "n_gt_1": 2355,
+          "median_both_finite": 60.0,
+          "median_when_changed": 80.0,
+          "epsilon": 5e-05,
+          "gt_1_reference_g": 1.0
+        },
+        "change_rate": 0.941654,
+        "no_change_rate": 0.055338,
+        "no_successor_rate": 0.003008,
+        "energy_change_rate": 0.941654,
+        "mass_change_rate": 0.862556,
+        "n_with_post_state": 3315,
+        "change_rate_given_post_state": 0.944495,
+        "no_change_rate_given_post_state": 0.055505,
+        "no_change_dominates": false
+      },
+      "edit_actions": {
+        "n_executed": 1795,
+        "n_changed": 1647,
+        "n_unchanged": 148,
+        "n_no_successor": 0,
+        "n_energy_changed": 1647,
+        "n_mass_changed": 1392,
+        "n_energy_and_mass": 1392,
+        "n_energy_only": 255,
+        "n_mass_only": 0,
+        "n_value_edit": 1639,
+        "n_appear": 0,
+        "n_wipe": 8,
+        "wipe_next_action": {
+          "ABSTAIN": 8
+        },
+        "n_null_flip": 8,
+        "n_macro_only": 2,
+        "n_dishes": 504,
+        "unchanged_reasons": {
+          "code_switched_same_nutri": 11,
+          "macro_only": 2,
+          "same_portion_grams": 77,
+          "tool_failed": 58
+        },
+        "tool_failed": {
+          "n": 58,
+          "n_changed": 0,
+          "n_unchanged": 58,
+          "n_no_successor": 0
+        },
+        "energy_abs_delta": {
+          "n_both_finite": 1787,
+          "n_gt_1": 1636,
+          "median_both_finite": 28.6,
+          "median_when_changed": 32.0,
+          "epsilon": 5e-05,
+          "gt_1_reference_kcal": 1.0
+        },
+        "mass_abs_delta": {
+          "n_both_finite": 1787,
+          "n_gt_1": 1384,
+          "median_both_finite": 25.0,
+          "median_when_changed": 40.0,
+          "epsilon": 5e-05,
+          "gt_1_reference_g": 1.0
+        },
+        "change_rate": 0.917549,
+        "no_change_rate": 0.082451,
+        "no_successor_rate": 0.0,
+        "energy_change_rate": 0.917549,
+        "mass_change_rate": 0.775487,
+        "n_with_post_state": 1795,
+        "change_rate_given_post_state": 0.917549,
+        "no_change_rate_given_post_state": 0.082451,
+        "no_change_dominates": false
+      },
+      "by_action": {
+        "CORRECT_CODE": {
+          "n_executed": 326,
+          "n_changed": 255,
+          "n_unchanged": 71,
+          "n_no_successor": 0,
+          "n_energy_changed": 255,
+          "n_mass_changed": 0,
+          "n_energy_and_mass": 0,
+          "n_energy_only": 255,
+          "n_mass_only": 0,
+          "n_value_edit": 255,
+          "n_appear": 0,
+          "n_wipe": 0,
+          "wipe_next_action": {},
+          "n_null_flip": 0,
+          "n_macro_only": 2,
+          "n_dishes": 237,
+          "unchanged_reasons": {
+            "code_switched_same_nutri": 11,
+            "macro_only": 2,
+            "tool_failed": 58
+          },
+          "tool_failed": {
+            "n": 58,
+            "n_changed": 0,
+            "n_unchanged": 58,
+            "n_no_successor": 0
+          },
+          "energy_abs_delta": {
+            "n_both_finite": 326,
+            "n_gt_1": 252,
+            "median_both_finite": 33.0,
+            "median_when_changed": 43.0,
+            "epsilon": 5e-05,
+            "gt_1_reference_kcal": 1.0
+          },
+          "mass_abs_delta": {
+            "n_both_finite": 326,
+            "n_gt_1": 0,
+            "median_both_finite": 0.0,
+            "median_when_changed": null,
+            "epsilon": 5e-05,
+            "gt_1_reference_g": 1.0
+          },
+          "change_rate": 0.782209,
+          "no_change_rate": 0.217791,
+          "no_successor_rate": 0.0,
+          "energy_change_rate": 0.782209,
+          "mass_change_rate": 0.0,
+          "n_with_post_state": 326,
+          "change_rate_given_post_state": 0.782209,
+          "no_change_rate_given_post_state": 0.217791,
+          "no_change_dominates": false,
+          "mass_note": "mass_g stayed within ε on every executed step; energy_kcal moved on the changed steps. A same-gram code swap does not move mass.",
+          "action": "CORRECT_CODE"
+        },
+        "RE_PORTION": {
+          "n_executed": 1469,
+          "n_changed": 1392,
+          "n_unchanged": 77,
+          "n_no_successor": 0,
+          "n_energy_changed": 1392,
+          "n_mass_changed": 1392,
+          "n_energy_and_mass": 1392,
+          "n_energy_only": 0,
+          "n_mass_only": 0,
+          "n_value_edit": 1384,
+          "n_appear": 0,
+          "n_wipe": 8,
+          "wipe_next_action": {
+            "ABSTAIN": 8
+          },
+          "n_null_flip": 8,
+          "n_macro_only": 0,
+          "n_dishes": 504,
+          "unchanged_reasons": {
+            "same_portion_grams": 77
+          },
+          "tool_failed": {
+            "n": 0,
+            "n_changed": 0,
+            "n_unchanged": 0,
+            "n_no_successor": 0
+          },
+          "energy_abs_delta": {
+            "n_both_finite": 1461,
+            "n_gt_1": 1384,
+            "median_both_finite": 27.3,
+            "median_when_changed": 30.5,
+            "epsilon": 5e-05,
+            "gt_1_reference_kcal": 1.0
+          },
+          "mass_abs_delta": {
+            "n_both_finite": 1461,
+            "n_gt_1": 1384,
+            "median_both_finite": 40.0,
+            "median_when_changed": 40.0,
+            "epsilon": 5e-05,
+            "gt_1_reference_g": 1.0
+          },
+          "change_rate": 0.947583,
+          "no_change_rate": 0.052417,
+          "no_successor_rate": 0.0,
+          "energy_change_rate": 0.947583,
+          "mass_change_rate": 0.947583,
+          "n_with_post_state": 1469,
+          "change_rate_given_post_state": 0.947583,
+          "no_change_rate_given_post_state": 0.052417,
+          "no_change_dominates": false,
+          "action": "RE_PORTION"
+        },
+        "RE_DECOMPOSE": {
+          "n_executed": 0,
+          "n_changed": 0,
+          "n_unchanged": 0,
+          "n_no_successor": 0,
+          "n_energy_changed": 0,
+          "n_mass_changed": 0,
+          "n_energy_and_mass": 0,
+          "n_energy_only": 0,
+          "n_mass_only": 0,
+          "n_value_edit": 0,
+          "n_appear": 0,
+          "n_wipe": 0,
+          "wipe_next_action": {},
+          "n_null_flip": 0,
+          "n_macro_only": 0,
+          "n_dishes": 0,
+          "unchanged_reasons": {},
+          "tool_failed": {
+            "n": 0,
+            "n_changed": 0,
+            "n_unchanged": 0,
+            "n_no_successor": 0
+          },
+          "energy_abs_delta": {
+            "n_both_finite": 0,
+            "n_gt_1": 0,
+            "median_both_finite": null,
+            "median_when_changed": null,
+            "epsilon": 5e-05,
+            "gt_1_reference_kcal": 1.0
+          },
+          "mass_abs_delta": {
+            "n_both_finite": 0,
+            "n_gt_1": 0,
+            "median_both_finite": null,
+            "median_when_changed": null,
+            "epsilon": 5e-05,
+            "gt_1_reference_g": 1.0
+          },
+          "change_rate": null,
+          "no_change_rate": null,
+          "no_successor_rate": null,
+          "energy_change_rate": null,
+          "mass_change_rate": null,
+          "n_with_post_state": 0,
+          "change_rate_given_post_state": null,
+          "no_change_rate_given_post_state": null,
+          "no_change_dominates": false,
+          "action": "RE_DECOMPOSE"
+        },
+        "RETRIEVE": {
+          "n_executed": 1530,
+          "n_changed": 1484,
+          "n_unchanged": 36,
+          "n_no_successor": 10,
+          "n_energy_changed": 1484,
+          "n_mass_changed": 1476,
+          "n_energy_and_mass": 1476,
+          "n_energy_only": 8,
+          "n_mass_only": 0,
+          "n_value_edit": 979,
+          "n_appear": 505,
+          "n_wipe": 0,
+          "wipe_next_action": {},
+          "n_null_flip": 505,
+          "n_macro_only": 0,
+          "n_dishes": 506,
+          "unchanged_reasons": {
+            "no_successor": 10,
+            "tool_failed": 6,
+            "within_epsilon": 30
+          },
+          "tool_failed": {
+            "n": 9,
+            "n_changed": 0,
+            "n_unchanged": 6,
+            "n_no_successor": 3
+          },
+          "energy_abs_delta": {
+            "n_both_finite": 1013,
+            "n_gt_1": 979,
+            "median_both_finite": 52.0,
+            "median_when_changed": 57.0,
+            "epsilon": 5e-05,
+            "gt_1_reference_kcal": 1.0
+          },
+          "mass_abs_delta": {
+            "n_both_finite": 1013,
+            "n_gt_1": 971,
+            "median_both_finite": 100.0,
+            "median_when_changed": 100.0,
+            "epsilon": 5e-05,
+            "gt_1_reference_g": 1.0
+          },
+          "change_rate": 0.969935,
+          "no_change_rate": 0.023529,
+          "no_successor_rate": 0.006536,
+          "energy_change_rate": 0.969935,
+          "mass_change_rate": 0.964706,
+          "n_with_post_state": 1520,
+          "change_rate_given_post_state": 0.976316,
+          "no_change_rate_given_post_state": 0.023684,
+          "no_change_dominates": false,
+          "action": "RETRIEVE"
+        }
+      },
+      "n_step_gaps": 0
+    },
+    "logged_holdout_stop_pass_corrected": {
+      "n_dishes": 356,
+      "n_rows": 2606,
+      "n_dishes_with_audited_tool": 356,
+      "energy_keys_seen": [
+        "energy_kcal"
+      ],
+      "mass_keys_seen": [
+        "mass_g"
+      ],
+      "overall": {
+        "n_executed": 2250,
+        "n_changed": 2213,
+        "n_unchanged": 37,
+        "n_no_successor": 0,
+        "n_energy_changed": 2213,
+        "n_mass_changed": 2059,
+        "n_energy_and_mass": 2059,
+        "n_energy_only": 154,
+        "n_mass_only": 0,
+        "n_value_edit": 1845,
+        "n_appear": 362,
+        "n_wipe": 6,
+        "wipe_next_action": {
+          "RETRIEVE": 6
+        },
+        "n_null_flip": 368,
+        "n_macro_only": 0,
+        "n_dishes": 356,
+        "unchanged_reasons": {
+          "both_missing": 13,
+          "within_epsilon": 24
+        },
+        "tool_failed": {
+          "n": 0,
+          "n_changed": 0,
+          "n_unchanged": 0,
+          "n_no_successor": 0
+        },
+        "energy_abs_delta": {
+          "n_both_finite": 1869,
+          "n_gt_1": 1845,
+          "median_both_finite": 64.2,
+          "median_when_changed": 68.8,
+          "epsilon": 5e-05,
+          "gt_1_reference_kcal": 1.0
+        },
+        "mass_abs_delta": {
+          "n_both_finite": 1869,
+          "n_gt_1": 1691,
+          "median_both_finite": 95.0,
+          "median_when_changed": 95.0,
+          "epsilon": 5e-05,
+          "gt_1_reference_g": 1.0
+        },
+        "change_rate": 0.983556,
+        "no_change_rate": 0.016444,
+        "no_successor_rate": 0.0,
+        "energy_change_rate": 0.983556,
+        "mass_change_rate": 0.915111,
+        "n_with_post_state": 2250,
+        "change_rate_given_post_state": 0.983556,
+        "no_change_rate_given_post_state": 0.016444,
+        "no_change_dominates": false
+      },
+      "edit_actions": {
+        "n_executed": 1061,
+        "n_changed": 1061,
+        "n_unchanged": 0,
+        "n_no_successor": 0,
+        "n_energy_changed": 1061,
+        "n_mass_changed": 907,
+        "n_energy_and_mass": 907,
+        "n_energy_only": 154,
+        "n_mass_only": 0,
+        "n_value_edit": 1061,
+        "n_appear": 0,
+        "n_wipe": 0,
+        "wipe_next_action": {},
+        "n_null_flip": 0,
+        "n_macro_only": 0,
+        "n_dishes": 327,
+        "unchanged_reasons": {},
+        "tool_failed": {
+          "n": 0,
+          "n_changed": 0,
+          "n_unchanged": 0,
+          "n_no_successor": 0
+        },
+        "energy_abs_delta": {
+          "n_both_finite": 1061,
+          "n_gt_1": 1061,
+          "median_both_finite": 50.4,
+          "median_when_changed": 50.4,
+          "epsilon": 5e-05,
+          "gt_1_reference_kcal": 1.0
+        },
+        "mass_abs_delta": {
+          "n_both_finite": 1061,
+          "n_gt_1": 907,
+          "median_both_finite": 60.0,
+          "median_when_changed": 70.0,
+          "epsilon": 5e-05,
+          "gt_1_reference_g": 1.0
+        },
+        "change_rate": 1.0,
+        "no_change_rate": 0.0,
+        "no_successor_rate": 0.0,
+        "energy_change_rate": 1.0,
+        "mass_change_rate": 0.854854,
+        "n_with_post_state": 1061,
+        "change_rate_given_post_state": 1.0,
+        "no_change_rate_given_post_state": 0.0,
+        "no_change_dominates": false
+      },
+      "by_action": {
+        "CORRECT_CODE": {
+          "n_executed": 154,
+          "n_changed": 154,
+          "n_unchanged": 0,
+          "n_no_successor": 0,
+          "n_energy_changed": 154,
+          "n_mass_changed": 0,
+          "n_energy_and_mass": 0,
+          "n_energy_only": 154,
+          "n_mass_only": 0,
+          "n_value_edit": 154,
+          "n_appear": 0,
+          "n_wipe": 0,
+          "wipe_next_action": {},
+          "n_null_flip": 0,
+          "n_macro_only": 0,
+          "n_dishes": 114,
+          "unchanged_reasons": {},
+          "tool_failed": {
+            "n": 0,
+            "n_changed": 0,
+            "n_unchanged": 0,
+            "n_no_successor": 0
+          },
+          "energy_abs_delta": {
+            "n_both_finite": 154,
+            "n_gt_1": 154,
+            "median_both_finite": 43.0,
+            "median_when_changed": 43.0,
+            "epsilon": 5e-05,
+            "gt_1_reference_kcal": 1.0
+          },
+          "mass_abs_delta": {
+            "n_both_finite": 154,
+            "n_gt_1": 0,
+            "median_both_finite": 0.0,
+            "median_when_changed": null,
+            "epsilon": 5e-05,
+            "gt_1_reference_g": 1.0
+          },
+          "change_rate": 1.0,
+          "no_change_rate": 0.0,
+          "no_successor_rate": 0.0,
+          "energy_change_rate": 1.0,
+          "mass_change_rate": 0.0,
+          "n_with_post_state": 154,
+          "change_rate_given_post_state": 1.0,
+          "no_change_rate_given_post_state": 0.0,
+          "no_change_dominates": false,
+          "mass_note": "mass_g stayed within ε on every executed step; energy_kcal moved on the changed steps. A same-gram code swap does not move mass.",
+          "action": "CORRECT_CODE"
+        },
+        "RE_PORTION": {
+          "n_executed": 907,
+          "n_changed": 907,
+          "n_unchanged": 0,
+          "n_no_successor": 0,
+          "n_energy_changed": 907,
+          "n_mass_changed": 907,
+          "n_energy_and_mass": 907,
+          "n_energy_only": 0,
+          "n_mass_only": 0,
+          "n_value_edit": 907,
+          "n_appear": 0,
+          "n_wipe": 0,
+          "wipe_next_action": {},
+          "n_null_flip": 0,
+          "n_macro_only": 0,
+          "n_dishes": 321,
+          "unchanged_reasons": {},
+          "tool_failed": {
+            "n": 0,
+            "n_changed": 0,
+            "n_unchanged": 0,
+            "n_no_successor": 0
+          },
+          "energy_abs_delta": {
+            "n_both_finite": 907,
+            "n_gt_1": 907,
+            "median_both_finite": 54.25,
+            "median_when_changed": 54.25,
+            "epsilon": 5e-05,
+            "gt_1_reference_kcal": 1.0
+          },
+          "mass_abs_delta": {
+            "n_both_finite": 907,
+            "n_gt_1": 907,
+            "median_both_finite": 70.0,
+            "median_when_changed": 70.0,
+            "epsilon": 5e-05,
+            "gt_1_reference_g": 1.0
+          },
+          "change_rate": 1.0,
+          "no_change_rate": 0.0,
+          "no_successor_rate": 0.0,
+          "energy_change_rate": 1.0,
+          "mass_change_rate": 1.0,
+          "n_with_post_state": 907,
+          "change_rate_given_post_state": 1.0,
+          "no_change_rate_given_post_state": 0.0,
+          "no_change_dominates": false,
+          "action": "RE_PORTION"
+        },
+        "RE_DECOMPOSE": {
+          "n_executed": 0,
+          "n_changed": 0,
+          "n_unchanged": 0,
+          "n_no_successor": 0,
+          "n_energy_changed": 0,
+          "n_mass_changed": 0,
+          "n_energy_and_mass": 0,
+          "n_energy_only": 0,
+          "n_mass_only": 0,
+          "n_value_edit": 0,
+          "n_appear": 0,
+          "n_wipe": 0,
+          "wipe_next_action": {},
+          "n_null_flip": 0,
+          "n_macro_only": 0,
+          "n_dishes": 0,
+          "unchanged_reasons": {},
+          "tool_failed": {
+            "n": 0,
+            "n_changed": 0,
+            "n_unchanged": 0,
+            "n_no_successor": 0
+          },
+          "energy_abs_delta": {
+            "n_both_finite": 0,
+            "n_gt_1": 0,
+            "median_both_finite": null,
+            "median_when_changed": null,
+            "epsilon": 5e-05,
+            "gt_1_reference_kcal": 1.0
+          },
+          "mass_abs_delta": {
+            "n_both_finite": 0,
+            "n_gt_1": 0,
+            "median_both_finite": null,
+            "median_when_changed": null,
+            "epsilon": 5e-05,
+            "gt_1_reference_g": 1.0
+          },
+          "change_rate": null,
+          "no_change_rate": null,
+          "no_successor_rate": null,
+          "energy_change_rate": null,
+          "mass_change_rate": null,
+          "n_with_post_state": 0,
+          "change_rate_given_post_state": null,
+          "no_change_rate_given_post_state": null,
+          "no_change_dominates": false,
+          "action": "RE_DECOMPOSE"
+        },
+        "RETRIEVE": {
+          "n_executed": 1189,
+          "n_changed": 1152,
+          "n_unchanged": 37,
+          "n_no_successor": 0,
+          "n_energy_changed": 1152,
+          "n_mass_changed": 1152,
+          "n_energy_and_mass": 1152,
+          "n_energy_only": 0,
+          "n_mass_only": 0,
+          "n_value_edit": 784,
+          "n_appear": 362,
+          "n_wipe": 6,
+          "wipe_next_action": {
+            "RETRIEVE": 6
+          },
+          "n_null_flip": 368,
+          "n_macro_only": 0,
+          "n_dishes": 356,
+          "unchanged_reasons": {
+            "both_missing": 13,
+            "within_epsilon": 24
+          },
+          "tool_failed": {
+            "n": 0,
+            "n_changed": 0,
+            "n_unchanged": 0,
+            "n_no_successor": 0
+          },
+          "energy_abs_delta": {
+            "n_both_finite": 808,
+            "n_gt_1": 784,
+            "median_both_finite": 94.0,
+            "median_when_changed": 96.0,
+            "epsilon": 5e-05,
+            "gt_1_reference_kcal": 1.0
+          },
+          "mass_abs_delta": {
+            "n_both_finite": 808,
+            "n_gt_1": 784,
+            "median_both_finite": 100.0,
+            "median_when_changed": 100.0,
+            "epsilon": 5e-05,
+            "gt_1_reference_g": 1.0
+          },
+          "change_rate": 0.968881,
+          "no_change_rate": 0.031119,
+          "no_successor_rate": 0.0,
+          "energy_change_rate": 0.968881,
+          "mass_change_rate": 0.968881,
+          "n_with_post_state": 1189,
+          "change_rate_given_post_state": 0.968881,
+          "no_change_rate_given_post_state": 0.031119,
+          "no_change_dominates": false,
+          "action": "RETRIEVE"
+        }
+      },
+      "n_step_gaps": 0
+    },
+    "on_policy_stop_pass_corrected": {
+      "n_dishes": 488,
+      "n_rows": 3641,
+      "n_dishes_with_audited_tool": 488,
+      "energy_keys_seen": [
+        "energy_kcal"
+      ],
+      "mass_keys_seen": [
+        "mass_g"
+      ],
+      "overall": {
+        "n_executed": 3153,
+        "n_changed": 2994,
+        "n_unchanged": 159,
+        "n_no_successor": 0,
+        "n_energy_changed": 2994,
+        "n_mass_changed": 2741,
+        "n_energy_and_mass": 2741,
+        "n_energy_only": 253,
+        "n_mass_only": 0,
+        "n_value_edit": 2506,
+        "n_appear": 488,
+        "n_wipe": 0,
+        "wipe_next_action": {},
+        "n_null_flip": 488,
+        "n_macro_only": 2,
+        "n_dishes": 488,
+        "unchanged_reasons": {
+          "code_switched_same_nutri": 11,
+          "macro_only": 2,
+          "same_portion_grams": 75,
+          "tool_failed": 56,
+          "within_epsilon": 15
+        },
+        "tool_failed": {
+          "n": 56,
+          "n_changed": 0,
+          "n_unchanged": 56,
+          "n_no_successor": 0
+        },
+        "energy_abs_delta": {
+          "n_both_finite": 2665,
+          "n_gt_1": 2503,
+          "median_both_finite": 38.0,
+          "median_when_changed": 39.0,
+          "epsilon": 5e-05,
+          "gt_1_reference_kcal": 1.0
+        },
+        "mass_abs_delta": {
+          "n_both_finite": 2665,
+          "n_gt_1": 2253,
+          "median_both_finite": 60.0,
+          "median_when_changed": 80.0,
+          "epsilon": 5e-05,
+          "gt_1_reference_g": 1.0
+        },
+        "change_rate": 0.949572,
+        "no_change_rate": 0.050428,
+        "no_successor_rate": 0.0,
+        "energy_change_rate": 0.949572,
+        "mass_change_rate": 0.869331,
+        "n_with_post_state": 3153,
+        "change_rate_given_post_state": 0.949572,
+        "no_change_rate_given_post_state": 0.050428,
+        "no_change_dominates": false
+      },
+      "edit_actions": {
+        "n_executed": 1722,
+        "n_changed": 1578,
+        "n_unchanged": 144,
+        "n_no_successor": 0,
+        "n_energy_changed": 1578,
+        "n_mass_changed": 1333,
+        "n_energy_and_mass": 1333,
+        "n_energy_only": 245,
+        "n_mass_only": 0,
+        "n_value_edit": 1578,
+        "n_appear": 0,
+        "n_wipe": 0,
+        "wipe_next_action": {},
+        "n_null_flip": 0,
+        "n_macro_only": 2,
+        "n_dishes": 488,
+        "unchanged_reasons": {
+          "code_switched_same_nutri": 11,
+          "macro_only": 2,
+          "same_portion_grams": 75,
+          "tool_failed": 56
+        },
+        "tool_failed": {
+          "n": 56,
+          "n_changed": 0,
+          "n_unchanged": 56,
+          "n_no_successor": 0
+        },
+        "energy_abs_delta": {
+          "n_both_finite": 1722,
+          "n_gt_1": 1575,
+          "median_both_finite": 27.9,
+          "median_when_changed": 32.0,
+          "epsilon": 5e-05,
+          "gt_1_reference_kcal": 1.0
+        },
+        "mass_abs_delta": {
+          "n_both_finite": 1722,
+          "n_gt_1": 1333,
+          "median_both_finite": 25.0,
+          "median_when_changed": 40.0,
+          "epsilon": 5e-05,
+          "gt_1_reference_g": 1.0
+        },
+        "change_rate": 0.916376,
+        "no_change_rate": 0.083624,
+        "no_successor_rate": 0.0,
+        "energy_change_rate": 0.916376,
+        "mass_change_rate": 0.7741,
+        "n_with_post_state": 1722,
+        "change_rate_given_post_state": 0.916376,
+        "no_change_rate_given_post_state": 0.083624,
+        "no_change_dominates": false
+      },
+      "by_action": {
+        "CORRECT_CODE": {
+          "n_executed": 314,
+          "n_changed": 245,
+          "n_unchanged": 69,
+          "n_no_successor": 0,
+          "n_energy_changed": 245,
+          "n_mass_changed": 0,
+          "n_energy_and_mass": 0,
+          "n_energy_only": 245,
+          "n_mass_only": 0,
+          "n_value_edit": 245,
+          "n_appear": 0,
+          "n_wipe": 0,
+          "wipe_next_action": {},
+          "n_null_flip": 0,
+          "n_macro_only": 2,
+          "n_dishes": 226,
+          "unchanged_reasons": {
+            "code_switched_same_nutri": 11,
+            "macro_only": 2,
+            "tool_failed": 56
+          },
+          "tool_failed": {
+            "n": 56,
+            "n_changed": 0,
+            "n_unchanged": 56,
+            "n_no_successor": 0
+          },
+          "energy_abs_delta": {
+            "n_both_finite": 314,
+            "n_gt_1": 242,
+            "median_both_finite": 33.0,
+            "median_when_changed": 43.0,
+            "epsilon": 5e-05,
+            "gt_1_reference_kcal": 1.0
+          },
+          "mass_abs_delta": {
+            "n_both_finite": 314,
+            "n_gt_1": 0,
+            "median_both_finite": 0.0,
+            "median_when_changed": null,
+            "epsilon": 5e-05,
+            "gt_1_reference_g": 1.0
+          },
+          "change_rate": 0.780255,
+          "no_change_rate": 0.219745,
+          "no_successor_rate": 0.0,
+          "energy_change_rate": 0.780255,
+          "mass_change_rate": 0.0,
+          "n_with_post_state": 314,
+          "change_rate_given_post_state": 0.780255,
+          "no_change_rate_given_post_state": 0.219745,
+          "no_change_dominates": false,
+          "mass_note": "mass_g stayed within ε on every executed step; energy_kcal moved on the changed steps. A same-gram code swap does not move mass.",
+          "action": "CORRECT_CODE"
+        },
+        "RE_PORTION": {
+          "n_executed": 1408,
+          "n_changed": 1333,
+          "n_unchanged": 75,
+          "n_no_successor": 0,
+          "n_energy_changed": 1333,
+          "n_mass_changed": 1333,
+          "n_energy_and_mass": 1333,
+          "n_energy_only": 0,
+          "n_mass_only": 0,
+          "n_value_edit": 1333,
+          "n_appear": 0,
+          "n_wipe": 0,
+          "wipe_next_action": {},
+          "n_null_flip": 0,
+          "n_macro_only": 0,
+          "n_dishes": 488,
+          "unchanged_reasons": {
+            "same_portion_grams": 75
+          },
+          "tool_failed": {
+            "n": 0,
+            "n_changed": 0,
+            "n_unchanged": 0,
+            "n_no_successor": 0
+          },
+          "energy_abs_delta": {
+            "n_both_finite": 1408,
+            "n_gt_1": 1333,
+            "median_both_finite": 27.3,
+            "median_when_changed": 30.5,
+            "epsilon": 5e-05,
+            "gt_1_reference_kcal": 1.0
+          },
+          "mass_abs_delta": {
+            "n_both_finite": 1408,
+            "n_gt_1": 1333,
+            "median_both_finite": 40.0,
+            "median_when_changed": 40.0,
+            "epsilon": 5e-05,
+            "gt_1_reference_g": 1.0
+          },
+          "change_rate": 0.946733,
+          "no_change_rate": 0.053267,
+          "no_successor_rate": 0.0,
+          "energy_change_rate": 0.946733,
+          "mass_change_rate": 0.946733,
+          "n_with_post_state": 1408,
+          "change_rate_given_post_state": 0.946733,
+          "no_change_rate_given_post_state": 0.053267,
+          "no_change_dominates": false,
+          "action": "RE_PORTION"
+        },
+        "RE_DECOMPOSE": {
+          "n_executed": 0,
+          "n_changed": 0,
+          "n_unchanged": 0,
+          "n_no_successor": 0,
+          "n_energy_changed": 0,
+          "n_mass_changed": 0,
+          "n_energy_and_mass": 0,
+          "n_energy_only": 0,
+          "n_mass_only": 0,
+          "n_value_edit": 0,
+          "n_appear": 0,
+          "n_wipe": 0,
+          "wipe_next_action": {},
+          "n_null_flip": 0,
+          "n_macro_only": 0,
+          "n_dishes": 0,
+          "unchanged_reasons": {},
+          "tool_failed": {
+            "n": 0,
+            "n_changed": 0,
+            "n_unchanged": 0,
+            "n_no_successor": 0
+          },
+          "energy_abs_delta": {
+            "n_both_finite": 0,
+            "n_gt_1": 0,
+            "median_both_finite": null,
+            "median_when_changed": null,
+            "epsilon": 5e-05,
+            "gt_1_reference_kcal": 1.0
+          },
+          "mass_abs_delta": {
+            "n_both_finite": 0,
+            "n_gt_1": 0,
+            "median_both_finite": null,
+            "median_when_changed": null,
+            "epsilon": 5e-05,
+            "gt_1_reference_g": 1.0
+          },
+          "change_rate": null,
+          "no_change_rate": null,
+          "no_successor_rate": null,
+          "energy_change_rate": null,
+          "mass_change_rate": null,
+          "n_with_post_state": 0,
+          "change_rate_given_post_state": null,
+          "no_change_rate_given_post_state": null,
+          "no_change_dominates": false,
+          "action": "RE_DECOMPOSE"
+        },
+        "RETRIEVE": {
+          "n_executed": 1431,
+          "n_changed": 1416,
+          "n_unchanged": 15,
+          "n_no_successor": 0,
+          "n_energy_changed": 1416,
+          "n_mass_changed": 1408,
+          "n_energy_and_mass": 1408,
+          "n_energy_only": 8,
+          "n_mass_only": 0,
+          "n_value_edit": 928,
+          "n_appear": 488,
+          "n_wipe": 0,
+          "wipe_next_action": {},
+          "n_null_flip": 488,
+          "n_macro_only": 0,
+          "n_dishes": 488,
+          "unchanged_reasons": {
+            "within_epsilon": 15
+          },
+          "tool_failed": {
+            "n": 0,
+            "n_changed": 0,
+            "n_unchanged": 0,
+            "n_no_successor": 0
+          },
+          "energy_abs_delta": {
+            "n_both_finite": 943,
+            "n_gt_1": 928,
+            "median_both_finite": 52.0,
+            "median_when_changed": 52.0,
+            "epsilon": 5e-05,
+            "gt_1_reference_kcal": 1.0
+          },
+          "mass_abs_delta": {
+            "n_both_finite": 943,
+            "n_gt_1": 920,
+            "median_both_finite": 100.0,
+            "median_when_changed": 100.0,
+            "epsilon": 5e-05,
+            "gt_1_reference_g": 1.0
+          },
+          "change_rate": 0.989518,
+          "no_change_rate": 0.010482,
+          "no_successor_rate": 0.0,
+          "energy_change_rate": 0.989518,
+          "mass_change_rate": 0.983927,
+          "n_with_post_state": 1431,
+          "change_rate_given_post_state": 0.989518,
+          "no_change_rate_given_post_state": 0.010482,
+          "no_change_dominates": false,
+          "action": "RETRIEVE"
+        }
+      },
+      "n_step_gaps": 0
+    }
+  },
+  "overall_step_weighted": {
+    "n_dishes": 887,
+    "n_rows": 6593,
+    "n_dishes_with_audited_tool": 886,
+    "energy_keys_seen": [
+      "energy_kcal"
+    ],
+    "mass_keys_seen": [
+      "mass_g"
+    ],
+    "overall": {
+      "n_executed": 5716,
+      "n_changed": 5467,
+      "n_unchanged": 239,
+      "n_no_successor": 10,
+      "n_energy_changed": 5467,
+      "n_mass_changed": 5047,
+      "n_energy_and_mass": 5047,
+      "n_energy_only": 420,
+      "n_mass_only": 0,
+      "n_value_edit": 4544,
+      "n_appear": 888,
+      "n_wipe": 35,
+      "wipe_next_action": {
+        "ABSTAIN": 28,
+        "RETRIEVE": 7
+      },
+      "n_null_flip": 923,
+      "n_macro_only": 2,
+      "n_dishes": 886,
+      "unchanged_reasons": {
+        "both_missing": 21,
+        "code_switched_same_nutri": 11,
+        "macro_only": 2,
+        "no_successor": 10,
+        "same_portion_grams": 77,
+        "tool_failed": 64,
+        "within_epsilon": 64
+      },
+      "tool_failed": {
+        "n": 67,
+        "n_changed": 0,
+        "n_unchanged": 64,
+        "n_no_successor": 3
+      },
+      "energy_abs_delta": {
+        "n_both_finite": 4760,
+        "n_gt_1": 4541,
+        "median_both_finite": 42.0,
+        "median_when_changed": 43.0,
+        "epsilon": 5e-05,
+        "gt_1_reference_kcal": 1.0
+      },
+      "mass_abs_delta": {
+        "n_both_finite": 4760,
+        "n_gt_1": 4124,
+        "median_both_finite": 80.0,
+        "median_when_changed": 90.0,
+        "epsilon": 5e-05,
+        "gt_1_reference_g": 1.0
+      },
+      "change_rate": 0.956438,
+      "no_change_rate": 0.041812,
+      "no_successor_rate": 0.001749,
+      "energy_change_rate": 0.956438,
+      "mass_change_rate": 0.88296,
+      "n_with_post_state": 5706,
+      "change_rate_given_post_state": 0.958114,
+      "no_change_rate_given_post_state": 0.041886,
+      "no_change_dominates": false
+    },
+    "edit_actions": {
+      "n_executed": 2901,
+      "n_changed": 2753,
+      "n_unchanged": 148,
+      "n_no_successor": 0,
+      "n_energy_changed": 2753,
+      "n_mass_changed": 2341,
+      "n_energy_and_mass": 2341,
+      "n_energy_only": 412,
+      "n_mass_only": 0,
+      "n_value_edit": 2737,
+      "n_appear": 0,
+      "n_wipe": 16,
+      "wipe_next_action": {
+        "ABSTAIN": 16
+      },
+      "n_null_flip": 16,
+      "n_macro_only": 2,
+      "n_dishes": 846,
+      "unchanged_reasons": {
+        "code_switched_same_nutri": 11,
+        "macro_only": 2,
+        "same_portion_grams": 77,
+        "tool_failed": 58
+      },
+      "tool_failed": {
+        "n": 58,
+        "n_changed": 0,
+        "n_unchanged": 58,
+        "n_no_successor": 0
+      },
+      "energy_abs_delta": {
+        "n_both_finite": 2885,
+        "n_gt_1": 2734,
+        "median_both_finite": 33.0,
+        "median_when_changed": 35.75,
+        "epsilon": 5e-05,
+        "gt_1_reference_kcal": 1.0
+      },
+      "mass_abs_delta": {
+        "n_both_finite": 2885,
+        "n_gt_1": 2325,
+        "median_both_finite": 40.0,
+        "median_when_changed": 60.0,
+        "epsilon": 5e-05,
+        "gt_1_reference_g": 1.0
+      },
+      "change_rate": 0.948983,
+      "no_change_rate": 0.051017,
+      "no_successor_rate": 0.0,
+      "energy_change_rate": 0.948983,
+      "mass_change_rate": 0.806963,
+      "n_with_post_state": 2901,
+      "change_rate_given_post_state": 0.948983,
+      "no_change_rate_given_post_state": 0.051017,
+      "no_change_dominates": false
+    },
+    "by_action": {
+      "CORRECT_CODE": {
+        "n_executed": 483,
+        "n_changed": 412,
+        "n_unchanged": 71,
+        "n_no_successor": 0,
+        "n_energy_changed": 412,
+        "n_mass_changed": 0,
+        "n_energy_and_mass": 0,
+        "n_energy_only": 412,
+        "n_mass_only": 0,
+        "n_value_edit": 412,
+        "n_appear": 0,
+        "n_wipe": 0,
+        "wipe_next_action": {},
+        "n_null_flip": 0,
+        "n_macro_only": 2,
+        "n_dishes": 354,
+        "unchanged_reasons": {
+          "code_switched_same_nutri": 11,
+          "macro_only": 2,
+          "tool_failed": 58
+        },
+        "tool_failed": {
+          "n": 58,
+          "n_changed": 0,
+          "n_unchanged": 58,
+          "n_no_successor": 0
+        },
+        "energy_abs_delta": {
+          "n_both_finite": 483,
+          "n_gt_1": 409,
+          "median_both_finite": 43.0,
+          "median_when_changed": 43.0,
+          "epsilon": 5e-05,
+          "gt_1_reference_kcal": 1.0
+        },
+        "mass_abs_delta": {
+          "n_both_finite": 483,
+          "n_gt_1": 0,
+          "median_both_finite": 0.0,
+          "median_when_changed": null,
+          "epsilon": 5e-05,
+          "gt_1_reference_g": 1.0
+        },
+        "change_rate": 0.853002,
+        "no_change_rate": 0.146998,
+        "no_successor_rate": 0.0,
+        "energy_change_rate": 0.853002,
+        "mass_change_rate": 0.0,
+        "n_with_post_state": 483,
+        "change_rate_given_post_state": 0.853002,
+        "no_change_rate_given_post_state": 0.146998,
+        "no_change_dominates": false,
+        "mass_note": "mass_g stayed within ε on every executed step; energy_kcal moved on the changed steps. A same-gram code swap does not move mass.",
+        "action": "CORRECT_CODE"
+      },
+      "RE_PORTION": {
+        "n_executed": 2418,
+        "n_changed": 2341,
+        "n_unchanged": 77,
+        "n_no_successor": 0,
+        "n_energy_changed": 2341,
+        "n_mass_changed": 2341,
+        "n_energy_and_mass": 2341,
+        "n_energy_only": 0,
+        "n_mass_only": 0,
+        "n_value_edit": 2325,
+        "n_appear": 0,
+        "n_wipe": 16,
+        "wipe_next_action": {
+          "ABSTAIN": 16
+        },
+        "n_null_flip": 16,
+        "n_macro_only": 0,
+        "n_dishes": 840,
+        "unchanged_reasons": {
+          "same_portion_grams": 77
+        },
+        "tool_failed": {
+          "n": 0,
+          "n_changed": 0,
+          "n_unchanged": 0,
+          "n_no_successor": 0
+        },
+        "energy_abs_delta": {
+          "n_both_finite": 2402,
+          "n_gt_1": 2325,
+          "median_both_finite": 32.25,
+          "median_when_changed": 34.4,
+          "epsilon": 5e-05,
+          "gt_1_reference_kcal": 1.0
+        },
+        "mass_abs_delta": {
+          "n_both_finite": 2402,
+          "n_gt_1": 2325,
+          "median_both_finite": 50.0,
+          "median_when_changed": 60.0,
+          "epsilon": 5e-05,
+          "gt_1_reference_g": 1.0
+        },
+        "change_rate": 0.968156,
+        "no_change_rate": 0.031844,
+        "no_successor_rate": 0.0,
+        "energy_change_rate": 0.968156,
+        "mass_change_rate": 0.968156,
+        "n_with_post_state": 2418,
+        "change_rate_given_post_state": 0.968156,
+        "no_change_rate_given_post_state": 0.031844,
+        "no_change_dominates": false,
+        "action": "RE_PORTION"
+      },
+      "RE_DECOMPOSE": {
+        "n_executed": 0,
+        "n_changed": 0,
+        "n_unchanged": 0,
+        "n_no_successor": 0,
+        "n_energy_changed": 0,
+        "n_mass_changed": 0,
+        "n_energy_and_mass": 0,
+        "n_energy_only": 0,
+        "n_mass_only": 0,
+        "n_value_edit": 0,
+        "n_appear": 0,
+        "n_wipe": 0,
+        "wipe_next_action": {},
+        "n_null_flip": 0,
+        "n_macro_only": 0,
+        "n_dishes": 0,
+        "unchanged_reasons": {},
+        "tool_failed": {
+          "n": 0,
+          "n_changed": 0,
+          "n_unchanged": 0,
+          "n_no_successor": 0
+        },
+        "energy_abs_delta": {
+          "n_both_finite": 0,
+          "n_gt_1": 0,
+          "median_both_finite": null,
+          "median_when_changed": null,
+          "epsilon": 5e-05,
+          "gt_1_reference_kcal": 1.0
+        },
+        "mass_abs_delta": {
+          "n_both_finite": 0,
+          "n_gt_1": 0,
+          "median_both_finite": null,
+          "median_when_changed": null,
+          "epsilon": 5e-05,
+          "gt_1_reference_g": 1.0
+        },
+        "change_rate": null,
+        "no_change_rate": null,
+        "no_successor_rate": null,
+        "energy_change_rate": null,
+        "mass_change_rate": null,
+        "n_with_post_state": 0,
+        "change_rate_given_post_state": null,
+        "no_change_rate_given_post_state": null,
+        "no_change_dominates": false,
+        "action": "RE_DECOMPOSE"
+      },
+      "RETRIEVE": {
+        "n_executed": 2815,
+        "n_changed": 2714,
+        "n_unchanged": 91,
+        "n_no_successor": 10,
+        "n_energy_changed": 2714,
+        "n_mass_changed": 2706,
+        "n_energy_and_mass": 2706,
+        "n_energy_only": 8,
+        "n_mass_only": 0,
+        "n_value_edit": 1807,
+        "n_appear": 888,
+        "n_wipe": 19,
+        "wipe_next_action": {
+          "ABSTAIN": 12,
+          "RETRIEVE": 7
+        },
+        "n_null_flip": 907,
+        "n_macro_only": 0,
+        "n_dishes": 886,
+        "unchanged_reasons": {
+          "both_missing": 21,
+          "no_successor": 10,
+          "tool_failed": 6,
+          "within_epsilon": 64
+        },
+        "tool_failed": {
+          "n": 9,
+          "n_changed": 0,
+          "n_unchanged": 6,
+          "n_no_successor": 3
+        },
+        "energy_abs_delta": {
+          "n_both_finite": 1875,
+          "n_gt_1": 1807,
+          "median_both_finite": 63.0,
+          "median_when_changed": 63.0,
+          "epsilon": 5e-05,
+          "gt_1_reference_kcal": 1.0
+        },
+        "mass_abs_delta": {
+          "n_both_finite": 1875,
+          "n_gt_1": 1799,
+          "median_both_finite": 100.0,
+          "median_when_changed": 100.0,
+          "epsilon": 5e-05,
+          "gt_1_reference_g": 1.0
+        },
+        "change_rate": 0.964121,
+        "no_change_rate": 0.032327,
+        "no_successor_rate": 0.003552,
+        "energy_change_rate": 0.964121,
+        "mass_change_rate": 0.961279,
+        "n_with_post_state": 2805,
+        "change_rate_given_post_state": 0.967558,
+        "no_change_rate_given_post_state": 0.032442,
+        "no_change_dominates": false,
+        "action": "RETRIEVE"
+      }
+    },
+    "populations": [
+      "logged_holdout",
+      "on_policy_rgb_test"
+    ],
+    "population_note": "Step-weighted sum of the named full trajectories. Not one evaluation population. Dish subsets are not included, so a dish is not counted twice."
+  },
+  "epsilon_sensitivity": [
+    {
+      "epsilon": 0.0,
+      "by_population": {
+        "logged_holdout": {
+          "epsilon": 0.0,
+          "note": "Same steps, both fields use this epsilon. Not the primary definition. 0 counts any finite difference. 1 is one kcal and one gram, the FixRate energy threshold, shown only so small logged edits are visible.",
+          "overall": {
+            "n_executed": 2391,
+            "n_changed": 2336,
+            "n_unchanged": 55,
+            "n_no_successor": 0,
+            "change_rate": 0.976997,
+            "no_change_rate": 0.023003
+          },
+          "edit_actions": {
+            "n_executed": 1106,
+            "n_changed": 1106,
+            "n_unchanged": 0,
+            "n_no_successor": 0,
+            "change_rate": 1.0,
+            "no_change_rate": 0.0
+          },
+          "by_action": {
+            "CORRECT_CODE": {
+              "n_executed": 157,
+              "n_changed": 157,
+              "n_unchanged": 0,
+              "n_no_successor": 0,
+              "change_rate": 1.0,
+              "no_change_rate": 0.0
+            },
+            "RE_PORTION": {
+              "n_executed": 949,
+              "n_changed": 949,
+              "n_unchanged": 0,
+              "n_no_successor": 0,
+              "change_rate": 1.0,
+              "no_change_rate": 0.0
+            },
+            "RE_DECOMPOSE": {
+              "n_executed": 0,
+              "n_changed": 0,
+              "n_unchanged": 0,
+              "n_no_successor": 0,
+              "change_rate": null,
+              "no_change_rate": null
+            },
+            "RETRIEVE": {
+              "n_executed": 1285,
+              "n_changed": 1230,
+              "n_unchanged": 55,
+              "n_no_successor": 0,
+              "change_rate": 0.957198,
+              "no_change_rate": 0.042802
+            }
+          }
+        },
+        "on_policy_rgb_test": {
+          "epsilon": 0.0,
+          "note": "Same steps, both fields use this epsilon. Not the primary definition. 0 counts any finite difference. 1 is one kcal and one gram, the FixRate energy threshold, shown only so small logged edits are visible.",
+          "overall": {
+            "n_executed": 3325,
+            "n_changed": 3131,
+            "n_unchanged": 184,
+            "n_no_successor": 10,
+            "change_rate": 0.941654,
+            "no_change_rate": 0.055338
+          },
+          "edit_actions": {
+            "n_executed": 1795,
+            "n_changed": 1647,
+            "n_unchanged": 148,
+            "n_no_successor": 0,
+            "change_rate": 0.917549,
+            "no_change_rate": 0.082451
+          },
+          "by_action": {
+            "CORRECT_CODE": {
+              "n_executed": 326,
+              "n_changed": 255,
+              "n_unchanged": 71,
+              "n_no_successor": 0,
+              "change_rate": 0.782209,
+              "no_change_rate": 0.217791
+            },
+            "RE_PORTION": {
+              "n_executed": 1469,
+              "n_changed": 1392,
+              "n_unchanged": 77,
+              "n_no_successor": 0,
+              "change_rate": 0.947583,
+              "no_change_rate": 0.052417
+            },
+            "RE_DECOMPOSE": {
+              "n_executed": 0,
+              "n_changed": 0,
+              "n_unchanged": 0,
+              "n_no_successor": 0,
+              "change_rate": null,
+              "no_change_rate": null
+            },
+            "RETRIEVE": {
+              "n_executed": 1530,
+              "n_changed": 1484,
+              "n_unchanged": 36,
+              "n_no_successor": 10,
+              "change_rate": 0.969935,
+              "no_change_rate": 0.023529
+            }
+          }
+        }
+      },
+      "overall_step_weighted": {
+        "epsilon": 0.0,
+        "note": "Same steps, both fields use this epsilon. Not the primary definition. 0 counts any finite difference. 1 is one kcal and one gram, the FixRate energy threshold, shown only so small logged edits are visible.",
+        "overall": {
+          "n_executed": 5716,
+          "n_changed": 5467,
+          "n_unchanged": 239,
+          "n_no_successor": 10,
+          "change_rate": 0.956438,
+          "no_change_rate": 0.041812
+        },
+        "edit_actions": {
+          "n_executed": 2901,
+          "n_changed": 2753,
+          "n_unchanged": 148,
+          "n_no_successor": 0,
+          "change_rate": 0.948983,
+          "no_change_rate": 0.051017
+        },
+        "by_action": {
+          "CORRECT_CODE": {
+            "n_executed": 483,
+            "n_changed": 412,
+            "n_unchanged": 71,
+            "n_no_successor": 0,
+            "change_rate": 0.853002,
+            "no_change_rate": 0.146998
+          },
+          "RE_PORTION": {
+            "n_executed": 2418,
+            "n_changed": 2341,
+            "n_unchanged": 77,
+            "n_no_successor": 0,
+            "change_rate": 0.968156,
+            "no_change_rate": 0.031844
+          },
+          "RE_DECOMPOSE": {
+            "n_executed": 0,
+            "n_changed": 0,
+            "n_unchanged": 0,
+            "n_no_successor": 0,
+            "change_rate": null,
+            "no_change_rate": null
+          },
+          "RETRIEVE": {
+            "n_executed": 2815,
+            "n_changed": 2714,
+            "n_unchanged": 91,
+            "n_no_successor": 10,
+            "change_rate": 0.964121,
+            "no_change_rate": 0.032327
+          }
+        }
+      }
+    },
+    {
+      "epsilon": 1.0,
+      "by_population": {
+        "logged_holdout": {
+          "epsilon": 1.0,
+          "note": "Same steps, both fields use this epsilon. Not the primary definition. 0 counts any finite difference. 1 is one kcal and one gram, the FixRate energy threshold, shown only so small logged edits are visible.",
+          "overall": {
+            "n_executed": 2391,
+            "n_changed": 2336,
+            "n_unchanged": 55,
+            "n_no_successor": 0,
+            "change_rate": 0.976997,
+            "no_change_rate": 0.023003
+          },
+          "edit_actions": {
+            "n_executed": 1106,
+            "n_changed": 1106,
+            "n_unchanged": 0,
+            "n_no_successor": 0,
+            "change_rate": 1.0,
+            "no_change_rate": 0.0
+          },
+          "by_action": {
+            "CORRECT_CODE": {
+              "n_executed": 157,
+              "n_changed": 157,
+              "n_unchanged": 0,
+              "n_no_successor": 0,
+              "change_rate": 1.0,
+              "no_change_rate": 0.0
+            },
+            "RE_PORTION": {
+              "n_executed": 949,
+              "n_changed": 949,
+              "n_unchanged": 0,
+              "n_no_successor": 0,
+              "change_rate": 1.0,
+              "no_change_rate": 0.0
+            },
+            "RE_DECOMPOSE": {
+              "n_executed": 0,
+              "n_changed": 0,
+              "n_unchanged": 0,
+              "n_no_successor": 0,
+              "change_rate": null,
+              "no_change_rate": null
+            },
+            "RETRIEVE": {
+              "n_executed": 1285,
+              "n_changed": 1230,
+              "n_unchanged": 55,
+              "n_no_successor": 0,
+              "change_rate": 0.957198,
+              "no_change_rate": 0.042802
+            }
+          }
+        },
+        "on_policy_rgb_test": {
+          "epsilon": 1.0,
+          "note": "Same steps, both fields use this epsilon. Not the primary definition. 0 counts any finite difference. 1 is one kcal and one gram, the FixRate energy threshold, shown only so small logged edits are visible.",
+          "overall": {
+            "n_executed": 3325,
+            "n_changed": 3128,
+            "n_unchanged": 187,
+            "n_no_successor": 10,
+            "change_rate": 0.940752,
+            "no_change_rate": 0.056241
+          },
+          "edit_actions": {
+            "n_executed": 1795,
+            "n_changed": 1644,
+            "n_unchanged": 151,
+            "n_no_successor": 0,
+            "change_rate": 0.915877,
+            "no_change_rate": 0.084123
+          },
+          "by_action": {
+            "CORRECT_CODE": {
+              "n_executed": 326,
+              "n_changed": 252,
+              "n_unchanged": 74,
+              "n_no_successor": 0,
+              "change_rate": 0.773006,
+              "no_change_rate": 0.226994
+            },
+            "RE_PORTION": {
+              "n_executed": 1469,
+              "n_changed": 1392,
+              "n_unchanged": 77,
+              "n_no_successor": 0,
+              "change_rate": 0.947583,
+              "no_change_rate": 0.052417
+            },
+            "RE_DECOMPOSE": {
+              "n_executed": 0,
+              "n_changed": 0,
+              "n_unchanged": 0,
+              "n_no_successor": 0,
+              "change_rate": null,
+              "no_change_rate": null
+            },
+            "RETRIEVE": {
+              "n_executed": 1530,
+              "n_changed": 1484,
+              "n_unchanged": 36,
+              "n_no_successor": 10,
+              "change_rate": 0.969935,
+              "no_change_rate": 0.023529
+            }
+          }
+        }
+      },
+      "overall_step_weighted": {
+        "epsilon": 1.0,
+        "note": "Same steps, both fields use this epsilon. Not the primary definition. 0 counts any finite difference. 1 is one kcal and one gram, the FixRate energy threshold, shown only so small logged edits are visible.",
+        "overall": {
+          "n_executed": 5716,
+          "n_changed": 5464,
+          "n_unchanged": 242,
+          "n_no_successor": 10,
+          "change_rate": 0.955913,
+          "no_change_rate": 0.042337
+        },
+        "edit_actions": {
+          "n_executed": 2901,
+          "n_changed": 2750,
+          "n_unchanged": 151,
+          "n_no_successor": 0,
+          "change_rate": 0.947949,
+          "no_change_rate": 0.052051
+        },
+        "by_action": {
+          "CORRECT_CODE": {
+            "n_executed": 483,
+            "n_changed": 409,
+            "n_unchanged": 74,
+            "n_no_successor": 0,
+            "change_rate": 0.846791,
+            "no_change_rate": 0.153209
+          },
+          "RE_PORTION": {
+            "n_executed": 2418,
+            "n_changed": 2341,
+            "n_unchanged": 77,
+            "n_no_successor": 0,
+            "change_rate": 0.968156,
+            "no_change_rate": 0.031844
+          },
+          "RE_DECOMPOSE": {
+            "n_executed": 0,
+            "n_changed": 0,
+            "n_unchanged": 0,
+            "n_no_successor": 0,
+            "change_rate": null,
+            "no_change_rate": null
+          },
+          "RETRIEVE": {
+            "n_executed": 2815,
+            "n_changed": 2714,
+            "n_unchanged": 91,
+            "n_no_successor": 10,
+            "change_rate": 0.964121,
+            "no_change_rate": 0.032327
+          }
+        }
+      }
+    }
+  ],
+  "notes": [
+    "logged_holdout edit actions: change 1106/1106, no-change 0/1106, value_edit 1098, wipe 8. No-change is not the majority outcome on this population.",
+    "on_policy_rgb_test edit actions: change 1647/1795, no-change 148/1795, value_edit 1639, wipe 8. No-change is not the majority outcome on this population.",
+    "logged_holdout RE_DECOMPOSE: 0 executed steps.",
+    "logged_holdout RE_PORTION: 8 changed steps replace a finite dish vector with a missing one (next action: ABSTAIN=8). Those count as written-vector changes and are not included in value_edit.",
+    "logged_holdout RETRIEVE: 19 changed steps replace a finite dish vector with a missing one (next action: ABSTAIN=12, RETRIEVE=7). Those count as written-vector changes and are not included in value_edit.",
+    "on_policy_rgb_test RE_DECOMPOSE: 0 executed steps.",
+    "on_policy_rgb_test RE_PORTION: 77/1469 left dish energy and mass within ε; 77 of those unchanged steps have portion_g and from_portion_g within ε, so the portion call did not move grams.",
+    "on_policy_rgb_test RE_PORTION: 8 changed steps replace a finite dish vector with a missing one (next action: ABSTAIN=8). Those count as written-vector changes and are not included in value_edit.",
+    "logged_holdout_stop_pass_corrected RE_DECOMPOSE: 0 executed steps.",
+    "logged_holdout_stop_pass_corrected RETRIEVE: 6 changed steps replace a finite dish vector with a missing one (next action: RETRIEVE=6). Those count as written-vector changes and are not included in value_edit.",
+    "on_policy_stop_pass_corrected RE_DECOMPOSE: 0 executed steps.",
+    "on_policy_stop_pass_corrected RE_PORTION: 75/1408 left dish energy and mass within ε; 75 of those unchanged steps have portion_g and from_portion_g within ε, so the portion call did not move grams.",
+    "on_policy_rgb_test CORRECT_CODE: 71/326 left dish energy and mass within ε (tool_failed 58, code switched but same dish energy and mass 11). Mass change rate is separate: a same-gram code swap does not move mass_g.",
+    "on_policy_stop_pass_corrected CORRECT_CODE: 69/314 left dish energy and mass within ε (tool_failed 56, code switched but same dish energy and mass 11). Mass change rate is separate: a same-gram code swap does not move mass_g.",
+    "No-change does not dominate any audited action or rollup (majority cutoff 0.5 of executed steps). The cutoff is descriptive and was not fit on hold-out or rgb_test. Minority no-change steps are still counted above."
+  ],
+  "elapsed_seconds": 1.25,
+  "inputs": {
+    "logged_holdout_jsonl": "results/weak_steps/rgb_train_holdout_all.jsonl",
+    "on_policy_jsonl": "results/closed_loop/on_policy_rgb_test.jsonl",
+    "logged_holdout_sha256": "6055ccbbbf0d432e500eabfe2c9e4bdd4ca07a553686588c266f4b92ec89b433",
+    "on_policy_sha256": "dc24231294d88360de7606f27548253e57aff88caebe6bc3863c9d9168dc54e5",
+    "git_head": "128775834742722022fd126bd664a410111acf1e",
+    "documented_population": {
+      "logged_holdout": "rgb_train hold-out weak steps; #28/#31 offline family. Primary subset is STOP and s in {pass, corrected}.",
+      "on_policy_rgb_test": "results/closed_loop/on_policy_rgb_test.jsonl; #34 on-policy family. Primary subset is STOP and s in {pass, corrected}."
+    },
+    "frozen_sha256_prefix": {
+      "abstain_calibration.json": "b033825f2dbb73c0",
+      "fixrate_holdout.json": "333e108cacbb175f",
+      "mae_aurc_holdout.json": "0a38d0d13d826f24",
+      "mae_aurc_testsplit.json": "b762a2c21cb75d34",
+      "metrics_holdout.json": "cbb9340ff5e0bf00",
+      "n5k_rgb_test_overhead_b0_b1.json": "1585be1951b46f71",
+      "n5k_rgb_test_overhead_b0_b1.jsonl": "a4dfdd82e3a595f4",
+      "n5k_subset_b0_b1.json": "1585be1951b46f71",
+      "n5k_subset_b0_b1.jsonl": "a4dfdd82e3a595f4",
+      "n5k_subset_b0_b1_n50_seed42.json": "8e3400bcbfcd56cd",
+      "n5k_subset_b0_b1_n50_seed42.jsonl": "013c899da4724ef2",
+      "on_policy_rgb_test.jsonl": "dc24231294d88360",
+      "on_policy_rgb_test_summary.json": "e06fdde7af492a50",
+      "policy_state_mlp.npz": "f0ac0b41f99cbd72",
+      "report_fixrate.txt": "ba87e58d87c94a50",
+      "report_holdout.txt": "dab9fe91b8c5ad78",
+      "report_mae_aurc.txt": "f7d0eb9a743679a4",
+      "report_mae_aurc_testsplit.txt": "b29bdb74b4a78295",
+      "rgb_train_fit_all.jsonl": "ed47f9239bfecb3c",
+      "rgb_train_fit_all.summary.json": "d11e6a3e547b38d0",
+      "rgb_train_holdout_all.jsonl": "6055ccbbbf0d432e",
+      "rgb_train_holdout_all.summary.json": "c32db76caacf010b",
+      "train_meta.json": "c87f13089b4188d1"
+    },
+    "documented_prefix_match": {
+      "rgb_train_fit_all.jsonl": true,
+      "n5k_rgb_test_overhead_b0_b1.jsonl": true
+    },
+    "labels_read": false,
+    "mass_estimator_trained": false,
+    "frozen_unchanged": true
+  },
+  "audited_actions": [
+    "CORRECT_CODE",
+    "RE_PORTION",
+    "RE_DECOMPOSE",
+    "RETRIEVE"
+  ]
+}
