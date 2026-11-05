@@ -51,7 +51,6 @@ from vdr.weak.teacher import (
     MIN_RETRIEVE_SCORE,
     TOP_K,
     _binding_edges,
-    _null_nutri,
     _public_cands,
     _scaled,
     _sum_nutri,
@@ -522,6 +521,10 @@ class ClosedLoopRollout:
                 None,
             )
         if action == "ABSTAIN":
+            # Keep the decision-time dish vector. Wiping it hides a mass write
+            # that already changed the state the selector scored, and replay
+            # then sees a different vector than the one that chose ABSTAIN.
+            # A step with nothing written still stores a null vector below.
             reason = "no_vlm_hypothesis" if not self.hyps else "policy_abstain"
             return (
                 self._base_obs(
@@ -532,7 +535,7 @@ class ClosedLoopRollout:
                 ),
                 "abstain",
                 reason,
-                _null_nutri(),
+                None,
             )
         if action == "RETRIEVE":
             return self._retrieve(), None, None, None
@@ -966,8 +969,9 @@ def run_self_check() -> None:
         raise AssertionError((stuck.ended_reason, [step["action_t"] for step in stuck.steps]))
 
     abstain = _run(["ABSTAIN"], apple)
-    if abstain.steps[0]["s"] != "abstain" or abstain.steps[0]["nutri_dish"]["energy_kcal"] is not None:
-        raise AssertionError("abstain should null the terminal total")
+    abstain_nutri = abstain.steps[0].get("nutri_dish") or {}
+    if abstain.steps[0]["s"] != "abstain" or abstain_nutri.get("energy_kcal") is not None:
+        raise AssertionError("an abstain before any write should not invent a total")
     if abstain.steps[0]["abstain_reason"] != "policy_abstain":
         raise AssertionError(abstain.steps[0]["abstain_reason"])
 
