@@ -1,0 +1,124 @@
+{
+  "protocol": "p0b_mass_rgb_train_fit_holdout",
+  "task": "P0b Mass Estimator",
+  "rgb_only": true,
+  "depth_used": false,
+  "uses_rgb_test_gt": false,
+  "holdout_used_for_selection": false,
+  "rl": false,
+  "legacy_weights_loaded": false,
+  "volume_tool": false,
+  "backbone": "vit_b_16",
+  "backbone_candidates": [
+    "vit_b_16",
+    "resnet101"
+  ],
+  "pretrained": "ImageNet-1K V1",
+  "targets": [
+    "mass_g",
+    "energy_kcal",
+    "protein_g",
+    "carb_g",
+    "fat_g"
+  ],
+  "loss": "laplace_nll on fit-standardized targets",
+  "sigma": "laplace_scale in original units",
+  "interval": "central 95% Laplace, low clipped at 0",
+  "confidence": "1 / (1 + sigma_mass_g / 100)",
+  "probe_epochs": 3,
+  "train_epochs": 12,
+  "batch_size": 16,
+  "lr_backbone": 3e-05,
+  "lr_head": 0.001,
+  "weight_decay": 0.01,
+  "seed": 0,
+  "grad_clip": 1.0,
+  "image_size": 224,
+  "eval_resize": 256,
+  "train_pool": "rgb_train fit (sha256 % 10 != 0) with overhead rgb.png",
+  "probe_val": "fit residue 1 only",
+  "eval_pool": "rgb_train hold-out (sha256 % 10 == 0) with overhead rgb.png",
+  "checkpoint_rule": "last train epoch; not chosen on hold-out",
+  "n_fit": 2498,
+  "n_probe_train": 2240,
+  "n_probe_val": 258,
+  "n_holdout_unscored_at_save": 257,
+  "train_nll": [
+    0.6505,
+    0.3477,
+    0.1747,
+    0.0569,
+    -0.0908,
+    -0.2197,
+    -0.3462,
+    -0.439,
+    -0.5794,
+    -0.6742,
+    -0.7663,
+    -0.8037
+  ],
+  "fit_mae_in_sample": {
+    "mass_g": {
+      "mae": 21.4788,
+      "median_ae": 13.6618
+    },
+    "energy_kcal": {
+      "mae": 31.4983,
+      "median_ae": 15.7356
+    },
+    "protein_g": {
+      "mae": 3.2112,
+      "median_ae": 1.1213
+    },
+    "carb_g": {
+      "mae": 3.2958,
+      "median_ae": 1.7076
+    },
+    "fat_g": {
+      "mae": 2.4119,
+      "median_ae": 1.1177
+    }
+  },
+  "fit_mean_baseline_mae": {
+    "mass_g": {
+      "mae": 123.3559,
+      "median_ae": 113.4804
+    },
+    "energy_kcal": {
+      "mae": 167.7115,
+      "median_ae": 152.9017
+    },
+    "protein_g": {
+      "mae": 15.4011,
+      "median_ae": 15.0397
+    },
+    "carb_g": {
+      "mae": 12.7212,
+      "median_ae": 11.3633
+    },
+    "fat_g": {
+      "mae": 10.2479,
+      "median_ae": 9.3821
+    }
+  },
+  "selected_from_probe": "vit_b_16",
+  "weights": [
+    "weights-part-00.npz",
+    "weights-part-01.npz",
+    "weights-part-02.npz"
+  ],
+  "target_mean": [
+    217.48038430744595,
+    253.68143286509257,
+    18.01942854083264,
+    19.20050267493996,
+    12.67770729103284
+  ],
+  "target_std": [
+    162.6382266558151,
+    221.18035264909247,
+    20.126017999666796,
+    22.714295209797086,
+    13.470024936970383
+  ]
+}

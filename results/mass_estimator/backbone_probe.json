@@ -1,0 +1,80 @@
+{
+  "protocol": "p0b_mass_rgb_train_fit_holdout",
+  "task": "P0b Mass Estimator",
+  "rgb_only": true,
+  "depth_used": false,
+  "uses_rgb_test_gt": false,
+  "holdout_used_for_selection": false,
+  "rl": false,
+  "legacy_weights_loaded": false,
+  "volume_tool": false,
+  "backbone": "vit_b_16",
+  "backbone_candidates": [
+    "vit_b_16",
+    "resnet101"
+  ],
+  "pretrained": "ImageNet-1K V1",
+  "targets": [
+    "mass_g",
+    "energy_kcal",
+    "protein_g",
+    "carb_g",
+    "fat_g"
+  ],
+  "loss": "laplace_nll on fit-standardized targets",
+  "sigma": "laplace_scale in original units",
+  "interval": "central 95% Laplace, low clipped at 0",
+  "confidence": "1 / (1 + sigma_mass_g / 100)",
+  "probe_epochs": 3,
+  "train_epochs": 12,
+  "batch_size": 16,
+  "lr_backbone": 3e-05,
+  "lr_head": 0.001,
+  "weight_decay": 0.01,
+  "seed": 0,
+  "grad_clip": 1.0,
+  "image_size": 224,
+  "eval_resize": 256,
+  "train_pool": "rgb_train fit (sha256 % 10 != 0) with overhead rgb.png",
+  "probe_val": "fit residue 1 only",
+  "eval_pool": "rgb_train hold-out (sha256 % 10 == 0) with overhead rgb.png",
+  "checkpoint_rule": "last train epoch; not chosen on hold-out",
+  "selection_rule": "lower fit-internal mass MAE, then energy MAE, then vit_b_16 before resnet101",
+  "selected_backbone": "vit_b_16",
+  "rows": [
+    {
+      "backbone": "vit_b_16",
+      "mass_mae": 52.4773,
+      "energy_mae": 84.1564,
+      "protein_mae": 6.7888,
+      "carb_mae": 9.3923,
+      "fat_mae": 4.7655,
+      "n_probe_train": 2240,
+      "n_probe_val": 258,
+      "epochs": 3,
+      "train_nll": [
+        0.7903,
+        0.4425,
+        0.1482
+      ]
+    },
+    {
+      "backbone": "resnet101",
+      "mass_mae": 57.5179,
+      "energy_mae": 97.0476,
+      "protein_mae": 7.8433,
+      "carb_mae": 9.6311,
+      "fat_mae": 4.9239,
+      "n_probe_train": 2240,
+      "n_probe_val": 258,
+      "epochs": 3,
+      "train_nll": [
+        1.0694,
+        0.7406,
+        0.4599
+      ]
+    }
+  ],
+  "holdout_scored": false,
+  "rgb_test_scored": false
+}

@@ -1,0 +1,29 @@
+P0b Mass Estimator — RGB-only
+protocol: p0b_mass_rgb_train_fit_holdout
+modality: RGB only. Depth was not read. rgb_test labels were not read.
+Main table for this specialist is RGB-only, same image channel as rgb_test overhead rgb.png.
+backbone: vit_b_16 (ImageNet-1K V1), chosen on fit-internal residue 1, not on hold-out.
+checkpoint: last of 12 fit epochs. No RL. Legacy weights were not loaded.
+train n=2498  probe_train n=2240  probe_val n=258  hold-out n=257
+Probe (fit residue 1; selection input):
+  vit_b_16: mass MAE 52.4773 g, energy MAE 84.1564 kcal
+  resnet101: mass MAE 57.5179 g, energy MAE 97.0476 kcal
+Selected: vit_b_16
+Hold-out (scored once, after the checkpoint was saved):
+  mass MAE 29.6147 g (median AE 18.0219)
+  energy MAE 43.2161 kcal (median AE 23.0434)
+  protein MAE 4.7922 g
+  carb MAE 4.5685 g
+  fat MAE 3.2113 g
+Fit-mean baseline on the same hold-out dishes (constant = fit mean, not a tuned model):
+  mass MAE 130.6992 g
+  energy MAE 176.8194 kcal
+95% Laplace interval coverage on hold-out (descriptive; the width was not adjusted):
+  mass_g 0.8560
+  energy_kcal 0.8132
+  protein_g 0.8638
+  carb_g 0.8677
+  fat_g 0.8599
+In-sample fit MAE is in eval_holdout.json under fit_mae_in_sample and is not the reported number.
+elapsed_seconds 1219.3
+docs/STATUS.md was not modified.

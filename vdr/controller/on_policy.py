@@ -1,9 +1,9 @@
 """On-policy closed-loop rollout. The saved policy picks every action.
 
 Perception hypotheses come from a caller-supplied VLM (the rgb_test script
-uses local Qwen3.8-27B-VL). Tool IR is FNDDS retrieve, the existing portion
-grid, and nutrition lookup. Nutrition5K ingredient mass, ingredient kcal, and
-cafe dish labels are not inputs.
+uses local Qwen3.8-27B-VL). Tool IR is FNDDS retrieve, nutrition lookup, the
+blind portion grid on RETRIEVE, and ``estimate_mass`` on RE_PORTION.
+Nutrition5K ingredient mass, ingredient kcal, and cafe dish labels are not inputs.
 
 Caps are the existing ones, not a search on rgb_test:
 
@@ -12,10 +12,15 @@ Caps are the existing ones, not a search on rgb_test:
 
 ``CORRECT_CODE`` switches to another Top-k code inside the teacher's existing
 score window (``MIN_RETRIEVE_SCORE``, ``MAX_SCORE_DROP``). It does not compare
-kcal/g to an ingredient label. ``RE_PORTION`` sends the VLM gram hint, or the
-blind 100 g hint when the VLM omitted grams, through ``search_portion``.
-``VOLUME_ESTIMATE`` is refused. ``RE_DECOMPOSE`` is not a second VLM call:
-the #24 checkpoint masks that class (fit weight 0).
+kcal/g to an ingredient label. ``RE_PORTION`` calls ``estimate_mass`` and writes
+that RGB specialist's component grams. It does not re-score the portion grid.
+``RETRIEVE`` still places the first grams with the blind 100 g grid; that guess
+is what RE_PORTION replaces. ``VOLUME_ESTIMATE`` is refused. ``RE_DECOMPOSE``
+is not a second VLM call: the #24 checkpoint masks that class (fit weight 0).
+
+``ON_POLICY_DEFINITION`` still describes the frozen #34 rollout, which used the
+portion grid. This module's RE_PORTION path is the P0b Mass wiring and is not
+a rewrite of that run.
 
 The emitted IR matches ``ir_step`` so ``scripts/closed_loop_mae_aurc.py``
 can score it. Replaying mask-none on the written rows reproduces ``action_t``.
@@ -329,6 +334,8 @@ class ClosedLoopRollout:
         lookup_fn: LookupFn,
         portion_fn: PortionFn,
         catalog_path: str | None = None,
+        image_path: str | Path | None = None,
+        mass_fn: Callable[..., Any] | None = None,
         vlm_alias: str = "qwen3.8-27b",
         vlm_serving: str = "llama.cpp llama-server 127.0.0.1:18080",
     ) -> None:
@@ -341,6 +348,8 @@ class ClosedLoopRollout:
         self.lookup_fn = lookup_fn
         self.portion_fn = portion_fn
         self.catalog_path = catalog_path
+        self.image_path = None if image_path is None else Path(image_path)
+        self.mass_fn = mass_fn
         self.vlm_alias = vlm_alias
         self.vlm_serving = vlm_serving
         self.finalized: list[dict[str, Any]] = []
@@ -579,23 +588,63 @@ class ClosedLoopRollout:
         self.corrected = True
         return self._base_obs(**{"from": current, "to": target})
 
+    def _call_mass(self, candidates: Sequence[Mapping[str, Any]], hints: Sequence[float | None]) -> Any:
+        """RE_PORTION's only portion source. The gram grid is not consulted."""
+        fn = self.mass_fn
+        if fn is None:
+            from vdr.tools.mass_estimator import estimate_mass
+
+            fn = estimate_mass
+        return fn(
+            self.image_path,
+            candidates,
+            component_index=self.comp_i,
+            component_hints_g=hints,
+            catalog_path=self.catalog_path,
+        )
+
     def _reportion(self) -> dict[str, Any]:
         if not self.live_code or not self._on_component():
             return self._base_obs(tool_failed=True, error="no_code")
-        hint = self.hyps[self.comp_i].portion_g
-        used_vlm = hint is not None
-        hint_g = float(hint) if used_vlm else float(BLIND_PORTION_HINT_G)
-        new_portion = self._call_portion(self.live_code, hint_g)
+        from vdr.tools.mass_estimator import MassEstimatorError
+
+        candidates = [dict(cand) for cand in self.live_cands]
+        if not any(str(cand.get("code")) == str(self.live_code) for cand in candidates):
+            candidates.insert(
+                0,
+                {"code": self.live_code, "score": 1.0, "name": self.hyps[self.comp_i].name},
+            )
+        hints = [hyp.portion_g for hyp in self.hyps]
+        try:
+            estimate = self._call_mass(candidates, hints)
+        except MassEstimatorError as exc:
+            return self._base_obs(
+                tool_failed=True,
+                error="mass_estimator_failed",
+                mass_error=str(exc),
+                mass_tool="estimate_mass",
+                rgb_only=True,
+                depth_used=False,
+            )
+        if isinstance(estimate, Mapping) and (
+            estimate.get("rgb_only") is False or estimate.get("depth_used") is True
+        ):
+            return self._base_obs(
+                tool_failed=True,
+                error="mass_estimator_not_rgb_only",
+                mass_tool="estimate_mass",
+            )
+        new_portion = _portion_grams(estimate)
         if new_portion is None:
-            return self._base_obs(tool_failed=True, error="portion_miss")
+            return self._base_obs(tool_failed=True, error="mass_estimator_no_portion", mass_tool="estimate_mass")
+        new_portion = round(float(new_portion), 4)
         nutri = _scaled(self.live_code, new_portion, self.lookup_fn, self.catalog_path)
         if nutri is None:
-            return self._base_obs(tool_failed=True, error="lookup_miss")
+            return self._base_obs(tool_failed=True, error="lookup_miss", mass_tool="estimate_mass")
         old_portion = 0.0 if self.live_portion is None else float(self.live_portion)
-        source = "vlm_guess" if used_vlm else "grid_search"
         query = self.accepted_query or self.hyps[self.comp_i].name
         self.live_portion = new_portion
-        self.live_portion_src = source
+        self.live_portion_src = "mass_estimator"
         self.live_nutri = nutri
         self.live_edges = _binding_edges(self.comp_i, self.live_code, query, new_portion)
         self.corrected = True
@@ -606,10 +655,9 @@ class ClosedLoopRollout:
         if self.comp_i >= len(self.hyps):
             self.phase = "terminal"
         obs = self._base_obs(
-            portion_g=round(float(new_portion), 4),
+            portion_g=new_portion,
             from_portion_g=round(old_portion, 4),
-            portion_src=source,
-            portion_note="vlm_hint_on_existing_grid" if used_vlm else "blind_100g_grid",
+            **_mass_obs(estimate),
         )
         return obs
 
@@ -655,6 +703,45 @@ class ClosedLoopRollout:
         return record
 
 
+def _portion_grams(estimate: Any) -> float | None:
+    if isinstance(estimate, Mapping):
+        value = estimate.get("portion_g", estimate.get("mass_g"))
+    else:
+        value = getattr(estimate, "portion_g", None)
+        if value is None:
+            value = getattr(estimate, "mass_g", None)
+    if value is None:
+        return None
+    return float(value)
+
+
+def _mass_obs(estimate: Any) -> dict[str, Any]:
+    """Fields copied onto the RE_PORTION observation. The grid is not a field."""
+    obs: dict[str, Any] = {
+        "portion_src": "mass_estimator",
+        "portion_note": "estimate_mass_rgb_only",
+        "mass_tool": "estimate_mass",
+        "rgb_only": True,
+        "depth_used": False,
+    }
+    if not isinstance(estimate, Mapping):
+        return obs
+    sigma = estimate.get("sigma") if isinstance(estimate.get("sigma"), Mapping) else {}
+    intervals = estimate.get("intervals") if isinstance(estimate.get("intervals"), Mapping) else {}
+    obs.update(
+        {
+            "mass_g": estimate.get("mass_g"),
+            "mass_sigma": sigma.get("mass_g"),
+            "mass_interval": intervals.get("mass_g"),
+            "mass_confidence": estimate.get("confidence"),
+            "nutrient_refs": estimate.get("nutrient_refs"),
+            "mass_backbone": estimate.get("backbone"),
+            "nutrients_model": estimate.get("nutrients"),
+        }
+    )
+    return obs
+
+
 def rollout_dish(
     dish_id: str,
     policy: Any,
@@ -664,6 +751,7 @@ def rollout_dish(
     retrieve_fn: RetrieveFn | None = None,
     lookup_fn: LookupFn | None = None,
     portion_fn: PortionFn | None = None,
+    mass_fn: Callable[..., Any] | None = None,
     catalog_path: str | None = None,
     check_replay: bool = True,
 ) -> RolloutResult:
@@ -697,6 +785,8 @@ def rollout_dish(
         lookup_fn=lookup_fn,
         portion_fn=portion_fn,
         catalog_path=catalog_path,
+        image_path=image_path,
+        mass_fn=mass_fn,
         vlm_alias=alias,
         vlm_serving=serving,
     )
@@ -772,33 +862,97 @@ def run_self_check() -> None:
             self.i += 1
             return [action]
 
-    def _run(actions: list[str], hyps: list[dict[str, Any]]) -> RolloutResult:
+    mass_calls: list[dict[str, Any]] = []
+
+    def mass_fn(
+        image: Any,
+        candidates: Sequence[Mapping[str, Any]],
+        component_index: int | None = None,
+        component_hints_g: Sequence[float | None] | None = None,
+        catalog_path: str | None = None,
+        **_kwargs: Any,
+    ) -> dict[str, Any]:
+        del catalog_path
+        mass_calls.append(
+            {
+                "image": None if image is None else str(image),
+                "codes": [str(cand.get("code")) for cand in candidates],
+                "component_index": component_index,
+                "hints": [None if hint is None else float(hint) for hint in (component_hints_g or [])],
+            }
+        )
+        return {
+            "portion_g": 210.0,
+            "mass_g": 210.0,
+            "sigma": {"mass_g": 12.0},
+            "intervals": {"mass_g": {"low": 170.0, "high": 250.0, "coverage": 0.95}},
+            "confidence": 0.89,
+            "nutrient_refs": {"model_rgb": {"energy_kcal": 180.0}, "fndds": []},
+            "nutrients": {"energy_kcal": 180.0, "protein_g": 2.0, "carb_g": 20.0, "fat_g": 1.0},
+            "rgb_only": True,
+            "depth_used": False,
+            "backbone": "stub",
+            "portion_src": "mass_estimator",
+        }
+
+    def _run(
+        actions: list[str],
+        hyps: list[dict[str, Any]],
+        *,
+        image_path: str | None = None,
+        mass: Any = mass_fn,
+    ) -> RolloutResult:
         hints.clear()
+        mass_calls.clear()
         return rollout_dish(
             dish_id,
             ListPolicy(actions),
-            image_path=None,
+            image_path=image_path,
             perceive_fn=lambda _path: (hyps, {"model_alias": "qwen3.8-27b", "serving": "self-check"}),
             retrieve_fn=retrieve_fn,
             lookup_fn=lookup_fn,
             portion_fn=portion_fn,
+            mass_fn=mass,
             check_replay=False,
         )
 
     apple = [{"name": "apple", "portion_g": 180}]
-    rolled = _run(["RETRIEVE", "RE_PORTION", "STOP"], apple)
+    rolled = _run(["RETRIEVE", "RE_PORTION", "STOP"], apple, image_path="overhead/rgb.png")
     actions = [step["action_t"] for step in rolled.steps]
     if actions != ["RETRIEVE", "RE_PORTION", "STOP"]:
         raise AssertionError(actions)
     if rolled.ended_reason != "policy_stop" or rolled.steps[-1]["s"] != "corrected":
         raise AssertionError(rolled.ended_reason)
     terminal = rolled.steps[-1]["nutri_dish"]["energy_kcal"]
-    if abs(float(terminal) - 175.0) > 1e-6:
+    # 210 g from estimate_mass, not the grid's 175 g for a 180 g hint.
+    if abs(float(terminal) - 210.0) > 1e-6:
         raise AssertionError(terminal)
-    if hints != [100.0, 180.0]:
+    if hints != [100.0]:
         raise AssertionError(hints)
+    if len(mass_calls) != 1 or "111" not in mass_calls[0]["codes"]:
+        raise AssertionError(mass_calls)
+    if mass_calls[0]["hints"] != [180.0] or not str(mass_calls[0]["image"]).endswith("rgb.png"):
+        raise AssertionError(mass_calls)
+    portion_obs = rolled.steps[1]["obs_t"]
+    if portion_obs.get("portion_src") != "mass_estimator" or portion_obs.get("mass_tool") != "estimate_mass":
+        raise AssertionError(portion_obs)
+    if portion_obs.get("rgb_only") is not True or portion_obs.get("depth_used") is not False:
+        raise AssertionError(portion_obs)
+    if abs(float(portion_obs["portion_g"]) - 210.0) > 1e-6:
+        raise AssertionError(portion_obs["portion_g"])
     if rolled.steps[-1]["obs_t"]["privileged"] is not False:
         raise AssertionError("privileged observation")
+
+    def boom(*_args: Any, **_kwargs: Any) -> None:
+        from vdr.tools.mass_estimator import MassEstimatorError
+
+        raise MassEstimatorError("checkpoint missing")
+
+    failed = _run(["RETRIEVE", "RE_PORTION", "STOP"], apple, mass=boom)
+    if failed.steps[1]["obs_t"].get("tool_failed") is not True:
+        raise AssertionError(failed.steps[1]["obs_t"])
+    if hints != [100.0]:
+        raise AssertionError(hints)
 
     stuck = _run(["RETRIEVE", "RE_DECOMPOSE", "RE_DECOMPOSE", "RE_DECOMPOSE", "STOP"], apple)
     if "STOP" in [step["action_t"] for step in stuck.steps] or stuck.ended_reason != "stuck":
@@ -832,6 +986,7 @@ def run_self_check() -> None:
         retrieve_fn=retrieve_fn,
         lookup_fn=lookup_fn,
         portion_fn=portion_fn,
+        mass_fn=mass_fn,
         check_replay=True,
     )
     if not live.steps or live.steps[0]["obs_t"]["hypothesis_source"] != HYPOTHESIS_SOURCE:
