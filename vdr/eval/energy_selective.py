@@ -663,7 +663,10 @@ def format_energy_report(payload: Mapping[str, Any]) -> str:
         f"headline population: {payload['headline']}",
         payload["populations"][PRIMARY_POPULATION],
         "",
-        "Primary — logged STOP pass/corrected (force-answer keeps policy ABSTAIN):",
+        str(
+            payload.get("primary_title")
+            or "Primary — logged STOP pass/corrected (force-answer keeps policy ABSTAIN):"
+        ),
     ]
     for name in order:
         lines.append(_method_line(name, methods[name]["primary_logged_grounded_stop"]))
@@ -695,7 +698,7 @@ def format_energy_report(payload: Mapping[str, Any]) -> str:
         [
             "",
             (
-                "teacher terminal audit (not a policy row): "
+                f"{payload.get('terminal_audit_title') or 'teacher terminal audit (not a policy row)'}: "
                 f"n={audit['n']} MAE={_fmt(audit['mae_kcal'])} "
                 f"summary_round={_fmt(audit['mae_rounded_like_weak_step_summary'])}"
             ),
@@ -708,7 +711,7 @@ def format_energy_report(payload: Mapping[str, Any]) -> str:
             "AURC is kcal (same units as MAE), trapezoid from vdr.eval.selective, lower better.",
             "Spearman > 0 means a higher abstain_score lines up with larger absolute error.",
             "",
-            DEFINITION,
+            str(payload.get("definition") or DEFINITION),
         ]
     )
     sources = payload.get("abstain_score_sources")
@@ -735,6 +738,9 @@ def format_energy_report(payload: Mapping[str, Any]) -> str:
             "split",
             "labels",
             "rgb_test",
+            "on_policy",
+            "offline_holdout",
+            "vlm",
             "b0_b1",
             "fixrate_and_accuracy",
             "b5",

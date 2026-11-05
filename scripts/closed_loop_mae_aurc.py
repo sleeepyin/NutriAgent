@@ -14,16 +14,18 @@ headline so the #28 score can be checked without a second definition.
     python scripts/closed_loop_mae_aurc.py --self-check
     python scripts/closed_loop_mae_aurc.py
 
-rgb_test is not rolled out here. A later IR jsonl of the same shape can be
-scored without fitting a threshold::
+rgb_test is not rolled out here. An on-policy IR jsonl of the same shape
+can be scored without fitting a threshold::
 
     python scripts/closed_loop_mae_aurc.py \\
-        --trajectories path/to/rollout.jsonl \\
+        --trajectories results/closed_loop/on_policy_rgb_test.jsonl \\
         --expect-pool any \\
-        --allow-test-split
+        --allow-test-split \\
+        --on-policy-vlm
 
-That flag is off by default. It still does not read ``results/n5k_*`` and
-does not tune on labels. This command is not part of the hold-out run.
+``--on-policy-vlm`` refuses trajectories that lack the on-policy marker, so a
+weak-step log cannot be relabeled. It does not change the hold-out command.
+Neither path reads ``results/n5k_*`` or tunes on labels.
 """
 
 from __future__ import annotations
@@ -327,12 +329,15 @@ def _cafe_labels(dish_ids: set[str]) -> dict[str, float]:
     return {dish_id: float(table[dish_id]["energy_kcal"]) for dish_id in dish_ids}
 
 
-def _replay_b5(fit_path: Path, holdout_path: Path) -> PolicyMLP:
+def _replay_b5(fit_path: Path, holdout_path: Path, *, strict: bool = True) -> tuple[PolicyMLP, int]:
     """Reproduce the published open-loop MLP. Does not write weights.
 
     Constants stay on ``PolicyMLP`` (seed 0, 80 epochs, lr 1e-2, L2 1e-4,
     batch 512, dropout 0). The fit pool is the only supervision. The
-    published hold-out hit count is a replay check, not a search.
+    published hold-out hit count is a replay check, not a search. The
+    canonical hold-out table still requires that count. An on-policy rgb_test
+    score records the count this process actually got and does not search
+    rgb_test to force the published number.
     """
     fit = load_bc_rows(fit_path, expect_pool="fit")
     policy = PolicyMLP()
@@ -344,11 +349,11 @@ def _replay_b5(fit_path: Path, holdout_path: Path) -> PolicyMLP:
         )
     predicted = policy.predict_actions(hold.X)
     hits = sum(pred == str(label) for pred, label in zip(predicted, hold.y.tolist()))
-    if hits != B5_PUBLISHED_HOLD_HITS:
+    if strict and hits != B5_PUBLISHED_HOLD_HITS:
         raise EnergyEvalRefused(
             f"B5 replay hits {hits} != published {B5_PUBLISHED_HOLD_HITS}; refusing to score energy"
         )
-    return policy
+    return policy, hits
 
 
 def _jsonable(payload: dict) -> str:
@@ -443,6 +448,15 @@ def main() -> int:
         action="store_true",
         help="Score rgb_test/depth_test dish ids. Does not fit a threshold. Writes mae_aurc_testsplit.*, not the hold-out files.",
     )
+    parser.add_argument(
+        "--on-policy-vlm",
+        action="store_true",
+        help=(
+            "The trajectories are an on-policy Qwen rollout, not a weak-step log. "
+            "Requires --allow-test-split. Refuses rows without the on-policy marker. "
+            "Does not fit a threshold and does not rewrite the hold-out table."
+        ),
+    )
     parser.add_argument("--fit", type=Path, default=FIT_JSONL)
     parser.add_argument("--weights", type=Path, default=WEIGHTS)
     parser.add_argument("--train-meta", type=Path, default=TRAIN_META)
@@ -461,6 +475,8 @@ def main() -> int:
         )
         return 0
 
+    if args.on_policy_vlm and not args.allow_test_split:
+        raise EnergyEvalRefused("--on-policy-vlm requires --allow-test-split")
     if args.shuffle_seed != MASK_SHUFFLE_SEED:
         raise EnergyEvalRefused(
             f"shuffle seed {args.shuffle_seed} is not the published closed-loop seed {MASK_SHUFFLE_SEED}"
@@ -494,6 +510,13 @@ def main() -> int:
             raise EnergyEvalRefused(f"{name} sha256 does not start with the documented prefix {prefix}")
 
     steps_by_dish = _group_steps(trajectories, expect_pool=args.expect_pool, allow_test=args.allow_test_split)
+    if args.on_policy_vlm:
+        from vdr.controller.on_policy import OnPolicyRefused, assert_on_policy_marker
+
+        try:
+            assert_on_policy_marker(steps_by_dish)
+        except OnPolicyRefused as exc:
+            raise EnergyEvalRefused(str(exc)) from exc
     state, keys, truth = _stack_state(steps_by_dish)
     if is_canonical:
         loaded = load_closed_loop_rows(trajectories, expect_pool="holdout")
@@ -524,13 +547,18 @@ def main() -> int:
                 raise EnergyEvalRefused(
                     f"mask {mode} hits {hits} != saved metrics tp sum {saved_hits[mode]}"
                 )
+    if args.on_policy_vlm and ours_hits["none"] != len(keys):
+        raise EnergyEvalRefused(
+            "on-policy mask-none re-prediction matches executed action_t on "
+            f"{ours_hits['none']}/{len(keys)} rows"
+        )
 
     print(
         f"replaying B5 PolicyMLP.fit on {_rel(fit_path)} "
         "(published constants, fit pool only, checkpoint not written)",
         flush=True,
     )
-    b5 = _replay_b5(fit_path, canonical_holdout)
+    b5, b5_hold_hits = _replay_b5(fit_path, canonical_holdout, strict=not args.on_policy_vlm)
     b5_actions, b5_scores = _predict(b5, _b5_matrix(steps_by_dish, keys))
     b5_hits_on_target = _hits(keys, b5_actions, truth)
     if is_canonical and b5_hits_on_target != B5_PUBLISHED_HOLD_HITS:
@@ -622,7 +650,7 @@ def main() -> int:
         ),
         "rgb_test": (
             "Not run. A full-set rgb_test number needs a VLM rollout that writes this IR shape. "
-            "Pass --trajectories with --expect-pool any --allow-test-split later. "
+            "Pass --trajectories with --expect-pool any --allow-test-split --on-policy-vlm later. "
             "That path does not search a threshold and does not read results/n5k_*. "
             "This run did not pass --allow-test-split."
             if not args.allow_test_split
@@ -642,9 +670,21 @@ def main() -> int:
             "The new score is not an action."
         ),
         "b5": (
-            "Open-loop 31-d PolicyMLP replayed in memory on the fit pool with the module "
-            f"constants. Hold-out action hits {B5_PUBLISHED_HOLD_HITS}/{B5_PUBLISHED_HOLD_ROWS}. "
-            "No checkpoint was written and no constant was changed."
+            (
+                "Open-loop 31-d PolicyMLP replayed in memory on the fit pool with the module "
+                f"constants. This process's train-hold-out action hits were {b5_hold_hits}/"
+                f"{B5_PUBLISHED_HOLD_ROWS}. The published #28 replay was "
+                f"{B5_PUBLISHED_HOLD_HITS}/{B5_PUBLISHED_HOLD_ROWS}. The gap is numeric replay "
+                "on train labels, not a search on rgb_test. No checkpoint was written and no "
+                "constant was changed. This B5 row is a counterfactual read of the on-policy "
+                "trace, not its own rollout."
+            )
+            if args.on_policy_vlm
+            else (
+                "Open-loop 31-d PolicyMLP replayed in memory on the fit pool with the module "
+                f"constants. Hold-out action hits {B5_PUBLISHED_HOLD_HITS}/{B5_PUBLISHED_HOLD_ROWS}. "
+                "No checkpoint was written and no constant was changed."
+            )
         ),
         "closed_loop_weights": (
             f"Loaded {_rel(weights)}. PolicyStateMLP.fit was not called. "
@@ -698,6 +738,13 @@ def main() -> int:
         },
         "frozen_unchanged": True,
     }
+    if args.on_policy_vlm:
+        from vdr.controller.on_policy import OnPolicyRefused, annotate_on_policy_table
+
+        try:
+            annotate_on_policy_table(payload, steps_by_dish)
+        except OnPolicyRefused as exc:
+            raise EnergyEvalRefused(str(exc)) from exc
     text = format_energy_report(payload)
     out_dir.mkdir(parents=True, exist_ok=True)
     json_path.write_text(_jsonable(payload), encoding="utf-8")
