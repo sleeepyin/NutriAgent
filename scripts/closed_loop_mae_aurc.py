@@ -5,6 +5,12 @@ Compares the saved closed-loop policy (Ours, mask none / zero / shuffle)
 with the open-loop B5 MLP. Does not train the closed-loop policy, does not
 write a B5 checkpoint, and does not search a threshold.
 
+Ours AURC uses the locked abstain score in
+``results/closed_loop/abstain_calibration.json`` (committed kcal over the
+existing 2500 cap). Actions stay the saved checkpoint's argmax. B5 still
+uses softmax P(ABSTAIN). A softmax reference block is written beside the
+headline so the #28 score can be checked without a second definition.
+
     python scripts/closed_loop_mae_aurc.py --self-check
     python scripts/closed_loop_mae_aurc.py
 
@@ -45,11 +51,18 @@ from vdr.controller.policy_bc import BC_ACTIONS  # noqa: E402
 from vdr.controller.policy_mlp import PolicyMLP  # noqa: E402
 from vdr.controller.policy_state_mlp import PolicyStateMLP  # noqa: E402
 from vdr.controller.state_features import (  # noqa: E402
+    ENERGY_CAP_KCAL,
     OBS_SLICE,
     build_state_features,
     mask_observation_block,
 )
 from vdr.data.n5k import load_labels, test_split_ids  # noqa: E402
+from vdr.eval.abstain_calibration import (  # noqa: E402
+    SCORE_RULE_ID,
+    logged_committed_kcal_scores,
+    run_self_check as run_calibration_self_check,
+    score_committed_kcal,
+)
 from vdr.eval.energy_selective import (  # noqa: E402
     SECONDARY_ABSTAIN_THRESHOLD,
     EnergyEvalRefused,
@@ -65,6 +78,28 @@ OUT_DIR = ROOT / "results" / "closed_loop"
 WEIGHTS = OUT_DIR / "policy_state_mlp.npz"
 TRAIN_META = OUT_DIR / "train_meta.json"
 SAVED_METRICS = OUT_DIR / "metrics_holdout.json"
+CALIBRATION = OUT_DIR / "abstain_calibration.json"
+OURS_METHODS = ("ours_mask_none", "ours_mask_zero", "ours_mask_shuffle")
+# #28 softmax table, rounded the way report_mae_aurc.txt prints. A reproduction
+# check for the reference block, not a target the calibrated score is fit to.
+PUBLISHED_SOFTMAX_PRIMARY = {
+    "ours_mask_none": {"full_set_mae_kcal": "30.7085", "coverage": "0.9522", "aurc": "58.3726"},
+    "b5_open_loop": {"full_set_mae_kcal": "30.7085", "coverage": "1.0000", "aurc": "32.1474"},
+    "ours_mask_zero": {"full_set_mae_kcal": "30.7085", "coverage": "0.0225", "aurc": "41.1197"},
+    "ours_mask_shuffle": {"full_set_mae_kcal": "80.3964", "coverage": "0.6949", "aurc": "101.2660"},
+}
+_SLIM_PRIMARY = (
+    "n_population",
+    "n_scored",
+    "n_kept",
+    "n_early_decision",
+    "n_policy_abstain",
+    "full_set_mae_kcal",
+    "coverage",
+    "selective_mae_kcal",
+    "aurc",
+    "spearman_abstain_score_vs_abs_error",
+)
 JSON_NAME = "mae_aurc_holdout.json"
 REPORT_NAME = "report_mae_aurc.txt"
 TEST_JSON_NAME = "mae_aurc_testsplit.json"
@@ -320,6 +355,80 @@ def _jsonable(payload: dict) -> str:
     return json.dumps(payload, indent=2, ensure_ascii=False) + "\n"
 
 
+def _load_calibration(path: Path) -> dict:
+    if not path.is_file():
+        raise EnergyEvalRefused(f"missing abstain calibration artifact {path}")
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if payload.get("rule_id") != SCORE_RULE_ID or payload.get("winner") != SCORE_RULE_ID:
+        raise EnergyEvalRefused(
+            f"abstain calibration is locked to {SCORE_RULE_ID}, artifact has "
+            f"rule_id={payload.get('rule_id')!r} winner={payload.get('winner')!r}"
+        )
+    if payload.get("winner_matches_locked_rule") is not True:
+        raise EnergyEvalRefused("abstain calibration winner does not match the locked rule")
+    if payload.get("uses_official_holdout") or payload.get("uses_test_gt") or payload.get("threshold_fit_on_holdout"):
+        raise EnergyEvalRefused("abstain calibration artifact used hold-out or test labels")
+    try:
+        cap = float(payload["energy_cap_kcal"])
+    except (KeyError, TypeError, ValueError) as exc:
+        raise EnergyEvalRefused("abstain calibration is missing energy_cap_kcal") from exc
+    if abs(cap - float(ENERGY_CAP_KCAL)) > 1e-6:
+        raise EnergyEvalRefused(f"calibration cap {cap} != ENERGY_CAP_KCAL {ENERGY_CAP_KCAL}")
+    try:
+        candidates = payload["fit_internal_val"]["candidates"]
+        winner_aurc = float(candidates[SCORE_RULE_ID]["aurc"])
+    except (KeyError, TypeError, ValueError) as exc:
+        raise EnergyEvalRefused("abstain calibration is missing fit-internal candidate AURCs") from exc
+    for name, block in candidates.items():
+        if float(block["aurc"]) + 1e-9 < winner_aurc:
+            raise EnergyEvalRefused(
+                f"artifact candidate {name} has a lower fit-internal AURC than {SCORE_RULE_ID}"
+            )
+    return payload
+
+
+def _slim_primary(block: dict) -> dict:
+    return {key: block[key] for key in _SLIM_PRIMARY}
+
+
+def _readings_for(
+    steps_by_dish: dict,
+    keys: list[tuple[str, int]],
+    predicted: dict[str, tuple[list[str], np.ndarray]],
+    labels: dict[str, float],
+) -> dict:
+    readings = {}
+    for name in METHOD_ORDER:
+        actions, scores = predicted[name]
+        pred_map, score_map = _maps(keys, actions, scores)
+        readings[name] = dish_readings(steps_by_dish, pred_map, score_map, labels)
+    return readings
+
+
+def _assert_calibrated_matches_energy(readings: dict) -> None:
+    for name in OURS_METHODS:
+        for reading in readings[name]:
+            if reading.energy_kcal is None:
+                continue
+            expected = score_committed_kcal(reading.energy_kcal)
+            if abs(float(reading.abstain_score) - expected) > 1e-9:
+                raise EnergyEvalRefused(
+                    f"{name} {reading.dish_id}: calibrated score {reading.abstain_score} "
+                    f"!= committed kcal score {expected}"
+                )
+
+
+def _assert_softmax_reference(reference: dict) -> None:
+    for name, published in PUBLISHED_SOFTMAX_PRIMARY.items():
+        block = reference[name]
+        for key, text in published.items():
+            got = f"{float(block[key]):.4f}"
+            if got != text:
+                raise EnergyEvalRefused(
+                    f"softmax reference {name} {key}={got} != published #28 {text}"
+                )
+
+
 def _rel(path: Path) -> str:
     return str(path.relative_to(ROOT)) if path.is_relative_to(ROOT) else str(path)
 
@@ -344,9 +453,11 @@ def main() -> int:
 
     if args.self_check:
         run_self_check()
+        run_calibration_self_check()
         print(
             "closed_loop_mae_aurc self-check ok "
-            f"threshold={SECONDARY_ABSTAIN_THRESHOLD} (secondary, not fit)"
+            f"threshold={SECONDARY_ABSTAIN_THRESHOLD} (secondary, not fit) "
+            f"abstain_score={SCORE_RULE_ID}"
         )
         return 0
 
@@ -356,6 +467,7 @@ def main() -> int:
         )
 
     run_self_check()
+    run_calibration_self_check()
     started = time.perf_counter()
     trajectories = args.trajectories if args.trajectories.is_absolute() else ROOT / args.trajectories
     fit_path = args.fit if args.fit.is_absolute() else ROOT / args.fit
@@ -367,9 +479,10 @@ def main() -> int:
     is_canonical = trajectories.resolve() == canonical_holdout and not args.allow_test_split
     json_path, text_path = _assert_output_targets(out_dir, test_split=args.allow_test_split)
 
-    for path in (trajectories, fit_path, weights, meta_path, saved_metrics, canonical_holdout):
+    for path in (trajectories, fit_path, weights, meta_path, saved_metrics, canonical_holdout, CALIBRATION):
         if not path.is_file():
             raise EnergyEvalRefused(f"missing {path}")
+    calibration = _load_calibration(CALIBRATION)
 
     frozen_paths = _frozen_paths()
     if len({path.name for path in frozen_paths}) != len(frozen_paths):
@@ -425,15 +538,61 @@ def main() -> int:
             f"B5 hits on stacked hold-out rows {b5_hits_on_target} != {B5_PUBLISHED_HOLD_HITS}"
         )
     predicted["b5_open_loop"] = (b5_actions, b5_scores)
+    softmax_predicted = {
+        name: (list(actions), np.array(scores, dtype=np.float64, copy=True))
+        for name, (actions, scores) in predicted.items()
+    }
+    calibrated_by_step = logged_committed_kcal_scores(steps_by_dish)
+    if set(calibrated_by_step) != set(keys):
+        raise EnergyEvalRefused("calibrated scores do not cover the logged steps")
+    for name in OURS_METHODS:
+        actions, _softmax_scores = predicted[name]
+        calibrated_column = np.array([calibrated_by_step[key] for key in keys], dtype=np.float64)
+        predicted[name] = (actions, calibrated_column)
 
     labels = _cafe_labels(set(steps_by_dish))
-    readings = {}
-    for name in METHOD_ORDER:
-        actions, scores = predicted[name]
-        pred_map, score_map = _maps(keys, actions, scores)
-        readings[name] = dish_readings(steps_by_dish, pred_map, score_map, labels)
+    readings = _readings_for(steps_by_dish, keys, predicted, labels)
+    _assert_calibrated_matches_energy(readings)
+    softmax_readings = _readings_for(steps_by_dish, keys, softmax_predicted, labels)
+    softmax_table = evaluate_energy_table(softmax_readings)
+    softmax_reference = {
+        name: _slim_primary(softmax_table["methods"][name]["primary_logged_grounded_stop"])
+        for name in METHOD_ORDER
+    }
+    if is_canonical:
+        _assert_softmax_reference(softmax_reference)
 
     payload = evaluate_energy_table(readings)
+    payload["abstain_score_sources"] = {
+        "ours_mask_none": (
+            f"{SCORE_RULE_ID}: clip(committed nutri_dish.energy_kcal / {float(ENERGY_CAP_KCAL):.0f}, 0, 1). "
+            "Not softmax P(ABSTAIN). The action is still the saved checkpoint's argmax."
+        ),
+        "ours_mask_zero": (
+            "Same committed-kcal score as mask none. The feature mask changes actions, "
+            "and the score changes only when that moves the decision step."
+        ),
+        "ours_mask_shuffle": (
+            "Same committed-kcal score as mask none. The feature mask changes actions, "
+            "and the score changes only when that moves the decision step."
+        ),
+        "b5_open_loop": "softmax P(ABSTAIN) from the open-loop PolicyMLP. Not calibrated.",
+    }
+    payload["softmax_p_abstain_reference"] = softmax_reference
+    payload["abstain_calibration"] = {
+        "artifact": _rel(CALIBRATION),
+        "sha256_prefix": _sha256(CALIBRATION)[:16],
+        "rule_id": calibration["rule_id"],
+        "winner": calibration["winner"],
+        "energy_cap_kcal": calibration["energy_cap_kcal"],
+        "fit_internal_val": calibration["fit_internal_val"],
+        "uses_official_holdout": False,
+        "uses_test_gt": False,
+        "note": (
+            "Fit-internal validation locked the score before this hold-out table. "
+            "This process does not refit the score."
+        ),
+    }
     payload["method_order"] = list(METHOD_ORDER)
     audit = payload["teacher_terminal_audit"]
     if is_canonical:
@@ -477,12 +636,27 @@ def main() -> int:
             "FixRate and overall action accuracy are not this table. "
             "Action hits below are a weight-loader check."
         ),
+        "fixrate": (
+            "Not re-run. predict_actions is still the #24 checkpoint "
+            f"{_rel(weights)}, so the #26 FixRate table is unchanged. "
+            "The new score is not an action."
+        ),
         "b5": (
             "Open-loop 31-d PolicyMLP replayed in memory on the fit pool with the module "
             f"constants. Hold-out action hits {B5_PUBLISHED_HOLD_HITS}/{B5_PUBLISHED_HOLD_ROWS}. "
             "No checkpoint was written and no constant was changed."
         ),
-        "closed_loop_weights": f"Loaded {_rel(weights)}. PolicyStateMLP.fit was not called.",
+        "closed_loop_weights": (
+            f"Loaded {_rel(weights)}. PolicyStateMLP.fit was not called. "
+            "The STOP/ABSTAIN action head was not retrained."
+        ),
+        "abstain_score": (
+            f"Ours uses {SCORE_RULE_ID} from {_rel(CALIBRATION)}, locked on a fit-internal "
+            f"slice (dish digits % 5 == 0) by validation AURC. Official hold-out labels were "
+            "not used to choose it. B5 remains softmax P(ABSTAIN). "
+            f"Secondary cut 0.5 on the Ours score means committed kcal < {0.5 * float(ENERGY_CAP_KCAL):.0f}; "
+            "that cut was not searched. Primary coverage is still the ABSTAIN action flag."
+        ),
         "mask": (
             f"mask-zero nulls the observation block. mask-shuffle permutes it with "
             f"np.random.default_rng({MASK_SHUFFLE_SEED} + row_index), row_index in sorted "
@@ -514,6 +688,10 @@ def main() -> int:
         "allow_test_split": bool(args.allow_test_split),
         "shuffle_seed": MASK_SHUFFLE_SEED,
         "secondary_abstain_threshold": SECONDARY_ABSTAIN_THRESHOLD,
+        "abstain_calibration": _rel(CALIBRATION),
+        "abstain_calibration_sha256_prefix": _sha256(CALIBRATION)[:16],
+        "abstain_score_rule": SCORE_RULE_ID,
+        "policy_checkpoint": f"{_rel(weights)} unchanged from the #24/#28 action head",
         "frozen_sha256_prefix": {name: digest[:16] for name, digest in sorted(frozen_before.items())},
         "documented_prefix_match": {
             name: frozen_before.get(name, "").startswith(prefix) for name, prefix in DOCUMENTED_PREFIXES.items()

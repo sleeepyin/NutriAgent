@@ -1,0 +1,69 @@
+{
+  "rule_id": "committed_kcal_over_energy_cap",
+  "winner": "committed_kcal_over_energy_cap",
+  "winner_matches_locked_rule": true,
+  "energy_cap_kcal": 2500.0,
+  "formula": "clip(committed nutri_dish.energy_kcal / ENERGY_CAP_KCAL, 0, 1); missing energy -> 1",
+  "fit_internal_val": {
+    "modulus": 5,
+    "val_when": "int(digits of dish_id) % 5 == 0",
+    "n_train": 2748,
+    "n_val": 695,
+    "val_mae": 24.85085305323741,
+    "selection_metric": "validation AURC, lower better; tie break is the candidate name",
+    "candidates": {
+      "committed_kcal_over_energy_cap": {
+        "n": 695.0,
+        "aurc": 10.769875084388456,
+        "mae": 24.85085305323741
+      },
+      "softmax_p_abstain": {
+        "n": 695.0,
+        "aurc": 28.38044777149357,
+        "mae": 24.85085305323741
+      },
+      "obs_nutri_energy_norm": {
+        "n": 695.0,
+        "aurc": 16.87652860628047,
+        "mae": 24.85085305323741
+      },
+      "stop_gap_energy": {
+        "n": 695.0,
+        "aurc": 12.988426580226992,
+        "mae": 24.85085305323741
+      }
+    }
+  },
+  "uses_official_holdout": false,
+  "uses_test_gt": false,
+  "threshold_fit_on_holdout": false,
+  "rl": false,
+  "population": "rgb_train fit pool, logged STOP with status pass or corrected and a finite force-answer energy. Not the official hold-out. Not rgb_test.",
+  "fit_rows": {
+    "n_dishes": 3679,
+    "n_grounded_stop_scored": 3443,
+    "n_early_decision": 0,
+    "n_rows_for_selection": 3443
+  },
+  "descriptive_all_fit_aurc_not_used_for_selection": {
+    "committed_kcal_over_energy_cap": 11.782921201634496,
+    "softmax_p_abstain": 40.755708314360994,
+    "obs_nutri_energy_norm": 19.301427612623563,
+    "stop_gap_energy": 15.187469375090583
+  },
+  "discarded": {
+    "softmax_p_abstain": "The saved head's P(ABSTAIN) is a candidate and loses on the fit-internal slice, so the action head is not retrained and no temperature or class-weight is applied.",
+    "early_stop": "0 of 3443 fit grounded-STOP decisions are before the last logged step. Early STOP is not the AURC failure on this checkpoint.",
+    "obs_nutri_energy_norm": "The previous-step observation energy is not the committed total. It is a candidate and is not the winner."
+  },
+  "action_head": "results/closed_loop/policy_state_mlp.npz was not modified",
+  "inputs": {
+    "fit_jsonl": "results/weak_steps/rgb_train_fit_all.jsonl",
+    "fit_sha256_prefix": "ed47f9239bfecb3c",
+    "weights": "results/closed_loop/policy_state_mlp.npz",
+    "weights_sha256_prefix": "f0ac0b41f99cbd72",
+    "official_holdout_read": false,
+    "results_n5k_read": false
+  },
+  "elapsed_seconds": 4.87
+}

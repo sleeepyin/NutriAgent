@@ -4,33 +4,45 @@ headline population: primary_logged_grounded_stop
 Logged terminal action is STOP, top-level s is pass or corrected, and terminal nutri_dish.energy_kcal is finite. This is the weak-step train-energy audit set. Policy ABSTAIN decisions remain in the full-set MAE.
 
 Primary — logged STOP pass/corrected (force-answer keeps policy ABSTAIN):
-ours_mask_none: n_scored=356/356 full_MAE=30.7085 coverage=0.9522 (339/356) selective_MAE=31.0032 AURC=58.3726 spearman=0.1286
-b5_open_loop: n_scored=356/356 full_MAE=30.7085 coverage=1.0000 (356/356) selective_MAE=30.7085 AURC=32.1474 spearman=0.0095
-ours_mask_zero: n_scored=356/356 full_MAE=30.7085 coverage=0.0225 (8/356) selective_MAE=55.0052 AURC=41.1197 spearman=-0.5047
-ours_mask_shuffle: n_scored=354/356 full_MAE=80.3964 coverage=0.6949 (246/354) selective_MAE=100.9028 AURC=101.2660 spearman=-0.3065
+ours_mask_none: n_scored=356/356 full_MAE=30.7085 coverage=0.9522 (339/356) selective_MAE=31.0032 AURC=13.5311 spearman=0.6312 early=0
+b5_open_loop: n_scored=356/356 full_MAE=30.7085 coverage=1.0000 (356/356) selective_MAE=30.7085 AURC=32.1474 spearman=0.0095 early=0
+ours_mask_zero: n_scored=356/356 full_MAE=30.7085 coverage=0.0225 (8/356) selective_MAE=55.0052 AURC=13.5311 spearman=0.6312 early=0
+ours_mask_shuffle: n_scored=354/356 full_MAE=80.3964 coverage=0.6949 (246/354) selective_MAE=100.9028 AURC=54.5984 spearman=0.4456 early=122
 force-answer kcal identical: b5_open_loop = ours_mask_none = ours_mask_zero
   ours_mask_shuffle unscored: dish_1551378179, dish_1562615103
 paired common scored n=354 (dishes every method can score):
-  ours_mask_none: n_scored=354/354 full_MAE=30.8205 coverage=0.9548 (338/354) selective_MAE=31.0863 AURC=58.6844 spearman=0.1225
-  b5_open_loop: n_scored=354/354 full_MAE=30.8205 coverage=1.0000 (354/354) selective_MAE=30.8205 AURC=32.1976 spearman=0.0102
-  ours_mask_zero: n_scored=354/354 full_MAE=30.8205 coverage=0.0226 (8/354) selective_MAE=55.0052 AURC=41.3126 spearman=-0.5058
-  ours_mask_shuffle: n_scored=354/354 full_MAE=80.3964 coverage=0.6949 (246/354) selective_MAE=100.9028 AURC=101.2660 spearman=-0.3065
+  ours_mask_none: n_scored=354/354 full_MAE=30.8205 coverage=0.9548 (338/354) selective_MAE=31.0863 AURC=13.5326 spearman=0.6372 early=0
+  b5_open_loop: n_scored=354/354 full_MAE=30.8205 coverage=1.0000 (354/354) selective_MAE=30.8205 AURC=32.1976 spearman=0.0102 early=0
+  ours_mask_zero: n_scored=354/354 full_MAE=30.8205 coverage=0.0226 (8/354) selective_MAE=55.0052 AURC=13.5326 spearman=0.6372 early=0
+  ours_mask_shuffle: n_scored=354/354 full_MAE=80.3964 coverage=0.6949 (246/354) selective_MAE=100.9028 AURC=54.5984 spearman=0.4456 early=120
 
 Sensitivity — any finite horizon energy, including logged-abstain partial totals:
 Every dish with a finite force-answer energy, including logged ABSTAIN trajectories whose earlier steps wrote a partial nutri_dish total. A partial total is not the teacher's emitted dish answer.
-ours_mask_none: n_scored=376/380 full_MAE=37.8650 coverage=0.9229 (347/376) selective_MAE=35.7489 AURC=58.0525 spearman=0.1782
-b5_open_loop: n_scored=376/380 full_MAE=37.8650 coverage=1.0000 (376/376) selective_MAE=37.8650 AURC=37.2436 spearman=0.0432
-ours_mask_zero: n_scored=376/380 full_MAE=37.8650 coverage=0.0213 (8/376) selective_MAE=55.0052 AURC=51.9368 spearman=-0.5047
-ours_mask_shuffle: n_scored=374/380 full_MAE=85.3971 coverage=0.6979 (261/374) selective_MAE=103.5874 AURC=103.7522 spearman=-0.2784
+ours_mask_none: n_scored=376/380 full_MAE=37.8650 coverage=0.9229 (347/376) selective_MAE=35.7489 AURC=16.4585 spearman=0.6036 early=0
+b5_open_loop: n_scored=376/380 full_MAE=37.8650 coverage=1.0000 (376/376) selective_MAE=37.8650 AURC=37.2436 spearman=0.0432 early=0
+ours_mask_zero: n_scored=376/380 full_MAE=37.8650 coverage=0.0213 (8/376) selective_MAE=55.0052 AURC=16.4585 spearman=0.6036 early=0
+ours_mask_shuffle: n_scored=374/380 full_MAE=85.3971 coverage=0.6979 (261/374) selective_MAE=103.5874 AURC=57.6518 spearman=0.4361 early=128
 force-answer kcal identical: b5_open_loop = ours_mask_none = ours_mask_zero
 
 teacher terminal audit (not a policy row): n=356 MAE=30.7085 summary_round=30.7085
 
 Secondary score cut abstain_score < 0.5 is in the json under secondary_score_threshold. Primary coverage is the ABSTAIN action flag.
 AURC is kcal (same units as MAE), trapezoid from vdr.eval.selective, lower better.
-Spearman > 0 means higher P(ABSTAIN) lines up with larger absolute error.
+Spearman > 0 means a higher abstain_score lines up with larger absolute error.
 
-Offline logged-horizon force-answer. States stay the logged weak-step trajectory; the policy does not execute tools. The decision step is the first predicted STOP or ABSTAIN, or the last logged step if the policy never predicts a terminal action. Force-answer energy is the latest finite nutri_dish.energy_kcal at or before that step. Later logged calories are not credited. Dishes with no finite total are unscored and not imputed. Error is absolute kcal versus the cafe dish label passed in by the caller. Full-set MAE averages that error on scored dishes and keeps policy ABSTAIN decisions in the average. Coverage and Selective MAE keep the dishes whose decision action is not ABSTAIN (vdr.eval.selective, flag rule). AURC uses P(ABSTAIN) at the decision step as abstain_score (higher means less confident). Ties keep sorted dish_id order. The primary population is a logged STOP with status pass or corrected and a finite terminal energy. A sensitivity population also scores logged ABSTAIN trajectories when an earlier step has a finite total. A secondary score cut at 0.5 is reported and was not fit. This is not an on-policy rollout and not an rgb_test VLM evaluation.
+Offline logged-horizon force-answer. States stay the logged weak-step trajectory; the policy does not execute tools. The decision step is the first predicted STOP or ABSTAIN, or the last logged step if the policy never predicts a terminal action. Force-answer energy is the latest finite nutri_dish.energy_kcal at or before that step. Later logged calories are not credited. Dishes with no finite total are unscored and not imputed. Error is absolute kcal versus the cafe dish label passed in by the caller. Full-set MAE averages that error on scored dishes and keeps policy ABSTAIN decisions in the average. Coverage and Selective MAE keep the dishes whose decision action is not ABSTAIN (vdr.eval.selective, flag rule). AURC uses the caller-supplied abstain_score at the decision step (higher means less confident). The score may be softmax P(ABSTAIN) or a calibrated score recorded by the caller. Ties keep sorted dish_id order. The primary population is a logged STOP with status pass or corrected and a finite terminal energy. A sensitivity population also scores logged ABSTAIN trajectories when an earlier step has a finite total. A secondary score cut at 0.5 is reported and was not fit. This is not an on-policy rollout and not an rgb_test VLM evaluation.
+
+Abstain score source:
+  ours_mask_none: committed_kcal_over_energy_cap: clip(committed nutri_dish.energy_kcal / 2500, 0, 1). Not softmax P(ABSTAIN). The action is still the saved checkpoint's argmax.
+  ours_mask_zero: Same committed-kcal score as mask none. The feature mask changes actions, and the score changes only when that moves the decision step.
+  ours_mask_shuffle: Same committed-kcal score as mask none. The feature mask changes actions, and the score changes only when that moves the decision step.
+  b5_open_loop: softmax P(ABSTAIN) from the open-loop PolicyMLP. Not calibrated.
+
+Softmax P(ABSTAIN) reference (not the headline; same actions, #28 score):
+  ours_mask_none: n_scored=356/356 full_MAE=30.7085 coverage=0.9522 (339/356) selective_MAE=31.0032 AURC=58.3726 spearman=0.1286 early=0
+  b5_open_loop: n_scored=356/356 full_MAE=30.7085 coverage=1.0000 (356/356) selective_MAE=30.7085 AURC=32.1474 spearman=0.0095 early=0
+  ours_mask_zero: n_scored=356/356 full_MAE=30.7085 coverage=0.0225 (8/356) selective_MAE=55.0052 AURC=41.1197 spearman=-0.5047 early=0
+  ours_mask_shuffle: n_scored=354/356 full_MAE=80.3964 coverage=0.6949 (246/354) selective_MAE=100.9028 AURC=101.2660 spearman=-0.3065 early=122
 
 Scope:
   split: rgb_train hold-out (380 dishes, disjoint from the fit pool). Not rgb_test and not the 507-dish overhead pool.
@@ -39,8 +51,10 @@ Scope:
   b0_b1: B0 energy MAE 97.03 is the rgb_test Direct-VLM anchor (n=507) and is not a row. B1 110.72 is not faithful DietAI24 and is not a row.
   fixrate_and_accuracy: FixRate and overall action accuracy are not this table. Action hits below are a weight-loader check.
   b5: Open-loop 31-d PolicyMLP replayed in memory on the fit pool with the module constants. Hold-out action hits 2688/2771. No checkpoint was written and no constant was changed.
-  closed_loop_weights: Loaded results/closed_loop/policy_state_mlp.npz. PolicyStateMLP.fit was not called.
+  closed_loop_weights: Loaded results/closed_loop/policy_state_mlp.npz. PolicyStateMLP.fit was not called. The STOP/ABSTAIN action head was not retrained.
+  abstain_score: Ours uses committed_kcal_over_energy_cap from results/closed_loop/abstain_calibration.json, locked on a fit-internal slice (dish digits % 5 == 0) by validation AURC. Official hold-out labels were not used to choose it. B5 remains softmax P(ABSTAIN). Secondary cut 0.5 on the Ours score means committed kcal < 1250; that cut was not searched. Primary coverage is still the ABSTAIN action flag.
   mask: mask-zero nulls the observation block. mask-shuffle permutes it with np.random.default_rng(42 + row_index), row_index in sorted dish_id then step_i. Same rule as scripts/closed_loop_bc_train.py --shuffle-seed 42. B5 has no observation block, so it is not masked.
+  fixrate: Not re-run. predict_actions is still the #24 checkpoint results/closed_loop/policy_state_mlp.npz, so the #26 FixRate table is unchanged. The new score is not an action.
 
 Loader sanity (action agreement is not method proof):
   ours_mask_none_hits: 2662

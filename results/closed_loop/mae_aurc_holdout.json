@@ -1,7 +1,7 @@
 {
   "metric": "Full-set energy MAE + Coverage + Selective MAE + AURC",
   "definition_id": "offline_logged_horizon_force_answer",
-  "definition": "Offline logged-horizon force-answer. States stay the logged weak-step trajectory; the policy does not execute tools. The decision step is the first predicted STOP or ABSTAIN, or the last logged step if the policy never predicts a terminal action. Force-answer energy is the latest finite nutri_dish.energy_kcal at or before that step. Later logged calories are not credited. Dishes with no finite total are unscored and not imputed. Error is absolute kcal versus the cafe dish label passed in by the caller. Full-set MAE averages that error on scored dishes and keeps policy ABSTAIN decisions in the average. Coverage and Selective MAE keep the dishes whose decision action is not ABSTAIN (vdr.eval.selective, flag rule). AURC uses P(ABSTAIN) at the decision step as abstain_score (higher means less confident). Ties keep sorted dish_id order. The primary population is a logged STOP with status pass or corrected and a finite terminal energy. A sensitivity population also scores logged ABSTAIN trajectories when an earlier step has a finite total. A secondary score cut at 0.5 is reported and was not fit. This is not an on-policy rollout and not an rgb_test VLM evaluation.",
+  "definition": "Offline logged-horizon force-answer. States stay the logged weak-step trajectory; the policy does not execute tools. The decision step is the first predicted STOP or ABSTAIN, or the last logged step if the policy never predicts a terminal action. Force-answer energy is the latest finite nutri_dish.energy_kcal at or before that step. Later logged calories are not credited. Dishes with no finite total are unscored and not imputed. Error is absolute kcal versus the cafe dish label passed in by the caller. Full-set MAE averages that error on scored dishes and keeps policy ABSTAIN decisions in the average. Coverage and Selective MAE keep the dishes whose decision action is not ABSTAIN (vdr.eval.selective, flag rule). AURC uses the caller-supplied abstain_score at the decision step (higher means less confident). The score may be softmax P(ABSTAIN) or a calibrated score recorded by the caller. Ties keep sorted dish_id order. The primary population is a logged STOP with status pass or corrected and a finite terminal energy. A sensitivity population also scores logged ABSTAIN trajectories when an earlier step has a finite total. A secondary score cut at 0.5 is reported and was not fit. This is not an on-policy rollout and not an rgb_test VLM evaluation.",
   "populations": {
     "logged_grounded_stop": "Logged terminal action is STOP, top-level s is pass or corrected, and terminal nutri_dish.energy_kcal is finite. This is the weak-step train-energy audit set. Policy ABSTAIN decisions remain in the full-set MAE.",
     "any_finite_horizon_energy": "Every dish with a finite force-answer energy, including logged ABSTAIN trajectories whose earlier steps wrote a partial nutri_dish total. A partial total is not the teacher's emitted dish answer."
@@ -33,7 +33,7 @@
         "risk_at_full_coverage": 30.70853488764045,
         "risk_at_min_coverage": 59.133678999999916,
         "spearman_abstain_score_vs_abs_error": 0.009498374985651701,
-        "spearman_note": "Positive: higher P(ABSTAIN) lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned.",
+        "spearman_note": "Positive: a higher abstain_score lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned. The score is whatever the caller passed (softmax P(ABSTAIN) or a calibrated score).",
         "secondary_score_threshold": {
           "threshold": 0.5,
           "rule": "keep where abstain_score < 0.5",
@@ -112,7 +112,7 @@
         "risk_at_full_coverage": 37.86497622074467,
         "risk_at_min_coverage": 59.133678999999916,
         "spearman_abstain_score_vs_abs_error": 0.043182431576846425,
-        "spearman_note": "Positive: higher P(ABSTAIN) lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned.",
+        "spearman_note": "Positive: a higher abstain_score lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned. The score is whatever the caller passed (softmax P(ABSTAIN) or a calibrated score).",
         "secondary_score_threshold": {
           "threshold": 0.5,
           "rule": "keep where abstain_score < 0.5",
@@ -184,19 +184,19 @@
         "selective_mae_kcal": 31.003229769911506,
         "n_kept": 339,
         "coverage_of_population": 0.952247191011236,
-        "aurc": 58.37261331639449,
+        "aurc": 13.531051718517054,
         "aurc_lower_is_better": true,
-        "risk_at_full_coverage": 30.70853488764044,
-        "risk_at_min_coverage": 182.69799799999998,
-        "spearman_abstain_score_vs_abs_error": 0.12863461027553483,
-        "spearman_note": "Positive: higher P(ABSTAIN) lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned.",
+        "risk_at_full_coverage": 30.708534887640432,
+        "risk_at_min_coverage": 1.66,
+        "spearman_abstain_score_vs_abs_error": 0.6311895215924588,
+        "spearman_note": "Positive: a higher abstain_score lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned. The score is whatever the caller passed (softmax P(ABSTAIN) or a calibrated score).",
         "secondary_score_threshold": {
           "threshold": 0.5,
           "rule": "keep where abstain_score < 0.5",
           "note": "Fixed conventional cut. Not selected on hold-out or rgb_test. Primary coverage uses the ABSTAIN action flag, not this cut.",
-          "coverage": 0.952247191011236,
-          "selective_mae_kcal": 31.003229769911506,
-          "n_kept": 339
+          "coverage": 1.0,
+          "selective_mae_kcal": 30.70853488764045,
+          "n_kept": 356
         },
         "secondary_literature": {
           "mape_percent": 13.880979208917406,
@@ -210,31 +210,31 @@
             "target_coverage": 0.1,
             "k": 36.0,
             "coverage": 0.10112359550561797,
-            "risk": 99.14282688888886
+            "risk": 2.163602222222223
           },
           {
             "target_coverage": 0.25,
             "k": 89.0,
             "coverage": 0.25,
-            "risk": 48.95978989887639
+            "risk": 4.790125932584269
           },
           {
             "target_coverage": 0.5,
             "k": 178.0,
             "coverage": 0.5,
-            "risk": 33.858934117977505
+            "risk": 10.197229578651687
           },
           {
             "target_coverage": 0.75,
             "k": 267.0,
             "coverage": 0.75,
-            "risk": 32.47669252434457
+            "risk": 23.587953932584277
           },
           {
             "target_coverage": 1.0,
             "k": 356.0,
             "coverage": 1.0,
-            "risk": 30.70853488764044
+            "risk": 30.708534887640432
           }
         ],
         "selective_api": "vdr.eval.selective.coverage_and_selective_mae + aurc"
@@ -264,19 +264,19 @@
         "selective_mae_kcal": 35.74893431123919,
         "n_kept": 347,
         "coverage_of_population": 0.9131578947368421,
-        "aurc": 58.05253530629455,
+        "aurc": 16.45850377663149,
         "aurc_lower_is_better": true,
-        "risk_at_full_coverage": 37.86497622074468,
-        "risk_at_min_coverage": 182.69799799999998,
-        "spearman_abstain_score_vs_abs_error": 0.17821035815866273,
-        "spearman_note": "Positive: higher P(ABSTAIN) lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned.",
+        "risk_at_full_coverage": 37.86497622074467,
+        "risk_at_min_coverage": 1.66,
+        "spearman_abstain_score_vs_abs_error": 0.6035685273191226,
+        "spearman_note": "Positive: a higher abstain_score lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned. The score is whatever the caller passed (softmax P(ABSTAIN) or a calibrated score).",
         "secondary_score_threshold": {
           "threshold": 0.5,
           "rule": "keep where abstain_score < 0.5",
           "note": "Fixed conventional cut. Not selected on hold-out or rgb_test. Primary coverage uses the ABSTAIN action flag, not this cut.",
-          "coverage": 0.9228723404255319,
-          "selective_mae_kcal": 35.74893431123919,
-          "n_kept": 347
+          "coverage": 1.0,
+          "selective_mae_kcal": 37.86497622074468,
+          "n_kept": 376
         },
         "secondary_literature": {
           "mape_percent": 16.391613984011478,
@@ -290,31 +290,31 @@
             "target_coverage": 0.1,
             "k": 38.0,
             "coverage": 0.10106382978723404,
-            "risk": 94.31873049999997
+            "risk": 2.201833657894737
           },
           {
             "target_coverage": 0.25,
             "k": 94.0,
             "coverage": 0.25,
-            "risk": 46.41548187234041
+            "risk": 5.340119202127657
           },
           {
             "target_coverage": 0.5,
             "k": 188.0,
             "coverage": 0.5,
-            "risk": 34.35140472872338
+            "risk": 14.357625457446803
           },
           {
             "target_coverage": 0.75,
             "k": 282.0,
             "coverage": 0.75,
-            "risk": 33.472250617021274
+            "risk": 27.89380344326241
           },
           {
             "target_coverage": 1.0,
             "k": 376.0,
             "coverage": 1.0,
-            "risk": 37.86497622074468
+            "risk": 37.86497622074467
           }
         ],
         "selective_api": "vdr.eval.selective.coverage_and_selective_mae + aurc"
@@ -346,19 +346,19 @@
         "selective_mae_kcal": 100.90277111788618,
         "n_kept": 246,
         "coverage_of_population": 0.6910112359550562,
-        "aurc": 101.26600030891298,
+        "aurc": 54.59838272915456,
         "aurc_lower_is_better": true,
-        "risk_at_full_coverage": 80.3964298672317,
-        "risk_at_min_coverage": 13.417999000000009,
-        "spearman_abstain_score_vs_abs_error": -0.3065007651567128,
-        "spearman_note": "Positive: higher P(ABSTAIN) lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned.",
+        "risk_at_full_coverage": 80.39642986723167,
+        "risk_at_min_coverage": 1.66,
+        "spearman_abstain_score_vs_abs_error": 0.44555002489927503,
+        "spearman_note": "Positive: a higher abstain_score lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned. The score is whatever the caller passed (softmax P(ABSTAIN) or a calibrated score).",
         "secondary_score_threshold": {
           "threshold": 0.5,
           "rule": "keep where abstain_score < 0.5",
           "note": "Fixed conventional cut. Not selected on hold-out or rgb_test. Primary coverage uses the ABSTAIN action flag, not this cut.",
-          "coverage": 0.7005649717514124,
-          "selective_mae_kcal": 100.92555691935483,
-          "n_kept": 248
+          "coverage": 1.0,
+          "selective_mae_kcal": 80.39642986723163,
+          "n_kept": 354
         },
         "secondary_literature": {
           "mape_percent": 40.34001185812648,
@@ -372,31 +372,31 @@
             "target_coverage": 0.1,
             "k": 35.0,
             "coverage": 0.09887005649717515,
-            "risk": 75.59336748571425
+            "risk": 44.36858742857144
           },
           {
             "target_coverage": 0.25,
             "k": 88.0,
             "coverage": 0.24858757062146894,
-            "risk": 118.73750104545452
+            "risk": 50.65373197727272
           },
           {
             "target_coverage": 0.5,
             "k": 177.0,
             "coverage": 0.5,
-            "risk": 128.6707226045197
+            "risk": 57.74086144067794
           },
           {
             "target_coverage": 0.75,
             "k": 266.0,
             "coverage": 0.751412429378531,
-            "risk": 97.95448366541352
+            "risk": 64.30900539849623
           },
           {
             "target_coverage": 1.0,
             "k": 354.0,
             "coverage": 1.0,
-            "risk": 80.3964298672317
+            "risk": 80.39642986723167
           }
         ],
         "selective_api": "vdr.eval.selective.coverage_and_selective_mae + aurc"
@@ -430,19 +430,19 @@
         "selective_mae_kcal": 103.58737481226053,
         "n_kept": 261,
         "coverage_of_population": 0.6868421052631579,
-        "aurc": 103.75223401557548,
+        "aurc": 57.65175334310714,
         "aurc_lower_is_better": true,
-        "risk_at_full_coverage": 85.39705178074873,
-        "risk_at_min_coverage": 0.31121799999999666,
-        "spearman_abstain_score_vs_abs_error": -0.2783513260055942,
-        "spearman_note": "Positive: higher P(ABSTAIN) lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned.",
+        "risk_at_full_coverage": 85.39705178074871,
+        "risk_at_min_coverage": 1.66,
+        "spearman_abstain_score_vs_abs_error": 0.4360779351103089,
+        "spearman_note": "Positive: a higher abstain_score lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned. The score is whatever the caller passed (softmax P(ABSTAIN) or a calibrated score).",
         "secondary_score_threshold": {
           "threshold": 0.5,
           "rule": "keep where abstain_score < 0.5",
           "note": "Fixed conventional cut. Not selected on hold-out or rgb_test. Primary coverage uses the ABSTAIN action flag, not this cut.",
-          "coverage": 0.7032085561497327,
-          "selective_mae_kcal": 103.58844580608366,
-          "n_kept": 263
+          "coverage": 1.0,
+          "selective_mae_kcal": 85.39705178074867,
+          "n_kept": 374
         },
         "secondary_literature": {
           "mape_percent": 41.63820900200941,
@@ -456,31 +456,31 @@
             "target_coverage": 0.1,
             "k": 37.0,
             "coverage": 0.09893048128342247,
-            "risk": 71.98186702702701
+            "risk": 42.12650159459461
           },
           {
             "target_coverage": 0.25,
             "k": 94.0,
             "coverage": 0.25133689839572193,
-            "risk": 116.9122894255319
+            "risk": 54.306687989361684
           },
           {
             "target_coverage": 0.5,
             "k": 187.0,
             "coverage": 0.5,
-            "risk": 132.2641819625668
+            "risk": 61.63134411764704
           },
           {
             "target_coverage": 0.75,
             "k": 280.0,
             "coverage": 0.7486631016042781,
-            "risk": 101.49656359642854
+            "risk": 66.54228967500002
           },
           {
             "target_coverage": 1.0,
             "k": 374.0,
             "coverage": 1.0,
-            "risk": 85.39705178074873
+            "risk": 85.39705178074871
           }
         ],
         "selective_api": "vdr.eval.selective.coverage_and_selective_mae + aurc"
@@ -507,19 +507,19 @@
         "selective_mae_kcal": 55.00519649999999,
         "n_kept": 8,
         "coverage_of_population": 0.02247191011235955,
-        "aurc": 41.11967527471588,
+        "aurc": 13.531051718517054,
         "aurc_lower_is_better": true,
-        "risk_at_full_coverage": 30.708534887640457,
-        "risk_at_min_coverage": 59.133678999999916,
-        "spearman_abstain_score_vs_abs_error": -0.5047121653347151,
-        "spearman_note": "Positive: higher P(ABSTAIN) lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned.",
+        "risk_at_full_coverage": 30.708534887640432,
+        "risk_at_min_coverage": 1.66,
+        "spearman_abstain_score_vs_abs_error": 0.6311895215924588,
+        "spearman_note": "Positive: a higher abstain_score lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned. The score is whatever the caller passed (softmax P(ABSTAIN) or a calibrated score).",
         "secondary_score_threshold": {
           "threshold": 0.5,
           "rule": "keep where abstain_score < 0.5",
           "note": "Fixed conventional cut. Not selected on hold-out or rgb_test. Primary coverage uses the ABSTAIN action flag, not this cut.",
-          "coverage": 0.02247191011235955,
-          "selective_mae_kcal": 55.00519649999999,
-          "n_kept": 8
+          "coverage": 1.0,
+          "selective_mae_kcal": 30.70853488764045,
+          "n_kept": 356
         },
         "secondary_literature": {
           "mape_percent": 13.880979208917406,
@@ -533,31 +533,31 @@
             "target_coverage": 0.1,
             "k": 36.0,
             "coverage": 0.10112359550561797,
-            "risk": 49.963929750000005
+            "risk": 2.163602222222223
           },
           {
             "target_coverage": 0.25,
             "k": 89.0,
             "coverage": 0.25,
-            "risk": 38.529077505617984
+            "risk": 4.790125932584269
           },
           {
             "target_coverage": 0.5,
             "k": 178.0,
             "coverage": 0.5,
-            "risk": 44.24120137078653
+            "risk": 10.197229578651687
           },
           {
             "target_coverage": 0.75,
             "k": 267.0,
             "coverage": 0.75,
-            "risk": 38.53477492509366
+            "risk": 23.587953932584277
           },
           {
             "target_coverage": 1.0,
             "k": 356.0,
             "coverage": 1.0,
-            "risk": 30.708534887640457
+            "risk": 30.708534887640432
           }
         ],
         "selective_api": "vdr.eval.selective.coverage_and_selective_mae + aurc"
@@ -587,19 +587,19 @@
         "selective_mae_kcal": 55.00519649999999,
         "n_kept": 8,
         "coverage_of_population": 0.021052631578947368,
-        "aurc": 51.936799036824844,
+        "aurc": 16.45850377663149,
         "aurc_lower_is_better": true,
-        "risk_at_full_coverage": 37.86497622074468,
-        "risk_at_min_coverage": 59.133678999999916,
-        "spearman_abstain_score_vs_abs_error": -0.5047318607873421,
-        "spearman_note": "Positive: higher P(ABSTAIN) lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned.",
+        "risk_at_full_coverage": 37.86497622074467,
+        "risk_at_min_coverage": 1.66,
+        "spearman_abstain_score_vs_abs_error": 0.6035685273191226,
+        "spearman_note": "Positive: a higher abstain_score lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned. The score is whatever the caller passed (softmax P(ABSTAIN) or a calibrated score).",
         "secondary_score_threshold": {
           "threshold": 0.5,
           "rule": "keep where abstain_score < 0.5",
           "note": "Fixed conventional cut. Not selected on hold-out or rgb_test. Primary coverage uses the ABSTAIN action flag, not this cut.",
-          "coverage": 0.02127659574468085,
-          "selective_mae_kcal": 55.00519649999999,
-          "n_kept": 8
+          "coverage": 1.0,
+          "selective_mae_kcal": 37.86497622074468,
+          "n_kept": 376
         },
         "secondary_literature": {
           "mape_percent": 16.391613984011478,
@@ -613,31 +613,31 @@
             "target_coverage": 0.1,
             "k": 38.0,
             "coverage": 0.10106382978723404,
-            "risk": 62.86136907894736
+            "risk": 2.201833657894737
           },
           {
             "target_coverage": 0.25,
             "k": 94.0,
             "coverage": 0.25,
-            "risk": 50.367646936170225
+            "risk": 5.340119202127657
           },
           {
             "target_coverage": 0.5,
             "k": 188.0,
             "coverage": 0.5,
-            "risk": 55.422113340425526
+            "risk": 14.357625457446803
           },
           {
             "target_coverage": 0.75,
             "k": 282.0,
             "coverage": 0.75,
-            "risk": 47.60382107801419
+            "risk": 27.89380344326241
           },
           {
             "target_coverage": 1.0,
             "k": 376.0,
             "coverage": 1.0,
-            "risk": 37.86497622074468
+            "risk": 37.86497622074467
           }
         ],
         "selective_api": "vdr.eval.selective.coverage_and_selective_mae + aurc"
@@ -696,7 +696,7 @@
           "risk_at_full_coverage": 30.820513737288127,
           "risk_at_min_coverage": 59.133678999999916,
           "spearman_abstain_score_vs_abs_error": 0.010205848971527886,
-          "spearman_note": "Positive: higher P(ABSTAIN) lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned.",
+          "spearman_note": "Positive: a higher abstain_score lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned. The score is whatever the caller passed (softmax P(ABSTAIN) or a calibrated score).",
           "secondary_score_threshold": {
             "threshold": 0.5,
             "rule": "keep where abstain_score < 0.5",
@@ -766,19 +766,19 @@
           "selective_mae_kcal": 31.0862629556213,
           "n_kept": 338,
           "coverage_of_population": 0.9548022598870056,
-          "aurc": 58.68438144738269,
+          "aurc": 13.53255258658724,
           "aurc_lower_is_better": true,
           "risk_at_full_coverage": 30.820513737288117,
-          "risk_at_min_coverage": 182.69799799999998,
-          "spearman_abstain_score_vs_abs_error": 0.12247399999821071,
-          "spearman_note": "Positive: higher P(ABSTAIN) lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned.",
+          "risk_at_min_coverage": 1.66,
+          "spearman_abstain_score_vs_abs_error": 0.6372293358250801,
+          "spearman_note": "Positive: a higher abstain_score lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned. The score is whatever the caller passed (softmax P(ABSTAIN) or a calibrated score).",
           "secondary_score_threshold": {
             "threshold": 0.5,
             "rule": "keep where abstain_score < 0.5",
             "note": "Fixed conventional cut. Not selected on hold-out or rgb_test. Primary coverage uses the ABSTAIN action flag, not this cut.",
-            "coverage": 0.9548022598870056,
-            "selective_mae_kcal": 31.0862629556213,
-            "n_kept": 338
+            "coverage": 1.0,
+            "selective_mae_kcal": 30.820513737288138,
+            "n_kept": 354
           },
           "secondary_literature": {
             "mape_percent": 13.900423740276338,
@@ -792,25 +792,25 @@
               "target_coverage": 0.1,
               "k": 35.0,
               "coverage": 0.09887005649717515,
-              "risk": 101.89153585714283
+              "risk": 2.2131337428571434
             },
             {
               "target_coverage": 0.25,
               "k": 88.0,
               "coverage": 0.24858757062146894,
-              "risk": 49.48276463636362
+              "risk": 4.734900068181818
             },
             {
               "target_coverage": 0.5,
               "k": 177.0,
               "coverage": 0.5,
-              "risk": 34.0336285875706
+              "risk": 10.148408593220339
             },
             {
               "target_coverage": 0.75,
               "k": 266.0,
               "coverage": 0.751412429378531,
-              "risk": 32.58774019172932
+              "risk": 23.624718533834592
             },
             {
               "target_coverage": 1.0,
@@ -843,19 +843,19 @@
           "selective_mae_kcal": 100.90277111788618,
           "n_kept": 246,
           "coverage_of_population": 0.6949152542372882,
-          "aurc": 101.26600030891298,
+          "aurc": 54.59838272915456,
           "aurc_lower_is_better": true,
-          "risk_at_full_coverage": 80.3964298672317,
-          "risk_at_min_coverage": 13.417999000000009,
-          "spearman_abstain_score_vs_abs_error": -0.3065007651567128,
-          "spearman_note": "Positive: higher P(ABSTAIN) lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned.",
+          "risk_at_full_coverage": 80.39642986723167,
+          "risk_at_min_coverage": 1.66,
+          "spearman_abstain_score_vs_abs_error": 0.44555002489927503,
+          "spearman_note": "Positive: a higher abstain_score lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned. The score is whatever the caller passed (softmax P(ABSTAIN) or a calibrated score).",
           "secondary_score_threshold": {
             "threshold": 0.5,
             "rule": "keep where abstain_score < 0.5",
             "note": "Fixed conventional cut. Not selected on hold-out or rgb_test. Primary coverage uses the ABSTAIN action flag, not this cut.",
-            "coverage": 0.7005649717514124,
-            "selective_mae_kcal": 100.92555691935483,
-            "n_kept": 248
+            "coverage": 1.0,
+            "selective_mae_kcal": 80.39642986723163,
+            "n_kept": 354
           },
           "secondary_literature": {
             "mape_percent": 40.34001185812648,
@@ -869,31 +869,31 @@
               "target_coverage": 0.1,
               "k": 35.0,
               "coverage": 0.09887005649717515,
-              "risk": 75.59336748571425
+              "risk": 44.36858742857144
             },
             {
               "target_coverage": 0.25,
               "k": 88.0,
               "coverage": 0.24858757062146894,
-              "risk": 118.73750104545452
+              "risk": 50.65373197727272
             },
             {
               "target_coverage": 0.5,
               "k": 177.0,
               "coverage": 0.5,
-              "risk": 128.6707226045197
+              "risk": 57.74086144067794
             },
             {
               "target_coverage": 0.75,
               "k": 266.0,
               "coverage": 0.751412429378531,
-              "risk": 97.95448366541352
+              "risk": 64.30900539849623
             },
             {
               "target_coverage": 1.0,
               "k": 354.0,
               "coverage": 1.0,
-              "risk": 80.3964298672317
+              "risk": 80.39642986723167
             }
           ],
           "selective_api": "vdr.eval.selective.coverage_and_selective_mae + aurc"
@@ -918,19 +918,19 @@
           "selective_mae_kcal": 55.00519649999999,
           "n_kept": 8,
           "coverage_of_population": 0.022598870056497175,
-          "aurc": 41.312638751333786,
+          "aurc": 13.53255258658724,
           "aurc_lower_is_better": true,
-          "risk_at_full_coverage": 30.820513737288152,
-          "risk_at_min_coverage": 59.133678999999916,
-          "spearman_abstain_score_vs_abs_error": -0.5057799117280021,
-          "spearman_note": "Positive: higher P(ABSTAIN) lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned.",
+          "risk_at_full_coverage": 30.820513737288117,
+          "risk_at_min_coverage": 1.66,
+          "spearman_abstain_score_vs_abs_error": 0.6372293358250801,
+          "spearman_note": "Positive: a higher abstain_score lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned. The score is whatever the caller passed (softmax P(ABSTAIN) or a calibrated score).",
           "secondary_score_threshold": {
             "threshold": 0.5,
             "rule": "keep where abstain_score < 0.5",
             "note": "Fixed conventional cut. Not selected on hold-out or rgb_test. Primary coverage uses the ABSTAIN action flag, not this cut.",
-            "coverage": 0.022598870056497175,
-            "selective_mae_kcal": 55.00519649999999,
-            "n_kept": 8
+            "coverage": 1.0,
+            "selective_mae_kcal": 30.820513737288138,
+            "n_kept": 354
           },
           "secondary_literature": {
             "mape_percent": 13.900423740276338,
@@ -944,31 +944,31 @@
               "target_coverage": 0.1,
               "k": 35.0,
               "coverage": 0.09887005649717515,
-              "risk": 50.40712682857144
+              "risk": 2.2131337428571434
             },
             {
               "target_coverage": 0.25,
               "k": 88.0,
               "coverage": 0.24858757062146894,
-              "risk": 38.01547978409092
+              "risk": 4.734900068181818
             },
             {
               "target_coverage": 0.5,
               "k": 177.0,
               "coverage": 0.5,
-              "risk": 44.7391032542373
+              "risk": 10.148408593220339
             },
             {
               "target_coverage": 0.75,
               "k": 266.0,
               "coverage": 0.751412429378531,
-              "risk": 38.60409153007522
+              "risk": 23.624718533834592
             },
             {
               "target_coverage": 1.0,
               "k": 354.0,
               "coverage": 1.0,
-              "risk": 30.820513737288152
+              "risk": 30.820513737288117
             }
           ],
           "selective_api": "vdr.eval.selective.coverage_and_selective_mae + aurc"
@@ -1004,7 +1004,7 @@
           "risk_at_full_coverage": 38.00923663636362,
           "risk_at_min_coverage": 59.133678999999916,
           "spearman_abstain_score_vs_abs_error": 0.04438348589319921,
-          "spearman_note": "Positive: higher P(ABSTAIN) lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned.",
+          "spearman_note": "Positive: a higher abstain_score lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned. The score is whatever the caller passed (softmax P(ABSTAIN) or a calibrated score).",
           "secondary_score_threshold": {
             "threshold": 0.5,
             "rule": "keep where abstain_score < 0.5",
@@ -1074,19 +1074,19 @@
           "selective_mae_kcal": 35.84376356358382,
           "n_kept": 346,
           "coverage_of_population": 0.9251336898395722,
-          "aurc": 58.33633708181614,
+          "aurc": 16.477469861883627,
           "aurc_lower_is_better": true,
-          "risk_at_full_coverage": 38.00923663636364,
-          "risk_at_min_coverage": 182.69799799999998,
-          "spearman_abstain_score_vs_abs_error": 0.17326128939612076,
-          "spearman_note": "Positive: higher P(ABSTAIN) lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned.",
+          "risk_at_full_coverage": 38.009236636363624,
+          "risk_at_min_coverage": 1.66,
+          "spearman_abstain_score_vs_abs_error": 0.6089896486161414,
+          "spearman_note": "Positive: a higher abstain_score lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned. The score is whatever the caller passed (softmax P(ABSTAIN) or a calibrated score).",
           "secondary_score_threshold": {
             "threshold": 0.5,
             "rule": "keep where abstain_score < 0.5",
             "note": "Fixed conventional cut. Not selected on hold-out or rgb_test. Primary coverage uses the ABSTAIN action flag, not this cut.",
-            "coverage": 0.9251336898395722,
-            "selective_mae_kcal": 35.84376356358382,
-            "n_kept": 346
+            "coverage": 1.0,
+            "selective_mae_kcal": 38.00923663636364,
+            "n_kept": 374
           },
           "secondary_literature": {
             "mape_percent": 16.423444555271505,
@@ -1100,31 +1100,31 @@
               "target_coverage": 0.1,
               "k": 37.0,
               "coverage": 0.09893048128342247,
-              "risk": 96.78847962162159
+              "risk": 2.249721081081081
             },
             {
               "target_coverage": 0.25,
               "k": 94.0,
               "coverage": 0.25133689839572193,
-              "risk": 46.40816258510637
+              "risk": 5.340119202127657
             },
             {
               "target_coverage": 0.5,
               "k": 187.0,
               "coverage": 0.5,
-              "risk": 34.519390780748644
+              "risk": 14.333663326203201
             },
             {
               "target_coverage": 0.75,
               "k": 280.0,
               "coverage": 0.7486631016042781,
-              "risk": 33.64425419642858
+              "risk": 27.80909709642857
             },
             {
               "target_coverage": 1.0,
               "k": 374.0,
               "coverage": 1.0,
-              "risk": 38.00923663636364
+              "risk": 38.009236636363624
             }
           ],
           "selective_api": "vdr.eval.selective.coverage_and_selective_mae + aurc"
@@ -1151,19 +1151,19 @@
           "selective_mae_kcal": 103.58737481226053,
           "n_kept": 261,
           "coverage_of_population": 0.6978609625668449,
-          "aurc": 103.75223401557548,
+          "aurc": 57.65175334310714,
           "aurc_lower_is_better": true,
-          "risk_at_full_coverage": 85.39705178074873,
-          "risk_at_min_coverage": 0.31121799999999666,
-          "spearman_abstain_score_vs_abs_error": -0.2783513260055942,
-          "spearman_note": "Positive: higher P(ABSTAIN) lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned.",
+          "risk_at_full_coverage": 85.39705178074871,
+          "risk_at_min_coverage": 1.66,
+          "spearman_abstain_score_vs_abs_error": 0.4360779351103089,
+          "spearman_note": "Positive: a higher abstain_score lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned. The score is whatever the caller passed (softmax P(ABSTAIN) or a calibrated score).",
           "secondary_score_threshold": {
             "threshold": 0.5,
             "rule": "keep where abstain_score < 0.5",
             "note": "Fixed conventional cut. Not selected on hold-out or rgb_test. Primary coverage uses the ABSTAIN action flag, not this cut.",
-            "coverage": 0.7032085561497327,
-            "selective_mae_kcal": 103.58844580608366,
-            "n_kept": 263
+            "coverage": 1.0,
+            "selective_mae_kcal": 85.39705178074867,
+            "n_kept": 374
           },
           "secondary_literature": {
             "mape_percent": 41.63820900200941,
@@ -1177,31 +1177,31 @@
               "target_coverage": 0.1,
               "k": 37.0,
               "coverage": 0.09893048128342247,
-              "risk": 71.98186702702701
+              "risk": 42.12650159459461
             },
             {
               "target_coverage": 0.25,
               "k": 94.0,
               "coverage": 0.25133689839572193,
-              "risk": 116.9122894255319
+              "risk": 54.306687989361684
             },
             {
               "target_coverage": 0.5,
               "k": 187.0,
               "coverage": 0.5,
-              "risk": 132.2641819625668
+              "risk": 61.63134411764704
             },
             {
               "target_coverage": 0.75,
               "k": 280.0,
               "coverage": 0.7486631016042781,
-              "risk": 101.49656359642854
+              "risk": 66.54228967500002
             },
             {
               "target_coverage": 1.0,
               "k": 374.0,
               "coverage": 1.0,
-              "risk": 85.39705178074873
+              "risk": 85.39705178074871
             }
           ],
           "selective_api": "vdr.eval.selective.coverage_and_selective_mae + aurc"
@@ -1226,19 +1226,19 @@
           "selective_mae_kcal": 55.00519649999999,
           "n_kept": 8,
           "coverage_of_population": 0.0213903743315508,
-          "aurc": 52.172890257640816,
+          "aurc": 16.477469861883627,
           "aurc_lower_is_better": true,
-          "risk_at_full_coverage": 38.009236636363646,
-          "risk_at_min_coverage": 59.133678999999916,
-          "spearman_abstain_score_vs_abs_error": -0.5056897620109622,
-          "spearman_note": "Positive: higher P(ABSTAIN) lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned.",
+          "risk_at_full_coverage": 38.009236636363624,
+          "risk_at_min_coverage": 1.66,
+          "spearman_abstain_score_vs_abs_error": 0.6089896486161414,
+          "spearman_note": "Positive: a higher abstain_score lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned. The score is whatever the caller passed (softmax P(ABSTAIN) or a calibrated score).",
           "secondary_score_threshold": {
             "threshold": 0.5,
             "rule": "keep where abstain_score < 0.5",
             "note": "Fixed conventional cut. Not selected on hold-out or rgb_test. Primary coverage uses the ABSTAIN action flag, not this cut.",
-            "coverage": 0.0213903743315508,
-            "selective_mae_kcal": 55.00519649999999,
-            "n_kept": 8
+            "coverage": 1.0,
+            "selective_mae_kcal": 38.00923663636364,
+            "n_kept": 374
           },
           "secondary_literature": {
             "mape_percent": 16.423444555271505,
@@ -1252,31 +1252,31 @@
               "target_coverage": 0.1,
               "k": 37.0,
               "coverage": 0.09893048128342247,
-              "risk": 63.62918899999999
+              "risk": 2.249721081081081
             },
             {
               "target_coverage": 0.25,
               "k": 94.0,
               "coverage": 0.25133689839572193,
-              "risk": 50.367646936170225
+              "risk": 5.340119202127657
             },
             {
               "target_coverage": 0.5,
               "k": 187.0,
               "coverage": 0.5,
-              "risk": 55.6940703262032
+              "risk": 14.333663326203201
             },
             {
               "target_coverage": 0.75,
               "k": 280.0,
               "coverage": 0.7486631016042781,
-              "risk": 47.86607495357145
+              "risk": 27.80909709642857
             },
             {
               "target_coverage": 1.0,
               "k": 374.0,
               "coverage": 1.0,
-              "risk": 38.009236636363646
+              "risk": 38.009236636363624
             }
           ],
           "selective_api": "vdr.eval.selective.coverage_and_selective_mae + aurc"
@@ -1302,13 +1302,109 @@
     "rl": false,
     "model_fit_in_this_module": false
   },
+  "abstain_score_sources": {
+    "ours_mask_none": "committed_kcal_over_energy_cap: clip(committed nutri_dish.energy_kcal / 2500, 0, 1). Not softmax P(ABSTAIN). The action is still the saved checkpoint's argmax.",
+    "ours_mask_zero": "Same committed-kcal score as mask none. The feature mask changes actions, and the score changes only when that moves the decision step.",
+    "ours_mask_shuffle": "Same committed-kcal score as mask none. The feature mask changes actions, and the score changes only when that moves the decision step.",
+    "b5_open_loop": "softmax P(ABSTAIN) from the open-loop PolicyMLP. Not calibrated."
+  },
+  "softmax_p_abstain_reference": {
+    "ours_mask_none": {
+      "n_population": 356,
+      "n_scored": 356,
+      "n_kept": 339,
+      "n_early_decision": 0,
+      "n_policy_abstain": 17,
+      "full_set_mae_kcal": 30.70853488764045,
+      "coverage": 0.952247191011236,
+      "selective_mae_kcal": 31.003229769911506,
+      "aurc": 58.37261331639449,
+      "spearman_abstain_score_vs_abs_error": 0.12863461027553483
+    },
+    "b5_open_loop": {
+      "n_population": 356,
+      "n_scored": 356,
+      "n_kept": 356,
+      "n_early_decision": 0,
+      "n_policy_abstain": 0,
+      "full_set_mae_kcal": 30.70853488764045,
+      "coverage": 1.0,
+      "selective_mae_kcal": 30.70853488764045,
+      "aurc": 32.14744408424222,
+      "spearman_abstain_score_vs_abs_error": 0.009498374985651701
+    },
+    "ours_mask_zero": {
+      "n_population": 356,
+      "n_scored": 356,
+      "n_kept": 8,
+      "n_early_decision": 0,
+      "n_policy_abstain": 348,
+      "full_set_mae_kcal": 30.70853488764045,
+      "coverage": 0.02247191011235955,
+      "selective_mae_kcal": 55.00519649999999,
+      "aurc": 41.11967527471588,
+      "spearman_abstain_score_vs_abs_error": -0.5047121653347151
+    },
+    "ours_mask_shuffle": {
+      "n_population": 356,
+      "n_scored": 354,
+      "n_kept": 246,
+      "n_early_decision": 122,
+      "n_policy_abstain": 108,
+      "full_set_mae_kcal": 80.39642986723163,
+      "coverage": 0.6949152542372882,
+      "selective_mae_kcal": 100.90277111788618,
+      "aurc": 101.26600030891298,
+      "spearman_abstain_score_vs_abs_error": -0.3065007651567128
+    }
+  },
+  "abstain_calibration": {
+    "artifact": "results/closed_loop/abstain_calibration.json",
+    "sha256_prefix": "b033825f2dbb73c0",
+    "rule_id": "committed_kcal_over_energy_cap",
+    "winner": "committed_kcal_over_energy_cap",
+    "energy_cap_kcal": 2500.0,
+    "fit_internal_val": {
+      "modulus": 5,
+      "val_when": "int(digits of dish_id) % 5 == 0",
+      "n_train": 2748,
+      "n_val": 695,
+      "val_mae": 24.85085305323741,
+      "selection_metric": "validation AURC, lower better; tie break is the candidate name",
+      "candidates": {
+        "committed_kcal_over_energy_cap": {
+          "n": 695.0,
+          "aurc": 10.769875084388456,
+          "mae": 24.85085305323741
+        },
+        "softmax_p_abstain": {
+          "n": 695.0,
+          "aurc": 28.38044777149357,
+          "mae": 24.85085305323741
+        },
+        "obs_nutri_energy_norm": {
+          "n": 695.0,
+          "aurc": 16.87652860628047,
+          "mae": 24.85085305323741
+        },
+        "stop_gap_energy": {
+          "n": 695.0,
+          "aurc": 12.988426580226992,
+          "mae": 24.85085305323741
+        }
+      }
+    },
+    "uses_official_holdout": false,
+    "uses_test_gt": false,
+    "note": "Fit-internal validation locked the score before this hold-out table. This process does not refit the score."
+  },
   "method_order": [
     "ours_mask_none",
     "b5_open_loop",
     "ours_mask_zero",
     "ours_mask_shuffle"
   ],
-  "elapsed_seconds": 11.02,
+  "elapsed_seconds": 12.02,
   "owner": "营养论文代码编写",
   "status_file": "docs/STATUS.md was not modified. STATUS ownership stays 方案执行.",
   "scope": {
@@ -1317,8 +1413,10 @@
     "rgb_test": "Not run. A full-set rgb_test number needs a VLM rollout that writes this IR shape. Pass --trajectories with --expect-pool any --allow-test-split later. That path does not search a threshold and does not read results/n5k_*. This run did not pass --allow-test-split.",
     "b0_b1": "B0 energy MAE 97.03 is the rgb_test Direct-VLM anchor (n=507) and is not a row. B1 110.72 is not faithful DietAI24 and is not a row.",
     "fixrate_and_accuracy": "FixRate and overall action accuracy are not this table. Action hits below are a weight-loader check.",
+    "fixrate": "Not re-run. predict_actions is still the #24 checkpoint results/closed_loop/policy_state_mlp.npz, so the #26 FixRate table is unchanged. The new score is not an action.",
     "b5": "Open-loop 31-d PolicyMLP replayed in memory on the fit pool with the module constants. Hold-out action hits 2688/2771. No checkpoint was written and no constant was changed.",
-    "closed_loop_weights": "Loaded results/closed_loop/policy_state_mlp.npz. PolicyStateMLP.fit was not called.",
+    "closed_loop_weights": "Loaded results/closed_loop/policy_state_mlp.npz. PolicyStateMLP.fit was not called. The STOP/ABSTAIN action head was not retrained.",
+    "abstain_score": "Ours uses committed_kcal_over_energy_cap from results/closed_loop/abstain_calibration.json, locked on a fit-internal slice (dish digits % 5 == 0) by validation AURC. Official hold-out labels were not used to choose it. B5 remains softmax P(ABSTAIN). Secondary cut 0.5 on the Ours score means committed kcal < 1250; that cut was not searched. Primary coverage is still the ABSTAIN action flag.",
     "mask": "mask-zero nulls the observation block. mask-shuffle permutes it with np.random.default_rng(42 + row_index), row_index in sorted dish_id then step_i. Same rule as scripts/closed_loop_bc_train.py --shuffle-seed 42. B5 has no observation block, so it is not masked."
   },
   "loader_sanity": {
@@ -1351,6 +1449,10 @@
     "allow_test_split": false,
     "shuffle_seed": 42,
     "secondary_abstain_threshold": 0.5,
+    "abstain_calibration": "results/closed_loop/abstain_calibration.json",
+    "abstain_calibration_sha256_prefix": "b033825f2dbb73c0",
+    "abstain_score_rule": "committed_kcal_over_energy_cap",
+    "policy_checkpoint": "results/closed_loop/policy_state_mlp.npz unchanged from the #24/#28 action head",
     "frozen_sha256_prefix": {
       "fixrate_holdout.json": "333e108cacbb175f",
       "metrics_holdout.json": "cbb9340ff5e0bf00",
