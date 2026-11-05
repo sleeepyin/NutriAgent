@@ -1,0 +1,72 @@
+Full-set energy MAE / Coverage / Selective MAE / AURC
+definition: on_policy_vlm_horizon_force_answer
+headline population: primary_logged_grounded_stop
+On-policy trajectory ends in STOP with s in {pass, corrected} and a finite terminal nutri_dish.energy_kcal. This is not the weak-step teacher audit set and not the #28/#31 hold-out. Policy ABSTAIN terminals are outside this population.
+
+Primary — on-policy terminal STOP with s in {pass, corrected} (ABSTAIN terminals are outside this population):
+ours_mask_none: n_scored=488/488 full_MAE=96.2769 coverage=1.0000 (488/488) selective_MAE=96.2769 AURC=47.1737 spearman=0.6722 early=0
+b5_open_loop: n_scored=488/488 full_MAE=96.2769 coverage=1.0000 (488/488) selective_MAE=96.2769 AURC=81.5857 spearman=0.3030 early=0
+ours_mask_zero: n_scored=488/488 full_MAE=96.2769 coverage=0.0000 (0/488) selective_MAE=n/a AURC=47.1737 spearman=0.6722 early=0
+ours_mask_shuffle: n_scored=487/488 full_MAE=115.4178 coverage=0.6448 (314/487) selective_MAE=129.1560 AURC=71.5459 spearman=0.5561 early=170
+force-answer kcal identical: b5_open_loop = ours_mask_none = ours_mask_zero
+  ours_mask_shuffle unscored: dish_1568305225
+paired common scored n=487 (dishes every method can score):
+  ours_mask_none: n_scored=487/487 full_MAE=96.2443 coverage=1.0000 (487/487) selective_MAE=96.2443 AURC=47.1187 spearman=0.6721 early=0
+  b5_open_loop: n_scored=487/487 full_MAE=96.2443 coverage=1.0000 (487/487) selective_MAE=96.2443 AURC=81.5732 spearman=0.3026 early=0
+  ours_mask_zero: n_scored=487/487 full_MAE=96.2443 coverage=0.0000 (0/487) selective_MAE=n/a AURC=47.1187 spearman=0.6721 early=0
+  ours_mask_shuffle: n_scored=487/487 full_MAE=115.4178 coverage=0.6448 (314/487) selective_MAE=129.1560 AURC=71.5459 spearman=0.5561 early=169
+
+Sensitivity — any finite horizon energy, including logged-abstain partial totals:
+Every on-policy dish with a finite force-answer energy, including an ABSTAIN terminal whose earlier steps wrote a partial total. Dishes with no finite total are unscored and are not imputed as zero.
+ours_mask_none: n_scored=505/507 full_MAE=100.4110 coverage=0.9842 (497/505) selective_MAE=97.7964 AURC=48.8918 spearman=0.6711 early=0
+b5_open_loop: n_scored=505/507 full_MAE=100.4110 coverage=1.0000 (505/505) selective_MAE=100.4110 AURC=89.8155 spearman=0.2737 early=0
+ours_mask_zero: n_scored=505/507 full_MAE=100.4110 coverage=0.0178 (9/505) selective_MAE=180.1862 AURC=48.8918 spearman=0.6711 early=0
+ours_mask_shuffle: n_scored=504/507 full_MAE=118.0529 coverage=0.6488 (327/504) selective_MAE=131.5379 AURC=74.8347 spearman=0.5459 early=176
+force-answer kcal identical: b5_open_loop = ours_mask_none = ours_mask_zero
+
+on-policy rollout terminal audit (not the weak-step teacher): n=488 MAE=96.2769 summary_round=96.2769
+
+Secondary score cut abstain_score < 0.5 is in the json under secondary_score_threshold. Primary coverage is the ABSTAIN action flag.
+AURC is kcal (same units as MAE), trapezoid from vdr.eval.selective, lower better.
+Spearman > 0 means a higher abstain_score lines up with larger absolute error.
+
+On-policy VLM horizon scored with the same force-answer reader as the offline script. States were produced by rolling the saved closed-loop policy on rgb_test overhead images: the policy chose each action, local Qwen3.8-27B-VL wrote the component hypotheses, and FNDDS retrieve, the existing portion grid, and nutrition lookup wrote the tool IR. Nutrition5K ingredient rows and cafe labels were not used to choose actions, codes, or grams. For ours_mask_none, re-predicted actions match the executed actions, so the decision step is that rollout's STOP or ABSTAIN. B5 and the observation masks are counterfactual predictions on this trace, not separate rollouts. This is not the #28/#31 offline logged hold-out table (offline_logged_horizon_force_answer, rgb_train hold-out, n=356). No threshold was fit on rgb_test. This VLM is the closed-loop backbone, not faithful DietAI24 or FoodAgent.
+
+Abstain score source:
+  ours_mask_none: committed_kcal_over_energy_cap: clip(committed nutri_dish.energy_kcal / 2500, 0, 1). Not softmax P(ABSTAIN). The action is still the saved checkpoint's argmax.
+  ours_mask_zero: Same committed-kcal score as mask none. The feature mask changes actions, and the score changes only when that moves the decision step.
+  ours_mask_shuffle: Same committed-kcal score as mask none. The feature mask changes actions, and the score changes only when that moves the decision step.
+  b5_open_loop: softmax P(ABSTAIN) from the open-loop PolicyMLP. Not calibrated.
+
+Softmax P(ABSTAIN) reference (not the headline; same actions, #28 score):
+  ours_mask_none: n_scored=488/488 full_MAE=96.2769 coverage=1.0000 (488/488) selective_MAE=96.2769 AURC=114.5890 spearman=-0.1396 early=0
+  b5_open_loop: n_scored=488/488 full_MAE=96.2769 coverage=1.0000 (488/488) selective_MAE=96.2769 AURC=81.5857 spearman=0.3030 early=0
+  ours_mask_zero: n_scored=488/488 full_MAE=96.2769 coverage=0.0000 (0/488) selective_MAE=n/a AURC=116.4502 spearman=-0.3644 early=0
+  ours_mask_shuffle: n_scored=487/488 full_MAE=115.4178 coverage=0.6448 (314/487) selective_MAE=129.1560 AURC=130.9249 spearman=-0.1553 early=170
+
+Scope:
+  split: trajectories=results/closed_loop/on_policy_rgb_test.jsonl expect_pool=any allow_test_split=True
+  labels: Nutrition5k cafe dish energy_kcal from dish_metadata_cafe1/cafe2 via vdr.data.n5k.load_labels. Same labels as the weak-step train-energy audit. Labels are used only to score. They are not features and no threshold is fit on them.
+  rgb_test: rgb_test dishes that have an overhead rgb.png. Official rgb_test ids without an image were not imputed. Cafe labels are used only to score. No threshold was fit.
+  on_policy: Trajectories are an on-policy rollout of results/closed_loop/policy_state_mlp.npz. ours_mask_none re-prediction matches the executed action. B5 and obs masks are counterfactual reads of this trace, not separate VLM rollouts.
+  offline_holdout: results/closed_loop/mae_aurc_holdout.json is the #28/#31 offline logged hold-out (definition offline_logged_horizon_force_answer, n=356, train labels). Those numbers are not rows of this on-policy rgb_test table.
+  vlm: Local Qwen3.8-27B-VL via llama.cpp on 127.0.0.1:18080 (GPU 0): Qwen3.8-27B-UD-Q5_K_M.gguf + mmproj-BF16.gguf, alias qwen3.8-27b. Closed-loop perception only. Not faithful DietAI24 (B1) or FoodAgent (B2). Historical B0 97.03 is an anchor, not a row of this table. B1 110.72 is not faithful.
+  b0_b1: B0 energy MAE 97.03 is the rgb_test Direct-VLM anchor (n=507) and is not a row. B1 110.72 is not faithful DietAI24 and is not a row.
+  fixrate_and_accuracy: FixRate and overall action accuracy are not this table. Action hits below are a weight-loader check.
+  b5: Open-loop 31-d PolicyMLP replayed in memory on the fit pool with the module constants. This process's train-hold-out action hits were 2701/2771. The published #28 replay was 2688/2771. The gap is numeric replay on train labels, not a search on rgb_test. No checkpoint was written and no constant was changed. This B5 row is a counterfactual read of the on-policy trace, not its own rollout.
+  closed_loop_weights: Loaded results/closed_loop/policy_state_mlp.npz. PolicyStateMLP.fit was not called. The STOP/ABSTAIN action head was not retrained.
+  abstain_score: Ours uses committed_kcal_over_energy_cap from results/closed_loop/abstain_calibration.json, locked on a fit-internal slice (dish digits % 5 == 0) by validation AURC. Official hold-out labels were not used to choose it. B5 remains softmax P(ABSTAIN). Secondary cut 0.5 on the Ours score means committed kcal < 1250; that cut was not searched. Primary coverage is still the ABSTAIN action flag.
+  mask: mask-zero nulls the observation block. mask-shuffle permutes it with np.random.default_rng(42 + row_index), row_index in sorted dish_id then step_i. Same rule as scripts/closed_loop_bc_train.py --shuffle-seed 42. B5 has no observation block, so it is not masked.
+  fixrate: Not re-run. predict_actions is still the #24 checkpoint results/closed_loop/policy_state_mlp.npz, so the #26 FixRate table is unchanged. The new score is not an action.
+
+Loader sanity (action agreement is not method proof):
+  ours_mask_none_hits: 3822
+  ours_mask_zero_hits: 2663
+  ours_mask_shuffle_hits: 2491
+  saved_metrics_tp_sum: {'none': 2662, 'zero': 1950, 'shuffle': 1831}
+  canonical_holdout_matches_saved_metrics: None
+  b5_published_hold_hits: 2688
+  b5_hits_on_scored_rows: 3595
+  n_rows: 3822
+  n_dishes: 507
+  note: Action agreement checks the loader. It is not Full-set MAE / AURC proof.

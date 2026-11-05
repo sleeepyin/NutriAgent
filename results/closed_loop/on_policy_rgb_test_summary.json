@@ -1,0 +1,73 @@
+{
+  "protocol": "on_policy_vlm_closed_loop_v1",
+  "split": "rgb_test",
+  "full_pool": true,
+  "complete": true,
+  "n_official_rgb_test": 709,
+  "n_with_overhead_rgb": 507,
+  "n_attempted_this_process": 507,
+  "n_dishes_in_jsonl": 507,
+  "n_steps": 3822,
+  "n_failures": 0,
+  "failures": [],
+  "action_counts": {
+    "ABSTAIN": 9,
+    "CORRECT_CODE": 326,
+    "RETRIEVE": 1530,
+    "RE_PORTION": 1469,
+    "STOP": 488
+  },
+  "terminal_action_counts": {
+    "ABSTAIN": 9,
+    "RETRIEVE": 10,
+    "STOP": 488
+  },
+  "trajectories": "results/closed_loop/on_policy_rgb_test.jsonl",
+  "trajectories_sha256": "dc24231294d88360de7606f27548253e57aff88caebe6bc3863c9d9168dc54e5",
+  "vlm": {
+    "base_url": "http://127.0.0.1:18080",
+    "model_alias": "qwen3.8-27b",
+    "weights_file": "Qwen3.8-27B-UD-Q5_K_M.gguf",
+    "mmproj_file": "mmproj-BF16.gguf",
+    "serving": "llama.cpp llama-server b11581 OpenAI /v1/chat/completions GPU0:18080",
+    "health": {
+      "status": "ok"
+    },
+    "model_ids": [
+      "qwen3.8-27b"
+    ]
+  },
+  "policy_weights": "results/closed_loop/policy_state_mlp.npz",
+  "policy_weights_sha256_prefix": "f0ac0b41f99cbd72",
+  "uses_test_gt": false,
+  "rl": false,
+  "volume_tool": false,
+  "not_faithful_b1_or_b2": true,
+  "b5_and_masks": "Not separate rollouts. closed_loop_mae_aurc.py --on-policy-vlm re-reads this trace. Mask-none matches the executed actions. B5 and observation masks are counterfactual predictions on these states.",
+  "offline_holdout_not_this_file": "results/closed_loop/mae_aurc_holdout.json is the #28/#31 offline logged hold-out table. It is not this rollout.",
+  "labels": "This file does not contain cafe labels and does not report MAE.",
+  "elapsed_seconds": 2171.78,
+  "frozen_sha256_prefix": {
+    "abstain_calibration.json": "b033825f2dbb73c0",
+    "fixrate_holdout.json": "333e108cacbb175f",
+    "mae_aurc_holdout.json": "0a38d0d13d826f24",
+    "metrics_holdout.json": "cbb9340ff5e0bf00",
+    "n5k_rgb_test_overhead_b0_b1.json": "1585be1951b46f71",
+    "n5k_rgb_test_overhead_b0_b1.jsonl": "a4dfdd82e3a595f4",
+    "n5k_subset_b0_b1.json": "1585be1951b46f71",
+    "n5k_subset_b0_b1.jsonl": "a4dfdd82e3a595f4",
+    "n5k_subset_b0_b1_n50_seed42.json": "8e3400bcbfcd56cd",
+    "n5k_subset_b0_b1_n50_seed42.jsonl": "013c899da4724ef2",
+    "policy_state_mlp.npz": "f0ac0b41f99cbd72",
+    "report_fixrate.txt": "ba87e58d87c94a50",
+    "report_holdout.txt": "dab9fe91b8c5ad78",
+    "report_mae_aurc.txt": "f7d0eb9a743679a4",
+    "rgb_train_fit_all.jsonl": "ed47f9239bfecb3c",
+    "rgb_train_fit_all.summary.json": "d11e6a3e547b38d0",
+    "rgb_train_holdout_all.jsonl": "6055ccbbbf0d432e",
+    "rgb_train_holdout_all.summary.json": "c32db76caacf010b",
+    "train_meta.json": "c87f13089b4188d1"
+  },
+  "status_file": "docs/STATUS.md was not modified.",
+  "owner": "营养论文代码编写"
+}
