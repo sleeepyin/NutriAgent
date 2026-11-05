@@ -3,7 +3,7 @@
 把膳食图像理解做成**可验证中间状态的多模态工具调用 Agent**测试床。
 
 输出 \(y=(n, G, s, \tau)\)：营养向量 + 证据图 + 核验状态（`pass` / `corrected` / `abstain`）+ 纠错轨迹。  
-主方法：**Evidence-Aware Closed-Loop**（state-aware 控制器 \(\pi(a_t \mid h_t, o_{t-1}, b_t)\)）。规则仅先验/护栏。开环 31 维 BC 只是消融 **B5**。旧 Ours-BC 已停。暂不上 RL。额度或方案允许之前不训练闭环。  
+主方法：**Evidence-Guided Active Multimodal Nutrition Estimation** — **Error-Aware Active Specialist Selection**（Mass / 检索专家 + 监督 \(Q_\phi\) 选工具；**先**审计 traces 门禁，**再**训 Mass）。State-aware 闭环与开环 31 维 BC 为 **Ours-old / B5 对照**。暂不上 RL。  
 **主投 ACM Multimedia（CCF-A）**；备选 AAAI/IJCAI。算力假设 **2×4090D 24GB**。
 
 > **方案真源（请先读）**：[PLAN.md](PLAN.md)
