@@ -19,6 +19,10 @@ from vdr.controller.policy_bc import BC_ACTIONS  # noqa: E402
 from vdr.controller.policy_mlp import PolicyMLP  # noqa: E402
 from vdr.controller.policy_state_mlp import PolicyStateMLP  # noqa: E402
 from vdr.controller.state_features import STATE_FEATURE_DIM  # noqa: E402
+from vdr.eval.abstain_calibration import (  # noqa: E402
+    SCORE_RULE_ID,
+    run_self_check as run_calibration_self_check,
+)
 from vdr.eval.energy_selective import (  # noqa: E402
     SECONDARY_ABSTAIN_THRESHOLD,
     run_self_check,
@@ -44,6 +48,7 @@ def _proba_matches_actions(policy: PolicyMLP | PolicyStateMLP, matrix: np.ndarra
 
 def main() -> int:
     run_self_check()
+    run_calibration_self_check()
     rng = np.random.default_rng(0)
     labels = np.array(["RETRIEVE"] * 40 + ["ABSTAIN"] * 8, dtype=object)
     b5 = PolicyMLP()
@@ -57,6 +62,7 @@ def main() -> int:
     print(
         "closed_loop_mae_aurc_smoke ok "
         f"secondary_threshold={SECONDARY_ABSTAIN_THRESHOLD} "
+        f"abstain_score={SCORE_RULE_ID} "
         f"B5={FEATURE_DIM} state={STATE_FEATURE_DIM}"
     )
     return 0

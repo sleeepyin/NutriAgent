@@ -20,10 +20,12 @@ caller. This module does not open a metadata file and does not read rgb_test.
 Full-set MAE is the mean error on the scored dishes, including dishes whose
 decision action is ``ABSTAIN``. Coverage and Selective MAE use
 ``coverage_and_selective_mae`` with that abstain flag (keep the complement).
-AURC uses ``aurc``. ``abstain_score`` is the caller-supplied P(ABSTAIN) at
-the decision step. Higher score is lower confidence. No threshold is fit
-here. A fixed secondary cut at 0.5 is reported beside the flag rule and is
-not the primary coverage.
+AURC uses ``aurc``. ``abstain_score`` is caller-supplied and must lie in
+``[0, 1]``. Higher score is lower confidence. The #28 table passed softmax
+``P(ABSTAIN)``. A later run may pass a calibrated score from
+``vdr.eval.abstain_calibration``; this module does not choose which.
+No threshold is fit here. A fixed secondary cut at 0.5 is reported beside
+the flag rule and is not the primary coverage.
 
 Primary population: logged terminal action ``STOP`` with status ``pass`` or
 ``corrected`` and a finite terminal ``nutri_dish`` energy. Policy abstentions
@@ -62,8 +64,9 @@ DEFINITION = (
     "Full-set MAE averages that error on scored dishes and keeps policy "
     "ABSTAIN decisions in the average. Coverage and Selective MAE keep the "
     "dishes whose decision action is not ABSTAIN (vdr.eval.selective, flag "
-    "rule). AURC uses P(ABSTAIN) at the decision step as abstain_score "
-    "(higher means less confident). Ties keep sorted dish_id order. "
+    "rule). AURC uses the caller-supplied abstain_score at the decision step "
+    "(higher means less confident). The score may be softmax P(ABSTAIN) or a "
+    "calibrated score recorded by the caller. Ties keep sorted dish_id order. "
     "The primary population is a logged STOP with status pass or corrected "
     "and a finite terminal energy. A sensitivity population also scores "
     "logged ABSTAIN trajectories when an earlier step has a finite total. "
@@ -399,8 +402,9 @@ def summarize_readings(readings: Sequence[DishReading], *, population: str) -> d
         "risk_at_min_coverage": risk_min,
         "spearman_abstain_score_vs_abs_error": spearman,
         "spearman_note": (
-            "Positive: higher P(ABSTAIN) lines up with larger absolute error, "
-            "which is the ranking AURC rewards. Negative: the score is anti-aligned."
+            "Positive: a higher abstain_score lines up with larger absolute error, "
+            "which is the ranking AURC rewards. Negative: the score is anti-aligned. "
+            "The score is whatever the caller passed (softmax P(ABSTAIN) or a calibrated score)."
         ),
         "secondary_score_threshold": {
             "threshold": SECONDARY_ABSTAIN_THRESHOLD,
@@ -637,7 +641,8 @@ def _method_line(name: str, block: Mapping[str, Any]) -> str:
         f"coverage={_fmt(block['coverage'])} ({block['n_kept']}/{block['n_scored']}) "
         f"selective_MAE={_fmt(block['selective_mae_kcal'])} "
         f"AURC={_fmt(block['aurc'])} "
-        f"spearman={_fmt(block['spearman_abstain_score_vs_abs_error'])}"
+        f"spearman={_fmt(block['spearman_abstain_score_vs_abs_error'])} "
+        f"early={block['n_early_decision']}"
     )
 
 
@@ -701,11 +706,28 @@ def format_energy_report(payload: Mapping[str, Any]) -> str:
                 "Primary coverage is the ABSTAIN action flag."
             ),
             "AURC is kcal (same units as MAE), trapezoid from vdr.eval.selective, lower better.",
-            "Spearman > 0 means higher P(ABSTAIN) lines up with larger absolute error.",
+            "Spearman > 0 means a higher abstain_score lines up with larger absolute error.",
             "",
             DEFINITION,
         ]
     )
+    sources = payload.get("abstain_score_sources")
+    if isinstance(sources, Mapping):
+        lines.extend(["", "Abstain score source:"])
+        for key, text in sources.items():
+            lines.append(f"  {key}: {text}")
+    reference = payload.get("softmax_p_abstain_reference")
+    if isinstance(reference, Mapping):
+        lines.extend(
+            [
+                "",
+                "Softmax P(ABSTAIN) reference (not the headline; same actions, #28 score):",
+            ]
+        )
+        for name in order:
+            block = reference.get(name)
+            if isinstance(block, Mapping):
+                lines.append("  " + _method_line(name, block))
     scope = payload.get("scope")
     if isinstance(scope, Mapping):
         lines.extend(["", "Scope:"])
@@ -717,7 +739,9 @@ def format_energy_report(payload: Mapping[str, Any]) -> str:
             "fixrate_and_accuracy",
             "b5",
             "closed_loop_weights",
+            "abstain_score",
             "mask",
+            "fixrate",
         ):
             if key in scope:
                 lines.append(f"  {key}: {scope[key]}")
