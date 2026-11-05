@@ -2,7 +2,7 @@
 
 Offline scaffolding for **Verified Dietary Reasoning**. Truth sources: [`PLAN.md`](../PLAN.md) and [`docs/STATUS.md`](STATUS.md) after `#17` / `7ad3cfb`.
 
-**Closed-loop BC train landed (2026-11-04).** Fit/hold-out weak steps via `scripts/closed_loop_bc_train.py`; metrics under `results/closed_loop/`. Still no RL. Frozen `results/n5k_*` and `results/weak_steps/*.jsonl` stay as they are. **Next execution priority** (see [`docs/STATUS.md`](STATUS.md)): hold-out FixRate−WorsenRate + Tool cost under budget K, then full-set MAE / Coverage / Selective MAE / AURC—not another BC train.
+**Closed-loop BC train landed (2026-11-04).** Fit/hold-out weak steps via `scripts/closed_loop_bc_train.py`; metrics under `results/closed_loop/`. **FixRate hold-out (primary `offline_policy_matched_terminal_counterfactual`, #26, 2026-11-05):** `fixrate_holdout.json` / `report_fixrate.txt`. **Next** (see [`docs/STATUS.md`](STATUS.md)): full-set MAE / Coverage / Selective MAE / AURC. Still no RL. Frozen `results/n5k_*` and `results/weak_steps/*.jsonl` stay as they are.
 
 - Method center: Evidence-Aware Closed-Loop Tool Control
 - Main policy (not trained here): \(\pi(a_t \mid h_t, o_{t-1}, b_t)\) — must read the tool observation
