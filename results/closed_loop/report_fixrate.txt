@@ -1,0 +1,34 @@
+FixRate − WorsenRate (hold-out weak steps, closed-loop policy)
+definition: offline_policy_matched_terminal_counterfactual
+epsilon_kcal: 1.0 (pre-registered; |Δerr| > epsilon)
+budget_K: 32 (vdr.controller.features.STEP_BUDGET and vdr.controller.state_features.TOOL_CAP)
+error: absolute dish energy kcal versus the train-split cafe label
+ci: Percentile cluster bootstrap over dishes. Each draw resamples dishes with replacement and keeps every scored pair from those dishes. B=10000, seed=0, quantiles 2.5 and 97.5. Each rate block restarts the generator at the same seed. Wilson intervals are not used: fix and worsen are mutually exclusive outcomes of the same pairs, so the contrast is a paired trinomial mean.
+
+primary n_pairs=983 n_dishes=311 fix=760 worsen=214 neutral=9
+FixRate=0.7731
+WorsenRate=0.2177
+FixRate-WorsenRate=0.5554
+95% CI delta=[0.4818, 0.6280]
+95% CI FixRate=[0.7358, 0.8097]
+95% CI WorsenRate=[0.1820, 0.2545]
+mean |err| kcal before=176.5383 after=45.0973 decrease=131.4410
+
+by action (primary):
+  CORRECT_CODE: n=141 FixRate=0.6312 WorsenRate=0.3688 delta=0.2624 95% CI delta=[0.1111, 0.4219]
+  RE_PORTION: n=842 FixRate=0.7969 WorsenRate=0.1924 delta=0.6045 95% CI delta=[0.5238, 0.6835]
+  RE_DECOMPOSE: n=0 FixRate=n/a WorsenRate=n/a delta=n/a 95% CI delta=n/a
+
+tool cost logged trajectories: mean=6.2921 median=5.0000 min=1 max=24 within_K=380/380 over_K=0
+tool cost policy horizon (off-policy states): mean=6.2921 median=5.0000 min=1 max=24 within_K=380/380 equals_logged=380/380
+
+diagnostic consecutive running total: n=983 FixRate=0.4964 WorsenRate=0.4995 delta=-0.0031 95% CI delta=[-0.0723, 0.0694]
+diagnostic teacher-executed terminal: n=1061 FixRate=0.7785 WorsenRate=0.2130 delta=0.5655 95% CI delta=[0.4912, 0.6372]
+
+funnel: dishes=380 steps=2771 grounded=356 ungrounded=24 teacher_corrective=1106 matched_grounded=983 matched_undefined=0 policy_corrective_unmatched=78
+pairing check: n=907 max_abs_gap_kcal=0.0000
+
+Hold-out weak steps plus the saved closed-loop policy. A scored pair is a teacher step in {CORRECT_CODE, RE_PORTION, RE_DECOMPOSE} whose policy prediction equals that action, on a dish that ends at STOP with a finite nutri_dish energy (pass or corrected). Before/after dish energy is that STOP total with the corrected component swapped to its pre-correction energy. RE_PORTION uses the obs portion ratio. CORRECT_CODE swaps the old code's component energy for the new code at the same pre-portion grams, so a later RE_PORTION on that component is not credited to the code change. Error is absolute kcal versus the train-split cafe dish label. Fix: error falls by more than epsilon. Worsen: error rises by more than epsilon. Otherwise neutral. Rates share the scored-pair denominator. Scope: offline logged tool results and the saved policy checkpoint.
+
+Overall action accuracy is not this report. It is a weight-loader check when present.
+loader sanity: logged-action agreement=0.9607 saved_holdout_accuracy=0.9607 match=True

@@ -1,0 +1,295 @@
+{
+  "metric": "FixRate-WorsenRate",
+  "definition_id": "offline_policy_matched_terminal_counterfactual",
+  "definition": "Hold-out weak steps plus the saved closed-loop policy. A scored pair is a teacher step in {CORRECT_CODE, RE_PORTION, RE_DECOMPOSE} whose policy prediction equals that action, on a dish that ends at STOP with a finite nutri_dish energy (pass or corrected). Before/after dish energy is that STOP total with the corrected component swapped to its pre-correction energy. RE_PORTION uses the obs portion ratio. CORRECT_CODE swaps the old code's component energy for the new code at the same pre-portion grams, so a later RE_PORTION on that component is not credited to the code change. Error is absolute kcal versus the train-split cafe dish label. Fix: error falls by more than epsilon. Worsen: error rises by more than epsilon. Otherwise neutral. Rates share the scored-pair denominator. Scope: offline logged tool results and the saved policy checkpoint.",
+  "epsilon_kcal": 1.0,
+  "epsilon_rule": "fix if (err_before - err_after) > epsilon; worsen if (err_after - err_before) > epsilon; otherwise neutral",
+  "error": "absolute dish energy kcal versus the train-split cafe label",
+  "budget_K": 32,
+  "budget_K_source": "vdr.controller.features.STEP_BUDGET and vdr.controller.state_features.TOOL_CAP",
+  "ci_method": "Percentile cluster bootstrap over dishes. Each draw resamples dishes with replacement and keeps every scored pair from those dishes. B=10000, seed=0, quantiles 2.5 and 97.5. Each rate block restarts the generator at the same seed. Wilson intervals are not used: fix and worsen are mutually exclusive outcomes of the same pairs, so the contrast is a paired trinomial mean.",
+  "audit": {
+    "uses_test_gt": false,
+    "uses_train_dish_labels": true,
+    "vlm": false,
+    "volume_tool": false,
+    "legacy_regression_weights": false,
+    "online_rollout": false,
+    "policy_retrained": false,
+    "rl": false
+  },
+  "funnel": {
+    "n_dishes": 380,
+    "n_steps": 2771,
+    "n_grounded_dishes": 356,
+    "n_ungrounded_dishes": 24,
+    "n_teacher_corrective_steps": 1106,
+    "n_teacher_corrective_on_ungrounded": 45,
+    "n_policy_matched_on_grounded": 983,
+    "n_policy_matched_skipped_undefined": 0,
+    "n_policy_corrective_unmatched": 78
+  },
+  "primary": {
+    "n_pairs": 983,
+    "n_dishes": 311,
+    "n_fix": 760,
+    "n_worsen": 214,
+    "n_neutral": 9,
+    "fix_rate": 0.7731434384537131,
+    "worsen_rate": 0.21770091556459817,
+    "delta": 0.555442522889115,
+    "mean_err_before_kcal": 176.53831727466937,
+    "mean_err_after_kcal": 45.09734829399797,
+    "mean_err_decrease_kcal": 131.4409689806714,
+    "ci95": {
+      "method": "cluster_bootstrap_dishes",
+      "n_draws": 10000,
+      "seed": 0,
+      "alpha": 0.05,
+      "interval": "percentile",
+      "fix_rate": [
+        0.7358486034835879,
+        0.8097298493183448
+      ],
+      "worsen_rate": [
+        0.18201047257924197,
+        0.2544558884317855
+      ],
+      "delta": [
+        0.4818067504164688,
+        0.6280007376185458
+      ]
+    },
+    "by_action": {
+      "CORRECT_CODE": {
+        "n_pairs": 141,
+        "n_dishes": 107,
+        "n_fix": 89,
+        "n_worsen": 52,
+        "n_neutral": 0,
+        "fix_rate": 0.6312056737588653,
+        "worsen_rate": 0.36879432624113473,
+        "delta": 0.2624113475177305,
+        "mean_err_before_kcal": 83.22668324822695,
+        "mean_err_after_kcal": 80.1641104680851,
+        "mean_err_decrease_kcal": 3.062572780141845,
+        "ci95": {
+          "method": "cluster_bootstrap_dishes",
+          "n_draws": 10000,
+          "seed": 0,
+          "alpha": 0.05,
+          "interval": "percentile",
+          "fix_rate": [
+            0.5555555555555556,
+            0.7109375
+          ],
+          "worsen_rate": [
+            0.2890625,
+            0.4444444444444444
+          ],
+          "delta": [
+            0.1111111111111111,
+            0.421875
+          ]
+        }
+      },
+      "RE_PORTION": {
+        "n_pairs": 842,
+        "n_dishes": 306,
+        "n_fix": 671,
+        "n_worsen": 162,
+        "n_neutral": 9,
+        "fix_rate": 0.7969121140142518,
+        "worsen_rate": 0.19239904988123516,
+        "delta": 0.6045130641330166,
+        "mean_err_before_kcal": 192.16413722446558,
+        "mean_err_after_kcal": 39.22512327434679,
+        "mean_err_decrease_kcal": 152.93901395011875,
+        "ci95": {
+          "method": "cluster_bootstrap_dishes",
+          "n_draws": 10000,
+          "seed": 0,
+          "alpha": 0.05,
+          "interval": "percentile",
+          "fix_rate": [
+            0.755714507408073,
+            0.8371810449574727
+          ],
+          "worsen_rate": [
+            0.1535749347653443,
+            0.23250625526938454
+          ],
+          "delta": [
+            0.523807995598753,
+            0.6834976406097096
+          ]
+        }
+      },
+      "RE_DECOMPOSE": {
+        "n_pairs": 0,
+        "n_dishes": 0,
+        "n_fix": 0,
+        "n_worsen": 0,
+        "n_neutral": 0,
+        "fix_rate": null,
+        "worsen_rate": null,
+        "delta": null,
+        "mean_err_before_kcal": null,
+        "mean_err_after_kcal": null,
+        "mean_err_decrease_kcal": null,
+        "ci95": null
+      }
+    }
+  },
+  "diagnostic_consecutive_running_total": {
+    "n_pairs": 983,
+    "n_dishes": 311,
+    "n_fix": 488,
+    "n_worsen": 491,
+    "n_neutral": 4,
+    "fix_rate": 0.49643947100712105,
+    "worsen_rate": 0.49949135300101727,
+    "delta": -0.003051881993896236,
+    "mean_err_before_kcal": 218.5456752522889,
+    "mean_err_after_kcal": 154.29006205798578,
+    "mean_err_decrease_kcal": 64.25561319430315,
+    "ci95": {
+      "method": "cluster_bootstrap_dishes",
+      "n_draws": 10000,
+      "seed": 0,
+      "alpha": 0.05,
+      "interval": "percentile",
+      "fix_rate": [
+        0.4619035346097202,
+        0.5325080545697098
+      ],
+      "worsen_rate": [
+        0.4628188605864925,
+        0.5342864145658263
+      ],
+      "delta": [
+        -0.07232495650867646,
+        0.06936146573060603
+      ]
+    },
+    "note": "Diagnostic only. Energy is nutri_dish.energy_kcal on the corrective step and on the next IR step. A partial total omits later components, so a calorie increase can shrink |E − dish label| without a better final estimate."
+  },
+  "diagnostic_teacher_executed": {
+    "n_pairs": 1061,
+    "n_dishes": 327,
+    "n_fix": 826,
+    "n_worsen": 226,
+    "n_neutral": 9,
+    "fix_rate": 0.7785108388312912,
+    "worsen_rate": 0.21300659754948162,
+    "delta": 0.5655042412818096,
+    "mean_err_before_kcal": 176.31933302073514,
+    "mean_err_after_kcal": 46.28851483034873,
+    "mean_err_decrease_kcal": 130.03081819038644,
+    "ci95": {
+      "method": "cluster_bootstrap_dishes",
+      "n_draws": 10000,
+      "seed": 0,
+      "alpha": 0.05,
+      "interval": "percentile",
+      "fix_rate": [
+        0.74073887207086,
+        0.8146644569766796
+      ],
+      "worsen_rate": [
+        0.17697206297902454,
+        0.2493237405177399
+      ],
+      "delta": [
+        0.49120932203081313,
+        0.6372057815932127
+      ]
+    },
+    "note": "Diagnostic only. Same terminal component swap as the primary, gated on the teacher action rather than a matching policy prediction."
+  },
+  "tool_cost": {
+    "unit": "tool actions per dish",
+    "tool_actions": [
+      "CORRECT_CODE",
+      "RETRIEVE",
+      "RE_DECOMPOSE",
+      "RE_PORTION"
+    ],
+    "not_tools": [
+      "ABSTAIN",
+      "STOP"
+    ],
+    "logged_trajectory": {
+      "budget_K": 32,
+      "n_dishes": 380,
+      "mean": 6.292105263157895,
+      "median": 5.0,
+      "min": 1,
+      "max": 24,
+      "mean_capped_at_K": 6.292105263157895,
+      "median_capped_at_K": 5.0,
+      "n_within_budget": 380,
+      "n_over_budget": 0,
+      "fraction_within_budget": 1.0
+    },
+    "logged_trajectory_note": "Tools the teacher executed on the evaluated hold-out trajectories.",
+    "policy_horizon_off_policy": {
+      "budget_K": 32,
+      "n_dishes": 380,
+      "mean": 6.292105263157895,
+      "median": 5.0,
+      "min": 1,
+      "max": 24,
+      "mean_capped_at_K": 6.292105263157895,
+      "median_capped_at_K": 5.0,
+      "n_within_budget": 380,
+      "n_over_budget": 0,
+      "fraction_within_budget": 1.0
+    },
+    "n_dishes_horizon_equals_logged": 380,
+    "policy_horizon_note": "Predicted tool actions along the logged states until the policy's first STOP or ABSTAIN. States stay the teacher states. Teacher trajectories put STOP or ABSTAIN only on the last step, so this count equals the logged tool count when that first predicted terminal action is the last step."
+  },
+  "pairing_check": {
+    "n_re_portion_compared": 907,
+    "max_abs_gap_kcal": 1.1368683772161603e-13,
+    "limit_kcal": 0.001,
+    "note": "RE_PORTION nutri_i rescaled by obs portion_g/from_portion_g, compared with the next IR nutri_dish. Schema check, not a threshold search."
+  },
+  "loader_sanity": {
+    "logged_action_agreement": 0.9606640202093107,
+    "saved_holdout_accuracy": 0.9606640202093107,
+    "agreement_matches_saved_metrics": true,
+    "n_rows": 2771,
+    "note": "Weight-loader check against metrics_holdout.json. Overall accuracy is not method proof."
+  },
+  "elapsed_seconds": 7.95,
+  "inputs": {
+    "holdout_jsonl": "results/weak_steps/rgb_train_holdout_all.jsonl",
+    "weights": "results/closed_loop/policy_state_mlp.npz",
+    "train_meta": "results/closed_loop/train_meta.json",
+    "saved_metrics": "results/closed_loop/metrics_holdout.json",
+    "holdout_sha256": "6055ccbbbf0d432e500eabfe2c9e4bdd4ca07a553686588c266f4b92ec89b433",
+    "weights_sha256": "f0ac0b41f99cbd7294abdec1ff927355a00cc62fec35dc7ff9f19e3e712c0f36",
+    "frozen_sha256_prefix": {
+      "metrics_holdout.json": "cbb9340ff5e0bf00",
+      "n5k_rgb_test_overhead_b0_b1.json": "1585be1951b46f71",
+      "n5k_rgb_test_overhead_b0_b1.jsonl": "a4dfdd82e3a595f4",
+      "n5k_subset_b0_b1.json": "1585be1951b46f71",
+      "n5k_subset_b0_b1.jsonl": "a4dfdd82e3a595f4",
+      "n5k_subset_b0_b1_n50_seed42.json": "8e3400bcbfcd56cd",
+      "n5k_subset_b0_b1_n50_seed42.jsonl": "013c899da4724ef2",
+      "policy_state_mlp.npz": "f0ac0b41f99cbd72",
+      "report_holdout.txt": "dab9fe91b8c5ad78",
+      "rgb_train_fit_all.jsonl": "ed47f9239bfecb3c",
+      "rgb_train_fit_all.summary.json": "d11e6a3e547b38d0",
+      "rgb_train_holdout_all.jsonl": "6055ccbbbf0d432e",
+      "rgb_train_holdout_all.summary.json": "c32db76caacf010b",
+      "train_meta.json": "c87f13089b4188d1"
+    },
+    "documented_prefix_match": {
+      "rgb_train_fit_all.jsonl": true,
+      "n5k_rgb_test_overhead_b0_b1.jsonl": true
+    },
+    "frozen_unchanged": true
+  }
+}

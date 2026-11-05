@@ -2,7 +2,8 @@
 
 Toy MAE / evidence helpers stay in ``metrics``. P0 offline reports (no
 training) live beside them: action confusion, provenance validity, and
-selective coverage / MAE / AURC.
+selective coverage / MAE / AURC. Closed-loop FixRate / WorsenRate
+lives in ``fixrate``.
 """
 
 from vdr.eval.action_metrics import (
@@ -32,6 +33,12 @@ from vdr.eval.provenance import (
     load_catalog,
     scale_expected,
 )
+from vdr.eval.fixrate import (
+    BUDGET_K,
+    FIXRATE_EPSILON_KCAL,
+    evaluate_fixrate,
+    format_fixrate_report,
+)
 from vdr.eval.selective import aurc, coverage_and_selective_mae, risk_coverage_curve
 
 __all__ = [
@@ -39,14 +46,18 @@ __all__ = [
     "CatalogPinError",
     "FNDDS_PINNED_N_CODES",
     "FNDDS_PINNED_RELEASE",
+    "BUDGET_K",
+    "FIXRATE_EPSILON_KCAL",
     "aurc",
     "balanced_accuracy",
     "check_record",
     "confusion_matrix",
     "coverage_and_selective_mae",
+    "evaluate_fixrate",
     "evaluate_provenance",
     "evidence_accuracy",
     "fix_rate",
+    "format_fixrate_report",
     "format_report",
     "has_evidence_path",
     "load_catalog",

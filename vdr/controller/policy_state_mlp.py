@@ -2,11 +2,12 @@
 
 Architecture matches open-loop B5 capacity: input → 64 → 64 → n_actions.
 Training uses fit-pool labels only; hold-out is for evaluation elsewhere.
+``from_npz`` reloads a saved checkpoint and does not train.
 """
 
 from __future__ import annotations
 
-from typing import Any, Sequence
+from typing import Any, Mapping, Sequence
 
 import numpy as np
 
@@ -194,6 +195,64 @@ class PolicyStateMLP:
             "class_weight": self._class_weight,
             "input_dim": STATE_FEATURE_DIM,
         }
+
+    @classmethod
+    def from_npz(
+        cls,
+        path: Any,
+        *,
+        actions: Sequence[str],
+        class_weight: Mapping[str, float],
+    ) -> "PolicyStateMLP":
+        """Reload ``export_numpy`` arrays. Does not fit and does not read labels.
+
+        ``class_weight`` restores the emit mask (weight 0 stays masked). The
+        action order is the training column order of ``W3``.
+        """
+        policy = cls(actions=tuple(actions))
+        missing = [name for name in policy.actions if name not in class_weight]
+        if missing:
+            raise ValueError(f"class_weight is missing {missing}")
+        weight_values = [float(class_weight[name]) for name in policy.actions]
+        if any(value < 0.0 for value in weight_values):
+            raise ValueError("class_weight values must be >= 0")
+        emit = np.array([value > 0.0 for value in weight_values], dtype=bool)
+        if not bool(emit.any()):
+            raise ValueError("class_weight masks every action")
+
+        required = ("mean", "std", "W1", "b1", "W2", "b2", "W3", "b3")
+        with np.load(path, allow_pickle=False) as blob:
+            arrays = {key: np.asarray(blob[key], dtype=np.float64).copy() for key in required}
+
+        hidden1, hidden2 = MLP_HIDDEN_SIZES
+        shapes = {
+            "mean": (STATE_FEATURE_DIM,),
+            "std": (STATE_FEATURE_DIM,),
+            "W1": (STATE_FEATURE_DIM, hidden1),
+            "b1": (hidden1,),
+            "W2": (hidden1, hidden2),
+            "b2": (hidden2,),
+            "W3": (hidden2, policy.n_actions),
+            "b3": (policy.n_actions,),
+        }
+        for key, shape in shapes.items():
+            if arrays[key].shape != shape:
+                raise ValueError(f"{key} shape {arrays[key].shape} != {shape}")
+            if not np.isfinite(arrays[key]).all():
+                raise ValueError(f"{key} contains a non-finite value")
+
+        policy._mean = arrays["mean"]
+        policy._std = arrays["std"]
+        policy._W1 = arrays["W1"]
+        policy._b1 = arrays["b1"]
+        policy._W2 = arrays["W2"]
+        policy._b2 = arrays["b2"]
+        policy._W3 = arrays["W3"]
+        policy._b3 = arrays["b3"]
+        policy._class_weight = {name: float(class_weight[name]) for name in policy.actions}
+        policy._emit = emit
+        policy._model = f"numpy_state_mlp_{hidden1}_{hidden2}_loaded"
+        return policy
 
     def _require_fit(self) -> None:
         if self._model is None or self._W1 is None:
