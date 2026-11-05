@@ -3,7 +3,7 @@
 > 供 GitHub 同步：服务器跑完实验后，请在本文件更新。`notes/` 历史周报已删除，见 [`notes/README.md`](../notes/README.md)。执行助手据此继续改代码/方案。  
 > **截止日期（文档写入时）**：2026-11-05（Asia/Shanghai）。**方法真源已锁**：Canvas「**VDR — Evidence-Guided Active Multimodal Nutrition Estimation**」；Triste + 营养论文调研 **2026-11-05 锁定**。**技术中心**：Error-Aware Active Specialist Selection（**非** ABSTAIN/AURC/BC 补丁叙事）。旧「Evidence-Aware Closed-Loop Tool Control」→ **Ours-old / 纯控制器对照**，不作方法证明。  
 > **#24/#26/#28/#31/#34 数字保留**：offline **n=356** Full MAE **30.7085** 打平、Ours AURC **13.5311 ≤ B5 32.1474**；on-policy **n=488** Full MAE **96.2769** 打平 B5、Ours AURC **47.1737 ≤ B5 81.5857**（**勿声称** on-policy 能量赢；**勿混** offline 与 on-policy 人群）。弱 `abstain_score=clip(kcal/2500)` 已降权。  
-> **下一步（严格顺序，不可跳步）**：**① P0a 已完成（#37，`2e0e180`）** → **② P0b Mass Estimator（RGB-only，当前首项）** → **③ P0c U_* + Q_φ** → **④ P0d**；详见下文「下一步（立即执行）」。**Mass 在 U_* / Q_φ 之前，不可跳步。**  
+> **下一步（严格顺序，不可跳步）**：**① P0a 已完成（#37，`2e0e180`）** → **② P0b 已完成（#39，`4b6ccec`）** → **③ P0c U_* + Q_φ（当前首项）** → **④ P0d**；详见下文「下一步（立即执行）」。**Mass 在 U_* / Q_φ 之前，不可跳步。**  
 > **可执行的下一步只在本文件。** 聊天不是 runbook。助手改下一步、跑法或方案时，先更新文档并推到 GitHub；服务器上的人或 AI 先 `git pull --ff-only`，再读「下一步」执行。  
 > **服务器执行看「下一步」。** 这一节没有新的弱标签 / 507 命令。历史 `--n 50`、俯拍池 `--n 507`、弱标签 jsonl、开环 BC 数字都是已完成记录，不要再执行。
 
@@ -19,20 +19,23 @@
    - 产物：`results/closed_loop/tool_state_audit.json`、`report_tool_state_audit.txt`、`report_tool_state_audit.md`。  
    - **改码/改份量 edit 动作**（CORRECT_CODE / RE_PORTION；hold-out **无** RE_DECOMPOSE）：hold-out logged **变更率 1.0000（1106/1106）**。  
    - on-policy edit：**变更率 0.9175（1647/1795）**、无变化 **0.0825**；分层 **CORRECT_CODE 0.7822**、**RE_PORTION 0.9476**。  
-   - **结论**：「工具跑了但 n 不变」**不是**多数；**门禁通过**，可启动 **P0b Mass**（仍禁空壳 RE_PORTION）。
+   - **结论**：「工具跑了但 n 不变」**不是**多数；**门禁通过**（仍禁空壳 RE_PORTION）。**P0b Mass 已通过（#39）** → 当前首项 **P0c**。
 
-2. **P0b — Mass Estimator（当前首项；P0a 已通过）**  
-   - ViT-B/16 或 ResNet101；ImageNet 预训练 → Nutrition5K **rgb_train** 微调；**主表 RGB-only**（与 rgb_test 一致，禁 RGB-D 混主表）。  
-   - 多任务头 [M,E,P,C,F] + 不确定性 σ；工具接口 **`estimate_mass(image, candidates)`**；RE_PORTION 须接 Mass，**禁止空壳 RE_PORTION**。
+2. **P0b — Mass Estimator（已完成 #39，squash `4b6ccec`）**  
+   - **Backbone**：**ViT-B/16**（fit-internal probe 优于 ResNet101：probe-val mass MAE **52.48** vs **57.52**）；ImageNet-1K → Nutrition5K **rgb_train fit** 微调，**12 epoch**，**last checkpoint**。  
+   - **主表 RGB-only**（不读 depth；**禁止** rgb_test GT 用于选择/调参）。  
+   - 多任务头 **[M,E,P,C,F] + Laplace σ**；工具 **`estimate_mass(image, candidates)`** 已接入闭环 **RE_PORTION**（`portion_src=mass_estimator`；**无**空壳 RE_PORTION / **无** gram-grid 在 RE_PORTION 上重打分）。  
+   - **Hold-out**（rgb_train hold-out 俯拍 RGB，**n=257**，save 后单次评分）：mass MAE **29.6147 g**（median AE **18.0219**）；energy MAE **43.2161 kcal**（median AE **23.0434**）；protein **4.7922** / carb **4.5685** / fat **3.2113 g**；同盘 fit-mean 基线 mass **130.6992 g** / energy **176.8194 kcal**。  
+   - **产物**：`results/mass_estimator/`（`weights-part-00..02.npz`、`train_meta.json`、`backbone_probe.json`、`eval_holdout.json`、`report_holdout.txt`）。冻结 n5k / weak_steps **未改**。
 
-3. **P0c — U_* + Q_φ（Mass wired 后）**  
+3. **P0c — U_* + Q_φ（当前首项；Mass 已 wired）**  
    - 定义 **U_id / U_mass / U_nutrient / U_evidence**（替换弱 kcal-proxy 作主叙事）。  
    - 先规则启发式 utility，再监督 **Q_φ(z,a)=E[ΔL|z,a]**，**a*=argmax Q/Cost**；State-aware BC 仅 bootstrap/消融。**无 RL**。
 
 4. **P0d — 同预算评测（Ours-new）**  
    - Ours-new（Mass + Q_φ）vs B5 / B0 / **Ours-old**；主报 **Full-set MAE@energy + mass MAE + Tool cost**；Coverage / AURC **辅助**。
 
-5. **P1（later，不挡、不替代 P0b→P0c→P0d）**：图文检索 + FNDDS 重排；忠实 B1/B2 live API（[`docs/B1_B2_SCAFFOLD.md`](B1_B2_SCAFFOLD.md)）可并行，**不得**跳过 Mass 或 U_* / Q_φ 顺序。
+5. **P1（later，不挡、不替代 P0c→P0d）**：图文检索 + FNDDS 重排；忠实 B1/B2 live API（[`docs/B1_B2_SCAFFOLD.md`](B1_B2_SCAFFOLD.md)）可并行，**不得**跳过 **P0c（U_* / Q_φ）** 或 **P0d**（**P0b Mass 已完成 #39**）。
 
 **禁令（仍有效）**：不上 RL；不开 fast Cloud Agent；禁止 rgb_test GT 调参；勿覆盖冻结 n5k / weak_steps；空壳 RE_PORTION；kcal-proxy AURC 作主 claim；本机 Qwen closed-loop **≠** 忠实 C；体积默认关。
 
@@ -60,8 +63,15 @@
 - 定义：`p0a_tool_pre_post_dish_n`（dish 级 energy + mass；ε=**5e-5**，**未**在 hold-out / rgb_test 上拟合）。
 - hold-out logged **edit**（CORRECT_CODE / RE_PORTION）：**变更率 1.0000（1106/1106）**；RE_DECOMPOSE **0** 步。  
 - on-policy **edit**：**变更 0.9175（1647/1795）**、无变化 **0.0825**；**CORRECT_CODE 0.7822**、**RE_PORTION 0.9476**。  
-- **门禁结论**：「工具执行但 n 未变」**非**主导模式 → **允许开训 P0b Mass**（接口仍须 `estimate_mass`，禁空壳 RE_PORTION）。  
+- **门禁结论**：「工具执行但 n 未变」**非**主导模式（接口仍须 `estimate_mass`，禁空壳 RE_PORTION）。**P0b Mass 已通过（#39）**。  
 - 产物：`results/closed_loop/tool_state_audit.json`、`report_tool_state_audit.txt`、`report_tool_state_audit.md`。
+
+**P0b Mass Estimator 已通过（Ours-new 组件）**（2026-11-05 Asia/Shanghai，#39，squash **`4b6ccec`**）。
+
+- **Backbone / 训练**：ViT-B/16（probe-val mass MAE **52.48** vs ResNet101 **57.52**）；ImageNet-1K → **rgb_train fit** 微调 **12 epoch**（last ckpt）；**RGB-only**，不读 depth；**未**用 rgb_test GT 选择/调参。  
+- **头与工具**：**[M,E,P,C,F] + Laplace σ**；**`estimate_mass(image, candidates)`** → 闭环 **RE_PORTION**（`portion_src=mass_estimator`；禁空壳 RE_PORTION / 禁 RE_PORTION gram-grid 重打分）。  
+- **Hold-out**（rgb_train hold-out 俯拍 RGB，**n=257**，单次评分）：mass MAE **29.6147 g**（median **18.0219**）；energy **43.2161 kcal**（median **23.0434**）；protein **4.7922** / carb **4.5685** / fat **3.2113 g**；fit-mean 基线（同盘）mass **130.6992 g** / energy **176.8194 kcal**。  
+- **产物**：`results/mass_estimator/`（`weights-part-00..02.npz`、`train_meta.json`、`backbone_probe.json`、`eval_holdout.json`、`report_holdout.txt`）。**无 RL**；冻结 n5k / weak_steps **未改**。
 
 **闭环 State-aware BC 已落地（Ours-old 组件）**（2026-11-04 Asia/Shanghai，自托管 `gpu-12-container`，分支 `cursor/closed-loop-bc-20261104`）。
 
@@ -125,15 +135,15 @@
 
 ### 助手 / 本地（优先）
 
-1. **P0b Mass Estimator（RGB-only，当前首项）**：见「下一步」第 2 条；P0a #37 已通过（`2e0e180`），**可开训**；RE_PORTION 须 wired，禁空壳。
-2. **P0c → P0d**：U_* + Q_φ → 同预算 Ours-new 主表；**Mass 在前**，顺序不可打乱。
+1. **P0c U_* + Q_φ（当前首项）**：见「下一步」第 3 条；**P0b #39 已通过**（`4b6ccec`，Mass wired）；规则 utility → 监督 Q_φ；**无 RL**。
+2. **P0d**：同预算 Ours-new 主表（Mass + Q_φ vs B5 / B0 / Ours-old）；**不可跳过 P0c**。
 3. **#34 / #31 / #28 已冻结为 Ours-old 对照**；勿声称 on-policy 能量赢 B5。
-4. **P1 并行（可选）**：B1/B2 忠实 API；**不替代、不跳过 P0b→P0c→P0d**。
-5. **禁止：** 跳过 Mass 直接 Q_φ；把 FixRate / AURC 当 Ours-new 主证明；混 offline n=356 与 on-policy n=488；空壳 RE_PORTION；RL；fast Cloud Agent；test GT 调参；覆盖冻结文件；**110.72** 当忠实 DietAI24。
+4. **P1 并行（可选）**：B1/B2 忠实 API；**不替代、不跳过 P0c→P0d**（P0b 已完成）。
+5. **禁止：** 跳过 P0c 直接 P0d；把 FixRate / AURC 当 Ours-new 主证明；混 offline n=356 与 on-policy n=488；空壳 RE_PORTION；RL；fast Cloud Agent；test GT 调参；覆盖冻结文件；**110.72** 当忠实 DietAI24。
 
 ### 协作
 
-docs-first：改下一步先改本文件并推仓。Cloud Agent **永远不开 fast**。**2026-11-05** Triste + 调研锁定新方法真源；**P0 Mass Estimator 方向已锁**；**P0a #37 已落盘** → 代码侧当前首项 **P0b Mass**，再 U_* / Q_φ。
+docs-first：改下一步先改本文件并推仓。Cloud Agent **永远不开 fast**。**2026-11-05** Triste + 调研锁定新方法真源；**P0b Mass #39 已落盘**（`4b6ccec`）→ 代码侧当前首项 **P0c U_* + Q_φ**，再 P0d。
 
 ## 历史跑数（开环 v2 / 非主方法）
 
@@ -323,7 +333,7 @@ CUDA_VISIBLE_DEVICES=0 /var/tmp/nutri-venv/bin/python -u scripts/eval_n5k_subset
 W1 基础设施在这台 2×4090D 上已打通：**schema + 骨架 + toy 冒烟 + 真实 FNDDS catalog（5624）+ N5K 元数据/官方 split + 俯拍 RGB + Qwen2.5-VL-7B 单盘冒烟**。  
 B1 第二轮先验（菜品形态、未点名的仿肉、100 g 以上的高密度克重、Cheese+Crust 碎片合并）后，同一 50 盘子集已重跑：能量 MAE 为 B0 **98.3**、B1 **88.2**。上一轮是 97.4 / 107.9，硬化前是 98.2 / 112.1。  
 有俯拍 RGB 的官方 `rgb_test` 池已跑完：能量 MAE 为 B0 **97.03**（Direct-VLM 锚点）、B1 **110.72**（**不是忠实 DietAI24**；中位 63.51 / 63.57）。配对 506 盘上中位差距约 +3.5 kcal，MAE 差距在右尾。50 盘子集仍是 B0 **98.3**、B1 **88.2**，是偏有利的一抽，不能代替这 507 盘。见「507 分析（助手）」。  
-**现行缺口**在文首「下一步」：**P0a #37 已完成** → **P0b Mass Estimator（当前）** → P0c U_* + Q_φ → P0d Ours-new 主表。Ours-old（#24–#34）已落盘作对照。**Mass 在 Q_φ 前，不可跳步。** 忠实 B1/B2、试标 30（kappa **0.7–0.8**）为 P1 并行。开环 DAgger / BC 数字仅 B5。**暂不上 RL。**
+**现行缺口**在文首「下一步」：**P0a #37**、**P0b Mass #39（`4b6ccec`）已完成** → **P0c U_* + Q_φ（当前）** → P0d Ours-new 主表。Ours-old（#24–#34）已落盘作对照。**Mass 在 Q_φ 前，不可跳步。** 忠实 B1/B2、试标 30（kappa **0.7–0.8**）为 P1 并行。开环 DAgger / BC 数字仅 B5。**暂不上 RL。**
 
 ## 已完成（box）
 
