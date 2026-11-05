@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="460" viewBox="0 0 760 460">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="84" y="28" font-family="DejaVu Sans, sans-serif" font-size="16" fill="#111827">Each group's addition to the mean energy gap (kcal)</text>
+<line x1="84" y1="199.0" x2="736" y2="199.0" stroke="#111827"/>
+<line x1="84" y1="48" x2="84" y2="350" stroke="#111827"/>
+<rect x="102.0" y="199.0" width="140.5" height="131.3" fill="#1f7a4d"/>
+<text x="172.2" y="193.0" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#111827">-28.71</text>
+<text x="172.2" y="372" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#111827">
+<tspan x="172.2" dy="0">Both</tspan>
+<tspan x="172.2" dy="15">closer</tspan>
+</text>
+<rect x="260.5" y="116.6" width="140.5" height="82.4" fill="#c2410c"/>
+<text x="330.8" y="110.6" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#111827">+18.01</text>
+<text x="330.8" y="372" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#111827">
+<tspan x="330.8" dy="0">Mass closer,</tspan>
+<tspan x="330.8" dy="15">energy farther</tspan>
+</text>
+<rect x="419.0" y="199.0" width="140.5" height="43.2" fill="#1d4e89"/>
+<text x="489.2" y="193.0" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#111827">-9.44</text>
+<text x="489.2" y="372" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#111827">
+<tspan x="489.2" dy="0">Mass farther,</tspan>
+<tspan x="489.2" dy="15">energy closer</tspan>
+</text>
+<rect x="577.5" y="100.5" width="140.5" height="98.5" fill="#6b7280"/>
+<text x="647.8" y="94.5" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#111827">+21.54</text>
+<text x="647.8" y="372" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#111827">
+<tspan x="647.8" dy="0">Both</tspan>
+<tspan x="647.8" dy="15">farther</tspan>
+</text>
+<text x="22" y="199" text-anchor="middle" transform="rotate(-90 22 199)" font-family="DejaVu Sans, sans-serif" font-size="13" fill="#111827">kcal added to the 505-plate mean</text>
+</svg>
