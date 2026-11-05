@@ -1,15 +1,23 @@
 # 执行状态（STATUS）
 
 > 供 GitHub 同步：服务器跑完实验后，请在本文件更新。`notes/` 历史周报已删除，见 [`notes/README.md`](../notes/README.md)。执行助手据此继续改代码/方案。  
-> **截止日期（文档写入时）**：2026-11-05（Asia/Shanghai）。**Cursor 额度已恢复**；闭环 State-aware BC 训练已落地（#24）；hold-out **FixRate** 主定义评测已落地（#26）；hold-out **主表 MAE/AURC（离线 logged）** 已落地（#28，squash `e88afc8`）；**弃权校准 A 已落地**（#31，squash `aec2006`）——同一定义下 **Ours AURC 13.5311 ≤ B5 32.1474**（离线表 PASS，**不是** Full MAE 赢、**不是** on-policy）。开环 31 维仍只作消融 **B5**。**下一步方向已锁定（2026-11-05，Triste+调研）：**P0=A 已完成** → **立即 P1=B**；C（忠实 B1/B2）并行不挡。**  
+> **截止日期（文档写入时）**：2026-11-05（Asia/Shanghai）。**Cursor 额度已恢复**；闭环 State-aware BC（#24）；hold-out **FixRate**（#26）；hold-out **主表 MAE/AURC 离线 logged**（#28，`e88afc8`）；**弃权校准 A 已完成**（#31，`aec2006`）——offline hold-out **n=356**：Full MAE **30.7085** 打平 B5，**Ours AURC 13.5311 ≤ B5 32.1474**（**不是** Full MAE 赢、**不是** on-policy）。**P1=B 已完成**（#34，merge `75b80a1`）——on-policy `rgb_test`：**primary n=488 STOP** 上 Full MAE **96.2769** 与 B5 **打平**（**勿声称** on-policy 能量赢）；Ours AURC **47.1737 ≤ B5 81.5857**。开环 31 维仍只作消融 **B5**。**下一步**：与 Triste + **营养论文调研与方案制作** 共议方向（勿自行发明新 P0）；C（忠实 B1/B2）并行不挡。**  
 > **可执行的下一步只在本文件。** 聊天不是 runbook。助手改下一步、跑法或方案时，先更新文档并推到 GitHub；服务器上的人或 AI 先 `git pull --ff-only`，再读「下一步」执行。  
 > **服务器执行看「下一步」。** 这一节没有新的弱标签 / 507 命令。历史 `--n 50`、俯拍池 `--n 507`、弱标签 jsonl、开环 BC 数字都是已完成记录，不要再执行。
 
 ## 下一步（立即执行）
 
-**P0=A（弃权校准）已完成**（#31，`aec2006`）。**立即执行 P1=B**：on-policy VLM closed-loop **能量主表** — **`rgb_test` 真 rollout**、**同形 IR** 轨迹；主表与 #28/#31 的 hold-out **offline logged**（`offline_logged_horizon_force_answer`）**分开报**，勿混写。**VLM**：优先自托管 **本机千问3.8 27B 视觉**（**Qwen3.8-27B-VL**；仓库已知 7B 在 `/var/tmp/vdr-models/Qwen2.5-VL-7B-Instruct`，27B 以本机实际 serving 名为准）。若 endpoint/权重缺失或能力不足，允许在 **gpu-12-container** 上**自部署**其它开源 VLM，**不**阻塞商业 API。**禁止** rgb_test GT 调参；**不上 RL**；**不开 fast Cloud Agent**；冻结 n5k / weak_steps **勿覆盖**。**C** 忠实 B1/B2 live API **并行不挡**。
+**P0=A（弃权校准）已完成**（#31，squash `aec2006`）。**P1=B（on-policy rgb_test 能量主表）已完成**（#34，merge `75b80a1`）——定义 `on_policy_vlm_horizon_force_answer`；主表数字见「助手进度」**P1=B 已评测**；与 #28/#31 hold-out **offline logged**（`mae_aurc_holdout.json`，**n=356**）**分开报**，勿混表。
 
-> 真源：根目录 [`PLAN.md`](../PLAN.md)、Canvas「VDR — Evidence-Aware Closed-Loop Tool Control」、[`docs/VDR_P0.md`](VDR_P0.md)、[`docs/STATE_FEATURE_DESIGN.md`](STATE_FEATURE_DESIGN.md)。闭环 `π(a_t|h_t,o_{t-1},b_t)` 已实现 + 训练 + hold-out 动作评测（#24）；**FixRate** hold-out 主定义已评测（#26，仍为正但**不能**单独当完整方法证明）；**主表 MAE/AURC（离线 logged）** 基线已评测（#28）；**弃权排序 A** 已评测（#31）。`CLOSED_LOOP_READY=true`（见 `vdr/controller/state_features.py`）。Hold-out 动作侧 **ABSTAIN F1=0.5091**（mask none）；H2 mask-zero **ABSTAIN F1=0.1212**；overall Acc **次要**。同一 `offline_logged_horizon_force_answer`、primary hold-out logged STOP pass/corrected **n=356**：Full-set MAE 仍 **打平 30.7085 kcal**（0 次提前 STOP）；Coverage / Selective MAE 与 #28 相同；**Ours AURC 13.5311 ≤ B5 32.1474**（#28 前 Ours **58.3726** 为 pre-A 失败态，已由 A 修复 selective 排序，**仍非** Full MAE 赢、**仍非** on-policy）。动作头仍是 `results/closed_loop/policy_state_mlp.npz`（#24）；AURC 用 fit-internal val 锁定的 `abstain_score=clip(committed_kcal/2500,0,1)` 排序（**未**用 hold-out / **未**用 rgb_test GT）；Softmax P(ABSTAIN) 参照仍复现 #28。**Triste+调研已定：A 完成后 on-policy 真能量主表（P1=B）；C 不挡。** 开环 31 维 `build_features` 仍是消融 **B5**（`PolicyMLP` / `scripts/bc_mlp_smoke.py` 不变）。**不上 RL。不开 fast Cloud Agent。** 冻结结果不重写。
+**当前不自行开新 P0。** 与 **Triste + 营养论文调研与方案制作** 对齐后再锁方向。待议分叉（并列列出，择一或组合由调研定）：
+
+1. **On-policy 能量 gap**：Full MAE 仍与 B5 **打平 96.2769 kcal**（primary **n=488** STOP）；可选后续 DAgger / 感知 / 克重等——**调研后再定**，勿现在擅自改规则或 test GT 调参。
+2. **C 并行**：忠实 **B1/B2 live API**（脚手架在 [`docs/B1_B2_SCAFFOLD.md`](B1_B2_SCAFFOLD.md)；历史 **110.72** 禁止当忠实 DietAI24）。**不挡** 论文向工作。
+3. **论文向冻结**：FixRate（#26）、offline A（#31）、on-policy B（#34）表冻结 + 写作。
+
+**禁令（仍有效）**：不上 RL；不开 fast Cloud Agent；禁止 rgb_test GT 调参；勿覆盖冻结 n5k / weak_steps；勿把 offline logged 写成 on-policy；**勿声称** on-policy Full MAE 赢 B5；本机 Qwen closed-loop **≠** 忠实 C（DietAI24/FoodAgent）。
+
+> 真源：根目录 [`PLAN.md`](../PLAN.md)、Canvas「VDR — Evidence-Aware Closed-Loop Tool Control」、[`docs/VDR_P0.md`](VDR_P0.md)、[`docs/STATE_FEATURE_DESIGN.md`](STATE_FEATURE_DESIGN.md)。闭环 `π(a_t|h_t,o_{t-1},b_t)` + hold-out 动作（#24）；FixRate（#26）；offline 主表（#28）+ 弃权 A（#31）；on-policy 主表（#34）。`CLOSED_LOOP_READY=true`。Offline **n=356**：Full MAE **30.7085** 打平；Ours AURC **13.5311 ≤ B5 32.1474**。On-policy **n=488**：Full MAE **96.2769** 打平 B5；Ours AURC **47.1737 ≤ B5 81.5857**（`abstain_score=clip(committed_kcal/2500,0,1)`，#31 fit-internal 锁定，**未**用 rgb_test GT）。开环 31 维仍是消融 **B5**。**不上 RL。不开 fast Cloud Agent。** 冻结结果不重写。
 
 ### 服务器
 
@@ -63,23 +71,41 @@
 - Selective 排序：`abstain_score=clip(committed_kcal/2500,0,1)`，仅在 fit-internal val 上选定（**禁止** hold-out / rgb_test GT 调参）。Softmax P(ABSTAIN) 参照仍复现 #28 数字。
 - 相对 #28：**Full MAE 仍 30.7085**（tie；0 early STOP）；Coverage / Selective MAE **不变**；**Ours AURC 13.5311**（#28 前 **58.3726**）**≤ B5 32.1474**。
 - 产物：`results/closed_loop/abstain_calibration.json`；更新 `results/closed_loop/mae_aurc_holdout.json`、`report_mae_aurc.txt`。
-- **诚实解读**：这是 hold-out 离线 logged 表上 selective **AURC 对齐** B5，**不是** Full-set MAE 优于 B5，**不是** on-policy 能量主表证明；下一真能量主表须 **P1=B**。
+- **诚实解读**：这是 hold-out 离线 logged 表上 selective **AURC 对齐** B5，**不是** Full-set MAE 优于 B5，**不是** on-policy 能量主表证明；on-policy 主表见下段 **P1=B**。
 
-**P1=B VLM 授权**（2026-11-05 Asia/Shanghai，Triste 群聊）：闭环 rollout 优先本机 **千问3.8 27B 视觉**（Qwen3.8-27B-VL）；缺失可在 **gpu-12-container** 自部署开源 VLM，不以商业 API 为阻塞。
+**P1=B on-policy rgb_test 能量主表已评测**（2026-11-05 Asia/Shanghai，#34，merge `75b80a1`）。
+
+- 主定义：`on_policy_vlm_horizon_force_answer`（与 hold-out `offline_logged_horizon_force_answer` **不同**；勿混表）。
+- 池：`rgb_test` 有俯拍 `rgb.png` 的盘，**507/507**；官方 709 id 中 **202** 无图、**未** impute。
+- VLM：本机 **Qwen3.8-27B-VL**，`llama-server` **:18080**（GPU0）；closed-loop 骨干 only — **不是** 忠实 DietAI24 / FoodAgent（**C**）。
+- 策略：`results/closed_loop/policy_state_mlp.npz` 驱动每一步；**3822** steps；终端 **STOP 488** / **ABSTAIN 9** / stuck **RETRIEVE 10**；**0** VLM failures。
+- Primary 人群：on-policy 终端 **STOP** 且 `s∈{pass,corrected}` 且 finite `nutri_dish`，**n=488**。
+- 主表（kcal；**AURC 越低越好**）：
+  - **Ours mask-none**：Full MAE **96.2769**，Coverage **1.0**（488/488），Selective MAE **96.2769**，AURC **47.1737**
+  - **B5 开环 counterfactual（同 trace）**：Full MAE **96.2769**，Coverage **1.0**，Selective MAE **96.2769**，AURC **81.5857**
+  - **Ours mask-zero**：Full MAE **96.2769**，Coverage **0.0**，AURC **47.1737**
+  - **Ours mask-shuffle**：Full MAE **115.4178**（n=487），Coverage **0.6448**，Selective MAE **129.1560**，AURC **71.5459**
+- Force-answer kcal 在 Ours / B5 / mask-zero **相同**（early STOP **0**）。**Full MAE 与 B5 打平** — **勿声称** on-policy 能量赢 B5。
+- **Ours AURC 优于 B5**：selective 排序仍用 #31 fit-internal 锁定的 `abstain_score=clip(committed_kcal/2500,0,1)`（**未**用 rgb_test GT）。
+- 产物：`results/closed_loop/on_policy_rgb_test.jsonl`、`on_policy_rgb_test_summary.json`、`mae_aurc_testsplit.json`、`report_mae_aurc_testsplit.txt`。
+- **与 offline hold-out 分开**：#28/#31 数字仍在 `mae_aurc_holdout.json`（**n=356**，MAE **30.7085** / Ours AURC **13.5311**）。**B0 97.03**（n=507 Direct-VLM 锚点）**不是** 与 96.2769（488 STOP）同人群对照行。历史 B1 **110.72** 仍 **不是** 忠实 DietAI24。冻结 n5k jsonl sha256 前缀 **`a4dfdd82e3a595f4…`**、fit weak_steps **`ed47f9239bfecb3c…`** — **#34 未改**。
+
+**P1=B VLM 授权**（2026-11-05 Asia/Shanghai，Triste 群聊）：闭环 rollout 已用本机 **千问3.8 27B 视觉**（Qwen3.8-27B-VL）；见上段 #34 产物。
 
 **P0 冒烟 / B1-B2 脚手架**（#19 / #22）仍有效：`CLOSED_LOOP_READY` 以前为 false 的记录保留在历史段。B1 scaffold / B2 approx 仍等 live API。
 
 ### 助手 / 本地（优先）
 
-1. **P1=B 立即（代码编写 + gpu-12 rollout）：** on-policy VLM closed-loop **能量主表** — **同形 IR**、**rgb_test** 真 rollout；与 #28/#31 hold-out **offline logged** 分开报。VLM = 优先 **Qwen3.8-27B-VL**（**本机千问3.8 27B 视觉**）；不够则 **gpu-12-container** 自部署开源 VLM（勿等商业 API）。禁止 test GT 调参；不上 RL；不开 fast Cloud Agent；勿动冻结 n5k / weak_steps。本文件 STATUS 仍标 **方案执行**；执行记「营养论文代码编写」。
-2. **P0=A 已完成**（#31）：hold-out offline selective **AURC ≤ B5** 已达成（Ours **13.5311** vs B5 **32.1474**）；Full MAE 仍打平 — 见上段诚实解读。
-3. **P2 / 并行：** 忠实 B1/B2 live API（Omni+MFP3D+NutritionX）；脚注 scaffold/approx；禁止 **110.72** 当忠实。不挡 P1=B。
-4. **稍后：** P2 试标 30（kappa **0.7–0.8**）；指南 `docs/annotation_guide_v0.md` v0。
-5. **禁止：** 把 Full-set MAE 打平或 #31 AURC PASS 说成闭环能量赢 B5；把 offline logged 写成 on-policy rgb_test 主表；单独 Acc / ABSTAIN F1 / FixRate 当完整证明；上 RL；fast Cloud Agent；test GT 调参；体积；旧回归；覆盖冻结文件；**110.72** 当忠实 DietAI24；B2 approx 写成 Fixed-MoE。
+1. **与 Triste + 营养论文调研与方案制作共议下一步**（勿自行发明新 P0）：见文首「下一步」三分叉（on-policy 能量 gap / 忠实 C / 论文冻结+写作）。
+2. **P1=B 已完成**（#34 / `75b80a1`）：on-policy rgb_test 主表已落盘；Full MAE **打平** B5 — 见上段诚实解读。
+3. **P0=A 已完成**（#31）：hold-out offline Ours AURC **13.5311 ≤ B5 32.1474**；Full MAE 仍 **30.7085** 打平。
+4. **P2 / 并行（可选）**：忠实 B1/B2 live API；禁止 **110.72** 当忠实。不挡论文向冻结。
+5. **稍后：** P2 试标 30（kappa **0.7–0.8**）；指南 `docs/annotation_guide_v0.md` v0。
+6. **禁止：** 把 on-policy 或 offline Full MAE 打平说成能量赢 B5；把 offline logged 写成 on-policy rgb_test 主表；混 #28/#31 与 #34 表；单独 Acc / ABSTAIN F1 / FixRate 当完整证明；上 RL；fast Cloud Agent；test GT 调参；体积；旧回归；覆盖冻结文件；**110.72** 当忠实 DietAI24；本机 Qwen closed-loop 当忠实 C；B2 approx 写成 Fixed-MoE。
 
 ### 协作
 
-docs-first：改下一步先改本文件并推仓。Cloud Agent **永远不开 fast**。**2026-11-05** Triste（群聊）已授权 P1=B 使用本机 Qwen VL；见上「P1=B VLM 授权」。
+docs-first：改下一步先改本文件并推仓。Cloud Agent **永远不开 fast**。**2026-11-05** P1=B（#34）已用本机 Qwen3.8-27B-VL 跑完 on-policy 主表；下一步等与 **营养论文调研与方案制作** 共议。
 
 ## 历史跑数（开环 v2 / 非主方法）
 
