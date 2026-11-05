@@ -1,0 +1,28 @@
+{
+  "rule": "terminal_margin_fence",
+  "tau": 0.001645429361972572,
+  "multiplier": 3.0,
+  "formula": "On fit weak steps where uncalibrated Q/Cost picks stop or abstain and a specialist is legal, excess = best terminal Q/Cost - best legal specialist Q/Cost. tau = median(excess) + 3 * MAD(excess). MAD is the median absolute deviation from the median. The multiplier 3 is the usual robust fence and was not scored on the official hold-out or on rgb_test. At decision time, if a terminal action wins by less than tau, the rule utility selects. Otherwise the action stays argmax Q/Cost. Learned Q weights are unchanged.",
+  "population": "rgb_train fit weak steps whose uncalibrated Q/Cost action is stop or abstain and a specialist is legal. The official hold-out is not an input.",
+  "fit_rows": 25864,
+  "fit_dishes": 3679,
+  "n_terminal_wins_with_legal_specialist": 11843,
+  "median_excess": 0.0012922697657442204,
+  "mad_excess": 0.00011771986540945055,
+  "mean_excess": 0.012266450099282407,
+  "fraction_terminal_wins_below_tau": 0.7164569788060458,
+  "costs": {
+    "CORRECT_CODE": 1.0,
+    "RE_PORTION": 1.0,
+    "STOP": 1.0,
+    "ABSTAIN": 1.0,
+    "RETRIEVE": 2.0,
+    "RE_DECOMPOSE": 3.0
+  },
+  "weights": "results/qphi/q_phi.npz",
+  "weights_sha256_prefix": "a59ba6e49cf45220",
+  "holdout_used_for_selection": false,
+  "uses_rgb_test_gt": false,
+  "rl": false,
+  "not_p0d": "Q/Cost decision calibration on logged rgb_train weak steps. Not the same-budget full-set energy table. No reinforcement learning. rgb_test labels were not read."
+}

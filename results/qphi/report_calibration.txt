@@ -1,0 +1,13 @@
+Q/Cost calibration — unresolved terminal margin defers to the rule utility
+fit_rows=25864 holdout_rows=2771 tau=0.001645 median_excess=0.001292 mad=0.000118
+hold-out agreement with the rule utility uncalibrated 0.4489 calibrated 0.7712 (P0c baseline 0.4489, n=2771)
+uncalibrated actions RETRIEVE=499 RE_PORTION=608 RE_DECOMPOSE=0 ABSTAIN=266 STOP=1360 CORRECT_CODE=38
+calibrated actions RETRIEVE=1096 RE_PORTION=842 RE_DECOMPOSE=0 ABSTAIN=207 STOP=526 CORRECT_CODE=100
+rule utility actions RETRIEVE=1605 RE_PORTION=662 RE_DECOMPOSE=0 ABSTAIN=24 STOP=356 CORRECT_CODE=124
+specialist call rate on non-stop steps uncalibrated 0.8115 (1145/1411) calibrated 0.9078 (2038/2245)
+mass or retrieval among non-stop steps uncalibrated 0.7845 calibrated 0.8633
+calibrated counts retrieve=1096 mass=842 code_fix=100 stop=526 abstain=207
+decisions kept on Q/Cost 1878 / 2771; deferred to the rule utility 893
+stub uncalibrated ['STOP'] mass_calls=0
+stub calibrated ['RETRIEVE', 'RE_PORTION', 'STOP'] mass_calls=1 portion_src=mass_estimator
+Q/Cost decision calibration on logged rgb_train weak steps. Not the same-budget full-set energy table. No reinforcement learning. rgb_test labels were not read.

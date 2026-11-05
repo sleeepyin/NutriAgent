@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from vdr.controller.nutrition_loss import run_self_check as check_loss  # noqa: E402
+from vdr.controller.q_calibration import run_self_check as check_calibration  # noqa: E402
 from vdr.controller.q_phi import run_self_check as check_q  # noqa: E402
 from vdr.controller.q_state import run_self_check as check_z  # noqa: E402
 from vdr.controller.selector import HeuristicUtilityPolicy  # noqa: E402
@@ -22,7 +23,7 @@ from vdr.controller.utility import run_self_check as check_utility  # noqa: E402
 from vdr.tools.mass_estimator import run_self_check as check_mass  # noqa: E402
 
 
-def _heuristic_rollout() -> None:
+def _stub_rollout(policy: object) -> tuple[object, list[dict[str, object]]]:
     """Stub tools, one rgb_test id, no cafe label. Mass is called only by RE_PORTION."""
     from vdr.controller.on_policy import rgb_test_ids, rollout_dish
 
@@ -70,7 +71,7 @@ def _heuristic_rollout() -> None:
 
     rolled = rollout_dish(
         dish_id,
-        HeuristicUtilityPolicy(),
+        policy,
         image_path="overhead/rgb.png",
         perceive_fn=lambda _path: ([{"name": "apple", "portion_g": 180.0}], {"model_alias": "qwen3.8-27b", "serving": "self-check"}),
         retrieve_fn=retrieve_fn,
@@ -79,6 +80,11 @@ def _heuristic_rollout() -> None:
         mass_fn=mass_fn,
         check_replay=True,
     )
+    return rolled, calls
+
+
+def _heuristic_rollout() -> None:
+    rolled, calls = _stub_rollout(HeuristicUtilityPolicy())
     actions = [step["action_t"] for step in rolled.steps]
     if actions != ["RETRIEVE", "RE_PORTION", "STOP"]:
         raise AssertionError(actions)
@@ -93,13 +99,34 @@ def _heuristic_rollout() -> None:
         raise AssertionError(sigma)
 
 
+def _saved_calibration_rollout() -> None:
+    """The committed fence, on the real Q weights, must call retrieval and mass."""
+    from vdr.controller.q_calibration import load_calibrated_policy
+
+    weights = ROOT / "results" / "qphi" / "q_phi.npz"
+    calibration = ROOT / "results" / "qphi" / "calibration.json"
+    if not weights.is_file() or not calibration.is_file():
+        raise AssertionError("missing saved Q weights or calibration fence")
+    policy = load_calibrated_policy(weights, calibration)
+    rolled, calls = _stub_rollout(policy)
+    actions = [step["action_t"] for step in rolled.steps]
+    if actions != ["RETRIEVE", "RE_PORTION", "STOP"]:
+        raise AssertionError(actions)
+    if len(calls) != 1:
+        raise AssertionError(calls)
+    if rolled.steps[1]["obs_t"].get("portion_src") != "mass_estimator":
+        raise AssertionError(rolled.steps[1]["obs_t"])
+
+
 def main() -> int:
     check_z()
     check_loss()
     check_utility()
     check_q()
+    check_calibration()
     check_mass()
     _heuristic_rollout()
+    _saved_calibration_rollout()
     # This guard replaces the label loader. Keep it last.
     from vdr.controller.on_policy import run_self_check as check_on_policy
 
