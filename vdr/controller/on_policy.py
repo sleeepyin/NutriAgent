@@ -40,7 +40,8 @@ from vdr.controller.closed_loop_data import _belief_at_step
 from vdr.controller.features import STEP_BUDGET
 from vdr.controller.policy_bc import BC_ACTIONS
 from vdr.controller.policy_state_mlp import PolicyStateMLP
-from vdr.controller.state_features import TOOL_CAP, build_state_features
+from vdr.controller.selector import decision_features
+from vdr.controller.state_features import TOOL_CAP
 from vdr.perception.hypotheses import dedupe_hypotheses, merge_complementary_fragments
 from vdr.schemas.loader import IR_STEP_SCHEMA_PATH, load_schema, validate_instance
 from vdr.tools.rule_verify import verify
@@ -236,11 +237,16 @@ def assert_on_policy_marker(steps_by_dish: Mapping[str, Sequence[Mapping[str, An
 
 
 def assert_replay_matches(steps: Sequence[Mapping[str, Any]], policy: Any) -> None:
-    """Mask-none features of the written IR must reproduce the executed action."""
+    """Features of the written IR must reproduce the executed action.
+
+    State-aware BC replays the 79-d vector. A z-policy replays ``build_z``,
+    including σ only when the previous observation stored an ``estimate_mass``
+    reading. Both paths use ``decision_features``.
+    """
     prev: Mapping[str, Any] | None = None
     for row in steps:
         step_i = int(row["step_i"])
-        vec = build_state_features(row, prev, _belief_at_step(step_i))
+        vec = decision_features(policy, row, prev, _belief_at_step(step_i))
         predicted = policy.predict_actions(np.asarray(vec, dtype=np.float64).reshape(1, -1))
         if len(predicted) != 1 or predicted[0] != row.get("action_t"):
             raise OnPolicyRefused(
@@ -394,7 +400,7 @@ class ClosedLoopRollout:
         return RolloutResult(self.dish_id, self.steps, self.ended_reason, len(self.hyps))
 
     def _predict(self, view: Mapping[str, Any]) -> str:
-        vec = build_state_features(view, self.prev, _belief_at_step(self.step_i))
+        vec = decision_features(self.policy, view, self.prev, _belief_at_step(self.step_i))
         predicted = self.policy.predict_actions(np.asarray(vec, dtype=np.float64).reshape(1, -1))
         if len(predicted) != 1:
             raise OnPolicyRefused(f"{self.dish_id}: policy returned {predicted!r}")
@@ -732,6 +738,7 @@ def _mass_obs(estimate: Any) -> dict[str, Any]:
         {
             "mass_g": estimate.get("mass_g"),
             "mass_sigma": sigma.get("mass_g"),
+            "sigma": {str(key): sigma[key] for key in sigma},
             "mass_interval": intervals.get("mass_g"),
             "mass_confidence": estimate.get("confidence"),
             "nutrient_refs": estimate.get("nutrient_refs"),

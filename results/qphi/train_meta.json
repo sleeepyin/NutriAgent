@@ -1,0 +1,43 @@
+{
+  "weights": "results/qphi/q_phi.npz",
+  "metrics": "results/qphi/metrics_holdout.json",
+  "actions": [
+    "RETRIEVE",
+    "RE_PORTION",
+    "RE_DECOMPOSE",
+    "ABSTAIN",
+    "STOP",
+    "CORRECT_CODE"
+  ],
+  "costs": {
+    "CORRECT_CODE": 1.0,
+    "RE_PORTION": 1.0,
+    "STOP": 1.0,
+    "ABSTAIN": 1.0,
+    "RETRIEVE": 2.0,
+    "RE_DECOMPOSE": 3.0
+  },
+  "input_dim": 98,
+  "emit": [
+    true,
+    true,
+    false,
+    true,
+    true,
+    true
+  ],
+  "action_counts": {
+    "RETRIEVE": 7948,
+    "RE_PORTION": 8581,
+    "RE_DECOMPOSE": 0,
+    "ABSTAIN": 236,
+    "STOP": 3443,
+    "CORRECT_CODE": 1467
+  },
+  "train_mse": 0.002663,
+  "rl": false,
+  "epochs": 80,
+  "lr": 0.01,
+  "seed": 0,
+  "unobserved_anchor": 1.0
+}

@@ -1,0 +1,377 @@
+{
+  "task": "P0c U_* + Q_phi",
+  "rl": false,
+  "uses_rgb_test_gt": false,
+  "uses_train_dish_labels_for_delta_l": true,
+  "holdout_used_for_selection": false,
+  "kcal_proxy_in_z": false,
+  "volume_tool": false,
+  "legacy_regression_weights": false,
+  "rgb_only_mass": true,
+  "depth_used": false,
+  "not_p0d": "P0c selector comparison on logged rgb_train weak steps. Not the P0d same-budget Full-set MAE table against B5, B0, or Ours-old. No RL. rgb_test labels were not read.",
+  "loss_definition": "L = min(|energy_hat - energy_label|, 2500) / 2500. The 2500 kcal cap is ENERGY_CAP_KCAL from the closed-loop features (the same ceiling as rule_verify.ENERGY_MAX). It was not fit on hold-out or on rgb_test. Delta L = L(pre) - L(post) on nutri_dish.energy_kcal, and only when both sides have a finite energy. Positive means absolute kcal error fell. A missing energy is not scored as a full-cap miss. STOP and ABSTAIN do not edit n, so their target is 0. Mass and macro errors stay in U_mass / U_nutrient; they are not mixed into this target. rgb_test labels are not a legal reference.",
+  "z_dim": 98,
+  "state_suffix_dim": 79,
+  "z_names": [
+    "U_id",
+    "U_mass",
+    "U_nutrient",
+    "U_evidence",
+    "D_energy",
+    "D_mass",
+    "D_macro",
+    "D_models",
+    "sigma_mass_norm",
+    "sigma_energy_norm",
+    "sigma_macro_norm",
+    "sigma_present",
+    "gate_component_open",
+    "gate_code_present",
+    "gate_code_top1",
+    "gate_code_in_cands",
+    "gate_specialist_applied",
+    "gate_dish_energy",
+    "gate_portion_present",
+    "hyp_present",
+    "hyp_char_len_norm",
+    "hyp_token_len_norm",
+    "code_present",
+    "code_is_top1",
+    "code_in_cands",
+    "code_rank_norm",
+    "cands_present",
+    "n_cands_norm",
+    "top1_score",
+    "top2_score",
+    "score_gap",
+    "score_mean",
+    "portion_present",
+    "portion_g_norm",
+    "verify_ENERGY_OUTLIER",
+    "verify_PROTEIN_OUTLIER",
+    "verify_CARB_OUTLIER",
+    "verify_FAT_OUTLIER",
+    "verify_ENERGY_ATWATER_MISMATCH",
+    "verify_UNGROUNDED",
+    "verify_PORTION_MISSING",
+    "verify_PORTION_EXTREME",
+    "verify_CODE_CONF_GAP",
+    "verify_other",
+    "verify_count_norm",
+    "any_verify",
+    "top1_uncertainty",
+    "step_frac",
+    "step_remaining_frac",
+    "step_over_budget",
+    "obs_n_cands_norm",
+    "obs_top1_score",
+    "obs_top2_score",
+    "obs_score_gap",
+    "obs_score_mean",
+    "obs_selected_is_top1",
+    "obs_selected_in_cands",
+    "obs_selected_rank_norm",
+    "obs_score_entropy_norm",
+    "obs_top1_uncertainty",
+    "obs_ambiguous",
+    "obs_verify_ENERGY_OUTLIER",
+    "obs_verify_PROTEIN_OUTLIER",
+    "obs_verify_CARB_OUTLIER",
+    "obs_verify_FAT_OUTLIER",
+    "obs_verify_ENERGY_ATWATER_MISMATCH",
+    "obs_verify_UNGROUNDED",
+    "obs_verify_PORTION_MISSING",
+    "obs_verify_PORTION_EXTREME",
+    "obs_verify_CODE_CONF_GAP",
+    "obs_verify_other",
+    "obs_any_verify",
+    "obs_error_code_present",
+    "obs_tool_failed",
+    "obs_nutri_energy_norm",
+    "obs_nutri_mass_norm",
+    "obs_nutri_present",
+    "obs_delta_portion_norm",
+    "obs_prev_action_RETRIEVE",
+    "obs_prev_action_RE_PORTION",
+    "obs_prev_action_RE_DECOMPOSE",
+    "obs_prev_action_ABSTAIN",
+    "obs_prev_action_STOP",
+    "obs_prev_action_CORRECT_CODE",
+    "obs_terminal_s_pass",
+    "obs_terminal_s_corrected",
+    "obs_terminal_s_abstain",
+    "obs_terminal_s_none",
+    "obs_abstain_signal",
+    "obs_n_unresolved_norm",
+    "obs_n_kept_norm",
+    "obs_code_changed",
+    "obs_missing",
+    "budget_tools_used_norm",
+    "safety_force_abstain",
+    "safety_force_stop",
+    "safety_volume_disabled",
+    "safety_legacy_weights_off"
+  ],
+  "hidden": [
+    64,
+    64
+  ],
+  "epochs": 80,
+  "lr": 0.01,
+  "seed": 0,
+  "unobserved_anchor": 1.0,
+  "bc_epochs_reference": 80,
+  "bc_lr_reference": 0.01,
+  "bc_seed_reference": 0,
+  "mass_backbone": "vit_b_16",
+  "sigma_dishes": 2755,
+  "fit_path": "results/weak_steps/rgb_train_fit_all.jsonl",
+  "holdout_path": "results/weak_steps/rgb_train_holdout_all.jsonl",
+  "fit_rows": 25864,
+  "fit_dishes": 3679,
+  "holdout_rows": 2771,
+  "holdout_dishes": 380,
+  "fit_sigma_rows": 14125,
+  "holdout_sigma_rows": 1548,
+  "fit_limit": null,
+  "fit_seconds": 8.24,
+  "sigma_seconds": 0.66,
+  "train_mse": 0.002663,
+  "action_counts_fit": {
+    "RETRIEVE": 7948,
+    "RE_PORTION": 8581,
+    "RE_DECOMPOSE": 0,
+    "ABSTAIN": 236,
+    "STOP": 3443,
+    "CORRECT_CODE": 1467
+  },
+  "costs": {
+    "CORRECT_CODE": 1.0,
+    "RE_PORTION": 1.0,
+    "STOP": 1.0,
+    "ABSTAIN": 1.0,
+    "RETRIEVE": 2.0,
+    "RE_DECOMPOSE": 3.0
+  },
+  "holdout_mean_u": {
+    "U_id": 0.7385,
+    "U_mass": 0.4869,
+    "U_nutrient": 0.4586,
+    "U_evidence": 0.3041,
+    "D_models": 0.0772,
+    "sigma_mass_norm": 0.0997,
+    "sigma_energy_norm": 0.1353,
+    "sigma_present": 0.5586
+  },
+  "fit_q_regression": {
+    "population": "tool steps whose pre and post nutri_dish both have finite energy; STOP/ABSTAIN targets are 0 and are not in this MAE",
+    "n": 17996,
+    "mae": 0.0359,
+    "mse": 0.0032,
+    "pearson": 0.7935,
+    "baseline_zero_mae": 0.051,
+    "mean_delta_l": 0.0121,
+    "mean_predicted_q": 0.0025,
+    "per_action": {
+      "RETRIEVE": {
+        "n": 7948,
+        "mae": 0.0414,
+        "mean_delta_l": -0.0058,
+        "mean_predicted_q": -0.0204,
+        "pearson": 0.7638,
+        "mean_energy_delta_kcal": -14.4238,
+        "n_energy": 7948
+      },
+      "RE_PORTION": {
+        "n": 8581,
+        "mae": 0.0329,
+        "mean_delta_l": 0.0314,
+        "mean_predicted_q": 0.0243,
+        "pearson": 0.8332,
+        "mean_energy_delta_kcal": 78.4763,
+        "n_energy": 8581
+      },
+      "RE_DECOMPOSE": {
+        "n": 0
+      },
+      "ABSTAIN": {
+        "n": 0
+      },
+      "STOP": {
+        "n": 0
+      },
+      "CORRECT_CODE": {
+        "n": 1467,
+        "mae": 0.0241,
+        "mean_delta_l": -0.0038,
+        "mean_predicted_q": -0.0007,
+        "pearson": 0.1775,
+        "mean_energy_delta_kcal": -9.5594,
+        "n_energy": 1467
+      }
+    }
+  },
+  "holdout_q_regression": {
+    "population": "tool steps whose pre and post nutri_dish both have finite energy; STOP/ABSTAIN targets are 0 and are not in this MAE",
+    "n": 1960,
+    "mae": 0.0368,
+    "mse": 0.0035,
+    "pearson": 0.7799,
+    "baseline_zero_mae": 0.0518,
+    "mean_delta_l": 0.0118,
+    "mean_predicted_q": 0.0028,
+    "per_action": {
+      "RETRIEVE": {
+        "n": 862,
+        "mae": 0.0418,
+        "mean_delta_l": -0.0061,
+        "mean_predicted_q": -0.0216,
+        "pearson": 0.7629,
+        "mean_energy_delta_kcal": -15.3223,
+        "n_energy": 862
+      },
+      "RE_PORTION": {
+        "n": 941,
+        "mae": 0.0341,
+        "mean_delta_l": 0.0309,
+        "mean_predicted_q": 0.0257,
+        "pearson": 0.8059,
+        "mean_energy_delta_kcal": 77.2467,
+        "n_energy": 941
+      },
+      "RE_DECOMPOSE": {
+        "n": 0
+      },
+      "ABSTAIN": {
+        "n": 0
+      },
+      "STOP": {
+        "n": 0
+      },
+      "CORRECT_CODE": {
+        "n": 157,
+        "mae": 0.0252,
+        "mean_delta_l": -0.0038,
+        "mean_predicted_q": -0.001,
+        "pearson": 0.3202,
+        "mean_energy_delta_kcal": -9.4201,
+        "n_energy": 157
+      }
+    }
+  },
+  "holdout_baseline_train_mean_mae": 0.0517,
+  "holdout_selection": {
+    "rule": "a* = argmax value/Cost over actions the tools can execute. RE_PORTION requires a code. RETRIEVE and RE_DECOMPOSE require an open component. Heuristic value is the rule utility. Q value is Q_phi. BC is argmax of the saved state MLP and does not divide by cost.",
+    "costs": {
+      "CORRECT_CODE": 1.0,
+      "RE_PORTION": 1.0,
+      "STOP": 1.0,
+      "ABSTAIN": 1.0,
+      "RETRIEVE": 2.0,
+      "RE_DECOMPOSE": 3.0
+    },
+    "uncertainty_majority": 0.5,
+    "q_histogram": {
+      "RETRIEVE": 499,
+      "RE_PORTION": 608,
+      "RE_DECOMPOSE": 0,
+      "ABSTAIN": 266,
+      "STOP": 1360,
+      "CORRECT_CODE": 38
+    },
+    "heuristic_histogram": {
+      "RETRIEVE": 1605,
+      "RE_PORTION": 662,
+      "RE_DECOMPOSE": 0,
+      "ABSTAIN": 24,
+      "STOP": 356,
+      "CORRECT_CODE": 124
+    },
+    "bc_histogram": {
+      "RETRIEVE": 1288,
+      "RE_PORTION": 893,
+      "RE_DECOMPOSE": 0,
+      "ABSTAIN": 31,
+      "STOP": 349,
+      "CORRECT_CODE": 210
+    },
+    "logged_histogram": {
+      "RETRIEVE": 1285,
+      "RE_PORTION": 949,
+      "RE_DECOMPOSE": 0,
+      "ABSTAIN": 24,
+      "STOP": 356,
+      "CORRECT_CODE": 157
+    },
+    "agreement_q_vs_heuristic": 0.4489354023818116,
+    "agreement_q_vs_bc": 0.4731143991338867,
+    "agreement_heuristic_vs_bc": 0.773727896066402,
+    "agreement_q_vs_logged": 0.49548899314326955,
+    "agreement_heuristic_vs_logged": 0.7968242511728618,
+    "agreement_bc_vs_logged": 0.9606640202093107,
+    "conditional_delta_l": {
+      "q_over_cost": {
+        "n": 994,
+        "mean_delta_l": 0.0469,
+        "note": "Conditional on matching the logged action and on that action being a measured tool step."
+      },
+      "heuristic": {
+        "n": 1414,
+        "mean_delta_l": 0.0151,
+        "note": "Conditional on matching the logged action and on that action being a measured tool step."
+      },
+      "state_bc": {
+        "n": 1878,
+        "mean_delta_l": 0.0115,
+        "note": "Conditional on matching the logged action and on that action being a measured tool step."
+      }
+    }
+  },
+  "controller_stub": {
+    "heuristic": {
+      "selector": "heuristic",
+      "dish_id": "dish_1550704903",
+      "actions": [
+        "RETRIEVE",
+        "RE_PORTION",
+        "STOP"
+      ],
+      "ended_reason": "policy_stop",
+      "n_steps": 3,
+      "mass_calls": 1,
+      "replay_ok": true,
+      "read_cafe_label": false,
+      "vlm": false,
+      "note": "Stub perception and stub estimate_mass. Not an rgb_test score."
+    },
+    "q_over_cost": {
+      "selector": "q_over_cost",
+      "dish_id": "dish_1550704903",
+      "actions": [
+        "STOP"
+      ],
+      "ended_reason": "policy_stop",
+      "n_steps": 1,
+      "mass_calls": 0,
+      "replay_ok": true,
+      "read_cafe_label": false,
+      "vlm": false,
+      "note": "Stub perception and stub estimate_mass. Not an rgb_test score."
+    }
+  },
+  "bc_ablation": {
+    "weights": "results/closed_loop/policy_state_mlp.npz",
+    "note": "Saved state-aware BC (#24). Not retrained. Scored on the 79-d suffix of z. Ablation only."
+  },
+  "frozen_sha256": {
+    "results/weak_steps/rgb_train_fit_all.jsonl": "ed47f9239bfecb3c",
+    "results/weak_steps/rgb_train_holdout_all.jsonl": "6055ccbbbf0d432e",
+    "results/weak_steps/rgb_train_fit_all.summary.json": "d11e6a3e547b38d0",
+    "results/weak_steps/rgb_train_holdout_all.summary.json": "c32db76caacf010b",
+    "results/n5k_rgb_test_overhead_b0_b1.jsonl": "a4dfdd82e3a595f4",
+    "results/n5k_rgb_test_overhead_b0_b1.json": "1585be1951b46f71",
+    "results/n5k_subset_b0_b1.jsonl": "a4dfdd82e3a595f4",
+    "results/n5k_subset_b0_b1.json": "1585be1951b46f71"
+  }
+}

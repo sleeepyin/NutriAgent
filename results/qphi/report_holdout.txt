@@ -1,0 +1,14 @@
+P0c U_* + supervised Q_φ hold-out summary
+fit_rows=25864 holdout_rows=2771 z_dim=98
+sigma_rows fit=14125 holdout=1548 rgb_dishes=2755
+Q regression MAE 0.0368 on n=1960 measured tool steps (zero baseline 0.0518, pearson 0.7799)
+RE_PORTION mean energy change 77.2467 kcal on n=941 (predicted Q 0.0257)
+selection agreement Q vs heuristic 0.4489 Q vs BC 0.4731 heuristic vs logged 0.7968 BC vs logged 0.9607
+Q actions RETRIEVE=499 RE_PORTION=608 RE_DECOMPOSE=0 ABSTAIN=266 STOP=1360 CORRECT_CODE=38
+heuristic actions RETRIEVE=1605 RE_PORTION=662 RE_DECOMPOSE=0 ABSTAIN=24 STOP=356 CORRECT_CODE=124
+BC ablation actions RETRIEVE=1288 RE_PORTION=893 RE_DECOMPOSE=0 ABSTAIN=31 STOP=349 CORRECT_CODE=210
+logged actions RETRIEVE=1285 RE_PORTION=949 RE_DECOMPOSE=0 ABSTAIN=24 STOP=356 CORRECT_CODE=157
+mean U hold-out {'U_id': 0.7385, 'U_mass': 0.4869, 'U_nutrient': 0.4586, 'U_evidence': 0.3041, 'D_models': 0.0772, 'sigma_mass_norm': 0.0997, 'sigma_energy_norm': 0.1353, 'sigma_present': 0.5586}
+stub heuristic ['RETRIEVE', 'RE_PORTION', 'STOP'] (policy_stop)
+stub Q/Cost ['STOP'] (policy_stop)
+P0c selector comparison on logged rgb_train weak steps. Not the P0d same-budget Full-set MAE table against B5, B0, or Ours-old. No RL. rgb_test labels were not read.
