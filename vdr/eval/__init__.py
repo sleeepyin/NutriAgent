@@ -3,7 +3,8 @@
 Toy MAE / evidence helpers stay in ``metrics``. P0 offline reports (no
 training) live beside them: action confusion, provenance validity, and
 selective coverage / MAE / AURC. Closed-loop FixRate / WorsenRate
-lives in ``fixrate``.
+lives in ``fixrate``. Hold-out energy MAE / Coverage / Selective MAE / AURC
+lives in ``energy_selective``.
 """
 
 from vdr.eval.action_metrics import (
@@ -39,6 +40,11 @@ from vdr.eval.fixrate import (
     evaluate_fixrate,
     format_fixrate_report,
 )
+from vdr.eval.energy_selective import (
+    DEFINITION_ID as ENERGY_DEFINITION_ID,
+    evaluate_energy_table,
+    format_energy_report,
+)
 from vdr.eval.selective import aurc, coverage_and_selective_mae, risk_coverage_curve
 
 __all__ = [
@@ -47,16 +53,19 @@ __all__ = [
     "FNDDS_PINNED_N_CODES",
     "FNDDS_PINNED_RELEASE",
     "BUDGET_K",
+    "ENERGY_DEFINITION_ID",
     "FIXRATE_EPSILON_KCAL",
     "aurc",
     "balanced_accuracy",
     "check_record",
     "confusion_matrix",
     "coverage_and_selective_mae",
+    "evaluate_energy_table",
     "evaluate_fixrate",
     "evaluate_provenance",
     "evidence_accuracy",
     "fix_rate",
+    "format_energy_report",
     "format_fixrate_report",
     "format_report",
     "has_evidence_path",

@@ -1,0 +1,1378 @@
+{
+  "metric": "Full-set energy MAE + Coverage + Selective MAE + AURC",
+  "definition_id": "offline_logged_horizon_force_answer",
+  "definition": "Offline logged-horizon force-answer. States stay the logged weak-step trajectory; the policy does not execute tools. The decision step is the first predicted STOP or ABSTAIN, or the last logged step if the policy never predicts a terminal action. Force-answer energy is the latest finite nutri_dish.energy_kcal at or before that step. Later logged calories are not credited. Dishes with no finite total are unscored and not imputed. Error is absolute kcal versus the cafe dish label passed in by the caller. Full-set MAE averages that error on scored dishes and keeps policy ABSTAIN decisions in the average. Coverage and Selective MAE keep the dishes whose decision action is not ABSTAIN (vdr.eval.selective, flag rule). AURC uses P(ABSTAIN) at the decision step as abstain_score (higher means less confident). Ties keep sorted dish_id order. The primary population is a logged STOP with status pass or corrected and a finite terminal energy. A sensitivity population also scores logged ABSTAIN trajectories when an earlier step has a finite total. A secondary score cut at 0.5 is reported and was not fit. This is not an on-policy rollout and not an rgb_test VLM evaluation.",
+  "populations": {
+    "logged_grounded_stop": "Logged terminal action is STOP, top-level s is pass or corrected, and terminal nutri_dish.energy_kcal is finite. This is the weak-step train-energy audit set. Policy ABSTAIN decisions remain in the full-set MAE.",
+    "any_finite_horizon_energy": "Every dish with a finite force-answer energy, including logged ABSTAIN trajectories whose earlier steps wrote a partial nutri_dish total. A partial total is not the teacher's emitted dish answer."
+  },
+  "headline": "primary_logged_grounded_stop",
+  "methods": {
+    "b5_open_loop": {
+      "primary_logged_grounded_stop": {
+        "population": "logged_grounded_stop",
+        "n_population": 356,
+        "n_scored": 356,
+        "n_unscored": 0,
+        "unscored_dish_ids": [],
+        "n_policy_abstain": 0,
+        "n_early_decision": 0,
+        "n_energy_equals_logged_terminal": 356,
+        "n_energy_differs_from_logged_terminal": 0,
+        "decision_actions": {
+          "STOP": 356
+        },
+        "full_set_mae_kcal": 30.70853488764045,
+        "full_set_definition": "Mean |force-answer energy − cafe label| over scored dishes. Policy ABSTAIN rows stay in this mean when they have a finite energy.",
+        "coverage": 1.0,
+        "selective_mae_kcal": 30.70853488764045,
+        "n_kept": 356,
+        "coverage_of_population": 1.0,
+        "aurc": 32.14744408424222,
+        "aurc_lower_is_better": true,
+        "risk_at_full_coverage": 30.70853488764045,
+        "risk_at_min_coverage": 59.133678999999916,
+        "spearman_abstain_score_vs_abs_error": 0.009498374985651701,
+        "spearman_note": "Positive: higher P(ABSTAIN) lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned.",
+        "secondary_score_threshold": {
+          "threshold": 0.5,
+          "rule": "keep where abstain_score < 0.5",
+          "note": "Fixed conventional cut. Not selected on hold-out or rgb_test. Primary coverage uses the ABSTAIN action flag, not this cut.",
+          "coverage": 1.0,
+          "selective_mae_kcal": 30.70853488764045,
+          "n_kept": 356
+        },
+        "secondary_literature": {
+          "mape_percent": 13.880979208917406,
+          "median_abs_error_kcal": 12.875349999999997,
+          "mean_signed_error_kcal": -10.232788134831463,
+          "pearson_r_energy_vs_label": 0.8544841894445481,
+          "note": "PLAN §7 also lists MAPE and r. They are not the headline."
+        },
+        "curve_sample": [
+          {
+            "target_coverage": 0.1,
+            "k": 36.0,
+            "coverage": 0.10112359550561797,
+            "risk": 49.963929750000005
+          },
+          {
+            "target_coverage": 0.25,
+            "k": 89.0,
+            "coverage": 0.25,
+            "risk": 34.55188177528092
+          },
+          {
+            "target_coverage": 0.5,
+            "k": 178.0,
+            "coverage": 0.5,
+            "risk": 20.997702174157308
+          },
+          {
+            "target_coverage": 0.75,
+            "k": 267.0,
+            "coverage": 0.75,
+            "risk": 24.44738602996255
+          },
+          {
+            "target_coverage": 1.0,
+            "k": 356.0,
+            "coverage": 1.0,
+            "risk": 30.70853488764045
+          }
+        ],
+        "selective_api": "vdr.eval.selective.coverage_and_selective_mae + aurc"
+      },
+      "sensitivity_any_finite_horizon_energy": {
+        "population": "any_finite_horizon_energy",
+        "n_population": 380,
+        "n_scored": 376,
+        "n_unscored": 4,
+        "unscored_dish_ids": [
+          "dish_1556575700",
+          "dish_1559751458",
+          "dish_1560441247",
+          "dish_1562959295"
+        ],
+        "n_policy_abstain": 0,
+        "n_early_decision": 0,
+        "n_energy_equals_logged_terminal": 356,
+        "n_energy_differs_from_logged_terminal": 0,
+        "decision_actions": {
+          "STOP": 380
+        },
+        "full_set_mae_kcal": 37.86497622074468,
+        "full_set_definition": "Mean |force-answer energy − cafe label| over scored dishes. Policy ABSTAIN rows stay in this mean when they have a finite energy.",
+        "coverage": 1.0,
+        "selective_mae_kcal": 37.86497622074468,
+        "n_kept": 376,
+        "coverage_of_population": 0.9894736842105263,
+        "aurc": 37.243553460151006,
+        "aurc_lower_is_better": true,
+        "risk_at_full_coverage": 37.86497622074467,
+        "risk_at_min_coverage": 59.133678999999916,
+        "spearman_abstain_score_vs_abs_error": 0.043182431576846425,
+        "spearman_note": "Positive: higher P(ABSTAIN) lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned.",
+        "secondary_score_threshold": {
+          "threshold": 0.5,
+          "rule": "keep where abstain_score < 0.5",
+          "note": "Fixed conventional cut. Not selected on hold-out or rgb_test. Primary coverage uses the ABSTAIN action flag, not this cut.",
+          "coverage": 1.0,
+          "selective_mae_kcal": 37.86497622074468,
+          "n_kept": 376
+        },
+        "secondary_literature": {
+          "mape_percent": 16.391613984011478,
+          "median_abs_error_kcal": 13.560000500000001,
+          "mean_signed_error_kcal": -11.116356077127662,
+          "pearson_r_energy_vs_label": 0.8258124182928765,
+          "note": "PLAN §7 also lists MAPE and r. They are not the headline."
+        },
+        "curve_sample": [
+          {
+            "target_coverage": 0.1,
+            "k": 38.0,
+            "coverage": 0.10106382978723404,
+            "risk": 62.86136907894736
+          },
+          {
+            "target_coverage": 0.25,
+            "k": 94.0,
+            "coverage": 0.25,
+            "risk": 39.29327692553193
+          },
+          {
+            "target_coverage": 0.5,
+            "k": 188.0,
+            "coverage": 0.5,
+            "risk": 24.023997553191485
+          },
+          {
+            "target_coverage": 0.75,
+            "k": 282.0,
+            "coverage": 0.75,
+            "risk": 35.50881661702128
+          },
+          {
+            "target_coverage": 1.0,
+            "k": 376.0,
+            "coverage": 1.0,
+            "risk": 37.86497622074467
+          }
+        ],
+        "selective_api": "vdr.eval.selective.coverage_and_selective_mae + aurc"
+      }
+    },
+    "ours_mask_none": {
+      "primary_logged_grounded_stop": {
+        "population": "logged_grounded_stop",
+        "n_population": 356,
+        "n_scored": 356,
+        "n_unscored": 0,
+        "unscored_dish_ids": [],
+        "n_policy_abstain": 17,
+        "n_early_decision": 0,
+        "n_energy_equals_logged_terminal": 356,
+        "n_energy_differs_from_logged_terminal": 0,
+        "decision_actions": {
+          "ABSTAIN": 17,
+          "STOP": 339
+        },
+        "full_set_mae_kcal": 30.70853488764045,
+        "full_set_definition": "Mean |force-answer energy − cafe label| over scored dishes. Policy ABSTAIN rows stay in this mean when they have a finite energy.",
+        "coverage": 0.952247191011236,
+        "selective_mae_kcal": 31.003229769911506,
+        "n_kept": 339,
+        "coverage_of_population": 0.952247191011236,
+        "aurc": 58.37261331639449,
+        "aurc_lower_is_better": true,
+        "risk_at_full_coverage": 30.70853488764044,
+        "risk_at_min_coverage": 182.69799799999998,
+        "spearman_abstain_score_vs_abs_error": 0.12863461027553483,
+        "spearman_note": "Positive: higher P(ABSTAIN) lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned.",
+        "secondary_score_threshold": {
+          "threshold": 0.5,
+          "rule": "keep where abstain_score < 0.5",
+          "note": "Fixed conventional cut. Not selected on hold-out or rgb_test. Primary coverage uses the ABSTAIN action flag, not this cut.",
+          "coverage": 0.952247191011236,
+          "selective_mae_kcal": 31.003229769911506,
+          "n_kept": 339
+        },
+        "secondary_literature": {
+          "mape_percent": 13.880979208917406,
+          "median_abs_error_kcal": 12.875349999999997,
+          "mean_signed_error_kcal": -10.232788134831463,
+          "pearson_r_energy_vs_label": 0.8544841894445481,
+          "note": "PLAN §7 also lists MAPE and r. They are not the headline."
+        },
+        "curve_sample": [
+          {
+            "target_coverage": 0.1,
+            "k": 36.0,
+            "coverage": 0.10112359550561797,
+            "risk": 99.14282688888886
+          },
+          {
+            "target_coverage": 0.25,
+            "k": 89.0,
+            "coverage": 0.25,
+            "risk": 48.95978989887639
+          },
+          {
+            "target_coverage": 0.5,
+            "k": 178.0,
+            "coverage": 0.5,
+            "risk": 33.858934117977505
+          },
+          {
+            "target_coverage": 0.75,
+            "k": 267.0,
+            "coverage": 0.75,
+            "risk": 32.47669252434457
+          },
+          {
+            "target_coverage": 1.0,
+            "k": 356.0,
+            "coverage": 1.0,
+            "risk": 30.70853488764044
+          }
+        ],
+        "selective_api": "vdr.eval.selective.coverage_and_selective_mae + aurc"
+      },
+      "sensitivity_any_finite_horizon_energy": {
+        "population": "any_finite_horizon_energy",
+        "n_population": 380,
+        "n_scored": 376,
+        "n_unscored": 4,
+        "unscored_dish_ids": [
+          "dish_1556575700",
+          "dish_1559751458",
+          "dish_1560441247",
+          "dish_1562959295"
+        ],
+        "n_policy_abstain": 29,
+        "n_early_decision": 0,
+        "n_energy_equals_logged_terminal": 356,
+        "n_energy_differs_from_logged_terminal": 0,
+        "decision_actions": {
+          "ABSTAIN": 31,
+          "STOP": 349
+        },
+        "full_set_mae_kcal": 37.86497622074468,
+        "full_set_definition": "Mean |force-answer energy − cafe label| over scored dishes. Policy ABSTAIN rows stay in this mean when they have a finite energy.",
+        "coverage": 0.9228723404255319,
+        "selective_mae_kcal": 35.74893431123919,
+        "n_kept": 347,
+        "coverage_of_population": 0.9131578947368421,
+        "aurc": 58.05253530629455,
+        "aurc_lower_is_better": true,
+        "risk_at_full_coverage": 37.86497622074468,
+        "risk_at_min_coverage": 182.69799799999998,
+        "spearman_abstain_score_vs_abs_error": 0.17821035815866273,
+        "spearman_note": "Positive: higher P(ABSTAIN) lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned.",
+        "secondary_score_threshold": {
+          "threshold": 0.5,
+          "rule": "keep where abstain_score < 0.5",
+          "note": "Fixed conventional cut. Not selected on hold-out or rgb_test. Primary coverage uses the ABSTAIN action flag, not this cut.",
+          "coverage": 0.9228723404255319,
+          "selective_mae_kcal": 35.74893431123919,
+          "n_kept": 347
+        },
+        "secondary_literature": {
+          "mape_percent": 16.391613984011478,
+          "median_abs_error_kcal": 13.560000500000001,
+          "mean_signed_error_kcal": -11.116356077127662,
+          "pearson_r_energy_vs_label": 0.8258124182928765,
+          "note": "PLAN §7 also lists MAPE and r. They are not the headline."
+        },
+        "curve_sample": [
+          {
+            "target_coverage": 0.1,
+            "k": 38.0,
+            "coverage": 0.10106382978723404,
+            "risk": 94.31873049999997
+          },
+          {
+            "target_coverage": 0.25,
+            "k": 94.0,
+            "coverage": 0.25,
+            "risk": 46.41548187234041
+          },
+          {
+            "target_coverage": 0.5,
+            "k": 188.0,
+            "coverage": 0.5,
+            "risk": 34.35140472872338
+          },
+          {
+            "target_coverage": 0.75,
+            "k": 282.0,
+            "coverage": 0.75,
+            "risk": 33.472250617021274
+          },
+          {
+            "target_coverage": 1.0,
+            "k": 376.0,
+            "coverage": 1.0,
+            "risk": 37.86497622074468
+          }
+        ],
+        "selective_api": "vdr.eval.selective.coverage_and_selective_mae + aurc"
+      }
+    },
+    "ours_mask_shuffle": {
+      "primary_logged_grounded_stop": {
+        "population": "logged_grounded_stop",
+        "n_population": 356,
+        "n_scored": 354,
+        "n_unscored": 2,
+        "unscored_dish_ids": [
+          "dish_1551378179",
+          "dish_1562615103"
+        ],
+        "n_policy_abstain": 108,
+        "n_early_decision": 122,
+        "n_energy_equals_logged_terminal": 235,
+        "n_energy_differs_from_logged_terminal": 119,
+        "decision_actions": {
+          "ABSTAIN": 108,
+          "RETRIEVE": 26,
+          "RE_PORTION": 24,
+          "STOP": 198
+        },
+        "full_set_mae_kcal": 80.39642986723163,
+        "full_set_definition": "Mean |force-answer energy − cafe label| over scored dishes. Policy ABSTAIN rows stay in this mean when they have a finite energy.",
+        "coverage": 0.6949152542372882,
+        "selective_mae_kcal": 100.90277111788618,
+        "n_kept": 246,
+        "coverage_of_population": 0.6910112359550562,
+        "aurc": 101.26600030891298,
+        "aurc_lower_is_better": true,
+        "risk_at_full_coverage": 80.3964298672317,
+        "risk_at_min_coverage": 13.417999000000009,
+        "spearman_abstain_score_vs_abs_error": -0.3065007651567128,
+        "spearman_note": "Positive: higher P(ABSTAIN) lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned.",
+        "secondary_score_threshold": {
+          "threshold": 0.5,
+          "rule": "keep where abstain_score < 0.5",
+          "note": "Fixed conventional cut. Not selected on hold-out or rgb_test. Primary coverage uses the ABSTAIN action flag, not this cut.",
+          "coverage": 0.7005649717514124,
+          "selective_mae_kcal": 100.92555691935483,
+          "n_kept": 248
+        },
+        "secondary_literature": {
+          "mape_percent": 40.34001185812648,
+          "median_abs_error_kcal": 20.884796499999997,
+          "mean_signed_error_kcal": -17.15408479943503,
+          "pearson_r_energy_vs_label": 0.649746689693064,
+          "note": "PLAN §7 also lists MAPE and r. They are not the headline."
+        },
+        "curve_sample": [
+          {
+            "target_coverage": 0.1,
+            "k": 35.0,
+            "coverage": 0.09887005649717515,
+            "risk": 75.59336748571425
+          },
+          {
+            "target_coverage": 0.25,
+            "k": 88.0,
+            "coverage": 0.24858757062146894,
+            "risk": 118.73750104545452
+          },
+          {
+            "target_coverage": 0.5,
+            "k": 177.0,
+            "coverage": 0.5,
+            "risk": 128.6707226045197
+          },
+          {
+            "target_coverage": 0.75,
+            "k": 266.0,
+            "coverage": 0.751412429378531,
+            "risk": 97.95448366541352
+          },
+          {
+            "target_coverage": 1.0,
+            "k": 354.0,
+            "coverage": 1.0,
+            "risk": 80.3964298672317
+          }
+        ],
+        "selective_api": "vdr.eval.selective.coverage_and_selective_mae + aurc"
+      },
+      "sensitivity_any_finite_horizon_energy": {
+        "population": "any_finite_horizon_energy",
+        "n_population": 380,
+        "n_scored": 374,
+        "n_unscored": 6,
+        "unscored_dish_ids": [
+          "dish_1551378179",
+          "dish_1556575700",
+          "dish_1559751458",
+          "dish_1560441247",
+          "dish_1562615103",
+          "dish_1562959295"
+        ],
+        "n_policy_abstain": 113,
+        "n_early_decision": 128,
+        "n_energy_equals_logged_terminal": 235,
+        "n_energy_differs_from_logged_terminal": 119,
+        "decision_actions": {
+          "ABSTAIN": 115,
+          "RETRIEVE": 28,
+          "RE_PORTION": 29,
+          "STOP": 208
+        },
+        "full_set_mae_kcal": 85.39705178074867,
+        "full_set_definition": "Mean |force-answer energy − cafe label| over scored dishes. Policy ABSTAIN rows stay in this mean when they have a finite energy.",
+        "coverage": 0.6978609625668449,
+        "selective_mae_kcal": 103.58737481226053,
+        "n_kept": 261,
+        "coverage_of_population": 0.6868421052631579,
+        "aurc": 103.75223401557548,
+        "aurc_lower_is_better": true,
+        "risk_at_full_coverage": 85.39705178074873,
+        "risk_at_min_coverage": 0.31121799999999666,
+        "spearman_abstain_score_vs_abs_error": -0.2783513260055942,
+        "spearman_note": "Positive: higher P(ABSTAIN) lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned.",
+        "secondary_score_threshold": {
+          "threshold": 0.5,
+          "rule": "keep where abstain_score < 0.5",
+          "note": "Fixed conventional cut. Not selected on hold-out or rgb_test. Primary coverage uses the ABSTAIN action flag, not this cut.",
+          "coverage": 0.7032085561497327,
+          "selective_mae_kcal": 103.58844580608366,
+          "n_kept": 263
+        },
+        "secondary_literature": {
+          "mape_percent": 41.63820900200941,
+          "median_abs_error_kcal": 22.807884,
+          "mean_signed_error_kcal": -18.40835114438503,
+          "pearson_r_energy_vs_label": 0.6305816018597605,
+          "note": "PLAN §7 also lists MAPE and r. They are not the headline."
+        },
+        "curve_sample": [
+          {
+            "target_coverage": 0.1,
+            "k": 37.0,
+            "coverage": 0.09893048128342247,
+            "risk": 71.98186702702701
+          },
+          {
+            "target_coverage": 0.25,
+            "k": 94.0,
+            "coverage": 0.25133689839572193,
+            "risk": 116.9122894255319
+          },
+          {
+            "target_coverage": 0.5,
+            "k": 187.0,
+            "coverage": 0.5,
+            "risk": 132.2641819625668
+          },
+          {
+            "target_coverage": 0.75,
+            "k": 280.0,
+            "coverage": 0.7486631016042781,
+            "risk": 101.49656359642854
+          },
+          {
+            "target_coverage": 1.0,
+            "k": 374.0,
+            "coverage": 1.0,
+            "risk": 85.39705178074873
+          }
+        ],
+        "selective_api": "vdr.eval.selective.coverage_and_selective_mae + aurc"
+      }
+    },
+    "ours_mask_zero": {
+      "primary_logged_grounded_stop": {
+        "population": "logged_grounded_stop",
+        "n_population": 356,
+        "n_scored": 356,
+        "n_unscored": 0,
+        "unscored_dish_ids": [],
+        "n_policy_abstain": 348,
+        "n_early_decision": 0,
+        "n_energy_equals_logged_terminal": 356,
+        "n_energy_differs_from_logged_terminal": 0,
+        "decision_actions": {
+          "ABSTAIN": 348,
+          "STOP": 8
+        },
+        "full_set_mae_kcal": 30.70853488764045,
+        "full_set_definition": "Mean |force-answer energy − cafe label| over scored dishes. Policy ABSTAIN rows stay in this mean when they have a finite energy.",
+        "coverage": 0.02247191011235955,
+        "selective_mae_kcal": 55.00519649999999,
+        "n_kept": 8,
+        "coverage_of_population": 0.02247191011235955,
+        "aurc": 41.11967527471588,
+        "aurc_lower_is_better": true,
+        "risk_at_full_coverage": 30.708534887640457,
+        "risk_at_min_coverage": 59.133678999999916,
+        "spearman_abstain_score_vs_abs_error": -0.5047121653347151,
+        "spearman_note": "Positive: higher P(ABSTAIN) lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned.",
+        "secondary_score_threshold": {
+          "threshold": 0.5,
+          "rule": "keep where abstain_score < 0.5",
+          "note": "Fixed conventional cut. Not selected on hold-out or rgb_test. Primary coverage uses the ABSTAIN action flag, not this cut.",
+          "coverage": 0.02247191011235955,
+          "selective_mae_kcal": 55.00519649999999,
+          "n_kept": 8
+        },
+        "secondary_literature": {
+          "mape_percent": 13.880979208917406,
+          "median_abs_error_kcal": 12.875349999999997,
+          "mean_signed_error_kcal": -10.232788134831463,
+          "pearson_r_energy_vs_label": 0.8544841894445481,
+          "note": "PLAN §7 also lists MAPE and r. They are not the headline."
+        },
+        "curve_sample": [
+          {
+            "target_coverage": 0.1,
+            "k": 36.0,
+            "coverage": 0.10112359550561797,
+            "risk": 49.963929750000005
+          },
+          {
+            "target_coverage": 0.25,
+            "k": 89.0,
+            "coverage": 0.25,
+            "risk": 38.529077505617984
+          },
+          {
+            "target_coverage": 0.5,
+            "k": 178.0,
+            "coverage": 0.5,
+            "risk": 44.24120137078653
+          },
+          {
+            "target_coverage": 0.75,
+            "k": 267.0,
+            "coverage": 0.75,
+            "risk": 38.53477492509366
+          },
+          {
+            "target_coverage": 1.0,
+            "k": 356.0,
+            "coverage": 1.0,
+            "risk": 30.708534887640457
+          }
+        ],
+        "selective_api": "vdr.eval.selective.coverage_and_selective_mae + aurc"
+      },
+      "sensitivity_any_finite_horizon_energy": {
+        "population": "any_finite_horizon_energy",
+        "n_population": 380,
+        "n_scored": 376,
+        "n_unscored": 4,
+        "unscored_dish_ids": [
+          "dish_1556575700",
+          "dish_1559751458",
+          "dish_1560441247",
+          "dish_1562959295"
+        ],
+        "n_policy_abstain": 368,
+        "n_early_decision": 0,
+        "n_energy_equals_logged_terminal": 356,
+        "n_energy_differs_from_logged_terminal": 0,
+        "decision_actions": {
+          "ABSTAIN": 372,
+          "STOP": 8
+        },
+        "full_set_mae_kcal": 37.86497622074468,
+        "full_set_definition": "Mean |force-answer energy − cafe label| over scored dishes. Policy ABSTAIN rows stay in this mean when they have a finite energy.",
+        "coverage": 0.02127659574468085,
+        "selective_mae_kcal": 55.00519649999999,
+        "n_kept": 8,
+        "coverage_of_population": 0.021052631578947368,
+        "aurc": 51.936799036824844,
+        "aurc_lower_is_better": true,
+        "risk_at_full_coverage": 37.86497622074468,
+        "risk_at_min_coverage": 59.133678999999916,
+        "spearman_abstain_score_vs_abs_error": -0.5047318607873421,
+        "spearman_note": "Positive: higher P(ABSTAIN) lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned.",
+        "secondary_score_threshold": {
+          "threshold": 0.5,
+          "rule": "keep where abstain_score < 0.5",
+          "note": "Fixed conventional cut. Not selected on hold-out or rgb_test. Primary coverage uses the ABSTAIN action flag, not this cut.",
+          "coverage": 0.02127659574468085,
+          "selective_mae_kcal": 55.00519649999999,
+          "n_kept": 8
+        },
+        "secondary_literature": {
+          "mape_percent": 16.391613984011478,
+          "median_abs_error_kcal": 13.560000500000001,
+          "mean_signed_error_kcal": -11.116356077127662,
+          "pearson_r_energy_vs_label": 0.8258124182928765,
+          "note": "PLAN §7 also lists MAPE and r. They are not the headline."
+        },
+        "curve_sample": [
+          {
+            "target_coverage": 0.1,
+            "k": 38.0,
+            "coverage": 0.10106382978723404,
+            "risk": 62.86136907894736
+          },
+          {
+            "target_coverage": 0.25,
+            "k": 94.0,
+            "coverage": 0.25,
+            "risk": 50.367646936170225
+          },
+          {
+            "target_coverage": 0.5,
+            "k": 188.0,
+            "coverage": 0.5,
+            "risk": 55.422113340425526
+          },
+          {
+            "target_coverage": 0.75,
+            "k": 282.0,
+            "coverage": 0.75,
+            "risk": 47.60382107801419
+          },
+          {
+            "target_coverage": 1.0,
+            "k": 376.0,
+            "coverage": 1.0,
+            "risk": 37.86497622074468
+          }
+        ],
+        "selective_api": "vdr.eval.selective.coverage_and_selective_mae + aurc"
+      }
+    }
+  },
+  "identical_force_answer_energy": {
+    "logged_grounded_stop": [
+      [
+        "b5_open_loop",
+        "ours_mask_none",
+        "ours_mask_zero"
+      ],
+      [
+        "ours_mask_shuffle"
+      ]
+    ],
+    "any_finite_horizon_energy": [
+      [
+        "b5_open_loop",
+        "ours_mask_none",
+        "ours_mask_zero"
+      ],
+      [
+        "ours_mask_shuffle"
+      ]
+    ]
+  },
+  "paired_common_scored": {
+    "logged_grounded_stop": {
+      "population": "logged_grounded_stop",
+      "n_common_scored": 354,
+      "note": "Intersection of dishes in this population with a finite force-answer energy under every method. Use it when one method leaves a dish unscored.",
+      "methods": {
+        "b5_open_loop": {
+          "population": "logged_grounded_stop",
+          "n_population": 354,
+          "n_scored": 354,
+          "n_unscored": 0,
+          "unscored_dish_ids": [],
+          "n_policy_abstain": 0,
+          "n_early_decision": 0,
+          "n_energy_equals_logged_terminal": 354,
+          "n_energy_differs_from_logged_terminal": 0,
+          "decision_actions": {
+            "STOP": 354
+          },
+          "full_set_mae_kcal": 30.820513737288138,
+          "full_set_definition": "Mean |force-answer energy − cafe label| over scored dishes. Policy ABSTAIN rows stay in this mean when they have a finite energy.",
+          "coverage": 1.0,
+          "selective_mae_kcal": 30.820513737288138,
+          "n_kept": 354,
+          "coverage_of_population": 1.0,
+          "aurc": 32.197606100952335,
+          "aurc_lower_is_better": true,
+          "risk_at_full_coverage": 30.820513737288127,
+          "risk_at_min_coverage": 59.133678999999916,
+          "spearman_abstain_score_vs_abs_error": 0.010205848971527886,
+          "spearman_note": "Positive: higher P(ABSTAIN) lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned.",
+          "secondary_score_threshold": {
+            "threshold": 0.5,
+            "rule": "keep where abstain_score < 0.5",
+            "note": "Fixed conventional cut. Not selected on hold-out or rgb_test. Primary coverage uses the ABSTAIN action flag, not this cut.",
+            "coverage": 1.0,
+            "selective_mae_kcal": 30.820513737288138,
+            "n_kept": 354
+          },
+          "secondary_literature": {
+            "mape_percent": 13.900423740276338,
+            "median_abs_error_kcal": 12.875349999999997,
+            "mean_signed_error_kcal": -10.22908479943503,
+            "pearson_r_energy_vs_label": 0.854265100024464,
+            "note": "PLAN §7 also lists MAPE and r. They are not the headline."
+          },
+          "curve_sample": [
+            {
+              "target_coverage": 0.1,
+              "k": 35.0,
+              "coverage": 0.09887005649717515,
+              "risk": 50.40712682857144
+            },
+            {
+              "target_coverage": 0.25,
+              "k": 88.0,
+              "coverage": 0.24858757062146894,
+              "risk": 34.90724406818183
+            },
+            {
+              "target_coverage": 0.5,
+              "k": 177.0,
+              "coverage": 0.5,
+              "risk": 21.10390387570622
+            },
+            {
+              "target_coverage": 0.75,
+              "k": 266.0,
+              "coverage": 0.751412429378531,
+              "risk": 24.528248334586472
+            },
+            {
+              "target_coverage": 1.0,
+              "k": 354.0,
+              "coverage": 1.0,
+              "risk": 30.820513737288127
+            }
+          ],
+          "selective_api": "vdr.eval.selective.coverage_and_selective_mae + aurc"
+        },
+        "ours_mask_none": {
+          "population": "logged_grounded_stop",
+          "n_population": 354,
+          "n_scored": 354,
+          "n_unscored": 0,
+          "unscored_dish_ids": [],
+          "n_policy_abstain": 16,
+          "n_early_decision": 0,
+          "n_energy_equals_logged_terminal": 354,
+          "n_energy_differs_from_logged_terminal": 0,
+          "decision_actions": {
+            "ABSTAIN": 16,
+            "STOP": 338
+          },
+          "full_set_mae_kcal": 30.820513737288138,
+          "full_set_definition": "Mean |force-answer energy − cafe label| over scored dishes. Policy ABSTAIN rows stay in this mean when they have a finite energy.",
+          "coverage": 0.9548022598870056,
+          "selective_mae_kcal": 31.0862629556213,
+          "n_kept": 338,
+          "coverage_of_population": 0.9548022598870056,
+          "aurc": 58.68438144738269,
+          "aurc_lower_is_better": true,
+          "risk_at_full_coverage": 30.820513737288117,
+          "risk_at_min_coverage": 182.69799799999998,
+          "spearman_abstain_score_vs_abs_error": 0.12247399999821071,
+          "spearman_note": "Positive: higher P(ABSTAIN) lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned.",
+          "secondary_score_threshold": {
+            "threshold": 0.5,
+            "rule": "keep where abstain_score < 0.5",
+            "note": "Fixed conventional cut. Not selected on hold-out or rgb_test. Primary coverage uses the ABSTAIN action flag, not this cut.",
+            "coverage": 0.9548022598870056,
+            "selective_mae_kcal": 31.0862629556213,
+            "n_kept": 338
+          },
+          "secondary_literature": {
+            "mape_percent": 13.900423740276338,
+            "median_abs_error_kcal": 12.875349999999997,
+            "mean_signed_error_kcal": -10.22908479943503,
+            "pearson_r_energy_vs_label": 0.854265100024464,
+            "note": "PLAN §7 also lists MAPE and r. They are not the headline."
+          },
+          "curve_sample": [
+            {
+              "target_coverage": 0.1,
+              "k": 35.0,
+              "coverage": 0.09887005649717515,
+              "risk": 101.89153585714283
+            },
+            {
+              "target_coverage": 0.25,
+              "k": 88.0,
+              "coverage": 0.24858757062146894,
+              "risk": 49.48276463636362
+            },
+            {
+              "target_coverage": 0.5,
+              "k": 177.0,
+              "coverage": 0.5,
+              "risk": 34.0336285875706
+            },
+            {
+              "target_coverage": 0.75,
+              "k": 266.0,
+              "coverage": 0.751412429378531,
+              "risk": 32.58774019172932
+            },
+            {
+              "target_coverage": 1.0,
+              "k": 354.0,
+              "coverage": 1.0,
+              "risk": 30.820513737288117
+            }
+          ],
+          "selective_api": "vdr.eval.selective.coverage_and_selective_mae + aurc"
+        },
+        "ours_mask_shuffle": {
+          "population": "logged_grounded_stop",
+          "n_population": 354,
+          "n_scored": 354,
+          "n_unscored": 0,
+          "unscored_dish_ids": [],
+          "n_policy_abstain": 108,
+          "n_early_decision": 120,
+          "n_energy_equals_logged_terminal": 235,
+          "n_energy_differs_from_logged_terminal": 119,
+          "decision_actions": {
+            "ABSTAIN": 108,
+            "RETRIEVE": 26,
+            "RE_PORTION": 24,
+            "STOP": 196
+          },
+          "full_set_mae_kcal": 80.39642986723163,
+          "full_set_definition": "Mean |force-answer energy − cafe label| over scored dishes. Policy ABSTAIN rows stay in this mean when they have a finite energy.",
+          "coverage": 0.6949152542372882,
+          "selective_mae_kcal": 100.90277111788618,
+          "n_kept": 246,
+          "coverage_of_population": 0.6949152542372882,
+          "aurc": 101.26600030891298,
+          "aurc_lower_is_better": true,
+          "risk_at_full_coverage": 80.3964298672317,
+          "risk_at_min_coverage": 13.417999000000009,
+          "spearman_abstain_score_vs_abs_error": -0.3065007651567128,
+          "spearman_note": "Positive: higher P(ABSTAIN) lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned.",
+          "secondary_score_threshold": {
+            "threshold": 0.5,
+            "rule": "keep where abstain_score < 0.5",
+            "note": "Fixed conventional cut. Not selected on hold-out or rgb_test. Primary coverage uses the ABSTAIN action flag, not this cut.",
+            "coverage": 0.7005649717514124,
+            "selective_mae_kcal": 100.92555691935483,
+            "n_kept": 248
+          },
+          "secondary_literature": {
+            "mape_percent": 40.34001185812648,
+            "median_abs_error_kcal": 20.884796499999997,
+            "mean_signed_error_kcal": -17.15408479943503,
+            "pearson_r_energy_vs_label": 0.649746689693064,
+            "note": "PLAN §7 also lists MAPE and r. They are not the headline."
+          },
+          "curve_sample": [
+            {
+              "target_coverage": 0.1,
+              "k": 35.0,
+              "coverage": 0.09887005649717515,
+              "risk": 75.59336748571425
+            },
+            {
+              "target_coverage": 0.25,
+              "k": 88.0,
+              "coverage": 0.24858757062146894,
+              "risk": 118.73750104545452
+            },
+            {
+              "target_coverage": 0.5,
+              "k": 177.0,
+              "coverage": 0.5,
+              "risk": 128.6707226045197
+            },
+            {
+              "target_coverage": 0.75,
+              "k": 266.0,
+              "coverage": 0.751412429378531,
+              "risk": 97.95448366541352
+            },
+            {
+              "target_coverage": 1.0,
+              "k": 354.0,
+              "coverage": 1.0,
+              "risk": 80.3964298672317
+            }
+          ],
+          "selective_api": "vdr.eval.selective.coverage_and_selective_mae + aurc"
+        },
+        "ours_mask_zero": {
+          "population": "logged_grounded_stop",
+          "n_population": 354,
+          "n_scored": 354,
+          "n_unscored": 0,
+          "unscored_dish_ids": [],
+          "n_policy_abstain": 346,
+          "n_early_decision": 0,
+          "n_energy_equals_logged_terminal": 354,
+          "n_energy_differs_from_logged_terminal": 0,
+          "decision_actions": {
+            "ABSTAIN": 346,
+            "STOP": 8
+          },
+          "full_set_mae_kcal": 30.820513737288138,
+          "full_set_definition": "Mean |force-answer energy − cafe label| over scored dishes. Policy ABSTAIN rows stay in this mean when they have a finite energy.",
+          "coverage": 0.022598870056497175,
+          "selective_mae_kcal": 55.00519649999999,
+          "n_kept": 8,
+          "coverage_of_population": 0.022598870056497175,
+          "aurc": 41.312638751333786,
+          "aurc_lower_is_better": true,
+          "risk_at_full_coverage": 30.820513737288152,
+          "risk_at_min_coverage": 59.133678999999916,
+          "spearman_abstain_score_vs_abs_error": -0.5057799117280021,
+          "spearman_note": "Positive: higher P(ABSTAIN) lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned.",
+          "secondary_score_threshold": {
+            "threshold": 0.5,
+            "rule": "keep where abstain_score < 0.5",
+            "note": "Fixed conventional cut. Not selected on hold-out or rgb_test. Primary coverage uses the ABSTAIN action flag, not this cut.",
+            "coverage": 0.022598870056497175,
+            "selective_mae_kcal": 55.00519649999999,
+            "n_kept": 8
+          },
+          "secondary_literature": {
+            "mape_percent": 13.900423740276338,
+            "median_abs_error_kcal": 12.875349999999997,
+            "mean_signed_error_kcal": -10.22908479943503,
+            "pearson_r_energy_vs_label": 0.854265100024464,
+            "note": "PLAN §7 also lists MAPE and r. They are not the headline."
+          },
+          "curve_sample": [
+            {
+              "target_coverage": 0.1,
+              "k": 35.0,
+              "coverage": 0.09887005649717515,
+              "risk": 50.40712682857144
+            },
+            {
+              "target_coverage": 0.25,
+              "k": 88.0,
+              "coverage": 0.24858757062146894,
+              "risk": 38.01547978409092
+            },
+            {
+              "target_coverage": 0.5,
+              "k": 177.0,
+              "coverage": 0.5,
+              "risk": 44.7391032542373
+            },
+            {
+              "target_coverage": 0.75,
+              "k": 266.0,
+              "coverage": 0.751412429378531,
+              "risk": 38.60409153007522
+            },
+            {
+              "target_coverage": 1.0,
+              "k": 354.0,
+              "coverage": 1.0,
+              "risk": 30.820513737288152
+            }
+          ],
+          "selective_api": "vdr.eval.selective.coverage_and_selective_mae + aurc"
+        }
+      }
+    },
+    "any_finite_horizon_energy": {
+      "population": "any_finite_horizon_energy",
+      "n_common_scored": 374,
+      "note": "Intersection of dishes in this population with a finite force-answer energy under every method. Use it when one method leaves a dish unscored.",
+      "methods": {
+        "b5_open_loop": {
+          "population": "any_finite_horizon_energy",
+          "n_population": 374,
+          "n_scored": 374,
+          "n_unscored": 0,
+          "unscored_dish_ids": [],
+          "n_policy_abstain": 0,
+          "n_early_decision": 0,
+          "n_energy_equals_logged_terminal": 354,
+          "n_energy_differs_from_logged_terminal": 0,
+          "decision_actions": {
+            "STOP": 374
+          },
+          "full_set_mae_kcal": 38.00923663636364,
+          "full_set_definition": "Mean |force-answer energy − cafe label| over scored dishes. Policy ABSTAIN rows stay in this mean when they have a finite energy.",
+          "coverage": 1.0,
+          "selective_mae_kcal": 38.00923663636364,
+          "n_kept": 374,
+          "coverage_of_population": 1.0,
+          "aurc": 37.30023825518161,
+          "aurc_lower_is_better": true,
+          "risk_at_full_coverage": 38.00923663636362,
+          "risk_at_min_coverage": 59.133678999999916,
+          "spearman_abstain_score_vs_abs_error": 0.04438348589319921,
+          "spearman_note": "Positive: higher P(ABSTAIN) lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned.",
+          "secondary_score_threshold": {
+            "threshold": 0.5,
+            "rule": "keep where abstain_score < 0.5",
+            "note": "Fixed conventional cut. Not selected on hold-out or rgb_test. Primary coverage uses the ABSTAIN action flag, not this cut.",
+            "coverage": 1.0,
+            "selective_mae_kcal": 38.00923663636364,
+            "n_kept": 374
+          },
+          "secondary_literature": {
+            "mape_percent": 16.423444555271505,
+            "median_abs_error_kcal": 13.560000500000001,
+            "mean_signed_error_kcal": -11.117575743315511,
+            "pearson_r_energy_vs_label": 0.8255485688780891,
+            "note": "PLAN §7 also lists MAPE and r. They are not the headline."
+          },
+          "curve_sample": [
+            {
+              "target_coverage": 0.1,
+              "k": 37.0,
+              "coverage": 0.09893048128342247,
+              "risk": 63.62918899999999
+            },
+            {
+              "target_coverage": 0.25,
+              "k": 94.0,
+              "coverage": 0.25133689839572193,
+              "risk": 39.29327692553193
+            },
+            {
+              "target_coverage": 0.5,
+              "k": 187.0,
+              "coverage": 0.5,
+              "risk": 24.05300289839572
+            },
+            {
+              "target_coverage": 0.75,
+              "k": 280.0,
+              "coverage": 0.7486631016042781,
+              "risk": 35.71688669642857
+            },
+            {
+              "target_coverage": 1.0,
+              "k": 374.0,
+              "coverage": 1.0,
+              "risk": 38.00923663636362
+            }
+          ],
+          "selective_api": "vdr.eval.selective.coverage_and_selective_mae + aurc"
+        },
+        "ours_mask_none": {
+          "population": "any_finite_horizon_energy",
+          "n_population": 374,
+          "n_scored": 374,
+          "n_unscored": 0,
+          "unscored_dish_ids": [],
+          "n_policy_abstain": 28,
+          "n_early_decision": 0,
+          "n_energy_equals_logged_terminal": 354,
+          "n_energy_differs_from_logged_terminal": 0,
+          "decision_actions": {
+            "ABSTAIN": 28,
+            "STOP": 346
+          },
+          "full_set_mae_kcal": 38.00923663636364,
+          "full_set_definition": "Mean |force-answer energy − cafe label| over scored dishes. Policy ABSTAIN rows stay in this mean when they have a finite energy.",
+          "coverage": 0.9251336898395722,
+          "selective_mae_kcal": 35.84376356358382,
+          "n_kept": 346,
+          "coverage_of_population": 0.9251336898395722,
+          "aurc": 58.33633708181614,
+          "aurc_lower_is_better": true,
+          "risk_at_full_coverage": 38.00923663636364,
+          "risk_at_min_coverage": 182.69799799999998,
+          "spearman_abstain_score_vs_abs_error": 0.17326128939612076,
+          "spearman_note": "Positive: higher P(ABSTAIN) lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned.",
+          "secondary_score_threshold": {
+            "threshold": 0.5,
+            "rule": "keep where abstain_score < 0.5",
+            "note": "Fixed conventional cut. Not selected on hold-out or rgb_test. Primary coverage uses the ABSTAIN action flag, not this cut.",
+            "coverage": 0.9251336898395722,
+            "selective_mae_kcal": 35.84376356358382,
+            "n_kept": 346
+          },
+          "secondary_literature": {
+            "mape_percent": 16.423444555271505,
+            "median_abs_error_kcal": 13.560000500000001,
+            "mean_signed_error_kcal": -11.117575743315511,
+            "pearson_r_energy_vs_label": 0.8255485688780891,
+            "note": "PLAN §7 also lists MAPE and r. They are not the headline."
+          },
+          "curve_sample": [
+            {
+              "target_coverage": 0.1,
+              "k": 37.0,
+              "coverage": 0.09893048128342247,
+              "risk": 96.78847962162159
+            },
+            {
+              "target_coverage": 0.25,
+              "k": 94.0,
+              "coverage": 0.25133689839572193,
+              "risk": 46.40816258510637
+            },
+            {
+              "target_coverage": 0.5,
+              "k": 187.0,
+              "coverage": 0.5,
+              "risk": 34.519390780748644
+            },
+            {
+              "target_coverage": 0.75,
+              "k": 280.0,
+              "coverage": 0.7486631016042781,
+              "risk": 33.64425419642858
+            },
+            {
+              "target_coverage": 1.0,
+              "k": 374.0,
+              "coverage": 1.0,
+              "risk": 38.00923663636364
+            }
+          ],
+          "selective_api": "vdr.eval.selective.coverage_and_selective_mae + aurc"
+        },
+        "ours_mask_shuffle": {
+          "population": "any_finite_horizon_energy",
+          "n_population": 374,
+          "n_scored": 374,
+          "n_unscored": 0,
+          "unscored_dish_ids": [],
+          "n_policy_abstain": 113,
+          "n_early_decision": 126,
+          "n_energy_equals_logged_terminal": 235,
+          "n_energy_differs_from_logged_terminal": 119,
+          "decision_actions": {
+            "ABSTAIN": 113,
+            "RETRIEVE": 27,
+            "RE_PORTION": 29,
+            "STOP": 205
+          },
+          "full_set_mae_kcal": 85.39705178074867,
+          "full_set_definition": "Mean |force-answer energy − cafe label| over scored dishes. Policy ABSTAIN rows stay in this mean when they have a finite energy.",
+          "coverage": 0.6978609625668449,
+          "selective_mae_kcal": 103.58737481226053,
+          "n_kept": 261,
+          "coverage_of_population": 0.6978609625668449,
+          "aurc": 103.75223401557548,
+          "aurc_lower_is_better": true,
+          "risk_at_full_coverage": 85.39705178074873,
+          "risk_at_min_coverage": 0.31121799999999666,
+          "spearman_abstain_score_vs_abs_error": -0.2783513260055942,
+          "spearman_note": "Positive: higher P(ABSTAIN) lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned.",
+          "secondary_score_threshold": {
+            "threshold": 0.5,
+            "rule": "keep where abstain_score < 0.5",
+            "note": "Fixed conventional cut. Not selected on hold-out or rgb_test. Primary coverage uses the ABSTAIN action flag, not this cut.",
+            "coverage": 0.7032085561497327,
+            "selective_mae_kcal": 103.58844580608366,
+            "n_kept": 263
+          },
+          "secondary_literature": {
+            "mape_percent": 41.63820900200941,
+            "median_abs_error_kcal": 22.807884,
+            "mean_signed_error_kcal": -18.40835114438503,
+            "pearson_r_energy_vs_label": 0.6305816018597605,
+            "note": "PLAN §7 also lists MAPE and r. They are not the headline."
+          },
+          "curve_sample": [
+            {
+              "target_coverage": 0.1,
+              "k": 37.0,
+              "coverage": 0.09893048128342247,
+              "risk": 71.98186702702701
+            },
+            {
+              "target_coverage": 0.25,
+              "k": 94.0,
+              "coverage": 0.25133689839572193,
+              "risk": 116.9122894255319
+            },
+            {
+              "target_coverage": 0.5,
+              "k": 187.0,
+              "coverage": 0.5,
+              "risk": 132.2641819625668
+            },
+            {
+              "target_coverage": 0.75,
+              "k": 280.0,
+              "coverage": 0.7486631016042781,
+              "risk": 101.49656359642854
+            },
+            {
+              "target_coverage": 1.0,
+              "k": 374.0,
+              "coverage": 1.0,
+              "risk": 85.39705178074873
+            }
+          ],
+          "selective_api": "vdr.eval.selective.coverage_and_selective_mae + aurc"
+        },
+        "ours_mask_zero": {
+          "population": "any_finite_horizon_energy",
+          "n_population": 374,
+          "n_scored": 374,
+          "n_unscored": 0,
+          "unscored_dish_ids": [],
+          "n_policy_abstain": 366,
+          "n_early_decision": 0,
+          "n_energy_equals_logged_terminal": 354,
+          "n_energy_differs_from_logged_terminal": 0,
+          "decision_actions": {
+            "ABSTAIN": 366,
+            "STOP": 8
+          },
+          "full_set_mae_kcal": 38.00923663636364,
+          "full_set_definition": "Mean |force-answer energy − cafe label| over scored dishes. Policy ABSTAIN rows stay in this mean when they have a finite energy.",
+          "coverage": 0.0213903743315508,
+          "selective_mae_kcal": 55.00519649999999,
+          "n_kept": 8,
+          "coverage_of_population": 0.0213903743315508,
+          "aurc": 52.172890257640816,
+          "aurc_lower_is_better": true,
+          "risk_at_full_coverage": 38.009236636363646,
+          "risk_at_min_coverage": 59.133678999999916,
+          "spearman_abstain_score_vs_abs_error": -0.5056897620109622,
+          "spearman_note": "Positive: higher P(ABSTAIN) lines up with larger absolute error, which is the ranking AURC rewards. Negative: the score is anti-aligned.",
+          "secondary_score_threshold": {
+            "threshold": 0.5,
+            "rule": "keep where abstain_score < 0.5",
+            "note": "Fixed conventional cut. Not selected on hold-out or rgb_test. Primary coverage uses the ABSTAIN action flag, not this cut.",
+            "coverage": 0.0213903743315508,
+            "selective_mae_kcal": 55.00519649999999,
+            "n_kept": 8
+          },
+          "secondary_literature": {
+            "mape_percent": 16.423444555271505,
+            "median_abs_error_kcal": 13.560000500000001,
+            "mean_signed_error_kcal": -11.117575743315511,
+            "pearson_r_energy_vs_label": 0.8255485688780891,
+            "note": "PLAN §7 also lists MAPE and r. They are not the headline."
+          },
+          "curve_sample": [
+            {
+              "target_coverage": 0.1,
+              "k": 37.0,
+              "coverage": 0.09893048128342247,
+              "risk": 63.62918899999999
+            },
+            {
+              "target_coverage": 0.25,
+              "k": 94.0,
+              "coverage": 0.25133689839572193,
+              "risk": 50.367646936170225
+            },
+            {
+              "target_coverage": 0.5,
+              "k": 187.0,
+              "coverage": 0.5,
+              "risk": 55.6940703262032
+            },
+            {
+              "target_coverage": 0.75,
+              "k": 280.0,
+              "coverage": 0.7486631016042781,
+              "risk": 47.86607495357145
+            },
+            {
+              "target_coverage": 1.0,
+              "k": 374.0,
+              "coverage": 1.0,
+              "risk": 38.009236636363646
+            }
+          ],
+          "selective_api": "vdr.eval.selective.coverage_and_selective_mae + aurc"
+        }
+      }
+    }
+  },
+  "teacher_terminal_audit": {
+    "n": 356,
+    "mae_kcal": 30.70853488764045,
+    "mae_rounded_like_weak_step_summary": 30.7085,
+    "rounding": "Each dish absolute error is rounded to 4 decimals, then the mean is rounded to 4 decimals. Same rounding as the weak-step summary audit.",
+    "note": "Logged teacher STOP energy versus the cafe label. Not a policy row. Logged ABSTAIN dishes are outside this audit."
+  },
+  "audit": {
+    "uses_test_gt_for_thresholds": false,
+    "threshold_fit": false,
+    "secondary_threshold": 0.5,
+    "online_rollout": false,
+    "vlm": false,
+    "volume_tool": false,
+    "legacy_regression_weights": false,
+    "rl": false,
+    "model_fit_in_this_module": false
+  },
+  "method_order": [
+    "ours_mask_none",
+    "b5_open_loop",
+    "ours_mask_zero",
+    "ours_mask_shuffle"
+  ],
+  "elapsed_seconds": 11.02,
+  "owner": "营养论文代码编写",
+  "status_file": "docs/STATUS.md was not modified. STATUS ownership stays 方案执行.",
+  "scope": {
+    "split": "rgb_train hold-out (380 dishes, disjoint from the fit pool). Not rgb_test and not the 507-dish overhead pool.",
+    "labels": "Nutrition5k cafe dish energy_kcal from dish_metadata_cafe1/cafe2 via vdr.data.n5k.load_labels. Same labels as the weak-step train-energy audit. Labels are used only to score. They are not features and no threshold is fit on them.",
+    "rgb_test": "Not run. A full-set rgb_test number needs a VLM rollout that writes this IR shape. Pass --trajectories with --expect-pool any --allow-test-split later. That path does not search a threshold and does not read results/n5k_*. This run did not pass --allow-test-split.",
+    "b0_b1": "B0 energy MAE 97.03 is the rgb_test Direct-VLM anchor (n=507) and is not a row. B1 110.72 is not faithful DietAI24 and is not a row.",
+    "fixrate_and_accuracy": "FixRate and overall action accuracy are not this table. Action hits below are a weight-loader check.",
+    "b5": "Open-loop 31-d PolicyMLP replayed in memory on the fit pool with the module constants. Hold-out action hits 2688/2771. No checkpoint was written and no constant was changed.",
+    "closed_loop_weights": "Loaded results/closed_loop/policy_state_mlp.npz. PolicyStateMLP.fit was not called.",
+    "mask": "mask-zero nulls the observation block. mask-shuffle permutes it with np.random.default_rng(42 + row_index), row_index in sorted dish_id then step_i. Same rule as scripts/closed_loop_bc_train.py --shuffle-seed 42. B5 has no observation block, so it is not masked."
+  },
+  "loader_sanity": {
+    "ours_mask_none_hits": 2662,
+    "ours_mask_zero_hits": 1950,
+    "ours_mask_shuffle_hits": 1831,
+    "saved_metrics_tp_sum": {
+      "none": 2662,
+      "zero": 1950,
+      "shuffle": 1831
+    },
+    "canonical_holdout_matches_saved_metrics": {
+      "none": true,
+      "zero": true,
+      "shuffle": true
+    },
+    "b5_published_hold_hits": 2688,
+    "b5_hits_on_scored_rows": 2688,
+    "n_rows": 2771,
+    "n_dishes": 380,
+    "note": "Action agreement checks the loader. It is not Full-set MAE / AURC proof."
+  },
+  "inputs": {
+    "trajectories": "results/weak_steps/rgb_train_holdout_all.jsonl",
+    "fit_jsonl": "results/weak_steps/rgb_train_fit_all.jsonl",
+    "weights": "results/closed_loop/policy_state_mlp.npz",
+    "train_meta": "results/closed_loop/train_meta.json",
+    "saved_metrics": "results/closed_loop/metrics_holdout.json",
+    "canonical_holdout": true,
+    "allow_test_split": false,
+    "shuffle_seed": 42,
+    "secondary_abstain_threshold": 0.5,
+    "frozen_sha256_prefix": {
+      "fixrate_holdout.json": "333e108cacbb175f",
+      "metrics_holdout.json": "cbb9340ff5e0bf00",
+      "n5k_rgb_test_overhead_b0_b1.json": "1585be1951b46f71",
+      "n5k_rgb_test_overhead_b0_b1.jsonl": "a4dfdd82e3a595f4",
+      "n5k_subset_b0_b1.json": "1585be1951b46f71",
+      "n5k_subset_b0_b1.jsonl": "a4dfdd82e3a595f4",
+      "n5k_subset_b0_b1_n50_seed42.json": "8e3400bcbfcd56cd",
+      "n5k_subset_b0_b1_n50_seed42.jsonl": "013c899da4724ef2",
+      "policy_state_mlp.npz": "f0ac0b41f99cbd72",
+      "report_fixrate.txt": "ba87e58d87c94a50",
+      "report_holdout.txt": "dab9fe91b8c5ad78",
+      "rgb_train_fit_all.jsonl": "ed47f9239bfecb3c",
+      "rgb_train_fit_all.summary.json": "d11e6a3e547b38d0",
+      "rgb_train_holdout_all.jsonl": "6055ccbbbf0d432e",
+      "rgb_train_holdout_all.summary.json": "c32db76caacf010b",
+      "train_meta.json": "c87f13089b4188d1"
+    },
+    "documented_prefix_match": {
+      "rgb_train_fit_all.jsonl": true,
+      "n5k_rgb_test_overhead_b0_b1.jsonl": true
+    },
+    "frozen_unchanged": true
+  }
+}
