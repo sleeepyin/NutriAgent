@@ -37,7 +37,7 @@
 
 **FixRate 主定义已评测**（2026-11-05 Asia/Shanghai，#26，squash `7e3084f`）。
 
-- 主定义：`offline_policy_matched_terminal_counterfactual`（`scripts/closed_loop_fixrate_eval.py`）。
+- 主定义：`offline_policy_matched_terminal_counterfactual`（`scripts/closed_loop_fixrate.py`；冒烟 `scripts/closed_loop_fixrate_smoke.py`）。
 - Hold-out：FixRate **0.7731**，WorsenRate **0.2177**，Δ **0.5554**，95% CI **[0.4818, 0.6280]**（ε=1 kcal，按 dish 聚类 bootstrap B=10000）。
 - 工具成本 K=32：mean **6.29** / median **5**；**380/380** 在预算内。
 - 产物：`results/closed_loop/fixrate_holdout.json`、`report_fixrate.txt`。
