@@ -8,8 +8,11 @@ Actions that never appear in the fit set are masked at selection time
 because they have no logged ``ΔL``; that mask is a count, not a penalty.
 
 Selection is ``a* = argmax_a Q_φ(z, a) / Cost(a)`` with the costs in
-``vdr.controller.utility``. Width, step size, epoch count, and seed match
-the state-aware BC MLP and were not searched on hold-out or on rgb_test.
+``vdr.controller.utility``. ``predict_actions`` below is that raw argmax.
+``QCostPolicy(..., terminal_margin=tau)`` applies the fit-set fence from
+``vdr.controller.q_calibration`` without changing these weights. Width,
+step size, epoch count, and seed match the state-aware BC MLP and were
+not searched on hold-out or on rgb_test.
 """
 
 from __future__ import annotations

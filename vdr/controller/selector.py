@@ -2,7 +2,9 @@
 
 ``feature_kind="state"`` is the saved state-aware BC ablation: 79-d, no
 ``U_*``. ``feature_kind="z"`` is the error state. Heuristic utility and
-``Q_φ`` both select with ``argmax value / Cost``.
+``Q_φ`` both select with ``argmax value / Cost``. A positive
+``terminal_margin`` is the Q calibration fence: an unresolved stop or
+abstain defers to the rule utility. ``None`` keeps the uncalibrated argmax.
 """
 
 from __future__ import annotations
@@ -12,6 +14,7 @@ from typing import Any
 import numpy as np
 
 from vdr.controller.policy_bc import BC_ACTIONS
+from vdr.controller.q_calibration import calibrated_action
 from vdr.controller.q_phi import QPhi
 from vdr.controller.q_state import Z_DIM, build_z
 from vdr.controller.state_features import build_state_features
@@ -53,13 +56,26 @@ class HeuristicUtilityPolicy:
 
 
 class QCostPolicy:
-    """``a* = argmax Q_φ(z, a) / Cost(a)``. ``feature_kind`` is ``z``."""
+    """``a* = argmax Q_φ(z, a) / Cost(a)``. ``feature_kind`` is ``z``.
+
+    ``terminal_margin`` is the fit-set fence from ``q_calibration``. When it
+    is set, a stop or abstain that beats the best legal specialist by less
+    than that fence uses the rule utility. The learned ``Q`` weights are
+    unchanged.
+    """
 
     feature_kind = "z"
 
-    def __init__(self, model: QPhi) -> None:
+    def __init__(self, model: QPhi, *, terminal_margin: float | None = None) -> None:
         if model.actions != BC_ACTIONS:
             raise ValueError("QCostPolicy requires the BC action order")
+        if terminal_margin is not None:
+            margin = float(terminal_margin)
+            if not np.isfinite(margin) or margin < 0.0:
+                raise ValueError(f"terminal_margin must be finite and non-negative, got {terminal_margin}")
+            self.terminal_margin: float | None = margin
+        else:
+            self.terminal_margin = None
         self.model = model
 
     def predict_actions(self, Z: Any) -> list[str]:
@@ -72,7 +88,10 @@ class QCostPolicy:
         chosen: list[str] = []
         for row_z, row_q in zip(matrix, values):
             payload = {action: float(row_q[index]) for index, action in enumerate(self.model.actions)}
-            chosen.append(argmax_value_over_cost(payload, legal_actions(row_z)))
+            if self.terminal_margin is None:
+                chosen.append(argmax_value_over_cost(payload, legal_actions(row_z)))
+            else:
+                chosen.append(calibrated_action(payload, row_z, self.terminal_margin))
         return chosen
 
     def predict_q(self, Z: Any) -> np.ndarray:
