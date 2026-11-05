@@ -1,13 +1,13 @@
 # 执行状态（STATUS）
 
 > 供 GitHub 同步：服务器跑完实验后，请在本文件更新。`notes/` 历史周报已删除，见 [`notes/README.md`](../notes/README.md)。执行助手据此继续改代码/方案。  
-> **截止日期（文档写入时）**：2026-11-04（Asia/Shanghai）。**Cursor 额度已恢复**；闭环 State-aware BC 训练在本 PR 落地。开环 31 维仍只作消融 **B5**。  
+> **截止日期（文档写入时）**：2026-11-05（Asia/Shanghai）。**下一步**：FixRate−WorsenRate（hold-out + `results/closed_loop/policy_state_mlp.npz`），随后主表 MAE / AURC。闭环 State-aware BC 已在 PR #24（merge `9cb7e55`）落地。开环 31 维仍只作消融 **B5**。  
 > **可执行的下一步只在本文件。** 聊天不是 runbook。助手改下一步、跑法或方案时，先更新文档并推到 GitHub；服务器上的人或 AI 先 `git pull --ff-only`，再读「下一步」执行。  
 > **服务器执行看「下一步」。** 这一节没有新的弱标签 / 507 命令。历史 `--n 50`、俯拍池 `--n 507`、弱标签 jsonl、开环 BC 数字都是已完成记录，不要再执行。
 
 ## 下一步（立即执行）
 
-> 真源：根目录 [`PLAN.md`](../PLAN.md)、Canvas「VDR — Evidence-Aware Closed-Loop Tool Control」、[`docs/VDR_P0.md`](VDR_P0.md)、[`docs/STATE_FEATURE_DESIGN.md`](STATE_FEATURE_DESIGN.md)。**2026-11-04（Asia/Shanghai）Cursor 额度恢复后，闭环 `π(a_t|h_t,o_{t-1},b_t)` 已在本 PR 实现 + 训练 + hold-out 评测。** `CLOSED_LOOP_READY=true`（见 `vdr/controller/state_features.py`）。开环 31 维 `build_features` 仍是消融 **B5**（`PolicyMLP` / `scripts/bc_mlp_smoke.py` 不变）。**不上 RL。不开 fast Cloud Agent。** 冻结结果不重写。
+> 真源：根目录 [`PLAN.md`](../PLAN.md)、Canvas「VDR — Evidence-Aware Closed-Loop Tool Control」、[`docs/VDR_P0.md`](VDR_P0.md)、[`docs/STATE_FEATURE_DESIGN.md`](STATE_FEATURE_DESIGN.md)。**`CLOSED_LOOP_READY=true`（见 `vdr/controller/state_features.py`）。** 闭环 State-aware BC hold-out 已完成（PR #24 / `9cb7e55`）：**ABSTAIN F1=0.5091**；H2 mask-zero **ABSTAIN F1=0.1212**。overall Acc **次要**，不能当方法证明。开环 31 维 `build_features` 仍是消融 **B5**（`PolicyMLP` / `scripts/bc_mlp_smoke.py` 不变）。**不上 RL。不开 fast Cloud Agent。** 冻结结果不重写。
 
 ### 服务器
 
@@ -33,14 +33,17 @@
 - **Full fit** 25864 行 / hold-out 2771 行，CPU ~14s fit。Hold-out（mask none）：overall Acc **0.9607**（次要）；**ABSTAIN F1=0.5091**（14/24）；per-class PR/F1 见 json。**H2 mask-zero**：Acc **0.7037**，**ABSTAIN F1=0.1212**（obs 块有关）。mask-shuffle ABSTAIN F1 **0.0870**。这不是 Full-set MAE / AURC 主表证明。
 - `CLOSED_LOOP_READY=true`。B5 开环 MLP hold-out Acc **0.9700** / ABSTAIN F1=0 仍是消融对照，不是主方法。
 
+**下一版 STATUS 优先级**：FixRate−WorsenRate（+ 同预算 Tool cost），再主表 MAE / AURC；**不再**开一轮闭环 BC 训练。
+
 **P0 冒烟 / B1-B2 脚手架**（#19 / #22）仍有效：`CLOSED_LOOP_READY` 以前为 false 的记录保留在历史段。B1 scaffold / B2 approx 仍等 live API。
 
 ### 助手 / 本地（优先）
 
-1. **闭环 BC（本 PR 已完成）：** `build_state_features(h_t,o_prev,b_t)` + `PolicyStateMLP`；结果在 `results/closed_loop/`。后续迭代（DAgger、阈值、主表 MAE/AURC）另开 PR，仍禁止 RL / test GT / 体积 / 旧回归 / 覆盖冻结 jsonl。
-2. **稍后（需要线上 API / 权重）：** 忠实 DietAI24 与 FoodAgent（Omni+MFP3D+NutritionX）。不要把 scaffold 数字写进冻结 `results/n5k_*`。
-3. **P2 标注指南升级稍后 / 人工：** kappa **0.7–0.8**；试标 30。`docs/annotation_guide_v0.md` 仍是 v0。
-4. **禁止**：单独用 overall Acc 当方法证明；忽视 hold-out **ABSTAIN** per-class PR/F1；上 RL；开 fast Cloud Agent；用 test GT 调参；开体积工具；接旧回归权重；覆盖上面列出的冻结文件；把 **110.72** 当成忠实 DietAI24；把 B2 approx 写成 Fixed-MoE。
+1. **FixRate / WorsenRate（立即，代码侧主写）：** 在 hold-out 弱步骤 + 闭环策略（`results/closed_loop/policy_state_mlp.npz`）上，按 PLAN §7 / H1 实现 FixRate−WorsenRate，预注册 ε 与 95% CI。同一预算 **K** 下报告 Tool cost。指标只写入 `results/closed_loop/`（新文件，勿覆盖）。勿改写冻结 n5k / weak_steps jsonl。Owner：营养论文代码编写；STATUS owner 仍是方案执行。FixRate 脚本 + 指标 **单独一个 PR**。
+2. **主表 MAE / AURC（FixRate 后）：** 全集能量 MAE + Coverage / Selective MAE / AURC（Ours vs B5，含 mask 观测）。用现有 `vdr/eval/selective.py` 与脚本。仍禁止用 test GT 调参。
+3. **稍后（需要线上 API / 权重）：** 忠实 DietAI24 与 FoodAgent（Omni+MFP3D+NutritionX）。不要把 scaffold 数字写进冻结 `results/n5k_*`。
+4. **P2 标注指南升级稍后 / 人工：** kappa **0.7–0.8**；试标 30。`docs/annotation_guide_v0.md` 仍是 v0。
+5. **禁止**：单独用 overall Acc 当方法证明；忽视 hold-out **ABSTAIN** per-class PR/F1；上 RL；开 fast Cloud Agent；用 test GT 调参；开体积工具；接旧回归权重；覆盖上面列出的冻结文件；把 **110.72** 当成忠实 DietAI24；把 B2 approx 写成 Fixed-MoE。
 
 ### 协作
 
