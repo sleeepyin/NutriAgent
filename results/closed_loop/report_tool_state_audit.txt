@@ -1,0 +1,237 @@
+P0a tool-state audit (dish energy and mass)
+definition: p0a_tool_pre_post_dish_n
+scope: P0a audit gate only. Mass Estimator was not trained. No new weights. No RL.
+epsilon_energy_kcal: 5e-5 (5e-05) epsilon_mass_g: 5e-5 (5e-05)
+epsilon_source: Half of the teacher _round_nutri quantum (4 decimal places, 1e-4). Not fit on hold-out or rgb_test.
+fixrate_epsilon_kcal_not_used: 1.0
+comparison: pre = nutri_dish on the tool row (state before action_t). post = nutri_dish on the next logged row (state after the tool, before the next action).
+change_rule: changed if |Δenergy| > ε or |Δmass| > ε, or exactly one side of a field is finite. Both sides missing is unchanged. no_successor is a separate outcome and is not a change.
+edit_actions: CORRECT_CODE, RE_PORTION, RE_DECOMPOSE
+also_audited: CORRECT_CODE, RE_PORTION, RE_DECOMPOSE, RETRIEVE
+
+[logged_holdout] dishes=380 rows=2771 dishes_with_tool=380 step_gaps=0 energy_keys=['energy_kcal'] mass_keys=['mass_g']
+  overall: executed=2391 changed=2336 unchanged=55 no_successor=0 dishes=380
+  change_rate=0.9770 (2336/2391) no_change_rate=0.0230 (55/2391) no_successor_rate=0.0000 (0/2391)
+  energy_change_rate=0.9770 (2336/2391) mass_change_rate=0.9113 (2179/2391) energy_and_mass=2179 energy_only=157 mass_only=0
+  value_edit=1926 appear=383 wipe=27 null_flip=410 macro_only_unchanged=0
+  unchanged_or_no_successor_reasons: both_missing=21, within_epsilon=34
+  |Δ| both finite: energy median=64.45 median_when_energy_changed=69.3 n_gt_1kcal=1926/1960; mass median=95.0 median_when_mass_changed=95.0 n_gt_1g=1769/1960
+  wipe_next_action: ABSTAIN=20, RETRIEVE=7
+  edit_actions: executed=1106 changed=1106 unchanged=0 no_successor=0 dishes=342
+  change_rate=1.0000 (1106/1106) no_change_rate=0.0000 (0/1106) no_successor_rate=0.0000 (0/1106)
+  energy_change_rate=1.0000 (1106/1106) mass_change_rate=0.8580 (949/1106) energy_and_mass=949 energy_only=157 mass_only=0
+  value_edit=1098 appear=0 wipe=8 null_flip=8 macro_only_unchanged=0
+  |Δ| both finite: energy median=51.5 median_when_energy_changed=51.5 n_gt_1kcal=1098/1098; mass median=60.0 median_when_mass_changed=70.0 n_gt_1g=941/1098
+  wipe_next_action: ABSTAIN=8
+  CORRECT_CODE: executed=157 changed=157 unchanged=0 no_successor=0 dishes=117
+  change_rate=1.0000 (157/157) no_change_rate=0.0000 (0/157) no_successor_rate=0.0000 (0/157)
+  energy_change_rate=1.0000 (157/157) mass_change_rate=0.0000 (0/157) energy_and_mass=0 energy_only=157 mass_only=0
+  value_edit=157 appear=0 wipe=0 null_flip=0 macro_only_unchanged=0
+  |Δ| both finite: energy median=43.0 median_when_energy_changed=43.0 n_gt_1kcal=157/157; mass median=0.0 median_when_mass_changed=None n_gt_1g=0/157
+  mass_note: mass_g stayed within ε on every executed step; energy_kcal moved on the changed steps. A same-gram code swap does not move mass.
+  RE_PORTION: executed=949 changed=949 unchanged=0 no_successor=0 dishes=336
+  change_rate=1.0000 (949/949) no_change_rate=0.0000 (0/949) no_successor_rate=0.0000 (0/949)
+  energy_change_rate=1.0000 (949/949) mass_change_rate=1.0000 (949/949) energy_and_mass=949 energy_only=0 mass_only=0
+  value_edit=941 appear=0 wipe=8 null_flip=8 macro_only_unchanged=0
+  |Δ| both finite: energy median=55.2 median_when_energy_changed=55.2 n_gt_1kcal=941/941; mass median=70.0 median_when_mass_changed=70.0 n_gt_1g=941/941
+  wipe_next_action: ABSTAIN=8
+  RE_DECOMPOSE: executed=0 changed=0 unchanged=0 no_successor=0 dishes=0
+  change_rate=n/a no_change_rate=n/a no_successor_rate=n/a
+  energy_change_rate=n/a mass_change_rate=n/a energy_and_mass=0 energy_only=0 mass_only=0
+  value_edit=0 appear=0 wipe=0 null_flip=0 macro_only_unchanged=0
+  RETRIEVE: executed=1285 changed=1230 unchanged=55 no_successor=0 dishes=380
+  change_rate=0.9572 (1230/1285) no_change_rate=0.0428 (55/1285) no_successor_rate=0.0000 (0/1285)
+  energy_change_rate=0.9572 (1230/1285) mass_change_rate=0.9572 (1230/1285) energy_and_mass=1230 energy_only=0 mass_only=0
+  value_edit=828 appear=383 wipe=19 null_flip=402 macro_only_unchanged=0
+  unchanged_or_no_successor_reasons: both_missing=21, within_epsilon=34
+  |Δ| both finite: energy median=94.0 median_when_energy_changed=96.0 n_gt_1kcal=828/862; mass median=100.0 median_when_mass_changed=100.0 n_gt_1g=828/862
+  wipe_next_action: ABSTAIN=12, RETRIEVE=7
+
+[on_policy_rgb_test] dishes=507 rows=3822 dishes_with_tool=506 step_gaps=0 energy_keys=['energy_kcal'] mass_keys=['mass_g']
+  overall: executed=3325 changed=3131 unchanged=184 no_successor=10 dishes=506
+  change_rate=0.9417 (3131/3325) no_change_rate=0.0553 (184/3325) no_successor_rate=0.0030 (10/3325)
+  energy_change_rate=0.9417 (3131/3325) mass_change_rate=0.8626 (2868/3325) energy_and_mass=2868 energy_only=263 mass_only=0
+  value_edit=2618 appear=505 wipe=8 null_flip=513 macro_only_unchanged=2
+  unchanged_or_no_successor_reasons: code_switched_same_nutri=11, macro_only=2, no_successor=10, same_portion_grams=77, tool_failed=64, within_epsilon=30
+  tool_failed: n=67 changed=0 unchanged=64 no_successor=3
+  |Δ| both finite: energy median=38.0 median_when_energy_changed=39.9 n_gt_1kcal=2615/2800; mass median=60.0 median_when_mass_changed=80.0 n_gt_1g=2355/2800
+  wipe_next_action: ABSTAIN=8
+  edit_actions: executed=1795 changed=1647 unchanged=148 no_successor=0 dishes=504
+  change_rate=0.9175 (1647/1795) no_change_rate=0.0825 (148/1795) no_successor_rate=0.0000 (0/1795)
+  energy_change_rate=0.9175 (1647/1795) mass_change_rate=0.7755 (1392/1795) energy_and_mass=1392 energy_only=255 mass_only=0
+  value_edit=1639 appear=0 wipe=8 null_flip=8 macro_only_unchanged=2
+  unchanged_or_no_successor_reasons: code_switched_same_nutri=11, macro_only=2, same_portion_grams=77, tool_failed=58
+  tool_failed: n=58 changed=0 unchanged=58 no_successor=0
+  |Δ| both finite: energy median=28.6 median_when_energy_changed=32.0 n_gt_1kcal=1636/1787; mass median=25.0 median_when_mass_changed=40.0 n_gt_1g=1384/1787
+  wipe_next_action: ABSTAIN=8
+  CORRECT_CODE: executed=326 changed=255 unchanged=71 no_successor=0 dishes=237
+  change_rate=0.7822 (255/326) no_change_rate=0.2178 (71/326) no_successor_rate=0.0000 (0/326)
+  energy_change_rate=0.7822 (255/326) mass_change_rate=0.0000 (0/326) energy_and_mass=0 energy_only=255 mass_only=0
+  value_edit=255 appear=0 wipe=0 null_flip=0 macro_only_unchanged=2
+  unchanged_or_no_successor_reasons: code_switched_same_nutri=11, macro_only=2, tool_failed=58
+  tool_failed: n=58 changed=0 unchanged=58 no_successor=0
+  |Δ| both finite: energy median=33.0 median_when_energy_changed=43.0 n_gt_1kcal=252/326; mass median=0.0 median_when_mass_changed=None n_gt_1g=0/326
+  mass_note: mass_g stayed within ε on every executed step; energy_kcal moved on the changed steps. A same-gram code swap does not move mass.
+  RE_PORTION: executed=1469 changed=1392 unchanged=77 no_successor=0 dishes=504
+  change_rate=0.9476 (1392/1469) no_change_rate=0.0524 (77/1469) no_successor_rate=0.0000 (0/1469)
+  energy_change_rate=0.9476 (1392/1469) mass_change_rate=0.9476 (1392/1469) energy_and_mass=1392 energy_only=0 mass_only=0
+  value_edit=1384 appear=0 wipe=8 null_flip=8 macro_only_unchanged=0
+  unchanged_or_no_successor_reasons: same_portion_grams=77
+  |Δ| both finite: energy median=27.3 median_when_energy_changed=30.5 n_gt_1kcal=1384/1461; mass median=40.0 median_when_mass_changed=40.0 n_gt_1g=1384/1461
+  wipe_next_action: ABSTAIN=8
+  RE_DECOMPOSE: executed=0 changed=0 unchanged=0 no_successor=0 dishes=0
+  change_rate=n/a no_change_rate=n/a no_successor_rate=n/a
+  energy_change_rate=n/a mass_change_rate=n/a energy_and_mass=0 energy_only=0 mass_only=0
+  value_edit=0 appear=0 wipe=0 null_flip=0 macro_only_unchanged=0
+  RETRIEVE: executed=1530 changed=1484 unchanged=36 no_successor=10 dishes=506
+  change_rate=0.9699 (1484/1530) no_change_rate=0.0235 (36/1530) no_successor_rate=0.0065 (10/1530)
+  energy_change_rate=0.9699 (1484/1530) mass_change_rate=0.9647 (1476/1530) energy_and_mass=1476 energy_only=8 mass_only=0
+  value_edit=979 appear=505 wipe=0 null_flip=505 macro_only_unchanged=0
+  unchanged_or_no_successor_reasons: no_successor=10, tool_failed=6, within_epsilon=30
+  tool_failed: n=9 changed=0 unchanged=6 no_successor=3
+  |Δ| both finite: energy median=52.0 median_when_energy_changed=57.0 n_gt_1kcal=979/1013; mass median=100.0 median_when_mass_changed=100.0 n_gt_1g=971/1013
+
+[logged_holdout_stop_pass_corrected] dishes=356 rows=2606 dishes_with_tool=356 step_gaps=0 energy_keys=['energy_kcal'] mass_keys=['mass_g']
+  overall: executed=2250 changed=2213 unchanged=37 no_successor=0 dishes=356
+  change_rate=0.9836 (2213/2250) no_change_rate=0.0164 (37/2250) no_successor_rate=0.0000 (0/2250)
+  energy_change_rate=0.9836 (2213/2250) mass_change_rate=0.9151 (2059/2250) energy_and_mass=2059 energy_only=154 mass_only=0
+  value_edit=1845 appear=362 wipe=6 null_flip=368 macro_only_unchanged=0
+  unchanged_or_no_successor_reasons: both_missing=13, within_epsilon=24
+  |Δ| both finite: energy median=64.2 median_when_energy_changed=68.8 n_gt_1kcal=1845/1869; mass median=95.0 median_when_mass_changed=95.0 n_gt_1g=1691/1869
+  wipe_next_action: RETRIEVE=6
+  edit_actions: executed=1061 changed=1061 unchanged=0 no_successor=0 dishes=327
+  change_rate=1.0000 (1061/1061) no_change_rate=0.0000 (0/1061) no_successor_rate=0.0000 (0/1061)
+  energy_change_rate=1.0000 (1061/1061) mass_change_rate=0.8549 (907/1061) energy_and_mass=907 energy_only=154 mass_only=0
+  value_edit=1061 appear=0 wipe=0 null_flip=0 macro_only_unchanged=0
+  |Δ| both finite: energy median=50.4 median_when_energy_changed=50.4 n_gt_1kcal=1061/1061; mass median=60.0 median_when_mass_changed=70.0 n_gt_1g=907/1061
+  CORRECT_CODE: executed=154 changed=154 unchanged=0 no_successor=0 dishes=114
+  change_rate=1.0000 (154/154) no_change_rate=0.0000 (0/154) no_successor_rate=0.0000 (0/154)
+  energy_change_rate=1.0000 (154/154) mass_change_rate=0.0000 (0/154) energy_and_mass=0 energy_only=154 mass_only=0
+  value_edit=154 appear=0 wipe=0 null_flip=0 macro_only_unchanged=0
+  |Δ| both finite: energy median=43.0 median_when_energy_changed=43.0 n_gt_1kcal=154/154; mass median=0.0 median_when_mass_changed=None n_gt_1g=0/154
+  mass_note: mass_g stayed within ε on every executed step; energy_kcal moved on the changed steps. A same-gram code swap does not move mass.
+  RE_PORTION: executed=907 changed=907 unchanged=0 no_successor=0 dishes=321
+  change_rate=1.0000 (907/907) no_change_rate=0.0000 (0/907) no_successor_rate=0.0000 (0/907)
+  energy_change_rate=1.0000 (907/907) mass_change_rate=1.0000 (907/907) energy_and_mass=907 energy_only=0 mass_only=0
+  value_edit=907 appear=0 wipe=0 null_flip=0 macro_only_unchanged=0
+  |Δ| both finite: energy median=54.25 median_when_energy_changed=54.25 n_gt_1kcal=907/907; mass median=70.0 median_when_mass_changed=70.0 n_gt_1g=907/907
+  RE_DECOMPOSE: executed=0 changed=0 unchanged=0 no_successor=0 dishes=0
+  change_rate=n/a no_change_rate=n/a no_successor_rate=n/a
+  energy_change_rate=n/a mass_change_rate=n/a energy_and_mass=0 energy_only=0 mass_only=0
+  value_edit=0 appear=0 wipe=0 null_flip=0 macro_only_unchanged=0
+  RETRIEVE: executed=1189 changed=1152 unchanged=37 no_successor=0 dishes=356
+  change_rate=0.9689 (1152/1189) no_change_rate=0.0311 (37/1189) no_successor_rate=0.0000 (0/1189)
+  energy_change_rate=0.9689 (1152/1189) mass_change_rate=0.9689 (1152/1189) energy_and_mass=1152 energy_only=0 mass_only=0
+  value_edit=784 appear=362 wipe=6 null_flip=368 macro_only_unchanged=0
+  unchanged_or_no_successor_reasons: both_missing=13, within_epsilon=24
+  |Δ| both finite: energy median=94.0 median_when_energy_changed=96.0 n_gt_1kcal=784/808; mass median=100.0 median_when_mass_changed=100.0 n_gt_1g=784/808
+  wipe_next_action: RETRIEVE=6
+
+[on_policy_stop_pass_corrected] dishes=488 rows=3641 dishes_with_tool=488 step_gaps=0 energy_keys=['energy_kcal'] mass_keys=['mass_g']
+  overall: executed=3153 changed=2994 unchanged=159 no_successor=0 dishes=488
+  change_rate=0.9496 (2994/3153) no_change_rate=0.0504 (159/3153) no_successor_rate=0.0000 (0/3153)
+  energy_change_rate=0.9496 (2994/3153) mass_change_rate=0.8693 (2741/3153) energy_and_mass=2741 energy_only=253 mass_only=0
+  value_edit=2506 appear=488 wipe=0 null_flip=488 macro_only_unchanged=2
+  unchanged_or_no_successor_reasons: code_switched_same_nutri=11, macro_only=2, same_portion_grams=75, tool_failed=56, within_epsilon=15
+  tool_failed: n=56 changed=0 unchanged=56 no_successor=0
+  |Δ| both finite: energy median=38.0 median_when_energy_changed=39.0 n_gt_1kcal=2503/2665; mass median=60.0 median_when_mass_changed=80.0 n_gt_1g=2253/2665
+  edit_actions: executed=1722 changed=1578 unchanged=144 no_successor=0 dishes=488
+  change_rate=0.9164 (1578/1722) no_change_rate=0.0836 (144/1722) no_successor_rate=0.0000 (0/1722)
+  energy_change_rate=0.9164 (1578/1722) mass_change_rate=0.7741 (1333/1722) energy_and_mass=1333 energy_only=245 mass_only=0
+  value_edit=1578 appear=0 wipe=0 null_flip=0 macro_only_unchanged=2
+  unchanged_or_no_successor_reasons: code_switched_same_nutri=11, macro_only=2, same_portion_grams=75, tool_failed=56
+  tool_failed: n=56 changed=0 unchanged=56 no_successor=0
+  |Δ| both finite: energy median=27.9 median_when_energy_changed=32.0 n_gt_1kcal=1575/1722; mass median=25.0 median_when_mass_changed=40.0 n_gt_1g=1333/1722
+  CORRECT_CODE: executed=314 changed=245 unchanged=69 no_successor=0 dishes=226
+  change_rate=0.7803 (245/314) no_change_rate=0.2197 (69/314) no_successor_rate=0.0000 (0/314)
+  energy_change_rate=0.7803 (245/314) mass_change_rate=0.0000 (0/314) energy_and_mass=0 energy_only=245 mass_only=0
+  value_edit=245 appear=0 wipe=0 null_flip=0 macro_only_unchanged=2
+  unchanged_or_no_successor_reasons: code_switched_same_nutri=11, macro_only=2, tool_failed=56
+  tool_failed: n=56 changed=0 unchanged=56 no_successor=0
+  |Δ| both finite: energy median=33.0 median_when_energy_changed=43.0 n_gt_1kcal=242/314; mass median=0.0 median_when_mass_changed=None n_gt_1g=0/314
+  mass_note: mass_g stayed within ε on every executed step; energy_kcal moved on the changed steps. A same-gram code swap does not move mass.
+  RE_PORTION: executed=1408 changed=1333 unchanged=75 no_successor=0 dishes=488
+  change_rate=0.9467 (1333/1408) no_change_rate=0.0533 (75/1408) no_successor_rate=0.0000 (0/1408)
+  energy_change_rate=0.9467 (1333/1408) mass_change_rate=0.9467 (1333/1408) energy_and_mass=1333 energy_only=0 mass_only=0
+  value_edit=1333 appear=0 wipe=0 null_flip=0 macro_only_unchanged=0
+  unchanged_or_no_successor_reasons: same_portion_grams=75
+  |Δ| both finite: energy median=27.3 median_when_energy_changed=30.5 n_gt_1kcal=1333/1408; mass median=40.0 median_when_mass_changed=40.0 n_gt_1g=1333/1408
+  RE_DECOMPOSE: executed=0 changed=0 unchanged=0 no_successor=0 dishes=0
+  change_rate=n/a no_change_rate=n/a no_successor_rate=n/a
+  energy_change_rate=n/a mass_change_rate=n/a energy_and_mass=0 energy_only=0 mass_only=0
+  value_edit=0 appear=0 wipe=0 null_flip=0 macro_only_unchanged=0
+  RETRIEVE: executed=1431 changed=1416 unchanged=15 no_successor=0 dishes=488
+  change_rate=0.9895 (1416/1431) no_change_rate=0.0105 (15/1431) no_successor_rate=0.0000 (0/1431)
+  energy_change_rate=0.9895 (1416/1431) mass_change_rate=0.9839 (1408/1431) energy_and_mass=1408 energy_only=8 mass_only=0
+  value_edit=928 appear=488 wipe=0 null_flip=488 macro_only_unchanged=0
+  unchanged_or_no_successor_reasons: within_epsilon=15
+  |Δ| both finite: energy median=52.0 median_when_energy_changed=52.0 n_gt_1kcal=928/943; mass median=100.0 median_when_mass_changed=100.0 n_gt_1g=920/943
+
+[overall_step_weighted] populations=logged_holdout,on_policy_rgb_test dishes_sum=887 rows_sum=6593
+  note: Step-weighted sum of the named full trajectories. Not one evaluation population. Dish subsets are not included, so a dish is not counted twice.
+  overall: executed=5716 changed=5467 unchanged=239 no_successor=10 dishes=886
+  change_rate=0.9564 (5467/5716) no_change_rate=0.0418 (239/5716) no_successor_rate=0.0017 (10/5716)
+  energy_change_rate=0.9564 (5467/5716) mass_change_rate=0.8830 (5047/5716) energy_and_mass=5047 energy_only=420 mass_only=0
+  value_edit=4544 appear=888 wipe=35 null_flip=923 macro_only_unchanged=2
+  unchanged_or_no_successor_reasons: both_missing=21, code_switched_same_nutri=11, macro_only=2, no_successor=10, same_portion_grams=77, tool_failed=64, within_epsilon=64
+  tool_failed: n=67 changed=0 unchanged=64 no_successor=3
+  |Δ| both finite: energy median=42.0 median_when_energy_changed=43.0 n_gt_1kcal=4541/4760; mass median=80.0 median_when_mass_changed=90.0 n_gt_1g=4124/4760
+  wipe_next_action: ABSTAIN=28, RETRIEVE=7
+  edit_actions: executed=2901 changed=2753 unchanged=148 no_successor=0 dishes=846
+  change_rate=0.9490 (2753/2901) no_change_rate=0.0510 (148/2901) no_successor_rate=0.0000 (0/2901)
+  energy_change_rate=0.9490 (2753/2901) mass_change_rate=0.8070 (2341/2901) energy_and_mass=2341 energy_only=412 mass_only=0
+  value_edit=2737 appear=0 wipe=16 null_flip=16 macro_only_unchanged=2
+  unchanged_or_no_successor_reasons: code_switched_same_nutri=11, macro_only=2, same_portion_grams=77, tool_failed=58
+  tool_failed: n=58 changed=0 unchanged=58 no_successor=0
+  |Δ| both finite: energy median=33.0 median_when_energy_changed=35.75 n_gt_1kcal=2734/2885; mass median=40.0 median_when_mass_changed=60.0 n_gt_1g=2325/2885
+  wipe_next_action: ABSTAIN=16
+  CORRECT_CODE: executed=483 changed=412 unchanged=71 no_successor=0 dishes=354
+  change_rate=0.8530 (412/483) no_change_rate=0.1470 (71/483) no_successor_rate=0.0000 (0/483)
+  energy_change_rate=0.8530 (412/483) mass_change_rate=0.0000 (0/483) energy_and_mass=0 energy_only=412 mass_only=0
+  value_edit=412 appear=0 wipe=0 null_flip=0 macro_only_unchanged=2
+  unchanged_or_no_successor_reasons: code_switched_same_nutri=11, macro_only=2, tool_failed=58
+  tool_failed: n=58 changed=0 unchanged=58 no_successor=0
+  |Δ| both finite: energy median=43.0 median_when_energy_changed=43.0 n_gt_1kcal=409/483; mass median=0.0 median_when_mass_changed=None n_gt_1g=0/483
+  mass_note: mass_g stayed within ε on every executed step; energy_kcal moved on the changed steps. A same-gram code swap does not move mass.
+  RE_PORTION: executed=2418 changed=2341 unchanged=77 no_successor=0 dishes=840
+  change_rate=0.9682 (2341/2418) no_change_rate=0.0318 (77/2418) no_successor_rate=0.0000 (0/2418)
+  energy_change_rate=0.9682 (2341/2418) mass_change_rate=0.9682 (2341/2418) energy_and_mass=2341 energy_only=0 mass_only=0
+  value_edit=2325 appear=0 wipe=16 null_flip=16 macro_only_unchanged=0
+  unchanged_or_no_successor_reasons: same_portion_grams=77
+  |Δ| both finite: energy median=32.25 median_when_energy_changed=34.4 n_gt_1kcal=2325/2402; mass median=50.0 median_when_mass_changed=60.0 n_gt_1g=2325/2402
+  wipe_next_action: ABSTAIN=16
+  RE_DECOMPOSE: executed=0 changed=0 unchanged=0 no_successor=0 dishes=0
+  change_rate=n/a no_change_rate=n/a no_successor_rate=n/a
+  energy_change_rate=n/a mass_change_rate=n/a energy_and_mass=0 energy_only=0 mass_only=0
+  value_edit=0 appear=0 wipe=0 null_flip=0 macro_only_unchanged=0
+  RETRIEVE: executed=2815 changed=2714 unchanged=91 no_successor=10 dishes=886
+  change_rate=0.9641 (2714/2815) no_change_rate=0.0323 (91/2815) no_successor_rate=0.0036 (10/2815)
+  energy_change_rate=0.9641 (2714/2815) mass_change_rate=0.9613 (2706/2815) energy_and_mass=2706 energy_only=8 mass_only=0
+  value_edit=1807 appear=888 wipe=19 null_flip=907 macro_only_unchanged=0
+  unchanged_or_no_successor_reasons: both_missing=21, no_successor=10, tool_failed=6, within_epsilon=64
+  tool_failed: n=9 changed=0 unchanged=6 no_successor=3
+  |Δ| both finite: energy median=63.0 median_when_energy_changed=63.0 n_gt_1kcal=1807/1875; mass median=100.0 median_when_mass_changed=100.0 n_gt_1g=1799/1875
+  wipe_next_action: ABSTAIN=12, RETRIEVE=7
+
+epsilon sensitivity (not the primary definition):
+  ε=0.0 logged_holdout edit_actions change_rate=1.0000 (1106/1106) no_change_rate=0.0000 (0/1106)
+  ε=0.0 on_policy_rgb_test edit_actions change_rate=0.9175 (1647/1795) no_change_rate=0.0825 (148/1795)
+  ε=1.0 logged_holdout edit_actions change_rate=1.0000 (1106/1106) no_change_rate=0.0000 (0/1106)
+  ε=1.0 on_policy_rgb_test edit_actions change_rate=0.9159 (1644/1795) no_change_rate=0.0841 (151/1795)
+
+notes:
+- logged_holdout edit actions: change 1106/1106, no-change 0/1106, value_edit 1098, wipe 8. No-change is not the majority outcome on this population.
+- on_policy_rgb_test edit actions: change 1647/1795, no-change 148/1795, value_edit 1639, wipe 8. No-change is not the majority outcome on this population.
+- logged_holdout RE_DECOMPOSE: 0 executed steps.
+- logged_holdout RE_PORTION: 8 changed steps replace a finite dish vector with a missing one (next action: ABSTAIN=8). Those count as written-vector changes and are not included in value_edit.
+- logged_holdout RETRIEVE: 19 changed steps replace a finite dish vector with a missing one (next action: ABSTAIN=12, RETRIEVE=7). Those count as written-vector changes and are not included in value_edit.
+- on_policy_rgb_test RE_DECOMPOSE: 0 executed steps.
+- on_policy_rgb_test RE_PORTION: 77/1469 left dish energy and mass within ε; 77 of those unchanged steps have portion_g and from_portion_g within ε, so the portion call did not move grams.
+- on_policy_rgb_test RE_PORTION: 8 changed steps replace a finite dish vector with a missing one (next action: ABSTAIN=8). Those count as written-vector changes and are not included in value_edit.
+- logged_holdout_stop_pass_corrected RE_DECOMPOSE: 0 executed steps.
+- logged_holdout_stop_pass_corrected RETRIEVE: 6 changed steps replace a finite dish vector with a missing one (next action: RETRIEVE=6). Those count as written-vector changes and are not included in value_edit.
+- on_policy_stop_pass_corrected RE_DECOMPOSE: 0 executed steps.
+- on_policy_stop_pass_corrected RE_PORTION: 75/1408 left dish energy and mass within ε; 75 of those unchanged steps have portion_g and from_portion_g within ε, so the portion call did not move grams.
+- on_policy_rgb_test CORRECT_CODE: 71/326 left dish energy and mass within ε (tool_failed 58, code switched but same dish energy and mass 11). Mass change rate is separate: a same-gram code swap does not move mass_g.
+- on_policy_stop_pass_corrected CORRECT_CODE: 69/314 left dish energy and mass within ε (tool_failed 56, code switched but same dish energy and mass 11). Mass change rate is separate: a same-gram code swap does not move mass_g.
+- No-change does not dominate any audited action or rollup (majority cutoff 0.5 of executed steps). The cutoff is descriptive and was not fit on hold-out or rgb_test. Minority no-change steps are still counted above.
