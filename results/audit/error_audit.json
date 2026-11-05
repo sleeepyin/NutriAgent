@@ -1,0 +1,713 @@
+{
+  "definition": "p0d_same_budget_overhead_force_answer",
+  "n_paired": 505,
+  "population": "Official rgb_test plates with an overhead photo that every scored method could commit. Two overhead plates stay unscored.",
+  "methods": {
+    "ours": "Mass Estimator + calibrated Q/Cost selection",
+    "direct": "Direct vision-language model",
+    "closed": "Closed-loop control"
+  },
+  "energy_mae": {
+    "ours": 98.5521188950495,
+    "direct": 97.13115002772277,
+    "closed": 100.41096761980197,
+    "delta_ours_minus_direct": 1.4209688673267333,
+    "delta_ours_minus_closed": -1.8588487247524625
+  },
+  "mass_mae": {
+    "ours": 58.995199009900986,
+    "direct": 76.34653465346534,
+    "closed": 62.40990099009901,
+    "delta_ours_minus_direct": -17.351335643564358,
+    "delta_ours_minus_closed": -3.414701980198025
+  },
+  "median_abs": {
+    "ours_energy": 59.04335800000001,
+    "direct_energy": 63.51405299999999,
+    "ours_mass": 37.4631,
+    "direct_mass": 48.0
+  },
+  "relative": {
+    "mass_mae_change_vs_direct": -0.2272707690312541,
+    "energy_mae_change_vs_direct": 0.014629383744773601
+  },
+  "bootstrap": {
+    "energy_ours_minus_direct": {
+      "n": 505,
+      "mean": 1.4209688673267333,
+      "median": -4.543600000000026,
+      "ci95_low": -8.10395560732673,
+      "ci95_high": 11.0515861970297,
+      "fraction_mean_negative": 0.3864,
+      "draws": 10000,
+      "seed": 0,
+      "interval": "percentile",
+      "unit": "plate resampled with replacement"
+    },
+    "mass_ours_minus_direct": {
+      "n": 505,
+      "mean": -17.351335643564358,
+      "median": -8.115699999999997,
+      "ci95_low": -24.936131356435645,
+      "ci95_high": -10.13122226237624,
+      "fraction_mean_negative": 1.0,
+      "draws": 10000,
+      "seed": 0,
+      "interval": "percentile",
+      "unit": "plate resampled with replacement"
+    },
+    "energy_ours_minus_closed": {
+      "n": 505,
+      "mean": -1.8588487247524759,
+      "median": -3.508800000000008,
+      "ci95_low": -13.003788225049501,
+      "ci95_high": 9.29315542594059,
+      "fraction_mean_negative": 0.6248,
+      "draws": 10000,
+      "seed": 0,
+      "interval": "percentile",
+      "unit": "plate resampled with replacement"
+    },
+    "mass_ours_minus_closed": {
+      "n": 505,
+      "mean": -3.41470198019802,
+      "median": -6.225999999999999,
+      "ci95_low": -10.02639757920792,
+      "ci95_high": 3.054891232673267,
+      "fraction_mean_negative": 0.8548,
+      "draws": 10000,
+      "seed": 0,
+      "interval": "percentile",
+      "unit": "plate resampled with replacement"
+    }
+  },
+  "plates": {
+    "energy_closer": 264,
+    "energy_farther": 241,
+    "energy_tie": 0,
+    "mass_closer": 292,
+    "mass_farther": 212,
+    "mass_tie": 1
+  },
+  "median_paired_delta": {
+    "energy_kcal": -4.543600000000026,
+    "mass_g": -8.115699999999997
+  },
+  "trim_10": {
+    "energy": {
+      "n": 405.0,
+      "mean": -0.7686889679012332,
+      "each_tail": 0.1
+    },
+    "mass": {
+      "n": 405.0,
+      "mean": -12.327766666666664,
+      "each_tail": 0.1
+    }
+  },
+  "tail": {
+    "largest_positive_energy_gaps_removed_until_mean_le_0": 2,
+    "positive_energy_gap_sum_kcal": 19987.38158,
+    "top10_positive_energy_gap_sum_kcal": 3135.2825679999996,
+    "top10_share_of_positive_sum": 0.1568630966217837,
+    "energy_delta_quantiles": {
+      "0.05": -196.67637159999998,
+      "0.1": -123.7259728,
+      "0.25": -52.59621199999998,
+      "0.5": -4.543600000000026,
+      "0.75": 54.49546600000002,
+      "0.9": 132.60391560000014,
+      "0.95": 214.76367039999963,
+      "0.99": 298.1600639999994
+    },
+    "removed_until_mean_le_0": {
+      "n_removed": 2,
+      "plates": [
+        {
+          "dish_id": "dish_1562172643",
+          "energy_delta_ae_kcal": 426.1030840000001,
+          "mass_delta_ae_g": -105.49919999999997,
+          "label_energy_kcal": 734.269958,
+          "label_mass_g": 457.0,
+          "ours_energy_kcal": 1294.643,
+          "ours_mass_g": 508.5008,
+          "direct_energy_kcal": 600.0,
+          "direct_mass_g": 300.0,
+          "foods": "Egg omelet or scrambled egg, no added fat (203.4 g, was 100.0 g, 143.0 kcal/100 g); Bacon, for use on a sandwich (135.6 g, was 100.0 g, 494.0 kcal/100 g); Potato, home fries, NFS (169.5 g, was 100.0 g, 197.0 kcal/100 g)",
+          "plate_complete": true,
+          "decision_action": "STOP"
+        },
+        {
+          "dish_id": "dish_1564675411",
+          "energy_delta_ae_kcal": 360.753,
+          "mass_delta_ae_g": 23.614700000000028,
+          "label_energy_kcal": 235.531006,
+          "label_mass_g": 308.0,
+          "ours_energy_kcal": 810.753,
+          "ours_mass_g": 339.6147,
+          "direct_energy_kcal": 450.0,
+          "direct_mass_g": 300.0,
+          "foods": "Bacon, for use on a sandwich (92.6 g, was 100.0 g, 494.0 kcal/100 g); Egg omelet or scrambled egg, no added fat (247.0 g, was 100.0 g, 143.0 kcal/100 g)",
+          "plate_complete": true,
+          "decision_action": "STOP"
+        }
+      ],
+      "remaining_n": 503,
+      "remaining_mean_energy_delta_kcal": -0.13770736779324164,
+      "removed_energy_delta_sum_kcal": 786.856084
+    }
+  },
+  "completeness_bias": {
+    "complete": {
+      "n": 199,
+      "ours_mean_signed_energy_kcal": 33.37841321608041,
+      "direct_mean_signed_energy_kcal": -31.068679246231156,
+      "ours_mean_signed_mass_g": 5.815096482412061,
+      "direct_mean_signed_mass_g": -26.693467336683415
+    },
+    "incomplete": {
+      "n": 306,
+      "ours_mean_signed_energy_kcal": -71.18678481699347,
+      "direct_mean_signed_energy_kcal": 14.145864529411769,
+      "ours_mean_signed_mass_g": -73.49583169934641,
+      "direct_mean_signed_mass_g": 8.343137254901961
+    }
+  },
+  "terminal_by_completeness": [
+    {
+      "decision_action": "STOP",
+      "plate_complete": true,
+      "n": 198,
+      "energy_delta_kcal": -12.711989787878787,
+      "mass_delta_g": -37.36847373737373,
+      "contribution_to_mean_energy_kcal": -4.984106887128712,
+      "ours_mean_signed_energy_kcal": 31.10785971717172,
+      "direct_mean_signed_energy_kcal": -30.486197858585854
+    },
+    {
+      "decision_action": "STOP",
+      "plate_complete": false,
+      "n": 78,
+      "energy_delta_kcal": 39.26009461538462,
+      "mass_delta_g": 2.8870820512820536,
+      "contribution_to_mean_energy_kcal": 6.063935405940595,
+      "ours_mean_signed_energy_kcal": -87.59445397435897,
+      "direct_mean_signed_energy_kcal": 13.909542179487179
+    },
+    {
+      "decision_action": "ABSTAIN",
+      "plate_complete": true,
+      "n": 1,
+      "energy_delta_kcal": 336.54801199999997,
+      "mass_delta_g": -394.9986,
+      "contribution_to_mean_energy_kcal": 0.666431706930693,
+      "ours_mean_signed_energy_kcal": 482.94800599999996,
+      "direct_mean_signed_energy_kcal": -146.399994
+    },
+    {
+      "decision_action": "ABSTAIN",
+      "plate_complete": false,
+      "n": 205,
+      "energy_delta_kcal": -2.9330977268292684,
+      "mass_delta_g": -3.7920282926829265,
+      "contribution_to_mean_energy_kcal": -1.1906634336633664,
+      "ours_mean_signed_energy_kcal": -63.55752433658537,
+      "direct_mean_signed_energy_kcal": 15.654781517073172
+    },
+    {
+      "decision_action": "CORRECT_CODE",
+      "plate_complete": true,
+      "n": 0
+    },
+    {
+      "decision_action": "CORRECT_CODE",
+      "plate_complete": false,
+      "n": 23,
+      "energy_delta_kcal": 19.000560782608694,
+      "mass_delta_g": -18.099769565217393,
+      "contribution_to_mean_energy_kcal": 0.8653720752475247,
+      "ours_mean_signed_energy_kcal": -83.54331543478261,
+      "direct_mean_signed_energy_kcal": 1.4982628260869557
+    }
+  ],
+  "quadrants": [
+    {
+      "name": "mass_down_energy_down",
+      "label": "Mass and energy both closer",
+      "n": 180,
+      "share_of_plates": 0.3564356435643564,
+      "mean_energy_delta_kcal": -80.55918621111111,
+      "mean_mass_delta_g": -60.26534777777779,
+      "contribution_to_mean_energy_kcal": -28.714165382178216,
+      "contribution_to_mean_mass_g": -21.480718019801984
+    },
+    {
+      "name": "mass_down_energy_up",
+      "label": "Mass closer, energy farther",
+      "n": 112,
+      "share_of_plates": 0.22178217821782178,
+      "mean_energy_delta_kcal": 81.21222953571429,
+      "mean_mass_delta_g": -70.18671160714287,
+      "contribution_to_mean_energy_kcal": 18.011425164356435,
+      "contribution_to_mean_mass_g": -15.566161782178218
+    },
+    {
+      "name": "mass_up_energy_down",
+      "label": "Mass farther, energy closer",
+      "n": 84,
+      "share_of_plates": 0.16633663366336635,
+      "mean_energy_delta_kcal": -56.7754617142857,
+      "mean_mass_delta_g": 40.45511547619048,
+      "contribution_to_mean_energy_kcal": -9.443839176237622,
+      "contribution_to_mean_mass_g": 6.729167722772278
+    },
+    {
+      "name": "mass_up_energy_up",
+      "label": "Mass and energy both farther",
+      "n": 128,
+      "share_of_plates": 0.25346534653465347,
+      "mean_energy_delta_kcal": 84.98899884375001,
+      "mean_mass_delta_g": 51.15640703125,
+      "contribution_to_mean_energy_kcal": 21.54176604356436,
+      "contribution_to_mean_mass_g": 12.966376435643564
+    },
+    {
+      "name": "tie",
+      "label": "Tie on mass or energy",
+      "n": 1,
+      "share_of_plates": 0.0019801980198019802,
+      "mean_energy_delta_kcal": 13.020019999999988,
+      "mean_mass_delta_g": 0.0,
+      "contribution_to_mean_energy_kcal": 0.025782217821782156,
+      "contribution_to_mean_mass_g": 0.0
+    }
+  ],
+  "channels": {
+    "ours_mean_signed_energy_kcal": -29.981884998019805,
+    "ours_mean_mass_channel_kcal": -59.32406540927821,
+    "ours_mean_density_channel_kcal": 29.342180411258415,
+    "ours_mean_abs_mass_channel_kcal": 84.63490327418019,
+    "ours_mean_abs_density_channel_kcal": 101.04536550833217,
+    "ours_mean_cancellation_kcal": 87.12814988746284,
+    "ours_opposite_sign_rate": 0.5148514851485149,
+    "ours_energy_mae_kcal": 98.5521188950495,
+    "direct_mean_signed_energy_kcal": -3.6713517306930683,
+    "direct_mean_mass_channel_kcal": -13.688406151908627,
+    "direct_mean_density_channel_kcal": 10.017054421215558,
+    "direct_mean_abs_mass_channel_kcal": 100.06188034392243,
+    "direct_mean_abs_density_channel_kcal": 90.8448029810161,
+    "direct_mean_cancellation_kcal": 93.77553329721576,
+    "direct_opposite_sign_rate": 0.6059405940594059,
+    "direct_energy_mae_kcal": 97.13115002772277,
+    "closed_mean_signed_energy_kcal": 33.74340074455445,
+    "closed_mean_mass_channel_kcal": 3.5105275917502254,
+    "closed_mean_density_channel_kcal": 30.23287315280423,
+    "closed_mean_abs_mass_channel_kcal": 85.91651151955057,
+    "closed_mean_abs_density_channel_kcal": 85.81944804628412,
+    "closed_mean_cancellation_kcal": 71.32499194603271,
+    "closed_opposite_sign_rate": 0.5386138613861386,
+    "closed_energy_mae_kcal": 100.41096761980197,
+    "pearson_signed_mass_vs_density_gap_ours": -0.20521671465142774,
+    "pearson_signed_mass_vs_density_gap_direct": -0.29671851203042154,
+    "density_mae_kcal_per_g": {
+      "ours": 0.5123801293337802,
+      "direct": 0.5331289357004962,
+      "closed": 0.42741584122043286
+    }
+  },
+  "oracle_energy_mae_kcal": {
+    "note": "Identity on the saved grams and kcal/g. The label is a multiplier, not a tuning target.",
+    "ours_perfect_grams": 101.04536550833215,
+    "ours_perfect_density": 75.02236444324627,
+    "direct_perfect_grams": 90.8448029810161,
+    "direct_perfect_density": 102.18340430216888,
+    "ours_actual": 98.5521188950495,
+    "direct_actual": 97.13115002772277
+  },
+  "mass_down_energy_up": {
+    "name": "subset",
+    "label": "subset",
+    "n": 112,
+    "share_of_plates": 0.22178217821782178,
+    "mean_energy_delta_kcal": 81.21222953571429,
+    "mean_mass_delta_g": -70.18671160714287,
+    "contribution_to_mean_energy_kcal": 18.011425164356435,
+    "contribution_to_mean_mass_g": -15.566161782178218,
+    "mean_density_gap_ours": 0.6956949480506408,
+    "mean_density_gap_direct": 0.672622605847554,
+    "direct_opposite_sign_rate": 0.8035714285714286,
+    "ours_opposite_sign_rate": 0.45535714285714285,
+    "density_worse_than_direct_rate": 0.5535714285714286,
+    "incomplete_rate": 0.5357142857142857
+  },
+  "mass_down_energy_down": {
+    "name": "subset",
+    "label": "subset",
+    "n": 180,
+    "share_of_plates": 0.3564356435643564,
+    "mean_energy_delta_kcal": -80.55918621111111,
+    "mean_mass_delta_g": -60.26534777777779,
+    "contribution_to_mean_energy_kcal": -28.714165382178216,
+    "contribution_to_mean_mass_g": -21.480718019801984,
+    "mean_density_gap_ours": 0.349463467447627,
+    "mean_density_gap_direct": 0.5529362395206125,
+    "direct_opposite_sign_rate": 0.5333333333333333,
+    "ours_opposite_sign_rate": 0.5777777777777777,
+    "density_worse_than_direct_rate": 0.3055555555555556,
+    "incomplete_rate": 0.49444444444444446
+  },
+  "mass_down_by_density": {
+    "n_mass_down": 292,
+    "density_worse_and_energy_worse": 62,
+    "density_worse_and_energy_better": 55,
+    "density_better_and_energy_worse": 50,
+    "density_better_and_energy_better": 125
+  },
+  "slices": {
+    "all": {
+      "n": 505,
+      "ours_energy_mae": 98.5521188950495,
+      "ours_mass_mae": 58.995199009900986,
+      "direct_energy_mae": 97.13115002772277,
+      "direct_mass_mae": 76.34653465346534,
+      "closed_energy_mae": 100.41096761980197,
+      "closed_mass_mae": 62.40990099009901,
+      "energy_delta_ours_minus_direct": 1.420968867326735,
+      "mass_delta_ours_minus_direct": -17.351335643564354
+    },
+    "stop": {
+      "n": 276,
+      "ours_energy_mae": 96.70388040579711,
+      "ours_mass_mae": 45.25085,
+      "direct_energy_mae": 94.72810721014493,
+      "direct_mass_mae": 71.2427536231884,
+      "closed_energy_mae": 92.57693163768117,
+      "closed_mass_mae": 61.03623188405797,
+      "energy_delta_ours_minus_direct": 1.975773195652181,
+      "mass_delta_ours_minus_direct": -25.991903623188406
+    },
+    "abstain": {
+      "n": 206,
+      "ours_energy_mae": 97.15452607281554,
+      "ours_mass_mae": 75.8526,
+      "direct_energy_mae": 98.43965724757281,
+      "direct_mass_mae": 81.54368932038835,
+      "closed_energy_mae": 111.25142153883496,
+      "closed_mass_mae": 65.66019417475728,
+      "energy_delta_ours_minus_direct": -1.285131174757268,
+      "mass_delta_ours_minus_direct": -5.6910893203883575
+    },
+    "correct_code_terminal": {
+      "n": 23,
+      "ours_energy_mae": 133.24855126086956,
+      "ours_mass_mae": 72.94370869565216,
+      "direct_energy_mae": 114.24799047826086,
+      "direct_mass_mae": 91.04347826086956,
+      "closed_energy_mae": 97.32663821739132,
+      "closed_mass_mae": 49.78260869565217,
+      "energy_delta_ours_minus_direct": 19.0005607826087,
+      "mass_delta_ours_minus_direct": -18.0997695652174
+    },
+    "plate_complete": {
+      "n": 199,
+      "ours_energy_mae": 80.06446610050253,
+      "ours_mass_mae": 22.44243015075377,
+      "direct_energy_mae": 91.02138050251259,
+      "direct_mass_mae": 61.608040201005025,
+      "closed_energy_mae": 80.80131353768843,
+      "closed_mass_mae": 53.321608040201006,
+      "energy_delta_ours_minus_direct": -10.956914402010057,
+      "mass_delta_ours_minus_direct": -39.16561005025126
+    },
+    "plate_incomplete": {
+      "n": 306,
+      "ours_energy_mae": 110.57513492810456,
+      "ours_mass_mae": 82.76644411764707,
+      "direct_energy_mae": 101.104496875817,
+      "direct_mass_mae": 85.93137254901961,
+      "closed_energy_mae": 113.16365115686276,
+      "closed_mass_mae": 68.3202614379085,
+      "energy_delta_ours_minus_direct": 9.470638052287555,
+      "mass_delta_ours_minus_direct": -3.1649284313725445
+    },
+    "any_correct_code": {
+      "n": 34,
+      "ours_energy_mae": 134.89799702941178,
+      "ours_mass_mae": 74.98840882352941,
+      "direct_energy_mae": 123.8793186764706,
+      "direct_mass_mae": 100.08823529411765,
+      "closed_energy_mae": 102.89741373529412,
+      "closed_mass_mae": 61.470588235294116,
+      "energy_delta_ours_minus_direct": 11.01867835294118,
+      "mass_delta_ours_minus_direct": -25.09982647058824
+    },
+    "no_correct_code": {
+      "n": 471,
+      "ours_energy_mae": 95.92842493205944,
+      "ours_mass_mae": 57.84069978768578,
+      "direct_energy_mae": 95.20028435031846,
+      "direct_mass_mae": 74.63269639065817,
+      "closed_energy_mae": 100.23147894055201,
+      "closed_mass_mae": 62.47770700636943,
+      "energy_delta_ours_minus_direct": 0.7281405817409876,
+      "mass_delta_ours_minus_direct": -16.79199660297239
+    },
+    "single_component_complete": {
+      "n": 149,
+      "ours_energy_mae": 42.90869877181207,
+      "ours_mass_mae": 15.108491946308726,
+      "direct_energy_mae": 60.90229248993289,
+      "direct_mass_mae": 36.61073825503356,
+      "closed_energy_mae": 57.8326776442953,
+      "closed_mass_mae": 35.87248322147651,
+      "energy_delta_ours_minus_direct": -17.99359371812082,
+      "mass_delta_ours_minus_direct": -21.502246308724835
+    },
+    "multi_component_complete": {
+      "n": 50,
+      "ours_energy_mae": 190.78865274,
+      "ours_mass_mae": 44.297565999999996,
+      "direct_energy_mae": 180.77626278000002,
+      "direct_mass_mae": 136.1,
+      "closed_energy_mae": 149.2478485,
+      "closed_mass_mae": 105.32,
+      "energy_delta_ours_minus_direct": 10.012389959999979,
+      "mass_delta_ours_minus_direct": -91.802434
+    },
+    "any_rule_defer": {
+      "n": 505,
+      "ours_energy_mae": 98.5521188950495,
+      "ours_mass_mae": 58.995199009900986,
+      "direct_energy_mae": 97.13115002772277,
+      "direct_mass_mae": 76.34653465346534,
+      "closed_energy_mae": 100.41096761980197,
+      "closed_mass_mae": 62.40990099009901,
+      "energy_delta_ours_minus_direct": 1.420968867326735,
+      "mass_delta_ours_minus_direct": -17.351335643564354
+    },
+    "no_rule_defer": {
+      "n": 0
+    }
+  },
+  "selector": {
+    "match_rate": 1.0,
+    "n_steps": 2858,
+    "n_match": 2858,
+    "n_failures": 0,
+    "mismatch_logged_actions": {},
+    "matched_step_sources": {
+      "rule_utility": 863,
+      "q_over_cost": 1995
+    },
+    "matched_terminals": 505,
+    "tau": 0.001645429361972572,
+    "by_terminal_source": {
+      "q_over_cost": {
+        "n": 505,
+        "ours_energy_mae": 98.5521188950495,
+        "ours_mass_mae": 58.995199009900986,
+        "direct_energy_mae": 97.13115002772277,
+        "direct_mass_mae": 76.34653465346534,
+        "closed_energy_mae": 100.41096761980197,
+        "closed_mass_mae": 62.40990099009901,
+        "energy_delta_ours_minus_direct": 1.420968867326735,
+        "mass_delta_ours_minus_direct": -17.351335643564354
+      },
+      "rule_utility": {
+        "n": 0
+      }
+    }
+  },
+  "rewrite_same_codes": {
+    "n": 481,
+    "n_accounted": 481,
+    "n_with_mass_write": 481,
+    "grid_energy_mae": 114.67260974073697,
+    "rewritten_energy_mae": 96.77427397505198,
+    "grid_mass_mae": 78.66320166320166,
+    "rewritten_mass_mae": 58.42589708939709,
+    "energy_mae_change": -17.89833576568499,
+    "mass_mae_change": -20.237304573804572,
+    "mean_plate_energy_ae_change": -17.898335765685,
+    "mean_plate_mass_ae_change": -20.237304573804575,
+    "n_mass_ae_down": 291,
+    "n_energy_ae_up": 233,
+    "n_mass_down_energy_up": 96
+  },
+  "specialist_head_on_complete_plates": {
+    "n_with_head": 490,
+    "max_repeat_energy_span": 0.0,
+    "n_complete": 199,
+    "head_energy_mae": 36.91107382914573,
+    "committed_energy_mae": 80.06446610050253,
+    "direct_energy_mae": 91.02138050251259,
+    "head_mass_mae": 22.44745226130653,
+    "committed_mass_mae": 22.44243015075377,
+    "direct_mass_mae": 61.608040201005025,
+    "mean_abs_portion_sum_minus_head_mass_g": 0.005033165829146495,
+    "mean_abs_committed_minus_head_energy_kcal": 76.82961306532664
+  },
+  "head_by_slice": {
+    "single_complete": {
+      "n": 149,
+      "head_energy_mae": 23.206847134228187,
+      "committed_energy_mae": 42.90869877181207,
+      "direct_energy_mae": 60.90229248993289,
+      "head_mass_mae": 15.115203355704699,
+      "committed_mass_mae": 15.108491946308726,
+      "direct_mass_mae": 36.61073825503356
+    },
+    "multi_complete": {
+      "n": 50,
+      "head_energy_mae": 77.74966938,
+      "committed_energy_mae": 190.78865274,
+      "direct_energy_mae": 180.77626278000002,
+      "head_mass_mae": 44.29755400000001,
+      "committed_mass_mae": 44.297565999999996,
+      "direct_mass_mae": 136.1
+    },
+    "unfinished": {
+      "n": 291,
+      "head_energy_mae": 52.9016319209622,
+      "committed_energy_mae": 110.89072439518901,
+      "direct_energy_mae": 101.30143166666667,
+      "head_mass_mae": 39.638809965635744,
+      "committed_mass_mae": 83.96746357388315,
+      "direct_mass_mae": 86.50515463917526
+    }
+  },
+  "n_never_called_mass": 15,
+  "never_called_mass_actions": {
+    "CORRECT_CODE": 15
+  },
+  "single_component_complete": {
+    "n": 149,
+    "ours_density_mae_kcal_per_g": 0.28580363025829575,
+    "direct_density_mae_kcal_per_g": 0.719946698760722,
+    "ours_energy_mae": 42.90869877181207,
+    "direct_energy_mae": 60.90229248993289,
+    "ours_mass_mae": 15.108491946308726,
+    "direct_mass_mae": 36.61073825503356
+  },
+  "macros": {
+    "protein_g": {
+      "n": 505,
+      "ours_mae": 6.910875813861385,
+      "direct_mae": 8.771022554455444,
+      "delta_ours_minus_direct": -1.8601467405940584,
+      "ours_bias": -3.645192669306931,
+      "direct_bias": -3.5276827683168315
+    },
+    "carb_g": {
+      "n": 505,
+      "ours_mae": 9.699822671287128,
+      "direct_mae": 10.402672885148515,
+      "delta_ours_minus_direct": -0.702850213861387,
+      "ours_bias": -4.313285815841585,
+      "direct_bias": 4.141521114851485
+    },
+    "fat_g": {
+      "n": 505,
+      "ours_mae": 7.6570558178217825,
+      "direct_mae": 6.63220074059406,
+      "delta_ours_minus_direct": 1.0248550772277225,
+      "ours_bias": -0.48765705346534666,
+      "direct_bias": -3.8625986376237624
+    }
+  },
+  "examples": [
+    {
+      "dish_id": "dish_1565811061",
+      "decision_action": "ABSTAIN",
+      "n_hypotheses": 4,
+      "n_mass_writes": 3,
+      "plate_complete": false,
+      "label_energy_kcal": 380.320007,
+      "label_mass_g": 324.0,
+      "label_density_kcal_per_g": 1.1738271820987654,
+      "ours_energy_kcal": 95.7998,
+      "ours_mass_g": 276.9886,
+      "ours_density_kcal_per_g": 0.34586188745674007,
+      "direct_energy_kcal": 350.0,
+      "direct_mass_g": 400.0,
+      "direct_density_kcal_per_g": 0.875,
+      "energy_delta_ae_kcal": 254.2002,
+      "mass_delta_ae_g": -28.98860000000002,
+      "foods": "Spinach, raw (114.6 g, was 100.0 g, 27.0 kcal/100 g); Carrots, raw (76.4 g, was 100.0 g, 41.0 kcal/100 g); Broccoli, raw (86.0 g, was 100.0 g, 39.0 kcal/100 g)",
+      "direct_opposite_signs": true,
+      "ours_opposite_signs": false
+    },
+    {
+      "dish_id": "dish_1562172643",
+      "decision_action": "STOP",
+      "n_hypotheses": 3,
+      "n_mass_writes": 3,
+      "plate_complete": true,
+      "label_energy_kcal": 734.269958,
+      "label_mass_g": 457.0,
+      "label_density_kcal_per_g": 1.6067176323851202,
+      "ours_energy_kcal": 1294.643,
+      "ours_mass_g": 508.5008,
+      "ours_density_kcal_per_g": 2.545999927630399,
+      "direct_energy_kcal": 600.0,
+      "direct_mass_g": 300.0,
+      "direct_density_kcal_per_g": 2.0,
+      "energy_delta_ae_kcal": 426.1030840000001,
+      "mass_delta_ae_g": -105.49919999999997,
+      "foods": "Egg omelet or scrambled egg, no added fat (203.4 g, was 100.0 g, 143.0 kcal/100 g); Bacon, for use on a sandwich (135.6 g, was 100.0 g, 494.0 kcal/100 g); Potato, home fries, NFS (169.5 g, was 100.0 g, 197.0 kcal/100 g)",
+      "direct_opposite_signs": true,
+      "ours_opposite_signs": false
+    },
+    {
+      "dish_id": "dish_1566920304",
+      "decision_action": "ABSTAIN",
+      "n_hypotheses": 1,
+      "n_mass_writes": 1,
+      "plate_complete": true,
+      "label_energy_kcal": 296.399994,
+      "label_mass_g": 570.0,
+      "label_density_kcal_per_g": 0.5199999894736842,
+      "ours_energy_kcal": 779.348,
+      "ours_mass_g": 544.9986,
+      "ours_density_kcal_per_g": 1.430000003669734,
+      "direct_energy_kcal": 150.0,
+      "direct_mass_g": 150.0,
+      "direct_density_kcal_per_g": 1.0,
+      "energy_delta_ae_kcal": 336.54801199999997,
+      "mass_delta_ae_g": -394.9986,
+      "foods": "Cottage cheese, farmer's (545.0 g, was 100.0 g, 143.0 kcal/100 g)",
+      "direct_opposite_signs": true,
+      "ours_opposite_signs": true
+    },
+    {
+      "dish_id": "dish_1566316757",
+      "decision_action": "STOP",
+      "n_hypotheses": 3,
+      "n_mass_writes": 3,
+      "plate_complete": true,
+      "label_energy_kcal": 448.382874,
+      "label_mass_g": 819.0,
+      "label_density_kcal_per_g": 0.5474760366300366,
+      "ours_energy_kcal": 776.0579,
+      "ours_mass_g": 646.1938,
+      "ours_density_kcal_per_g": 1.200967728257374,
+      "direct_energy_kcal": 450.0,
+      "direct_mass_g": 300.0,
+      "direct_density_kcal_per_g": 1.5,
+      "energy_delta_ae_kcal": 326.0579,
+      "mass_delta_ae_g": -346.1938,
+      "foods": "Egg omelet or scrambled egg, no added fat (312.7 g, was 100.0 g, 143.0 kcal/100 g); Potato, NFS (208.4 g, was 100.0 g, 126.0 kcal/100 g); Gravy, NFS (125.1 g, was 100.0 g, 53.0 kcal/100 g)",
+      "direct_opposite_signs": true,
+      "ours_opposite_signs": true
+    }
+  ],
+  "n_trace_aligned": 505,
+  "n_clipped_portions": 1,
+  "inputs": {
+    "same_budget_dishes_sha256": "3b6324cbf8269dba43744e1c469fbf9dc9ff282a777deada426ec19ed035d4f4",
+    "same_budget_sha256": "837dfb12b03390f415629d15e1c80f8bc10bc70108d627ceb2a5b199f062f300",
+    "ours_new_rgb_test_sha256": "fdeb8b3292c215a6f18749cc102cb9703b6cf901245f752452d8ea878d777ff3",
+    "direct_jsonl_sha256": "a4dfdd82e3a595f4b174091322e77dad29ab59d95427ecd9a2f057faf4bf2476",
+    "q_weights_sha256_prefix": "a59ba6e49cf45220"
+  }
+}
