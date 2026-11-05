@@ -3,7 +3,7 @@
 > 供 GitHub 同步：服务器跑完实验后，请在本文件更新。`notes/` 历史周报已删除，见 [`notes/README.md`](../notes/README.md)。执行助手据此继续改代码/方案。  
 > **截止日期（文档写入时）**：2026-11-05（Asia/Shanghai）。**方法真源已锁**：Canvas「**VDR — Evidence-Guided Active Multimodal Nutrition Estimation**」；Triste + 营养论文调研 **2026-11-05 锁定**。**技术中心**：Error-Aware Active Specialist Selection（**非** ABSTAIN/AURC/BC 补丁叙事）。旧「Evidence-Aware Closed-Loop Tool Control」→ **Ours-old / 纯控制器对照**，不作方法证明。  
 > **#24/#26/#28/#31/#34 数字保留**：offline **n=356** Full MAE **30.7085** 打平、Ours AURC **13.5311 ≤ B5 32.1474**；on-policy **n=488** Full MAE **96.2769** 打平 B5、Ours AURC **47.1737 ≤ B5 81.5857**（**勿声称** on-policy 能量赢；**勿混** offline 与 on-policy 人群）。弱 `abstain_score=clip(kcal/2500)` 已降权。  
-> **下一步（严格顺序，不可跳步）**：**① P0a 已完成（#37，`2e0e180`）** → **② P0b 已完成（#39，`4b6ccec`）** → **③ P0c 已完成（#41，`54c32e8`）** → **④ Q 校准 已完成（#44，`3fc611d`）** → **⑤ P0d（已解锁）**；详见下文「下一步（立即执行）」。**Mass 在 U_* / Q_φ 之前，不可跳步；仍禁止跳至 P1。**  
+> **下一步（严格顺序，不可跳步）**：**① P0a 已完成（#37，`2e0e180`）** → **② P0b 已完成（#39，`4b6ccec`）** → **③ P0c 已完成（#41，`54c32e8`）** → **④ Q 校准 已完成（#44，`3fc611d`）** → **⑤ P0d 已完成（#46，`b9c4c5e7`）** → **当前首项 = 误差审计**（质量↓为何能量未稳赢 Direct-VLM / B0）；详见下文「下一步（立即执行）」。**Mass 在 U_* / Q_φ 之前，不可跳步；仍禁止跳至 P1。**  
 > **可执行的下一步只在本文件。** 聊天不是 runbook。助手改下一步、跑法或方案时，先更新文档并推到 GitHub；服务器上的人或 AI 先 `git pull --ff-only`，再读「下一步」执行。  
 > **服务器执行看「下一步」。** 这一节没有新的弱标签 / 507 命令。历史 `--n 50`、俯拍池 `--n 507`、弱标签 jsonl、开环 BC 数字都是已完成记录，不要再执行。
 
@@ -13,11 +13,14 @@
 
 **营养论文代码编写 — 严格顺序（前一步未落盘/未通过门禁，不得开始下一步）**
 
-**当前首项 — P0d 同预算评测（营养论文代码编写；#44 门禁已通过）**
+**当前首项 — 误差审计（营养论文代码编写；等本 STATUS 合进后再派）**
 
-- **Ours-new**（Mass + **校准后** Q/Cost）vs **B5 / B0 / Ours-old**；主报 **Full-set MAE@energy + mass MAE + Tool cost**（**Coverage / AURC 辅助**）。**不是** #44 hold-out 动作表（已落盘）；**不是** P0c 未校准 Q 评测。
-- **前置**：Triste **2026-11-05 选 B**（先校准 Q 再 P0d）；**#44 Q/Cost terminal-margin 校准**（fit-only `median+3·MAD`，τ≈**0.001645**；**Learned Q 权重未改**）→ **校准门禁已通过**（见下条 4 与「助手进度」）。
-- **禁令**：**禁止** Cloud Agent **fast** 自动开跑；**仍禁止**跳步至 **P1**；**无 RL**；**勿覆盖**冻结 n5k / weak_steps；**禁止** rgb_test GT 调参。**不得**把 #44 hold-out 动作一致率当 Full-set 能量主证明。
+- **目标**：解释 **P0d #46** 为何 **mass MAE 明显下降**，但 **Full-set energy MAE 未稳定优于 Direct-VLM（B0）**（paired n=505 上 ΔE **+1.4210** kcal vs B0，**能量主 claim 未成立**）。
+- **输入（#46 已落盘，只读）**：`results/p0d/same_budget.json`、`same_budget_dishes.jsonl`、`ours_new_rgb_test.jsonl`、`ours_new_rgb_test_summary.json`、`report_same_budget.txt`。
+- **建议分析（代码侧在本 STATUS 合并后再实现；此处不跑）**：逐盘 energy vs mass 残差；mass↓ 但 energy↑ vs B0 的盘；密度 / food-id 错配；STOP / ABSTAIN vs 工具路径分解；可选 Q/Cost vs rule-utility defer 交互。
+- **交付**：短报告落 `results/p0d/` 或 `results/audit/` + PR。**无新训练**；**不开 P1**；**无 RL**；**禁止** rgb_test GT 调参；**勿覆盖**冻结 n5k / weak_steps。
+- **审计落地后**：与 Triste + 调研共决 — 补 Mass / 补 Q / 或再开 retrieval-rerank（**P1**）。**不得**自动启动 P1。
+- **禁令**：**禁止** Cloud Agent **fast** 自动开跑；**仍禁止**跳步至 **P1**（检索/rerank **未解锁**）；**无 RL**；**勿覆盖**冻结 n5k / weak_steps；**禁止** rgb_test GT 调参。
 
 - **背景 — Q 保守性门禁（#41；选 B 的原因）**：P0c hold-out 上 Q/Cost **STOP-heavy**（2771 行：STOP **1360** / RE_PORTION **608** / RETRIEVE **499** / ABSTAIN **266** / CORRECT_CODE **38**）；Q/Cost 与规则 heuristic **一致率 0.4489**；stub **首步 STOP**。**#44 已缓解**（一致率 **0.7712**；stub **RETRIEVE→RE_PORTION→STOP**，1 次 mass，`portion_src=mass_estimator`）。
 
@@ -27,7 +30,7 @@
    - 产物：`results/closed_loop/tool_state_audit.json`、`report_tool_state_audit.txt`、`report_tool_state_audit.md`。  
    - **改码/改份量 edit 动作**（CORRECT_CODE / RE_PORTION；hold-out **无** RE_DECOMPOSE）：hold-out logged **变更率 1.0000（1106/1106）**。  
    - on-policy edit：**变更率 0.9175（1647/1795）**、无变化 **0.0825**；分层 **CORRECT_CODE 0.7822**、**RE_PORTION 0.9476**。  
-   - **结论**：「工具跑了但 n 不变」**不是**多数；**门禁通过**（仍禁空壳 RE_PORTION）。**P0b #39**、**P0c #41**、**Q 校准 #44** 已落盘 → 当前首项 **P0d 同预算评测**（见上）。
+   - **结论**：「工具跑了但 n 不变」**不是**多数；**门禁通过**（仍禁空壳 RE_PORTION）。**P0b #39**、**P0c #41**、**Q 校准 #44**、**P0d #46** 已落盘 → 当前首项 **误差审计**（见上）。
 
 2. **P0b — Mass Estimator（已完成 #39，squash `4b6ccec`）**  
    - **Backbone**：**ViT-B/16**（fit-internal probe 优于 ResNet101：probe-val mass MAE **52.48** vs **57.52**）；ImageNet-1K → Nutrition5K **rgb_train fit** 微调，**12 epoch**，**last checkpoint**。  
@@ -46,13 +49,21 @@
    - **方法**：fit weak steps 上，未校准 Q/Cost 选 STOP/ABSTAIN 且专家合法时，excess = 最佳终端 Q/Cost − 最佳合法专家 Q/Cost；**τ = median(excess) + 3·MAD(excess)**（**τ≈0.001645**；乘数 3 **未**在 hold-out / rgb_test 上搜）。终端领先 margin **< τ** → **defer 到 rule utility**；否则保持 argmax Q/Cost。**`q_phi.npz` 权重未改**。**无 RL**；**未**读 rgb_test GT；**未**用 hold-out 选 τ。  
    - **Hold-out**（`rgb_train` weak steps logged，**2771** 行，**n=2771**）：Q/Cost vs rule utility（P0c 同口径 heuristic）一致率 **0.4489 → 0.7712**。动作计数（校准后）：STOP **526**（未校准 **1360**）；RETRIEVE **1096**（**499**）；RE_PORTION **842**（**608**）；ABSTAIN **207**（**266**）；CORRECT_CODE **100**（**38**）。非 STOP 步：**专家调用率 0.811 → 0.908**；Mass|检索占比 **0.785 → 0.863**。决策：**保留 Q/Cost 1878**；**defer rule utility 893**。  
    - **Stub** `dish_1550704903`：未校准 **首步 STOP** → 校准 **RETRIEVE→RE_PORTION→STOP**（**mass_calls=1**，`portion_src=mass_estimator`）。  
-   - **校准门禁**：调研门槛（一致率 **≫ 0.45**；非 STOP **实际** Mass/检索）→ **通过**；**P0d 已解锁**。**不是 P0d Full-set 主表**。  
+   - **校准门禁**：调研门槛（一致率 **≫ 0.45**；非 STOP **实际** Mass/检索）→ **通过**；**P0d #46 已落盘**（`b9c4c5e7`）。**不是** P0d Full-set 主表的历史解读段（主表见下条 5）。  
    - **产物**：`results/qphi/calibration.json`、`calibration_holdout.json`、`report_calibration.txt`。冻结 n5k / weak_steps **未改**。
 
-5. **P0d — 同预算评测（Ours-new；当前首项；#44 门禁已通过）**  
-   - Ours-new（Mass + **校准后** Q/Cost）vs B5 / B0 / **Ours-old**；主报 **Full-set MAE@energy + mass MAE + Tool cost**；Coverage / AURC **辅助**（定义见「当前首项」）。
+5. **P0d — 同预算评测（已完成 #46，squash `b9c4c5e7`）**  
+   - **Ours-new**（Mass + **校准后** Q/Cost）vs **Ours-old**（closed-loop BC）/ **B0**（Direct-VLM）/ 开环 BC；定义 `p0d_same_budget_overhead_force_answer`；官方 rgb_test 有俯拍 **507** 盘；paired 四法皆可记分 **n=505**。  
+   - **Ours-new（paired n=505）**：Energy MAE **98.5521** kcal；Mass MAE **58.9952** g；Tool cost mean **4.6970**（median **2**，max **32**，505/505 在 K=32 内）。  
+   - **vs Ours-old（同 paired 池）**：ΔE **−1.8588** kcal，ΔM **−3.4147** g，Δtool **−1.8812**。  
+   - **vs Direct-VLM（B0，同 paired 池）**：ΔM **−17.3513** g，ΔE **+1.4210** kcal — **能量主 claim 未成立**（质量赢、能量未稳赢 B0）。  
+   - **Mass RE_PORTION**：**827** 次成功，**0** hollow（变更 dish 总营养 **827/827**）。  
+   - **Coverage 0.5921**；**ABSTAIN 206** — **仅辅助**，**不是**通过门禁。  
+   - **本池锚点复现（own-pool，非 paired 行）**：Direct-VLM **n=507** E **97.0256**（≈历史 **97.03**）/ M **76.4556**（≈**76.46**）；closed-loop STOP 子集 **n=488** E **96.2769**（与 #34 一致）。  
+   - **开环 BC** 读 closed-loop 同一 logged trace：**E/M/tool 与 closed-loop 相同**（report 说明非独立 VLM rollout）。  
+   - **产物**：`results/p0d/report_same_budget.txt`、`same_budget.json`、`same_budget_dishes.jsonl`、`ours_new_rgb_test.jsonl`、`ours_new_rgb_test_summary.json`。冻结 n5k / weak_steps **未改**。
 
-6. **P1（later，不挡、不替代 P0d；仍禁跳步）**：图文检索 + FNDDS 重排；忠实 B1/B2 live API（[`docs/B1_B2_SCAFFOLD.md`](B1_B2_SCAFFOLD.md)）可并行，**不得**跳过 **P0d**（**P0a–P0c 与 Q 校准 #44 已完成**）。
+6. **P1（later，未解锁；不挡、不替代误差审计；仍禁跳步）**：图文检索 + FNDDS 重排；忠实 B1/B2 live API（[`docs/B1_B2_SCAFFOLD.md`](B1_B2_SCAFFOLD.md)）**不得**跳过 **误差审计**；**P0a–P0c、Q 校准 #44、P0d #46 已完成** — Triste + 调研 **2026-11-05：合 #46，不开 P1，下一项误差审计**。
 
 **禁令（仍有效）**：不上 RL；不开 fast Cloud Agent；禁止 rgb_test GT 调参；勿覆盖冻结 n5k / weak_steps；空壳 RE_PORTION；kcal-proxy AURC 作主 claim；本机 Qwen closed-loop **≠** 忠实 C；体积默认关。
 
@@ -60,7 +71,7 @@
 
 ### 服务器
 
-**没有新的 507 / 弱标签重跑命令。** **P0d Full-set 主表**由「当前首项」定义；**#44 Q 校准已落盘，不再重训 Q 权重**。**禁止** Cloud Agent **fast** 代跑 P0d。冻结文件勿覆盖，也不要重跑：
+**没有新的 507 / 弱标签重跑命令。** **P0d #46 Full-set 主表已落盘**（`b9c4c5e7`）；当前工作是在 **#46 产物上只读误差审计**，不重跑 507 / 弱标签。**#44 Q 校准已落盘，不再重训 Q 权重**。**禁止** Cloud Agent **fast** 代跑 Full-set 或审计。**仍禁止**跳步 **P1**。冻结文件勿覆盖，也不要重跑：
 
 - `results/n5k_rgb_test_overhead_b0_b1.json` 与 `.jsonl`（sha256 前缀 `a4dfdd82e3a595f4…`）
 - 默认的 `results/n5k_subset_b0_b1.json` 与 `.jsonl`（现在就是上面这一对）
@@ -95,7 +106,7 @@
 - **U_* / z**：**U_id、U_mass、U_nutrient、U_evidence** + 分歧 + 先验 **o/b**；**z=98-d**；Mass **Laplace σ**（P0b `estimate_mass`）接入 **U_mass / U_nutrient**。**无 RL**；弱 kcal-proxy **不进 z** 作主叙事。  
 - **Q_φ**：规则 utility → 监督 **Q_φ**；**L=min(|Δenergy|,2500)/2500** 上的 **ΔL** 标签；**a*=argmax Q/Cost**。#24 **State-aware BC 仅消融**（hold-out 与 logged Acc **0.9607**）。  
 - **Hold-out**（rgb_train weak steps logged）：Q 回归 MAE **0.0368**（零基线 **0.0518**，Pearson **0.7799**，**n=1960** 可测工具步）；Q/Cost vs heuristic **0.4489**；heuristic vs logged **0.7968**。Q/Cost 动作 **STOP 1360** / RE_PORTION **608** / RETRIEVE **499** / ABSTAIN **266** / CORRECT_CODE **38**（**2771** 行）。stub：heuristic **RETRIEVE→RE_PORTION→STOP**；Q/Cost **首步 STOP**。  
-- **门禁解读**：Q **偏保守（STOP-heavy）** — **P0c 交付已完成**；Triste + 调研 **2026-11-05 选 B** → **#44 Q 校准已完成**（`3fc611d`）；**校准门禁通过** → 当前首项 **P0d**。**勿**把本段当 P0d 同预算 Full MAE 主表。  
+- **门禁解读**：Q **偏保守（STOP-heavy）** — **P0c 交付已完成**；Triste + 调研 **2026-11-05 选 B** → **#44 Q 校准已完成**（`3fc611d`）；**校准门禁通过** → **P0d #46 已完成**（`b9c4c5e7`）。**勿**把本段当 P0d 同预算 Full MAE 主表。  
 - **产物**：`results/qphi/`。**未**读 rgb_test GT；冻结 n5k / weak_steps **未改**。
 
 **Q/Cost terminal-margin 校准已通过（Ours-new 组件）**（2026-11-05 Asia/Shanghai，#44，squash **`3fc611d`**）。
@@ -103,8 +114,19 @@
 - **方法**：fit-only **median+3·MAD** terminal-margin fence（**τ≈0.001645**）；margin 不足 → rule utility；**Learned Q 权重未改**。**无 RL**；**未**用 hold-out / rgb_test 选 τ。脚本：`scripts/qphi_calibrate.py`；`vdr/controller/q_calibration.py`。  
 - **Hold-out**（rgb_train weak steps logged，**n=2771**）：Q/Cost vs rule utility **0.4489 → 0.7712**。STOP **1360→526**；RETRIEVE **499→1096**；RE_PORTION **608→842**；ABSTAIN **266→207**；CORRECT_CODE **38→100**。非 STOP：**专家调用率 0.811→0.908**；Mass|检索 **0.785→0.863**。决策：**Q/Cost 1878** / **rule utility 893**。  
 - **Stub** `dish_1550704903`：未校准首步 **STOP** → 校准 **RETRIEVE→RE_PORTION→STOP**（**1** mass call，`portion_src=mass_estimator`）。  
-- **门禁结论**：调研门槛 **通过** → **P0d 已解锁**。**不是** P0d Full-set MAE 主表。  
+- **门禁结论**：调研门槛 **通过** → **P0d #46 已落盘**。**不是** P0d Full-set 主表（主表见下段 P0d）。  
 - **产物**：`results/qphi/calibration.json`、`calibration_holdout.json`、`report_calibration.txt`。冻结 n5k / weak_steps **未改**（#44 未 touch 弱标签 jsonl 内容）。
+
+**P0d 同预算 Full-set 已评测（Ours-new 主表）**（2026-11-05 Asia/Shanghai，#46，squash **`b9c4c5e7`**）。
+
+- **定义**：`p0d_same_budget_overhead_force_answer`（`scripts/p0d_same_budget.py`；`vdr/eval/same_budget.py`）。官方 rgb_test **507** 有俯拍；paired 四法皆可记分 **n=505**；Cafe 标签只计误差；**未**在 rgb_test 上拟合阈值。  
+- **Ours-new**（Mass + **校准后** Q/Cost）：Energy MAE **98.5521** / Mass MAE **58.9952** / Tool cost mean **4.6970**。  
+- **vs Ours-old**（closed-loop BC，同 paired）：ΔE **−1.8588**，ΔM **−3.4147**，Δtool **−1.8812**。  
+- **vs Direct-VLM（B0）**：ΔM **−17.3513**，ΔE **+1.4210** — **能量未稳赢 B0**（质量主赢、能量主 claim 未成立）。  
+- **Mass RE_PORTION**：**827** success，**0** hollow。Coverage **0.5921**；ABSTAIN **206** — **辅助**，非 pass 门禁。  
+- **锚点**：B0 own-pool **n=507** E **97.0256** / M **76.4556**；closed-loop STOP **n=488** E **96.2769**。开环 BC 读同一 closed-loop trace → **E/M/tool 与 closed-loop 相同**。  
+- **诚实解读**：P0d 证明 Mass + 校准 Q 在同预算下 **降 mass、降 tool、略优于 Ours-old 能量**，但 **未**在 paired Full-set 上 **稳定击败 B0 能量**；下一步 **误差审计**，**不是 P1**。  
+- **产物**：`results/p0d/report_same_budget.txt`、`same_budget.json`、`same_budget_dishes.jsonl`、`ours_new_rgb_test.jsonl`、`ours_new_rgb_test_summary.json`。冻结 n5k / weak_steps **未改**。
 
 **闭环 State-aware BC 已落地（Ours-old 组件）**（2026-11-04 Asia/Shanghai，自托管 `gpu-12-container`，分支 `cursor/closed-loop-bc-20261104`）。
 
@@ -168,14 +190,14 @@
 
 ### 助手 / 本地（优先）
 
-1. **P0d 同预算评测（当前首项，#44 门禁已通过）**：Ours-new（Mass + 校准后 Q/Cost）vs B5 / B0 / Ours-old；主报 **Full MAE@energy + mass MAE + Tool cost**（Coverage / AURC 辅助）。见「下一步」「当前首项」。**#44 已落盘**（`3fc611d`）。**禁止** Cloud Agent **fast** 代跑。
+1. **误差审计（当前首项；等本 STATUS 合进后再派代码）**：只读 **#46** 产物；目标见「当前首项」。交付 `results/p0d/` 或 `results/audit/` 短报告 + PR。**禁止** Cloud Agent **fast** 代跑。
 2. **#34 / #31 / #28 已冻结为 Ours-old 对照**；勿声称 on-policy 能量赢 B5。
-3. **P1 并行（可选）**：B1/B2 忠实 API；**不替代、不跳过 P0d**。
-4. **禁止：** 跳过 P0d 进 P1；把 FixRate / AURC / #44 hold-out 动作表当 Ours-new Full-set 主证明；混 offline n=356 与 on-policy n=488；空壳 RE_PORTION；RL；fast Cloud Agent；test GT 调参；覆盖冻结文件；**110.72** 当忠实 DietAI24；**勿**重训 Q 权重覆盖 #44 校准产物。
+3. **P1 未解锁**：B1/B2 忠实 API **不得**替代误差审计或跳过审计直接开 retrieval-rerank。
+4. **禁止：** 跳过误差审计进 **P1**；把 FixRate / AURC / #44 hold-out 动作表当 Ours-new Full-set 主证明；混 offline n=356 与 on-policy n=488；空壳 RE_PORTION；RL；fast Cloud Agent；test GT 调参；覆盖冻结文件；**110.72** 当忠实 DietAI24；**勿**重训 Q 权重覆盖 #44 校准产物；重跑 507 / P0d Full-set（#46 已落盘）。
 
 ### 协作
 
-docs-first：改下一步先改本文件并推仓。Cloud Agent **永远不开 fast**。**2026-11-05** Triste + 调研锁定新方法真源，**选 B（先校准 Q 再 P0d）**；**P0a–P0c 与 Q 校准 #44（`3fc611d`）已落盘** → 代码侧当前首项 **P0d 同预算评测**；**不得**助手用 fast 代跑 P0d Full-set。
+docs-first：改下一步先改本文件并推仓。Cloud Agent **永远不开 fast**。**2026-11-05** Triste + 调研：**合 #46（P0d），不开 P1**；**P0a–P0c、Q 校准 #44、P0d #46（`b9c4c5e7`）已落盘** → 代码侧当前首项 **误差审计**（**等 STATUS 合进后再派**）；**不得**助手用 fast 代跑 Full-set 或审计。
 
 ## 历史跑数（开环 v2 / 非主方法）
 
@@ -365,7 +387,7 @@ CUDA_VISIBLE_DEVICES=0 /var/tmp/nutri-venv/bin/python -u scripts/eval_n5k_subset
 W1 基础设施在这台 2×4090D 上已打通：**schema + 骨架 + toy 冒烟 + 真实 FNDDS catalog（5624）+ N5K 元数据/官方 split + 俯拍 RGB + Qwen2.5-VL-7B 单盘冒烟**。  
 B1 第二轮先验（菜品形态、未点名的仿肉、100 g 以上的高密度克重、Cheese+Crust 碎片合并）后，同一 50 盘子集已重跑：能量 MAE 为 B0 **98.3**、B1 **88.2**。上一轮是 97.4 / 107.9，硬化前是 98.2 / 112.1。  
 有俯拍 RGB 的官方 `rgb_test` 池已跑完：能量 MAE 为 B0 **97.03**（Direct-VLM 锚点）、B1 **110.72**（**不是忠实 DietAI24**；中位 63.51 / 63.57）。配对 506 盘上中位差距约 +3.5 kcal，MAE 差距在右尾。50 盘子集仍是 B0 **98.3**、B1 **88.2**，是偏有利的一抽，不能代替这 507 盘。见「507 分析（助手）」。  
-**现行缺口**在文首「下一步」：**P0a #37**、**P0b #39**、**P0c #41（`54c32e8`）**、**Q 校准 #44（`3fc611d`，门禁通过）** 已完成 → **P0d** Ours-new 同预算主表（Mass + 校准后 Q）。Ours-old（#24–#34）已落盘作对照。**不可跳至 P1。** 忠实 B1/B2、试标 30（kappa **0.7–0.8**）为 P1 并行。开环 DAgger / BC 数字仅 B5。**暂不上 RL。**
+**现行缺口**在文首「下一步」：**P0a #37**、**P0b #39**、**P0c #41（`54c32e8`）**、**Q 校准 #44（`3fc611d`）**、**P0d #46（`b9c4c5e7`）** 已完成 → **误差审计**（解释 mass↓ 而 energy 未稳赢 B0）。Ours-old（#24–#34）已落盘作对照。**P1 未解锁；不可跳至 P1。** 试标 30（kappa **0.7–0.8**）仍为 P2。**暂不上 RL。**
 
 ## 已完成（box）
 
@@ -390,6 +412,7 @@ B1 第二轮先验（菜品形态、未点名的仿肉、100 g 以上的高密�
 | 方案 MD | 根目录 `PLAN.md`（2026-11-05 起与 Canvas「VDR — Evidence-Guided Active Multimodal Nutrition Estimation」对齐） |
 | P0 离线脚手架（未训练） | 设计 `docs/STATE_FEATURE_DESIGN.md`；混淆 / Provenance / Selective 脚本在 `scripts/`；mock `tests/fixtures/fndds_mock_foods.json`；草图 `vdr/controller/state_features.py`（`CLOSED_LOOP_READY` 假）。开环 31 维仍是 B5。**2026-11-04 离线冒烟已跑完**（数字在文首「助手进度」；不是方法证明，不是训练）。索引 [`docs/VDR_P0.md`](VDR_P0.md) |
 | Q/Cost 校准 #44 | fit-only terminal-margin **τ≈0.001645**；hold-out 一致率 **0.4489→0.7712**（**n=2771**）；产物 `results/qphi/calibration*.json`、`report_calibration.txt`；**无 RL**；**未**改 `q_phi.npz` 权重；冻结 weak_steps / n5k **未改** |
+| P0d 同预算 #46 | paired **n=505** Ours-new E **98.5521** / M **58.9952** / tool **4.6970**；vs B0 ΔE **+1.4210**（能量未稳赢）；产物 `results/p0d/`；squash **`b9c4c5e7`** |
 
 ## 明确未完成
 
