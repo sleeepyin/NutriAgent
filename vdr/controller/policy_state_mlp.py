@@ -158,13 +158,17 @@ class PolicyStateMLP:
         self._model = f"numpy_state_mlp_{hidden1}_{hidden2}"
         return self
 
-    def predict_actions(self, X: Any) -> list[str]:
+    def _feature_matrix(self, X: Any) -> np.ndarray:
         self._require_fit()
         matrix = np.asarray(X, dtype=np.float64)
         if matrix.ndim != 2 or matrix.shape[1] != STATE_FEATURE_DIM:
             raise ValueError(
                 f"X must have shape (n, {STATE_FEATURE_DIM}), got {getattr(matrix, 'shape', None)}"
             )
+        return matrix
+
+    def _masked_logits(self, matrix: np.ndarray) -> np.ndarray:
+        """Forward pass. Classes with fit weight 0 are -inf and drop out of the softmax."""
         assert self._mean is not None and self._std is not None
         assert self._W1 is not None and self._b1 is not None
         assert self._W2 is not None and self._b2 is not None
@@ -173,11 +177,22 @@ class PolicyStateMLP:
         centered = (matrix - self._mean) / self._std
         h1 = np.maximum(centered @ self._W1 + self._b1, 0.0)
         h2 = np.maximum(h1 @ self._W2 + self._b2, 0.0)
-        scores = h2 @ self._W3 + self._b3
-        scores = scores.copy()
+        scores = np.array(h2 @ self._W3 + self._b3, dtype=np.float64, copy=True)
         scores[:, ~self._emit] = -np.inf
+        return scores
+
+    def predict_actions(self, X: Any) -> list[str]:
+        scores = self._masked_logits(self._feature_matrix(X))
         chosen = np.argmax(scores, axis=1)
         return [self.actions[int(index)] for index in chosen]
+
+    def predict_proba(self, X: Any) -> np.ndarray:
+        """Softmax over actions. Shape ``(n, n_actions)``, column order ``self.actions``.
+
+        Masked classes (fit weight 0) have probability 0. Argmax matches
+        ``predict_actions``. Does not fit. ``from_npz`` is enough to call this.
+        """
+        return _softmax(self._masked_logits(self._feature_matrix(X)))
 
     def export_numpy(self) -> dict[str, Any]:
         self._require_fit()
