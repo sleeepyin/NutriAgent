@@ -1,0 +1,51 @@
+P0d same-budget evaluation
+definition: p0d_same_budget_overhead_force_answer
+Same-budget full set on official rgb_test dishes that have an overhead rgb.png. Each method commits one energy and one mass. The decision step is the first predicted STOP or ABSTAIN, or the last step if the method never predicts a terminal action. Committed nutrition is the latest finite nutri_dish at or before that step. Later totals are not credited. A dish missing energy or mass is unscored and is not imputed as zero. The paired table keeps only dishes scored by every method. Cafe labels score the error and do not choose actions, codes, grams, or thresholds. Tool cost counts RETRIEVE, CORRECT_CODE, RE_PORTION, and RE_DECOMPOSE through the decision step. STOP and ABSTAIN are not tools. The step cap is K=32. Coverage and AURC are auxiliary. This is not the hold-out action-agreement table and not a reinforcement-learning run.
+
+Pool: official rgb_test 709 ids, 507 with an overhead rgb.png. Ids without an image are not imputed.
+Budget K=32. Tool cost counts CORRECT_CODE, RETRIEVE, RE_DECOMPOSE, RE_PORTION. ABSTAIN and STOP are not tools. The Q/Cost weights are the selector's denominator, not this count.
+Cafe labels score error only. No threshold was fit on rgb_test.
+Coverage and AURC are auxiliary and were not used to pick a method.
+This is not the hold-out action-agreement table.
+
+Paired full set (every method has finite energy and mass), n=505
+Mass Estimator + calibrated Q/Cost selection: n=505 energy MAE 98.5521 kcal (median 59.0434) mass MAE 58.9952 g (median 37.4631) tool cost mean 4.6970 median 2.0000 max 32 within K 505/505
+Open-loop behavior cloning: n=505 energy MAE 100.4110 kcal (median 61.5717) mass MAE 62.4099 g (median 42.0000) tool cost mean 6.5782 median 6.0000 max 19 within K 505/505
+Direct vision-language model: n=505 energy MAE 97.1312 kcal (median 63.5141) mass MAE 76.3465 g (median 48.0000) tool cost mean 0.0000 median 0.0000 max 0 within K 505/505
+Closed-loop control: n=505 energy MAE 100.4110 kcal (median 61.5717) mass MAE 62.4099 g (median 42.0000) tool cost mean 6.5782 median 6.0000 max 19 within K 505/505
+
+Paired difference (this method minus the named control). Negative MAE is lower error.
+minus closed-loop control:
+  Mass Estimator + calibrated Q/Cost selection: energy -1.8588 kcal, mass -3.4147 g, tool cost -1.8812
+  Open-loop behavior cloning: energy 0.0000 kcal, mass 0.0000 g, tool cost 0.0000
+  Direct vision-language model: energy -3.2798 kcal, mass 13.9366 g, tool cost -6.5782
+  Closed-loop control: energy 0.0000 kcal, mass 0.0000 g, tool cost 0.0000
+minus direct vision-language model:
+  Mass Estimator + calibrated Q/Cost selection: energy 1.4210 kcal, mass -17.3513 g, tool cost 4.6970
+  Open-loop behavior cloning: energy 3.2798 kcal, mass -13.9366 g, tool cost 6.5782
+  Direct vision-language model: energy 0.0000 kcal, mass 0.0000 g, tool cost 0.0000
+  Closed-loop control: energy 3.2798 kcal, mass -13.9366 g, tool cost 6.5782
+
+Own full set (dishes that method could score; unscored dishes are not imputed):
+Mass Estimator + calibrated Q/Cost selection: scored 505/507 energy MAE 98.5521 kcal mass MAE 58.9952 g tool cost mean 4.6970 median 2.0000 max 32 within K 505/505 early decisions 0
+Open-loop behavior cloning: scored 505/507 energy MAE 100.4110 kcal mass MAE 62.4099 g tool cost mean 6.5782 median 6.0000 max 19 within K 505/505 early decisions 0
+Direct vision-language model: scored 507/507 energy MAE 97.0256 kcal mass MAE 76.4556 g tool cost mean 0.0000 median 0.0000 max 0 within K 507/507 early decisions 0
+Closed-loop control: scored 505/507 energy MAE 100.4110 kcal mass MAE 62.4099 g tool cost mean 6.5782 median 6.0000 max 19 within K 505/505 early decisions 0
+
+Auxiliary coverage / selective energy MAE / AURC on the paired full set:
+Mass Estimator + calibrated Q/Cost selection: coverage 0.5921 selective energy MAE 99.5150 kcal AURC 64.6268
+Open-loop behavior cloning: coverage 1.0000 selective energy MAE 100.4110 kcal AURC 96.2721
+Direct vision-language model: coverage 1.0000 selective energy MAE 97.1312 kcal AURC n/a
+Closed-loop control: coverage 0.9842 selective energy MAE 97.7964 kcal AURC 48.8918
+
+Auxiliary. The same open-loop policy read on the mass-estimator trace. Not a separate vision rollout. If it does not stop early, its committed nutrition is the mass-estimator trace's nutrition. The primary open-loop row is the read of the closed-loop control trace.
+Open-loop behavior cloning on the mass-estimator trace: scored 505/507 energy MAE 98.5521 kcal mass MAE 58.9952 g tool cost mean 5.2574 median 3.0000 max 32 within K 505/505 early decisions 0
+
+Reproduction, not the paired table: closed-loop control on its STOP pass/corrected subset n=488 energy MAE 96.2769 kcal, mass MAE 61.3525 g, tool cost mean 6.4611. The published energy figure is 96.2769 kcal (n=488). Direct vision-language model 97.03 kcal / 76.46 g is the n=507 anchor, not this subset.
+
+Abstain terminals: 206/206 keep a finite dish vector, which is the total the selector saw, including earlier mass writes. Null abstains immediately after a mass write: 0. Stop terminals: 277, of which 276 called the mass estimator.
+
+Mass-estimator RE_PORTION audit: success 827, failed 0, dish nutrition changed 827, unchanged 0, hollow 0.
+
+Q weights results/qphi/q_phi.npz sha256 prefix a59ba6e49cf45220. Fence tau=0.001645429361972572. Retrained=False.
+docs/STATUS.md was not modified.

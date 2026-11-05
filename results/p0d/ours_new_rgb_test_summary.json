@@ -1,0 +1,77 @@
+{
+  "protocol": "p0d_mass_calibrated_q_cost",
+  "split": "rgb_test",
+  "full_pool": true,
+  "complete": true,
+  "n_official_rgb_test": 709,
+  "n_with_overhead_rgb": 507,
+  "n_attempted_this_process": 507,
+  "n_failures": 0,
+  "failures": [],
+  "trajectories": "results/p0d/ours_new_rgb_test.jsonl",
+  "trajectories_sha256": "fdeb8b3292c215a6f18749cc102cb9703b6cf901245f752452d8ea878d777ff3",
+  "vlm": {
+    "base_url": "http://127.0.0.1:18080",
+    "model_alias": "qwen3.8-27b",
+    "weights_file": "Qwen3.8-27B-UD-Q5_K_M.gguf",
+    "mmproj_file": "mmproj-BF16.gguf",
+    "serving": "llama.cpp llama-server b11581 OpenAI /v1/chat/completions GPU0:18080",
+    "health": {
+      "status": "ok"
+    },
+    "model_ids": [
+      "qwen3.8-27b"
+    ]
+  },
+  "q_weights": "results/qphi/q_phi.npz",
+  "q_calibration": "results/qphi/calibration.json",
+  "terminal_margin": 0.001645429361972572,
+  "q_weights_retrained": false,
+  "mass_tool": "estimate_mass",
+  "portion_src_on_re_portion": "mass_estimator",
+  "n_dishes": 507,
+  "n_steps": 2858,
+  "action_counts": {
+    "ABSTAIN": 206,
+    "CORRECT_CODE": 694,
+    "RETRIEVE": 854,
+    "RE_PORTION": 827,
+    "STOP": 277
+  },
+  "terminal_action_counts": {
+    "ABSTAIN": 206,
+    "CORRECT_CODE": 23,
+    "RETRIEVE": 1,
+    "STOP": 277
+  },
+  "uses_test_gt": false,
+  "rl": false,
+  "volume_tool": false,
+  "labels": "This file does not contain cafe labels and does not report MAE.",
+  "elapsed_seconds": 1754.88,
+  "frozen_sha256_prefix": {
+    "abstain_calibration.json": "b033825f2dbb73c0",
+    "calibration.json": "c05e11ce513adbe7",
+    "calibration_holdout.json": "ac8ff5de2f90ce38",
+    "mae_aurc_holdout.json": "0a38d0d13d826f24",
+    "mae_aurc_testsplit.json": "b762a2c21cb75d34",
+    "metrics_holdout.json": "748dbb5e391f90ff",
+    "n5k_rgb_test_overhead_b0_b1.json": "1585be1951b46f71",
+    "n5k_rgb_test_overhead_b0_b1.jsonl": "a4dfdd82e3a595f4",
+    "n5k_subset_b0_b1.json": "1585be1951b46f71",
+    "n5k_subset_b0_b1.jsonl": "a4dfdd82e3a595f4",
+    "n5k_subset_b0_b1_n50_seed42.json": "8e3400bcbfcd56cd",
+    "n5k_subset_b0_b1_n50_seed42.jsonl": "013c899da4724ef2",
+    "on_policy_rgb_test.jsonl": "dc24231294d88360",
+    "on_policy_rgb_test_summary.json": "e06fdde7af492a50",
+    "policy_state_mlp.npz": "f0ac0b41f99cbd72",
+    "q_phi.npz": "a59ba6e49cf45220",
+    "rgb_train_fit_all.jsonl": "ed47f9239bfecb3c",
+    "rgb_train_fit_all.summary.json": "d11e6a3e547b38d0",
+    "rgb_train_holdout_all.jsonl": "6055ccbbbf0d432e",
+    "rgb_train_holdout_all.summary.json": "c32db76caacf010b",
+    "train_meta.json": "cb549db6864d12da"
+  },
+  "status_file": "docs/STATUS.md was not modified.",
+  "owner": "营养论文代码编写"
+}
