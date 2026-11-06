@@ -1,10 +1,12 @@
+> **历史脚手架 · 仅 Ours-old 对照，非现行主方法。** 本文件是 **Evidence-Aware Closed-Loop** 的状态特征设计，只作 **Ours-old** 对照。**现行方法中心**见 [`PLAN.md`](../PLAN.md)：**Error-Aware Active Specialist Selection**（选择用 **U_*** + 校准 **Q_φ**）。执行门禁见 [`docs/STATUS.md`](STATUS.md)。下文接口与字段表保留作历史对照。
+
 # State-Aware Feature Design / 状态感知特征设计
 
-> Landed design note for NutriAgent / VDR (P0). Aligned with [`PLAN.md`](../PLAN.md) after `#17` / `7ad3cfb`.
-> Method center = **Evidence-Aware Closed-Loop Tool Control**.
-> Main policy: \(\pi(a_t \mid h_t, o_{t-1}, b_t)\) — **must** read the prior tool observation.
-> Open-loop 31-d BC (no \(o_{t-1}\)) = **ablation B5 only**, not the main method.
-> The encoder in `vdr/controller/state_features.py` is **trainable** (`CLOSED_LOOP_READY = True` after `scripts/closed_loop_bc_train.py` + `results/closed_loop/metrics_holdout.json`). Open-loop 31-d remains ablation **B5**.
+> Landed design note for NutriAgent / VDR (P0), **Ours-old 对照**. Aligned with [`PLAN.md`](../PLAN.md) after `#17` / `7ad3cfb`（当时快照，不是现行门禁）。
+> 对照中心（**Ours-old**，非现行）= **Evidence-Aware Closed-Loop Tool Control**。现行方法中心见 [`PLAN.md`](../PLAN.md)：**Error-Aware Active Specialist Selection**。
+> 当时的闭环策略：\(\pi(a_t \mid h_t, o_{t-1}, b_t)\) — **must** read the prior tool observation。这是相对开环 B5 的 **Ours-old** 接口，不是现行 Q_φ 选择器。
+> Open-loop 31-d BC (no \(o_{t-1}\)) = **ablation B5 only**，相对上述闭环对照，也不是现行主方法。
+> The encoder in `vdr/controller/state_features.py` is **trainable** (`CLOSED_LOOP_READY = True` after `scripts/closed_loop_bc_train.py` + `results/closed_loop/metrics_holdout.json`). Open-loop 31-d remains ablation **B5**. `CLOSED_LOOP_READY` 只表示 **Ours-old** 脚手架就绪。
 
 ---
 
@@ -15,9 +17,9 @@ Repo `vdr/controller/features.py::build_features` deliberately builds a **31-d p
 
 That design was correct for an open-loop BC ablation (STATUS: MLP hold-out Acc 0.9700 but
 **ABSTAIN 0/24** — ABSTAIN and STOP collide on pre-action fields; the distinguishing signal sits
-in `obs_t` / `abstain_reason`). It is **not** the main closed-loop policy feature.
+in `obs_t` / `abstain_reason`). It is **not** the closed-loop feature in this Ours-old note.
 
-This document proposes `build_state_features(h_t, o_prev, b_t)` for the main method and maps the
+This document proposes `build_state_features(h_t, o_prev, b_t)` for the **Ours-old** closed-loop policy (对照，非现行主方法) and maps the
 existing open-loop path to ablation **B5**.
 
 **Scope of this file:** interface design + field lists + masking API + the landed sketch layout.  
@@ -27,7 +29,7 @@ existing open-loop path to ablation **B5**.
 
 ## 2. Policy interface / 策略接口
 
-### 2.1 Main (closed-loop)
+### 2.1 Closed-loop policy (Ours-old 对照)
 
 \[
 \pi(a_t \mid h_t, o_{t-1}, b_t)
@@ -79,7 +81,7 @@ def build_state_features(
     - b_t: remaining budget / safety flags. None → defaults (step from h_t only).
     - mask_obs: H2 ablation — ``zero`` nulls the obs block; ``shuffle`` permutes obs
       across a batch externally OR shuffles scalar slots with ``shuffle_seed``.
-      ``none`` = main method path.
+      ``none`` = Ours-old closed-loop path in this note (对照；非现行主方法).
 
     Does NOT read privileged teacher-chosen targets as *labels*. Encoding
     observation *structure* (candidate list returned by RETRIEVE, portion

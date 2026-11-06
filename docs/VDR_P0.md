@@ -1,11 +1,13 @@
+> **历史脚手架 · 仅 Ours-old 对照，非现行主方法。** 本文件是 **Evidence-Aware Closed-Loop** 的落地索引（闭环 BC / AURC / 开环 B5），只作 **Ours-old** 对照。**现行方法中心**见 [`PLAN.md`](../PLAN.md)：**Error-Aware Active Specialist Selection**（Mass + 校准 Q_φ）。执行门禁见 [`docs/STATUS.md`](STATUS.md)。下文 how-to 与数字保留。
+
 # VDR P0 — Evidence-Aware Closed-Loop (landed scripts)
 
-Offline scaffolding for **Verified Dietary Reasoning**. Truth sources: [`PLAN.md`](../PLAN.md) and [`docs/STATUS.md`](STATUS.md) after `#17` / `7ad3cfb`.
+Offline scaffolding for **Verified Dietary Reasoning** (**Ours-old 对照**). Historical alignment with [`PLAN.md`](../PLAN.md) and [`docs/STATUS.md`](STATUS.md) after `#17` / `7ad3cfb` — 当时快照，不是现行门禁。
 
-**Closed-loop BC train landed (2026-11-04).** Fit/hold-out weak steps via `scripts/closed_loop_bc_train.py`; metrics under `results/closed_loop/`. **FixRate hold-out (primary `offline_policy_matched_terminal_counterfactual`, #26, 2026-11-05):** `fixrate_holdout.json` / `report_fixrate.txt`. **Next** (see [`docs/STATUS.md`](STATUS.md)): full-set MAE / Coverage / Selective MAE / AURC. Still no RL. Frozen `results/n5k_*` and `results/weak_steps/*.jsonl` stay as they are.
+**Closed-loop BC train landed (2026-11-04) — Ours-old 对照.** Fit/hold-out weak steps via `scripts/closed_loop_bc_train.py`; metrics under `results/closed_loop/`. **FixRate hold-out (primary `offline_policy_matched_terminal_counterfactual`, #26, 2026-11-05):** `fixrate_holdout.json` / `report_fixrate.txt`. **当时排队的对照后续**（full-set MAE / Coverage / Selective MAE / AURC）后来以 Ours-old 落盘，**不是**现行下一步；现行下一步只看 STATUS。Still no RL. Frozen `results/n5k_*` and `results/weak_steps/*.jsonl` stay as they are.
 
-- Method center: Evidence-Aware Closed-Loop Tool Control
-- Main policy (not trained here): \(\pi(a_t \mid h_t, o_{t-1}, b_t)\) — must read the tool observation
+- 对照中心（**Ours-old**，非现行）：Evidence-Aware Closed-Loop Tool Control。现行方法中心见 [`PLAN.md`](../PLAN.md)：**Error-Aware Active Specialist Selection**。
+- Ours-old 策略（对照，非现行主方法）：\(\pi(a_t \mid h_t, o_{t-1}, b_t)\) — must read the tool observation
 - Open-loop 31-d BC (`build_features`, no \(o_{t-1}\)) = **ablation B5 only**
 - Overall Acc is not the story. Report per-class PR/F1 (especially ABSTAIN), Provenance Validity, Coverage / Selective MAE / AURC
 - Hold-out **ABSTAIN 0/24** is a red flag. The synthetic demo locks ABSTAIN F1 = 0 and Acc ≈ 0.9700

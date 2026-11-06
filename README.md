@@ -3,6 +3,7 @@
 把膳食图像理解做成**可验证中间状态的多模态工具调用 Agent**测试床。
 
 输出 \(y=(n, G, s, \tau)\)：营养向量 + 证据图 + 核验状态（`pass` / `corrected` / `abstain`）+ 纠错轨迹。  
+kcal-proxy 弃权不作主创新。  
 主方法：**Evidence-Guided Active Multimodal Nutrition Estimation** — **Error-Aware Active Specialist Selection**（Mass / 检索专家 + 监督 \(Q_\phi\) 选工具；**先**审计 traces 门禁，**再**训 Mass）。State-aware 闭环与开环 31 维 BC 为 **Ours-old / B5 对照**。暂不上 RL。  
 **主投 ACM Multimedia（CCF-A）**；备选 AAAI/IJCAI。算力假设 **2×4090D 24GB**。
 
@@ -21,7 +22,7 @@
 |------|------|
 | [PLAN.md](PLAN.md) | 完整实验方案（任务/基准/方法/基线/表/周程/MVP） |
 | [docs/STATUS.md](docs/STATUS.md) | **当前执行状态**（已完成 / 待办） |
-| [docs/VDR_P0.md](docs/VDR_P0.md) | P0 闭环脚手架（未训练）：31 维开环 = 消融 B5；ABSTAIN 0/24；无 RL |
+| [docs/VDR_P0.md](docs/VDR_P0.md) | **Ours-old / 历史脚手架**（Evidence-Aware Closed-Loop 对照），**不是**现行方法。31 维开环 = 消融 B5；ABSTAIN 0/24；无 RL |
 | [docs/B1_B2_SCAFFOLD.md](docs/B1_B2_SCAFFOLD.md) | B1 DietAI24 / B2 FoodAgent 脚手架：dry-run only，未跑主表。历史 B1 能量 MAE 110.72 不是忠实 DietAI24 |
 | [docs/COLLAB_GITHUB.md](docs/COLLAB_GITHUB.md) | **内网服务器 ↔ GitHub ↔ 助手**协作协议 |
 | [docs/SERVER_SETUP.md](docs/SERVER_SETUP.md) | 服务器下载数据、冒烟、VLM 注意 |
