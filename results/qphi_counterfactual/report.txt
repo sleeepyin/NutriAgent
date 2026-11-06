@@ -1,0 +1,17 @@
+protocol qphi_counterfactual_onestep_holdout_v1
+leakage no_dish_leakage leakage_exists False
+coverage_choice n 2391
+coverage_choice_mass n 1914
+oracle id 1.0 dE 82.19 regret 0.0 dM 27.8669 mass_regret 9.2806 cost 1.7555
+q_phi id 0.6165 dE 24.1441 regret 49.9586 dM 24.2622 mass_regret 12.383 cost 1.6243
+rule_utility id 0.6102 dE 23.034 regret 50.914 dM 25.2972 mass_regret 11.4923 cost 1.7074
+random id 0.4338 dE 4.038 regret 78.152 dM 12.1196 mass_regret 26.5302 cost 2.1399
+fixed_pipeline id 0.5914 dE 20.62 regret 52.9916 dM 18.8706 mass_regret 17.0234 cost 1.5199
+calibration n 3475 mae 0.0226 pearson 0.7471
+no_decompose
+nodecomp oracle id 1.0 dE 44.2749 regret 0.0
+nodecomp q_phi id 0.7356 dE 24.1441 regret 17.3261
+nodecomp rule_utility id 0.7299 dE 23.034 regret 18.2815
+nodecomp random id 0.7034 dE 2.7817 regret 35.712
+nodecomp fixed_pipeline id 0.7064 dE 20.62 regret 20.3591
+seconds 121.0

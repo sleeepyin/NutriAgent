@@ -1,0 +1,1025 @@
+{
+  "protocol_id": "qphi_counterfactual_onestep_holdout_v1",
+  "protocol": "One-step branches from frozen rgb_train hold-out weak-step states. Those dishes did not drive the #51 food-code swap or the #53 coverage guard (both were read off the rgb_test development 505). They were also not the fit rows used to train Q or to set \u03c4. A_legal drops STOP and ABSTAIN while a component is open and has no mass-estimator write. Each legal action is executed once from that same state. The oracle minimizes post-action absolute energy error. Mass error is logged and is not the selection objective. Q is the frozen checkpoint plus the existing terminal-margin fence and coverage guard. \u03c4 is not refit. No reinforcement learning. rgb_test labels are not read.",
+  "smoke": false,
+  "max_dishes": null,
+  "tau": 0.001645429361972572,
+  "tau_source": "results/qphi/calibration.json",
+  "q_weights": "results/qphi/q_phi.npz",
+  "q_sha256": "a59ba6e49cf45220d4c43194fc72ad60daa49f455aa66eefe04ee2954d5c107b",
+  "q_sha_matches_calibration": true,
+  "retrained_mass": false,
+  "retrained_q": false,
+  "retuned_tau": false,
+  "rl": false,
+  "uses_rgb_test_gt": false,
+  "p1": false,
+  "gates_2_through_7_started": false,
+  "leakage_audit": {
+    "question": "Are weak-step fit and hold-out grouped by dish_id, or do decision steps of the same dish fall on both sides?",
+    "split_rule": "int(sha256(dish_id).hexdigest()[:8], 16) % 10 == 0 \u2192 holdout, else fit",
+    "split_function": "vdr.weak.teacher.pool_of_dish",
+    "unit": "dish_id",
+    "fit_path": "/home/sdnu/nutriagent/results/weak_steps/rgb_train_fit_all.jsonl",
+    "holdout_path": "/home/sdnu/nutriagent/results/weak_steps/rgb_train_holdout_all.jsonl",
+    "fit_rows": 25864,
+    "holdout_rows": 2771,
+    "fit_dishes": 3679,
+    "holdout_dishes": 380,
+    "fit_dishes_with_multiple_steps": 3678,
+    "holdout_dishes_with_multiple_steps": 380,
+    "fit_dishes_with_noncontiguous_steps": 0,
+    "holdout_dishes_with_noncontiguous_steps": 0,
+    "dishes_in_both_splits": 0,
+    "rows_belonging_to_dishes_in_both_splits": 0,
+    "example_leaked_dish_ids": [],
+    "misfiled_dishes": 0,
+    "misfiled_examples": [],
+    "leakage_exists": false,
+    "conclusion": "no_dish_leakage",
+    "retrained": false,
+    "note": "Q training fits every supervised row of the fit file and scores the hold-out file. There is no random decision-step split in vdr.controller.q_data or scripts/qphi_train.py. The mass-estimator probe-val residue (sha256 % 10 == 1) is a second dish-grouped slice inside fit. It is not this cut. This audit does not refit Q, Mass, or \u03c4."
+  },
+  "n_holdout_dishes": 380,
+  "n_states": 2771,
+  "n_development_dishes": 505,
+  "n_overlap_development": 0,
+  "n_rgb_test_in_sample": 0,
+  "mass_forwards_fresh": 0,
+  "mass_branch_hits": 919,
+  "mass_branch_misses": 226,
+  "retrieve_cache": 203,
+  "slices": {
+    "coverage_choice": {
+      "n": 2391,
+      "policies": {
+        "oracle": {
+          "n": 2391,
+          "n_improvement": 1987,
+          "n_regret": 2378,
+          "n_idle": 0,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 1.0,
+          "exact_tiebreak_rate": 1.0,
+          "mean_energy_improvement_kcal": 71.9559,
+          "mean_energy_regret_kcal": 0.0,
+          "mean_mass_improvement_g": 25.6428,
+          "mean_mass_regret_g": 7.925,
+          "mean_cost": 1.7248,
+          "actions": {
+            "RETRIEVE": 1181,
+            "RE_PORTION": 470,
+            "RE_DECOMPOSE": 276,
+            "CORRECT_CODE": 464
+          }
+        },
+        "q_phi": {
+          "n": 2391,
+          "n_improvement": 1987,
+          "n_regret": 2378,
+          "n_idle": 0,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 0.6428,
+          "exact_tiebreak_rate": 0.6244,
+          "mean_energy_improvement_kcal": 19.9588,
+          "mean_energy_regret_kcal": 43.4476,
+          "mean_mass_improvement_g": 22.667,
+          "mean_mass_regret_g": 10.4115,
+          "mean_cost": 1.6048,
+          "actions": {
+            "RETRIEVE": 1446,
+            "RE_PORTION": 844,
+            "CORRECT_CODE": 101
+          }
+        },
+        "rule_utility": {
+          "n": 2391,
+          "n_improvement": 1987,
+          "n_regret": 2378,
+          "n_idle": 0,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 0.634,
+          "exact_tiebreak_rate": 0.6156,
+          "mean_energy_improvement_kcal": 18.6913,
+          "mean_energy_regret_kcal": 44.5067,
+          "mean_mass_improvement_g": 23.5196,
+          "mean_mass_regret_g": 9.699,
+          "mean_cost": 1.6713,
+          "actions": {
+            "RETRIEVE": 1605,
+            "RE_PORTION": 662,
+            "CORRECT_CODE": 124
+          }
+        },
+        "random": {
+          "n": 2391,
+          "n_improvement": 1987,
+          "n_regret": 1987,
+          "n_idle": 0,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 0.4555,
+          "exact_tiebreak_rate": 0.3803,
+          "mean_energy_improvement_kcal": 2.586,
+          "mean_energy_regret_kcal": 69.3699,
+          "mean_mass_improvement_g": 11.324,
+          "mean_mass_regret_g": 23.8032,
+          "mean_cost": 2.1408,
+          "actions": {
+            "EXPECTED": 2391
+          }
+        },
+        "fixed_pipeline": {
+          "n": 2391,
+          "n_improvement": 1987,
+          "n_regret": 2378,
+          "n_idle": 0,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 0.6253,
+          "exact_tiebreak_rate": 0.6148,
+          "mean_energy_improvement_kcal": 17.1712,
+          "mean_energy_regret_kcal": 45.7768,
+          "mean_mass_improvement_g": 18.2251,
+          "mean_mass_regret_g": 14.123,
+          "mean_cost": 1.5211,
+          "actions": {
+            "RETRIEVE": 1246,
+            "RE_PORTION": 1145
+          }
+        }
+      }
+    },
+    "coverage_choice_mass": {
+      "n": 1914,
+      "policies": {
+        "oracle": {
+          "n": 1914,
+          "n_improvement": 1637,
+          "n_regret": 1902,
+          "n_idle": 0,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 1.0,
+          "exact_tiebreak_rate": 1.0,
+          "mean_energy_improvement_kcal": 82.19,
+          "mean_energy_regret_kcal": 0.0,
+          "mean_mass_improvement_g": 27.8669,
+          "mean_mass_regret_g": 9.2806,
+          "mean_cost": 1.7555,
+          "actions": {
+            "RETRIEVE": 964,
+            "RE_PORTION": 348,
+            "RE_DECOMPOSE": 241,
+            "CORRECT_CODE": 361
+          }
+        },
+        "q_phi": {
+          "n": 1914,
+          "n_improvement": 1637,
+          "n_regret": 1902,
+          "n_idle": 0,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 0.6165,
+          "exact_tiebreak_rate": 0.6066,
+          "mean_energy_improvement_kcal": 24.1441,
+          "mean_energy_regret_kcal": 49.9586,
+          "mean_mass_improvement_g": 24.2622,
+          "mean_mass_regret_g": 12.383,
+          "mean_cost": 1.6243,
+          "actions": {
+            "RETRIEVE": 1195,
+            "RE_PORTION": 632,
+            "CORRECT_CODE": 87
+          }
+        },
+        "rule_utility": {
+          "n": 1914,
+          "n_improvement": 1637,
+          "n_regret": 1902,
+          "n_idle": 0,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 0.6102,
+          "exact_tiebreak_rate": 0.6003,
+          "mean_energy_improvement_kcal": 23.034,
+          "mean_energy_regret_kcal": 50.914,
+          "mean_mass_improvement_g": 25.2972,
+          "mean_mass_regret_g": 11.4923,
+          "mean_cost": 1.7074,
+          "actions": {
+            "RETRIEVE": 1354,
+            "RE_PORTION": 459,
+            "CORRECT_CODE": 101
+          }
+        },
+        "random": {
+          "n": 1914,
+          "n_improvement": 1637,
+          "n_regret": 1637,
+          "n_idle": 0,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 0.4338,
+          "exact_tiebreak_rate": 0.38,
+          "mean_energy_improvement_kcal": 4.038,
+          "mean_energy_regret_kcal": 78.152,
+          "mean_mass_improvement_g": 12.1196,
+          "mean_mass_regret_g": 26.5302,
+          "mean_cost": 2.1399,
+          "actions": {
+            "EXPECTED": 1914
+          }
+        },
+        "fixed_pipeline": {
+          "n": 1914,
+          "n_improvement": 1637,
+          "n_regret": 1902,
+          "n_idle": 0,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 0.5914,
+          "exact_tiebreak_rate": 0.5914,
+          "mean_energy_improvement_kcal": 20.62,
+          "mean_energy_regret_kcal": 52.9916,
+          "mean_mass_improvement_g": 18.8706,
+          "mean_mass_regret_g": 17.0234,
+          "mean_cost": 1.5199,
+          "actions": {
+            "RETRIEVE": 995,
+            "RE_PORTION": 919
+          }
+        }
+      }
+    },
+    "coverage_single": {
+      "n": 0,
+      "policies": {
+        "oracle": {
+          "n": 0
+        },
+        "q_phi": {
+          "n": 0
+        },
+        "rule_utility": {
+          "n": 0
+        },
+        "random": {
+          "n": 0
+        },
+        "fixed_pipeline": {
+          "n": 0
+        }
+      }
+    },
+    "closed_component": {
+      "n": 380,
+      "policies": {
+        "oracle": {
+          "n": 380,
+          "n_improvement": 356,
+          "n_regret": 356,
+          "n_idle": 0,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 1.0,
+          "exact_tiebreak_rate": 1.0,
+          "mean_energy_improvement_kcal": 0.0,
+          "mean_energy_regret_kcal": 0.0,
+          "mean_mass_improvement_g": 0.0,
+          "mean_mass_regret_g": 0.0,
+          "mean_cost": 1.0,
+          "actions": {
+            "STOP": 380
+          }
+        },
+        "q_phi": {
+          "n": 380,
+          "n_improvement": 356,
+          "n_regret": 356,
+          "n_idle": 0,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 1.0,
+          "exact_tiebreak_rate": 0.9763,
+          "mean_energy_improvement_kcal": 0.0,
+          "mean_energy_regret_kcal": 0.0,
+          "mean_mass_improvement_g": 0.0,
+          "mean_mass_regret_g": 0.0,
+          "mean_cost": 1.0,
+          "actions": {
+            "ABSTAIN": 9,
+            "STOP": 371
+          }
+        },
+        "rule_utility": {
+          "n": 380,
+          "n_improvement": 356,
+          "n_regret": 356,
+          "n_idle": 0,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 1.0,
+          "exact_tiebreak_rate": 0.9368,
+          "mean_energy_improvement_kcal": 0.0,
+          "mean_energy_regret_kcal": 0.0,
+          "mean_mass_improvement_g": 0.0,
+          "mean_mass_regret_g": 0.0,
+          "mean_cost": 1.0,
+          "actions": {
+            "ABSTAIN": 24,
+            "STOP": 356
+          }
+        },
+        "random": {
+          "n": 380,
+          "n_improvement": 356,
+          "n_regret": 356,
+          "n_idle": 0,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 1.0,
+          "exact_tiebreak_rate": 0.5,
+          "mean_energy_improvement_kcal": 0.0,
+          "mean_energy_regret_kcal": 0.0,
+          "mean_mass_improvement_g": 0.0,
+          "mean_mass_regret_g": 0.0,
+          "mean_cost": 1.0,
+          "actions": {
+            "EXPECTED": 380
+          }
+        },
+        "fixed_pipeline": {
+          "n": 380,
+          "n_improvement": 356,
+          "n_regret": 356,
+          "n_idle": 0,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 1.0,
+          "exact_tiebreak_rate": 1.0,
+          "mean_energy_improvement_kcal": 0.0,
+          "mean_energy_regret_kcal": 0.0,
+          "mean_mass_improvement_g": 0.0,
+          "mean_mass_regret_g": 0.0,
+          "mean_cost": 1.0,
+          "actions": {
+            "STOP": 380
+          }
+        }
+      }
+    },
+    "decisive_energy": {
+      "n": 1877,
+      "policies": {
+        "oracle": {
+          "n": 1877,
+          "n_improvement": 1612,
+          "n_regret": 1877,
+          "n_idle": 0,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 1.0,
+          "exact_tiebreak_rate": 1.0,
+          "mean_energy_improvement_kcal": 83.4639,
+          "mean_energy_regret_kcal": 0.0,
+          "mean_mass_improvement_g": 28.2992,
+          "mean_mass_regret_g": 9.2991,
+          "mean_cost": 1.7517,
+          "actions": {
+            "RETRIEVE": 935,
+            "RE_PORTION": 346,
+            "RE_DECOMPOSE": 238,
+            "CORRECT_CODE": 358
+          }
+        },
+        "q_phi": {
+          "n": 1877,
+          "n_improvement": 1612,
+          "n_regret": 1877,
+          "n_idle": 0,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 0.6121,
+          "exact_tiebreak_rate": 0.602,
+          "mean_energy_improvement_kcal": 24.5201,
+          "mean_energy_regret_kcal": 50.622,
+          "mean_mass_improvement_g": 24.522,
+          "mean_mass_regret_g": 12.5431,
+          "mean_cost": 1.6196,
+          "actions": {
+            "RETRIEVE": 1163,
+            "RE_PORTION": 627,
+            "CORRECT_CODE": 87
+          }
+        },
+        "rule_utility": {
+          "n": 1877,
+          "n_improvement": 1612,
+          "n_regret": 1877,
+          "n_idle": 0,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 0.6058,
+          "exact_tiebreak_rate": 0.5956,
+          "mean_energy_improvement_kcal": 23.3928,
+          "mean_energy_regret_kcal": 51.5901,
+          "mean_mass_improvement_g": 25.573,
+          "mean_mass_regret_g": 11.6405,
+          "mean_cost": 1.7043,
+          "actions": {
+            "RETRIEVE": 1322,
+            "RE_PORTION": 454,
+            "CORRECT_CODE": 101
+          }
+        },
+        "random": {
+          "n": 1877,
+          "n_improvement": 1612,
+          "n_regret": 1612,
+          "n_idle": 0,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 0.4246,
+          "exact_tiebreak_rate": 0.3783,
+          "mean_energy_improvement_kcal": 4.1013,
+          "mean_energy_regret_kcal": 79.3626,
+          "mean_mass_improvement_g": 12.2487,
+          "mean_mass_regret_g": 26.8784,
+          "mean_cost": 2.1348,
+          "actions": {
+            "EXPECTED": 1877
+          }
+        },
+        "fixed_pipeline": {
+          "n": 1877,
+          "n_improvement": 1612,
+          "n_regret": 1877,
+          "n_idle": 0,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 0.5866,
+          "exact_tiebreak_rate": 0.5866,
+          "mean_energy_improvement_kcal": 20.9413,
+          "mean_energy_regret_kcal": 53.6955,
+          "mean_mass_improvement_g": 19.0467,
+          "mean_mass_regret_g": 17.2453,
+          "mean_cost": 1.5131,
+          "actions": {
+            "RETRIEVE": 963,
+            "RE_PORTION": 914
+          }
+        }
+      }
+    }
+  },
+  "budget_curves": {
+    "1": {
+      "cap": 1.0,
+      "n": 1914,
+      "policies": {
+        "oracle": {
+          "n": 1914,
+          "n_improvement": 1637,
+          "n_regret": 1637,
+          "n_idle": 995,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 1.0,
+          "exact_tiebreak_rate": 1.0,
+          "mean_energy_improvement_kcal": 48.3357,
+          "mean_energy_regret_kcal": 0.0,
+          "mean_mass_improvement_g": 0.1966,
+          "mean_mass_regret_g": 6.0977,
+          "mean_cost": 0.4801,
+          "actions": {
+            "IDLE": 995,
+            "RE_PORTION": 434,
+            "CORRECT_CODE": 485
+          }
+        },
+        "q_phi": {
+          "n": 1914,
+          "n_improvement": 1637,
+          "n_regret": 1637,
+          "n_idle": 1195,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 0.7288,
+          "exact_tiebreak_rate": 0.7288,
+          "mean_energy_improvement_kcal": 31.6858,
+          "mean_energy_regret_kcal": 16.6499,
+          "mean_mass_improvement_g": -5.3456,
+          "mean_mass_regret_g": 11.6399,
+          "mean_cost": 0.3757,
+          "actions": {
+            "IDLE": 1195,
+            "RE_PORTION": 632,
+            "CORRECT_CODE": 87
+          }
+        },
+        "rule_utility": {
+          "n": 1914,
+          "n_improvement": 1637,
+          "n_regret": 1637,
+          "n_idle": 995,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 0.7597,
+          "exact_tiebreak_rate": 0.7597,
+          "mean_energy_improvement_kcal": 29.6298,
+          "mean_energy_regret_kcal": 18.7059,
+          "mean_mass_improvement_g": -9.308,
+          "mean_mass_regret_g": 15.6023,
+          "mean_cost": 0.4801,
+          "actions": {
+            "IDLE": 995,
+            "RE_PORTION": 818,
+            "CORRECT_CODE": 101
+          }
+        },
+        "random": {
+          "n": 1914,
+          "n_improvement": 1637,
+          "n_regret": 1637,
+          "n_idle": 995,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 0.7599,
+          "exact_tiebreak_rate": 0.7599,
+          "mean_energy_improvement_kcal": 14.6242,
+          "mean_energy_regret_kcal": 33.7114,
+          "mean_mass_improvement_g": -5.3686,
+          "mean_mass_regret_g": 11.6629,
+          "mean_cost": 0.4801,
+          "actions": {
+            "IDLE": 995,
+            "EXPECTED": 919
+          }
+        },
+        "fixed_pipeline": {
+          "n": 1914,
+          "n_improvement": 1637,
+          "n_regret": 1637,
+          "n_idle": 995,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 0.7466,
+          "exact_tiebreak_rate": 0.7466,
+          "mean_energy_improvement_kcal": 28.4268,
+          "mean_energy_regret_kcal": 19.9089,
+          "mean_mass_improvement_g": -10.7372,
+          "mean_mass_regret_g": 17.0315,
+          "mean_cost": 0.4801,
+          "actions": {
+            "IDLE": 995,
+            "RE_PORTION": 919
+          }
+        }
+      }
+    },
+    "2": {
+      "cap": 2.0,
+      "n": 1914,
+      "policies": {
+        "oracle": {
+          "n": 1914,
+          "n_improvement": 1637,
+          "n_regret": 1902,
+          "n_idle": 0,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 1.0,
+          "exact_tiebreak_rate": 1.0,
+          "mean_energy_improvement_kcal": 44.2749,
+          "mean_energy_regret_kcal": 0.0,
+          "mean_mass_improvement_g": 30.894,
+          "mean_mass_regret_g": 4.3104,
+          "mean_cost": 1.6139,
+          "actions": {
+            "RETRIEVE": 1175,
+            "RE_PORTION": 357,
+            "CORRECT_CODE": 382
+          }
+        },
+        "q_phi": {
+          "n": 1914,
+          "n_improvement": 1637,
+          "n_regret": 1902,
+          "n_idle": 0,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 0.7356,
+          "exact_tiebreak_rate": 0.7252,
+          "mean_energy_improvement_kcal": 24.1441,
+          "mean_energy_regret_kcal": 17.3261,
+          "mean_mass_improvement_g": 24.2622,
+          "mean_mass_regret_g": 10.0182,
+          "mean_cost": 1.6243,
+          "actions": {
+            "RETRIEVE": 1195,
+            "RE_PORTION": 632,
+            "CORRECT_CODE": 87
+          }
+        },
+        "rule_utility": {
+          "n": 1914,
+          "n_improvement": 1637,
+          "n_regret": 1902,
+          "n_idle": 0,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 0.7299,
+          "exact_tiebreak_rate": 0.72,
+          "mean_energy_improvement_kcal": 23.034,
+          "mean_energy_regret_kcal": 18.2815,
+          "mean_mass_improvement_g": 25.2972,
+          "mean_mass_regret_g": 9.1274,
+          "mean_cost": 1.7074,
+          "actions": {
+            "RETRIEVE": 1354,
+            "RE_PORTION": 459,
+            "CORRECT_CODE": 101
+          }
+        },
+        "random": {
+          "n": 1914,
+          "n_improvement": 1637,
+          "n_regret": 1902,
+          "n_idle": 0,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 0.7034,
+          "exact_tiebreak_rate": 0.6799,
+          "mean_energy_improvement_kcal": 2.7817,
+          "mean_energy_regret_kcal": 35.712,
+          "mean_mass_improvement_g": 26.0287,
+          "mean_mass_regret_g": 8.4977,
+          "mean_cost": 1.6799,
+          "actions": {
+            "EXPECTED": 1914
+          }
+        },
+        "fixed_pipeline": {
+          "n": 1914,
+          "n_improvement": 1637,
+          "n_regret": 1902,
+          "n_idle": 0,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 0.7064,
+          "exact_tiebreak_rate": 0.7064,
+          "mean_energy_improvement_kcal": 20.62,
+          "mean_energy_regret_kcal": 20.3591,
+          "mean_mass_improvement_g": 18.8706,
+          "mean_mass_regret_g": 14.6586,
+          "mean_cost": 1.5199,
+          "actions": {
+            "RETRIEVE": 995,
+            "RE_PORTION": 919
+          }
+        }
+      }
+    },
+    "3": {
+      "cap": 3.0,
+      "n": 1914,
+      "policies": {
+        "oracle": {
+          "n": 1914,
+          "n_improvement": 1637,
+          "n_regret": 1902,
+          "n_idle": 0,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 1.0,
+          "exact_tiebreak_rate": 1.0,
+          "mean_energy_improvement_kcal": 82.19,
+          "mean_energy_regret_kcal": 0.0,
+          "mean_mass_improvement_g": 27.8669,
+          "mean_mass_regret_g": 9.2806,
+          "mean_cost": 1.7555,
+          "actions": {
+            "RETRIEVE": 964,
+            "RE_PORTION": 348,
+            "RE_DECOMPOSE": 241,
+            "CORRECT_CODE": 361
+          }
+        },
+        "q_phi": {
+          "n": 1914,
+          "n_improvement": 1637,
+          "n_regret": 1902,
+          "n_idle": 0,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 0.6165,
+          "exact_tiebreak_rate": 0.6066,
+          "mean_energy_improvement_kcal": 24.1441,
+          "mean_energy_regret_kcal": 49.9586,
+          "mean_mass_improvement_g": 24.2622,
+          "mean_mass_regret_g": 12.383,
+          "mean_cost": 1.6243,
+          "actions": {
+            "RETRIEVE": 1195,
+            "RE_PORTION": 632,
+            "CORRECT_CODE": 87
+          }
+        },
+        "rule_utility": {
+          "n": 1914,
+          "n_improvement": 1637,
+          "n_regret": 1902,
+          "n_idle": 0,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 0.6102,
+          "exact_tiebreak_rate": 0.6003,
+          "mean_energy_improvement_kcal": 23.034,
+          "mean_energy_regret_kcal": 50.914,
+          "mean_mass_improvement_g": 25.2972,
+          "mean_mass_regret_g": 11.4923,
+          "mean_cost": 1.7074,
+          "actions": {
+            "RETRIEVE": 1354,
+            "RE_PORTION": 459,
+            "CORRECT_CODE": 101
+          }
+        },
+        "random": {
+          "n": 1914,
+          "n_improvement": 1637,
+          "n_regret": 1637,
+          "n_idle": 0,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 0.4338,
+          "exact_tiebreak_rate": 0.38,
+          "mean_energy_improvement_kcal": 4.038,
+          "mean_energy_regret_kcal": 78.152,
+          "mean_mass_improvement_g": 12.1196,
+          "mean_mass_regret_g": 26.5302,
+          "mean_cost": 2.1399,
+          "actions": {
+            "EXPECTED": 1914
+          }
+        },
+        "fixed_pipeline": {
+          "n": 1914,
+          "n_improvement": 1637,
+          "n_regret": 1902,
+          "n_idle": 0,
+          "n_q_illegal_on_full_set": 0,
+          "best_action_identification_rate": 0.5914,
+          "exact_tiebreak_rate": 0.5914,
+          "mean_energy_improvement_kcal": 20.62,
+          "mean_energy_regret_kcal": 52.9916,
+          "mean_mass_improvement_g": 18.8706,
+          "mean_mass_regret_g": 17.0234,
+          "mean_cost": 1.5199,
+          "actions": {
+            "RETRIEVE": 995,
+            "RE_PORTION": 919
+          }
+        }
+      }
+    }
+  },
+  "value_calibration": {
+    "target": "\u0394L = L(pre) - L(post), L = min(|kcal error|, 2500) / 2500",
+    "population": "every executed legal action on the reported states whose pre and post energy are both finite and whose Q is finite",
+    "n": 3475,
+    "mae": 0.0226,
+    "pearson_delta_l": 0.7471,
+    "pearson_energy_kcal": 0.7471,
+    "mean_predicted_q": 0.0007,
+    "mean_realized_delta_l": 0.0045,
+    "slope_realized_on_predicted": 0.8406,
+    "intercept_realized_on_predicted": 0.0039,
+    "bins": [
+      {
+        "q_lo": -0.3591,
+        "q_hi": -0.007284,
+        "n": 348,
+        "mean_predicted_q": -0.081641,
+        "mean_realized_delta_l": -0.056795,
+        "mean_realized_energy_delta_kcal": -141.9881
+      },
+      {
+        "q_lo": -0.007284,
+        "q_hi": -0.003142,
+        "n": 343,
+        "mean_predicted_q": -0.004399,
+        "mean_realized_delta_l": -0.00439,
+        "mean_realized_energy_delta_kcal": -10.9755
+      },
+      {
+        "q_lo": -0.003142,
+        "q_hi": -0.002566,
+        "n": 352,
+        "mean_predicted_q": -0.002798,
+        "mean_realized_delta_l": 0.000303,
+        "mean_realized_energy_delta_kcal": 0.7582
+      },
+      {
+        "q_lo": -0.002566,
+        "q_hi": -0.002136,
+        "n": 283,
+        "mean_predicted_q": -0.002351,
+        "mean_realized_delta_l": 0.000397,
+        "mean_realized_energy_delta_kcal": 0.9913
+      },
+      {
+        "q_lo": -0.002136,
+        "q_hi": -0.00147,
+        "n": 411,
+        "mean_predicted_q": -0.001858,
+        "mean_realized_delta_l": 0.000478,
+        "mean_realized_energy_delta_kcal": 1.1943
+      },
+      {
+        "q_lo": -0.00147,
+        "q_hi": -0.001064,
+        "n": 348,
+        "mean_predicted_q": -0.001242,
+        "mean_realized_delta_l": -0.002678,
+        "mean_realized_energy_delta_kcal": -6.6955
+      },
+      {
+        "q_lo": -0.001064,
+        "q_hi": -0.00026,
+        "n": 347,
+        "mean_predicted_q": -0.000814,
+        "mean_realized_delta_l": 0.001461,
+        "mean_realized_energy_delta_kcal": 3.6533
+      },
+      {
+        "q_lo": -0.00026,
+        "q_hi": 0.00604,
+        "n": 348,
+        "mean_predicted_q": 0.002315,
+        "mean_realized_delta_l": 0.00497,
+        "mean_realized_energy_delta_kcal": 12.4244
+      },
+      {
+        "q_lo": 0.00604,
+        "q_hi": 0.024313,
+        "n": 347,
+        "mean_predicted_q": 0.012079,
+        "mean_realized_delta_l": 0.014193,
+        "mean_realized_energy_delta_kcal": 35.483
+      },
+      {
+        "q_lo": 0.024313,
+        "q_hi": 0.312639,
+        "n": 348,
+        "mean_predicted_q": 0.087416,
+        "mean_realized_delta_l": 0.087109,
+        "mean_realized_energy_delta_kcal": 217.7725
+      }
+    ],
+    "per_action": {
+      "RETRIEVE": {
+        "n": 1637,
+        "mae": 0.0235,
+        "mean_predicted_q": -0.012,
+        "mean_realized_delta_l": -0.0021,
+        "pearson": 0.7545
+      },
+      "RE_PORTION": {
+        "n": 919,
+        "mae": 0.0258,
+        "mean_predicted_q": 0.0245,
+        "mean_realized_delta_l": 0.0203,
+        "pearson": 0.805
+      },
+      "RE_DECOMPOSE": {
+        "n": 0
+      },
+      "ABSTAIN": {
+        "n": 0
+      },
+      "STOP": {
+        "n": 0
+      },
+      "CORRECT_CODE": {
+        "n": 919,
+        "mae": 0.0177,
+        "mean_predicted_q": -0.0007,
+        "mean_realized_delta_l": 0.0006,
+        "pearson": 0.0163
+      }
+    },
+    "used_to_retune_tau": false,
+    "used_to_edit_weights": false
+  },
+  "teacher_vs_live_tool": {
+    "n_compared": 1616,
+    "n_logged_action_not_in_A_legal": 0,
+    "mean_abs_kcal": 42.389,
+    "by_action": {
+      "CORRECT_CODE": {
+        "n": 130,
+        "mean_abs_kcal": 77.8519
+      },
+      "RETRIEVE": {
+        "n": 732,
+        "mean_abs_kcal": 4.6077
+      },
+      "RE_PORTION": {
+        "n": 754,
+        "mean_abs_kcal": 72.9537
+      }
+    },
+    "note": "The weak-step teacher picks CORRECT_CODE from ingredient kcal/g and writes RE_PORTION from ingredient grams snapped to the grid. The branch uses the alternate retrieve code and estimate_mass. A large gap means the counterfactual did not reuse the privileged transition."
+  },
+  "noop_split": {
+    "n_headline": 1914,
+    "n_noop_oracle": 241,
+    "q_regret_on_noop_oracle": 258.5335,
+    "rule_regret_on_noop_oracle": 258.3722,
+    "q_regret_elsewhere": 19.6957,
+    "rule_regret_elsewhere": 20.8132,
+    "note": "RE_DECOMPOSE does not change nutrition. It is legal while a component is open, and it is the energy-best action when every real tool increases absolute energy error. The frozen Q head masks it."
+  },
+  "no_decompose": {
+    "n": 1914,
+    "policies": {
+      "oracle": {
+        "n": 1914,
+        "n_improvement": 1637,
+        "n_regret": 1902,
+        "n_idle": 0,
+        "n_q_illegal_on_full_set": 0,
+        "best_action_identification_rate": 1.0,
+        "exact_tiebreak_rate": 1.0,
+        "mean_energy_improvement_kcal": 44.2749,
+        "mean_energy_regret_kcal": 0.0,
+        "mean_mass_improvement_g": 30.894,
+        "mean_mass_regret_g": 4.3104,
+        "mean_cost": 1.6139,
+        "actions": {
+          "RETRIEVE": 1175,
+          "RE_PORTION": 357,
+          "CORRECT_CODE": 382
+        }
+      },
+      "q_phi": {
+        "n": 1914,
+        "n_improvement": 1637,
+        "n_regret": 1902,
+        "n_idle": 0,
+        "n_q_illegal_on_full_set": 0,
+        "best_action_identification_rate": 0.7356,
+        "exact_tiebreak_rate": 0.7252,
+        "mean_energy_improvement_kcal": 24.1441,
+        "mean_energy_regret_kcal": 17.3261,
+        "mean_mass_improvement_g": 24.2622,
+        "mean_mass_regret_g": 10.0182,
+        "mean_cost": 1.6243,
+        "actions": {
+          "RETRIEVE": 1195,
+          "RE_PORTION": 632,
+          "CORRECT_CODE": 87
+        }
+      },
+      "rule_utility": {
+        "n": 1914,
+        "n_improvement": 1637,
+        "n_regret": 1902,
+        "n_idle": 0,
+        "n_q_illegal_on_full_set": 0,
+        "best_action_identification_rate": 0.7299,
+        "exact_tiebreak_rate": 0.72,
+        "mean_energy_improvement_kcal": 23.034,
+        "mean_energy_regret_kcal": 18.2815,
+        "mean_mass_improvement_g": 25.2972,
+        "mean_mass_regret_g": 9.1274,
+        "mean_cost": 1.7074,
+        "actions": {
+          "RETRIEVE": 1354,
+          "RE_PORTION": 459,
+          "CORRECT_CODE": 101
+        }
+      },
+      "random": {
+        "n": 1914,
+        "n_improvement": 1637,
+        "n_regret": 1902,
+        "n_idle": 0,
+        "n_q_illegal_on_full_set": 0,
+        "best_action_identification_rate": 0.7034,
+        "exact_tiebreak_rate": 0.6799,
+        "mean_energy_improvement_kcal": 2.7817,
+        "mean_energy_regret_kcal": 35.712,
+        "mean_mass_improvement_g": 26.0287,
+        "mean_mass_regret_g": 8.4977,
+        "mean_cost": 1.6799,
+        "actions": {
+          "EXPECTED": 1914
+        }
+      },
+      "fixed_pipeline": {
+        "n": 1914,
+        "n_improvement": 1637,
+        "n_regret": 1902,
+        "n_idle": 0,
+        "n_q_illegal_on_full_set": 0,
+        "best_action_identification_rate": 0.7064,
+        "exact_tiebreak_rate": 0.7064,
+        "mean_energy_improvement_kcal": 20.62,
+        "mean_energy_regret_kcal": 20.3591,
+        "mean_mass_improvement_g": 18.8706,
+        "mean_mass_regret_g": 14.6586,
+        "mean_cost": 1.5199,
+        "actions": {
+          "RETRIEVE": 995,
+          "RE_PORTION": 919
+        }
+      }
+    }
+  },
+  "q_sources": {
+    "coverage_unwritten": 333,
+    "q_over_cost": 902,
+    "rule_utility": 679
+  },
+  "blockers": [
+    "RE_PORTION had no frozen mass forward on 226 branches, all outside the mass-available headline. Grams were not invented.",
+    "One-step branches, not a full-horizon rollout. Budget curves are one-step cost caps.",
+    "Weak-step states have no vision gram hints, so RE_PORTION uses the frozen equal split of the dish mass.",
+    "The #51 plate-level code swap is not inside the one-step branch."
+  ],
+  "frozen_unchanged": true,
+  "seconds": 121.0
+}
