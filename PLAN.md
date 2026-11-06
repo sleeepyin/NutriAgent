@@ -40,8 +40,8 @@ y = (n,\ G,\ s,\ \tau)
 ### 三条主贡献（写作冻结）
 
 1. **任务**：形式化 VDR；\(y=(n,G,s,\tau)\)；证据链可程序复算 + 可人工语义核；支持盘级/成分级弃权。
-2. **方法**：**Coverage-Constrained Active Specialist Selection** + **Error-Aware Q**（Route A）。未写完组件时 \(A_{legal}\) 去掉 STOP/ABSTAIN，再在合法集上 \(a^*=\arg\max_{a\in A_{legal}} Q_\phi(z,a)/\mathrm{Cost}(a)\)，\(Q_\phi(z,a)=\mathbb{E}[\Delta L\mid z,a]\)。Mass Estimator 已落地并冻结；图文检索重排（P1）暂缓；Grounding 非主创新；Nutrient Verifier 为护栏。**State-aware BC 仅 bootstrap/消融。** #51/#53 在冻结 Mass 与 Q/τ 上的开发集变化是确定性策略，**不是** Q 学得更好。
-3. **证明（待完成，不是 #53 已完成）**：反事实动作价值（Q 是否优于规则 / 随机 / 固定流水线）+ 外测 held-out 上能量与质量 MAE 及真实成本 Pareto + Provenance / Semantic；相对忠实 B1/B2，以及 arXiv 2610.11144、CVPRW 2025 Decomposing Food Images、NutriVision（arXiv 2609.33076）的差异。开发集超过 Direct-VLM **不**等于该证明。Coverage / Selective / AURC 仍辅助。
+2. **方法**：**Coverage-Constrained Active Specialist Selection** + **Error-Aware Q**（Route A）。未写完组件时 \(A_{legal}\) 去掉 STOP/ABSTAIN，再在合法集上 \(a^*=\arg\max_{a\in A_{legal}} Q_\phi(z,a)/\mathrm{Cost}(a)\)，\(Q_\phi(z,a)=\mathbb{E}[\Delta L\mid z,a]\)。Mass Estimator 已落地并冻结；图文检索重排（P1）暂缓；Grounding 非主创新；Nutrient Verifier 为护栏。**State-aware BC 仅 bootstrap/消融。** #51/#53 在冻结 Mass 与 Q/τ 上的开发集变化是确定性策略，**不是** Q 学得更好。#57 一步反事实同向：Q ≈ 规则 ≪ oracle。
+3. **证明（待完成，不是 #53 或 #57 已完成）**：#57 已记下反事实动作价值（一步评测 Q ≈ 规则 ≪ oracle，见 §14；不单独构成该证明）。仍待外测 held-out 上能量与质量 MAE 及真实成本 Pareto + Provenance / Semantic；相对忠实 B1/B2，以及 arXiv 2610.11144、CVPRW 2025 Decomposing Food Images、NutriVision（arXiv 2609.33076）的差异。开发集超过 Direct-VLM **不**等于该证明。Coverage / Selective / AURC 仍辅助。
 
 ---
 
@@ -222,7 +222,7 @@ Primary 叙事（Route A）：**Full-set MAE@energy + mass MAE + 真实 Tool cos
 
 ## 11. 必出实验
 
-- **机制优先（STATUS ①）**：反事实动作价值——同一状态下 oracle / \(Q_\phi\) / 规则 / 随机 / 固定流水线；regret 与最优动作识别率；weak-step 按 dish_id 分组。未做完之前，不要把开发集 MAE 写成 Q 的证明。
+- **机制（STATUS ①，已完成 #57）**：反事实动作价值——同一状态下 oracle / \(Q_\phi\) / 规则 / 随机 / 固定流水线。一步评测上 Q ≈ 规则 ≪ oracle（数字在 STATUS）。开发集 MAE 仍然不要写成 Q 的证明。
 - **M1 主**：Full-set MAE@energy + mass MAE（Ours-new vs B0/B5/Ours-old）+ Tool cost  
 - M2 辅：Coverage / Selective / AURC  
 - M3：Provenance 全量；Semantic 提前到核心实验（门禁 ⑥，仍排在 ① 之后）  
@@ -234,7 +234,7 @@ Primary 叙事（Route A）：**Full-set MAE@energy + mass MAE + 真实 Tool cos
 - A5 忠实 B1/B2（不挡 Mass P0）  
 - F1 案例：Mass 纠正 / 检索重排 / PARTIAL ABSTAIN  
 
-早期取舍是保住 **M1 + mass + Tool cost + A1/A2**。**现行顺序以 §14 为准（先 ①）**；切勿再把 Policy Acc、kcal-proxy AURC 或开发 505 当最终主表。
+早期取舍是保住 **M1 + mass + Tool cost + A1/A2**。**现行顺序以 §14 为准（① 已完成；代码空闲，等解锁仍锁定的 ②）**；切勿再把 Policy Acc、kcal-proxy AURC 或开发 505 当最终主表。
 
 ---
 
@@ -252,7 +252,7 @@ Primary 叙事（Route A）：**Full-set MAE@energy + mass MAE + 真实 Tool cos
 
 **B1/B2 并行，不挡 Mass P0。**
 
-上表是早期周程。**现行严格顺序以 §14 与 [`docs/STATUS.md`](docs/STATUS.md) 为准**：当前首项 **①**；**②–⑦** 锁定；P1 与 Mass/Q 重训仍锁。
+上表是早期周程。**现行严格顺序以 §14 与 [`docs/STATUS.md`](docs/STATUS.md) 为准**：**① 已完成**；当前等解锁 **②**（**②–⑦** 仍锁定）；P1 与 Mass/Q 重训仍锁。
 
 ---
 
@@ -274,9 +274,9 @@ Primary 叙事（Route A）：**Full-set MAE@energy + mass MAE + 真实 Tool cos
 
 ## 14. MVP-for-A（严格顺序；前一项未完成不得跳步）
 
-**当前首项 = ①** 反事实 Q 动作价值实验 + weak-step **dish_id 分组**泄漏审计。以 [`docs/STATUS.md`](docs/STATUS.md) 为准：**只许**开工 **①**。**禁止**自动开 **②–⑦**。**P1 仍暂缓 / 锁定。禁止**重训 Mass。**禁止**重训 Q。#53 冻结为 Ours-new **开发检查点**（配对 505 是开发 / 诊断集，不是最终独立泛化主表）。开发数字只在 STATUS，这里不改写。2026-11-06 的旧排序（先 #51 再 #53，P1 暂缓）已经做完，那套编号退役。
+**① 已完成（#57，squash `0aa30537`）。当前 = 等解锁 ②（② 仍锁定；代码空闲）。** 以 [`docs/STATUS.md`](docs/STATUS.md) 为准：**禁止**自动开 **②–⑦**。须等 Triste（+ 调研）把 **②** 写进 STATUS 之后才许再写代码。**P1 仍暂缓 / 锁定。禁止**重训 Mass。**禁止**重训 Q。#53 冻结为 Ours-new **开发检查点**（配对 505 是开发 / 诊断集，不是最终独立泛化主表）。#51/#53 的开发数字不在这里改写。2026-11-06 的旧排序（先 #51 再 #53，P1 暂缓）已经做完，那套编号退役。
 
-**已完成**：P0a–P0d、Q 校准 #44、误差审计 #48、food-id #51、覆盖约束 #53。**#51/#53 增益 ≠ Q 学习改进**（Mass / Q / τ 冻结）。
+**已完成**：P0a–P0d、Q 校准 #44、误差审计 #48、food-id #51、覆盖约束 #53、**① #57**。**#51/#53 增益 ≠ Q 学习改进**（Mass / Q / τ 冻结；① 一步评测 Q ≈ 规则 ≪ oracle）。
 
 **Checklist（给代码 Agent）**
 
@@ -285,8 +285,8 @@ Primary 叙事（Route A）：**Full-set MAE@energy + mass MAE + 真实 Tool cos
 3. **P0c — U_* + Q_φ — 已完成（#41，`54c32e8`）**；Q 校准 **已完成（#44，`3fc611d`）**：定义 U_id / U_mass / U_nutrient / U_evidence；先规则启发式 utility，再监督 **\(Q_\phi(z,a)=\mathbb{E}[\Delta L\mid z,a]\)**（**无 RL**）。
 
 4. **P0d / #48 / #51 / #53 — 已完成。** P0d（#46，`b9c4c5e7`）→ 误差审计（#48，`91a05d8`）→ food-id / 密度轻修（#51，`6c8fda02`）→ 覆盖约束（#53，`2a406df4`）。#53 把「未写完就不许 STOP/ABSTAIN」写成 **Coverage-Constrained Active Specialist Selection** 的 \(A_{legal}\) 门，**不是** Bug Fix，也**不是** Q 变强，**不是**最终主表。
-5. **① 当前首项 — Q 反事实 + dish_id 泄漏审计。** 冻结初始状态，对合法动作分支执行；比较 oracle、\(Q_\phi\)、Rule Utility、Random、Fixed Pipeline。报最优动作识别率、实现误差改善、相对 oracle 的 regret、预算曲线、价值校准。weak-step fit/hold-out **按 dish_id 分组**。**不**借此重训 Q 或 Mass。新产物另写路径，不覆盖冻结结果。
-6. **② 锁定 — #51 food-id 语义审计。** Exact / Near / Wrong，Protein / Carb / Fat MAE，人工复查换码的 37/50 多组件。kcal 变好不等于身份变对。
+5. **① 已完成（#57，squash `0aa30537`）— Q 反事实 + dish_id 泄漏审计。** 产物 `results/qphi_counterfactual/`。fit/hold-out **按 dish_id 分组**，交集 0，**无**重训。头条 n=1914（coverage-choice + mass forward；rgb_train hold-out；与 #53 的 505 交集 0）：Q Best-ID 0.6165、ΔE improve 24.14、E regret 49.96；规则 0.6102 / 23.03 / 50.91；固定 0.5914 / 20.62 / 52.99；随机 0.4338 / 4.04 / 78.15；oracle regret 0、improve 82.19。Q 略优于规则（约 0.96 kcal），约 50 kcal 落后 oracle。241/1914 的 oracle 最优是 RE_DECOMPOSE no-op（冻结 Q 不能发出）；去掉后 Q regret ~17.33 vs 规则 ~18.28。价值校准 n=3475：MAE(Q, ΔL) 0.0226，Pearson 0.747；RE_PORTION 0.805，CORRECT_CODE 0.016。**Q ≈ 规则 ≪ oracle**，加固 #53 增益 ≠ Q 学习。**不**重训 Q 或 Mass。
+6. **② 仍锁定 — 不是当前开工项。** #51 food-id 语义审计：Exact / Near / Wrong，Protein / Carb / Fat MAE，人工复查换码的 37/50 多组件。kcal 变好不等于身份变对。**代码空闲**，直到 Triste（+ 调研）把 ② 写进 STATUS。
 7. **③ 锁定 — 外部 held-out 规划。** 200–500 薄标注可承担一部分；按 dish / source 隔离；**不得**用于方法选择。
 8. **④ 锁定 — 真实 Tool Cost。** VLM 调用次数、延迟、token、单盘成本，以及能量 MAE–Cost Pareto。调用次数不等于真实成本。
 9. **⑤ 锁定 — 忠实 B1/B2 + 相关工作。** B1 必须按官方协议重做（历史非忠实数字见 §13，本节不改；scaffold / dry-run 不算）。B2 能完整则完整，否则诚实 approx。优先对照：arXiv **2610.11144**、CVPRW 2025 **Decomposing Food Images**、**NutriVision** arXiv **2609.33076**。不编造 DOI。
