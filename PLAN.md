@@ -1,10 +1,10 @@
 # Verified Dietary Reasoning（VDR）实验方案
 
-> **本文档是投稿叙事与执行的 Markdown 真源。** 与 Cursor Canvas「**VDR — Evidence-Guided Active Multimodal Nutrition Estimation**」对齐。  
+> **本文档是投稿叙事与执行的 Markdown 真源。** 与 Cursor Canvas「**Coverage-Constrained Active Specialist Selection**」对齐（2026-11-06）。  
 > Canvas：https://cursor.com/canvas/store-745bdf38-f3d7-4313-8d66-08e4b6903e93/d7be617d-d37e-4fe1-a4b5-9da2c86b27a2  
 > 算力假设：**2×4090D 24GB**。数据：**公开 Nutrition5K + FNDDS 2019–2020**；人工 **200–500** 盘薄标注；**无私有大规模采集**。  
-> **技术中心**：**Evidence-Guided Active Multimodal Nutrition Estimation**（证据引导的主动式多模态营养估计）。**方法核心卖点**：**Error-Aware Active Specialist Selection**（误差感知的主动专家工具选择）。**暂不上 RL。**  
-> **历史对照**：旧中心「Evidence-Aware Closed-Loop Tool Control」仅作对照叙事，不再作主标题。
+> **任务框架**：**Evidence-Guided Active Multimodal Nutrition Estimation**（证据引导的主动式多模态营养估计）。**技术中心 / 方法核心卖点**：**Coverage-Constrained Active Specialist Selection**（覆盖约束下的主动专家选择）+ **Error-Aware Q**。**Route A**：论文主张收窄为误差感知的**能量 + 质量**估计决策系统；蛋白质 / 碳水 / 脂肪作辅助。**暂不上 RL。**  
+> **历史对照**：旧中心「Evidence-Aware Closed-Loop Tool Control」仅作对照叙事，不再作主标题。#53 是开发检查点，不是本卖点的证明。
 
 ---
 
@@ -40,8 +40,8 @@ y = (n,\ G,\ s,\ \tau)
 ### 三条主贡献（写作冻结）
 
 1. **任务**：形式化 VDR；\(y=(n,G,s,\tau)\)；证据链可程序复算 + 可人工语义核；支持盘级/成分级弃权。
-2. **方法**：**Error-Aware Active Specialist Selection**——**Mass Estimator** / 图文检索+重排 / Grounding（非主创新）+ **Nutrient Verifier** 护栏；监督工具效用 **\(Q_\phi(z,a)=\mathbb{E}[\Delta L \mid z,a]\)**，\(a^*=\arg\max_a Q_\phi/Cost\)；**State-aware BC 仅 bootstrap/消融**。
-3. **证明**：**主表优先** Full-set **MAE@energy** + **mass MAE** + **Tool cost**（同预算）；相对 B5/B0/**Ours-old** 显著改善预测；Coverage / Selective / **AURC 辅助**；相对忠实 B1/B2 优势在主动专家选择 + 可验证证据，而非又一条检索管线。
+2. **方法**：**Coverage-Constrained Active Specialist Selection** + **Error-Aware Q**（Route A）。未写完组件时 \(A_{legal}\) 去掉 STOP/ABSTAIN，再在合法集上 \(a^*=\arg\max_{a\in A_{legal}} Q_\phi(z,a)/\mathrm{Cost}(a)\)，\(Q_\phi(z,a)=\mathbb{E}[\Delta L\mid z,a]\)。Mass Estimator 已落地并冻结；图文检索重排（P1）暂缓；Grounding 非主创新；Nutrient Verifier 为护栏。**State-aware BC 仅 bootstrap/消融。** #51/#53 在冻结 Mass 与 Q/τ 上的开发集变化是确定性策略，**不是** Q 学得更好。
+3. **证明（待完成，不是 #53 已完成）**：反事实动作价值（Q 是否优于规则 / 随机 / 固定流水线）+ 外测 held-out 上能量与质量 MAE 及真实成本 Pareto + Provenance / Semantic；相对忠实 B1/B2，以及 arXiv 2610.11144、CVPRW 2025 Decomposing Food Images、NutriVision（arXiv 2609.33076）的差异。开发集超过 Direct-VLM **不**等于该证明。Coverage / Selective / AURC 仍辅助。
 
 ---
 
@@ -51,10 +51,14 @@ y = (n,\ G,\ s,\ \tau)
 |------|------|
 | 把 **kcal-proxy AURC** 当主创新 | #34 只改善排序不改善预测；审稿质疑按规模降 Coverage |
 | **空壳 RE_PORTION** | 无独立 DL 份量估计则无法改善终态 \(n\) |
-| 工具**全串行**冒充 Agent | 选择必须由 \(z_t\) / \(Q_\phi\) 驱动 |
+| 工具**全串行**冒充 Agent | 选择必须由 \(A_{legal}\) 与 \(Q_\phi\) 驱动 |
 | **RGB-D 混进 RGB 主表** | 主协议与现 rgb_test 一致 **仅 RGB** |
 | 上 **RL** | 采纳边界：暂不上 RL |
 | 用 **test GT** 调参 | 泄漏 |
+| 把 **#51/#53** 写成 Q 学得更好 | Mass / Q / τ 冻结；增益是确定性策略 |
+| 把开发 **505** 当独立最终测试 | #48→#51→#53 已形成测试集反馈 |
+| 现在开 **P1** 或重训 Mass/Q | 须先走完 STATUS ①–⑥，再由 ⑦ 共决 |
+| weak-step 按步随机拆 fit/hold-out | 同一 dish 泄漏 |
 | **开 fast Cloud Agent** | 资源边界 |
 | **体积工具默认开** | Tanabe 警示；默认关 |
 | 把开环 31 维 BC 写回主方法 | 仍仅消融 **B5** |
@@ -77,6 +81,8 @@ y = (n,\ G,\ s,\ \tau)
 | **H2** | 掩蔽 U_* 或锁死 Mass → MAE 回升；固定流水线 / 随机劣于 \(Q_\phi\) |
 | **H3** | 相对忠实 B1/B2，优势在主动专家 + 证据；无法完全复现则诚实声明 approx |
 
+**主张边界（Route A）**：输出仍可含 \(n=(E,P,C,F,M)\)，但 \(Q_\phi\) 的监督核心是能量误差改善。论文主 claim 是误差感知的能量与质量估计决策系统；蛋白质 / 碳水 / 脂肪作辅助。多目标 Q（Route B）在反事实实验与外测完成前不开。
+
 ---
 
 ## 4. 四层架构（技术中心）
@@ -85,14 +91,14 @@ y = (n,\ G,\ s,\ \tau)
 
 1. **Initial Visual Understanding** — Qwen 等 VLM → 假设 + 初始证据链  
 2. **Deep Learning Specialist Tools** — Mass / Retrieval+rerank / Grounding / Nutrient Verifier  
-3. **Evidence-Aware Active Controller** — 按 \(z_t\) 选工具；STOP / PARTIAL ABSTAIN  
+3. **Coverage-Constrained Active Controller** — 未写完组件时 \(A_{legal}\) 去掉 STOP/ABSTAIN，再按 \(Q_\phi/\mathrm{Cost}\) 在合法集上选工具  
 4. **Verified Nutrition Output** — \(\hat n=\sum \hat m_i f(c_i)\) + 证据链 + 轨迹  
 
 | 层 | 要点 |
 |----|------|
 | Initial VLM | 冻结或轻量格式对齐；禁旧回归权重 |
 | DL Specialists | **真正改善证据质量**；RE_PORTION 须接 Mass |
-| Active Controller | 监督 \(Q_\phi\)；**非 RL**；BC 仅启动/消融 |
+| Coverage-Constrained Controller | 先 \(A_{legal}\)（未写完则去掉 STOP/ABSTAIN），再监督 \(Q_\phi/\mathrm{Cost}\)；**非 RL**；BC 仅启动/消融 |
 | Verified Output | 可程序复算；断链 → ungrounded |
 
 ---
@@ -102,11 +108,13 @@ y = (n,\ G,\ s,\ \tau)
 | 优先级 | 专家 | 骨干 / 接口 | 主创新? |
 |--------|------|-------------|---------|
 | **P0** | **Mass Estimator** | ViT-B/16 或 ResNet101；ImageNet → N5K train 微调；**RGB-only 主表**；多任务 **[M,E,P,C,F]+σ**；`estimate_mass(image, candidates)` | **是 — 主增益来源** |
-| **P1** | 图文检索 + FNDDS 重排 | SigLIP/CLIP + 向量库 + cross-modal/VLM rerank | 次主 |
+| **P1** | 图文检索 + FNDDS 重排 | SigLIP/CLIP + 向量库 + cross-modal/VLM rerank | 次主，**现暂缓**（⑦ 之前不开） |
 | **P2/P3** | 区域定位 | Grounding DINO / SAM2 + 局部再问 VLM | **否** — 不当主创新 |
 | 配套 | Nutrient Verifier | FNDDS 查表 + 规则/一致性 | 护栏 |
 
 Grounding 为 P2/P3：细粒度分割未必自动改善营养 MAE，**份量/质量**才是瓶颈（待补正式引用，勿编造 DOI）。
+
+**P1 检索重排仍暂缓**，STATUS 门禁 ⑦ 之前不开，也不重训 Mass / Q。**Coverage Guard** 已在 #53 落地，应写成 \(A_{legal}\) 方法，不是空壳，也不是 Bug Fix。#51 同头换码已落地；语义审计仍锁在门禁 ②。
 
 ---
 
@@ -115,8 +123,22 @@ Grounding 为 P2/P3：细粒度分割未必自动改善营养 MAE，**份量/质
 **状态** \(z_t = [U_{id}, U_{mass}, U_{nutrient}, U_{evidence}, D_{models}, o_{t-1}, b_t]\)
 
 \[
-Q_\phi(z,a) = \mathbb{E}[\Delta L \mid z,a],\quad a^* = \arg\max_a \frac{Q_\phi(z,a)}{Cost(a)}
+Q_\phi(z,a) = \mathbb{E}[\Delta L \mid z,a]
 \]
+
+未写完组件时，终止动作不进合法集（#53 写成方法，不是 if-else 修补）：
+
+\[
+A_{legal}(s_t)=A(s_t)\setminus\{\mathrm{STOP},\mathrm{ABSTAIN}\}
+\]
+
+仍有未写完组件时用上面的合法集；否则 \(A_{legal}(s_t)=A(s_t)\)。
+
+\[
+a^*=\arg\max_{a\in A_{legal}(s_t)}\frac{Q_\phi(s_t,a)}{Cost(a)}
+\]
+
+覆盖约束只保证**初始清单内**未写完的组件会继续做合法质量估计，**不能**证明 VLM 没有漏掉整道食物。#51 的同头换码与 #53 的这道门都在冻结 Mass 与 Q/τ 上完成；开发集上的变化**不是** Q 学得更好。监督仍按 Route A 看能量误差改善；质量 MAE 是并列主指标；宏量是辅助。**非 RL。**
 
 | 分量 | 含义 | 触发 |
 |------|------|------|
@@ -125,7 +147,7 @@ Q_\phi(z,a) = \mathbb{E}[\Delta L \mid z,a],\quad a^* = \arg\max_a \frac{Q_\phi(
 | \(U_{nutrient}\) | 营养一致性冲突 | Nutrient Verifier |
 | \(U_{evidence}\) | 证据链完整度/断链 | Grounding 或 PARTIAL ABSTAIN |
 
-动作：调用 Mass / Retrieval / Grounding / Verifier / CORRECT_CODE / RE_PORTION（**须接 Mass**）/ PARTIAL ABSTAIN / STOP。**体积默认关。**
+动作：调用 Mass / Retrieval / Grounding / Verifier / CORRECT_CODE / RE_PORTION（**须接 Mass**）/ PARTIAL ABSTAIN / STOP。**体积默认关。** 仍有未写完组件时，STOP 与 ABSTAIN 不在 \(A_{legal}\) 里。
 
 训练：先在 train 上收集调用前后 \(\Delta L\) 监督；可先**规则启发式 utility**，再学 \(Q_\phi\)。**State-aware BC → 仅 bootstrap/消融。**
 
@@ -163,14 +185,14 @@ Q_\phi(z,a) = \mathbb{E}[\Delta L \mid z,a],\quad a^* = \arg\max_a \frac{Q_\phi(
 
 | 优先级 | 指标 | 角色 |
 |--------|------|------|
-| **主** | Full-set **MAE@energy** | 必须先追相对 B5/B0/Ours-old 的改善 |
-| **主** | **mass MAE** | 证明 Mass Specialist 真起作用 |
-| **主** | **Tool cost** | 同预算；防多调用刷分 |
+| **主** | Full-set **MAE@energy** | Route A 主 claim。开发对照可以看；**最终主表必须来自隔离 held-out**，不能用当前开发 505 |
+| **主** | **mass MAE** | 与能量并列的 Route A 主指标，用来看 Mass 与覆盖约束 |
+| **主** | **真实 Tool cost** | 同预算调用次数不够。须记 VLM 调用次数、延迟、token、单盘成本，并报能量 MAE–Cost Pareto（门禁 ④）。调用次数 ≠ 真实成本 |
 | 辅 | Coverage / Selective MAE / **AURC** | 可信曲线；**不作主创新** |
 | 辅 | Evidence Validity | Provenance + Semantic |
 | 行为 | FixRate / WorsenRate（ε + 95% CI） | 须审计终态 \(n\) 是否真变 |
 
-Primary 叙事：**Full-set MAE@energy + mass MAE + Tool cost**。禁止 kcal-proxy AURC 作主 claim。
+Primary 叙事（Route A）：**Full-set MAE@energy + mass MAE + 真实 Tool cost**。宏量 MAE 为辅助。禁止 kcal-proxy AURC 作主 claim。开发 505 不是最终独立主表。
 
 ---
 
@@ -185,15 +207,25 @@ Primary 叙事：**Full-set MAE@energy + mass MAE + Tool cost**。禁止 kcal-pr
 | B4 Self-Refine/CRITIC | 同预算文本自纠 | 预算对齐 |
 | **B5 Open-loop BC** | 原 31 维不读 obs | **仅消融**；#34 与 Ours-old MAE 打平 |
 | **Ours-old** | 仅闭环控制器 / 弱 kcal-proxy / **无 Mass Specialist** | **对照**；不再写作主方法 |
-| **Ours-new** | Mass（+可选检索）+ **\(Q_\phi\)** 主动专家选择 | **主方法**；非 RL |
+| **Ours-new（dev）** | Mass + 校准 Q + #51 码表 + #53 覆盖约束 | **开发检查点**；非最终独立泛化；非 RL |
+
+**B1 必须忠实重做**后再进主表。历史 B1 能量 MAE 不是忠实 DietAI24（数字在 §13，本节不改）；scaffold / dry-run 不算完成。
+
+优先对照的相关工作（不编 DOI；刊名、arXiv 号与日期来自 2026-11-06 评审和 Canvas）：
+
+- **DietAI24**（简报所给刊名 Communications Medicine 2025；代码 https://github.com/Runz96/DietAI24）：忠实复现为 B1。数据库检索本身不作主创新。
+- **Decomposing Food Images**（CVPRW 2025）：两步分解本身不构成新意。
+- arXiv **2610.11144**（2026-10，食物身份验证 / 恢复；https://arxiv.org/abs/2610.11144）：与覆盖约束有交集，是重点对比。须划清「清单内写齐」和「身份验证 / 恢复」，并补人工身份审计。
+- **NutriVision**，arXiv **2609.33076**（2026-09；https://arxiv.org/abs/2609.33076）：专用营养预测方向，不是同型 Agent。
 
 ---
 
 ## 11. 必出实验
 
+- **机制优先（STATUS ①）**：反事实动作价值——同一状态下 oracle / \(Q_\phi\) / 规则 / 随机 / 固定流水线；regret 与最优动作识别率；weak-step 按 dish_id 分组。未做完之前，不要把开发集 MAE 写成 Q 的证明。
 - **M1 主**：Full-set MAE@energy + mass MAE（Ours-new vs B0/B5/Ours-old）+ Tool cost  
 - M2 辅：Coverage / Selective / AURC  
-- M3：Provenance；Semantic 后移  
+- M3：Provenance 全量；Semantic 提前到核心实验（门禁 ⑥，仍排在 ① 之后）  
 - M4：Fix/Worsen + **终态 n 变更审计**  
 - A1 锁死 Mass → 增益消失  
 - A2 掩蔽 U_* → MAE 回升  
@@ -202,7 +234,7 @@ Primary 叙事：**Full-set MAE@energy + mass MAE + Tool cost**。禁止 kcal-pr
 - A5 忠实 B1/B2（不挡 Mass P0）  
 - F1 案例：Mass 纠正 / 检索重排 / PARTIAL ABSTAIN  
 
-时间不够保住 **M1 + mass + Tool cost + A1/A2**；切勿再把 Policy Acc 或 kcal-proxy AURC 当主表。
+早期取舍是保住 **M1 + mass + Tool cost + A1/A2**。**现行顺序以 §14 为准（先 ①）**；切勿再把 Policy Acc、kcal-proxy AURC 或开发 505 当最终主表。
 
 ---
 
@@ -219,6 +251,8 @@ Primary 叙事：**Full-set MAE@energy + mass MAE + Tool cost**。禁止 kcal-pr
 | W14–16 | 写作投稿 ACM MM |
 
 **B1/B2 并行，不挡 Mass P0。**
+
+上表是早期周程。**现行严格顺序以 §14 与 [`docs/STATUS.md`](docs/STATUS.md) 为准**：当前首项 **①**；**②–⑦** 锁定；P1 与 Mass/Q 重训仍锁。
 
 ---
 
@@ -240,21 +274,27 @@ Primary 叙事：**Full-set MAE@energy + mass MAE + Tool cost**。禁止 kcal-pr
 
 ## 14. MVP-for-A（严格顺序；前一项未完成不得跳步）
 
-**当前首项 = 等 Triste + 营养论文调研共决**（议题：**冻结主表写稿** / **P1 暂缓**）。这是**共决建议**，**待 Triste 拍板写入** [`docs/STATUS.md`](docs/STATUS.md)。STATUS（#54，`cdfe115b`）仍写「等共决」，**没有**把「冻结主表写稿」锁进门禁。在写入之前：**禁止自动开 P1**；代码侧 **idle**（不得开工、训练、评测，也不得把写稿当服务器任务）。
+**当前首项 = ①** 反事实 Q 动作价值实验 + weak-step **dish_id 分组**泄漏审计。以 [`docs/STATUS.md`](docs/STATUS.md) 为准：**只许**开工 **①**。**禁止**自动开 **②–⑦**。**P1 仍暂缓 / 锁定。禁止**重训 Mass。**禁止**重训 Q。#53 冻结为 Ours-new **开发检查点**（配对 505 是开发 / 诊断集，不是最终独立泛化主表）。开发数字只在 STATUS，这里不改写。2026-11-06 的旧排序（先 #51 再 #53，P1 暂缓）已经做完，那套编号退役。
 
-调研票（同样**未**写入 STATUS，不得据此开工）：冻结 **#53** 主表写稿；**P1 检索重排仍暂缓**；残留 **2** 盘 honeycomb 可选小修。
+**已完成**：P0a–P0d、Q 校准 #44、误差审计 #48、food-id #51、覆盖约束 #53。**#51/#53 增益 ≠ Q 学习改进**（Mass / Q / τ 冻结）。
 
 **Checklist（给代码 Agent）**
 
 1. **P0a 门禁 — 审计 traces — 已完成（#37，`2e0e180`）**：在现有 on-policy（#34 jsonl）与 hold-out logged traces 上统计 CORRECT_CODE / RE_PORTION（及同类改证据工具）执行后，终态营养向量 \(n\) **是否真的变化**——报变更率、无变化比例、按动作分层；审计摘要已落盘后才开训 Mass（该步已完成，见下条）。
 2. **P0b — Mass Estimator — 已完成（#39，`4b6ccec`）**：ViT-B/16 或 ResNet101；ImageNet → N5K train；**RGB-only**；多任务 [M,E,P,C,F]+σ；工具 `estimate_mass` 接入（禁止空壳 RE_PORTION）。
 3. **P0c — U_* + Q_φ — 已完成（#41，`54c32e8`）**；Q 校准 **已完成（#44，`3fc611d`）**：定义 U_id / U_mass / U_nutrient / U_evidence；先规则启发式 utility，再监督 **\(Q_\phi(z,a)=\mathbb{E}[\Delta L\mid z,a]\)**（**无 RL**）。
-4. **P0d — 同预算主表 — 已完成（#46，`b9c4c5e7`）** → **误差审计已完成（#48，`91a05d8`）** → **共决已完成（2026-11-06；②>①≫③）** → **food-id / 密度轻修已完成（#51，`6c8fda02`）** → **覆盖未写组件 + 早停已完成（#53，`2a406df4`）**。
-5. **当前首项 — 等 Triste + 调研共决**（**冻结主表写稿** / **P1 暂缓**）：**共决建议 / 待 Triste 拍板写入 STATUS**。STATUS 仍为等共决，**不要**把冻结写成已锁门禁。**禁止自动开 P1。** 代码侧 **idle**，直到 STATUS 解锁。见 [`docs/STATUS.md`](docs/STATUS.md)。
-6. **P1 later**：检索+重排；忠实 B1/B2 **不得**替代当前首项 — **暂缓 / 未解锁**，**禁止自动开 P1**，**不得**跳步。
 
-**可推迟**：RL；完整 200–500 金标准可分期；体积；RGB-D 主表；VLM LoRA 营养头；kcal 代理弃权作主故事。
+4. **P0d / #48 / #51 / #53 — 已完成。** P0d（#46，`b9c4c5e7`）→ 误差审计（#48，`91a05d8`）→ food-id / 密度轻修（#51，`6c8fda02`）→ 覆盖约束（#53，`2a406df4`）。#53 把「未写完就不许 STOP/ABSTAIN」写成 **Coverage-Constrained Active Specialist Selection** 的 \(A_{legal}\) 门，**不是** Bug Fix，也**不是** Q 变强，**不是**最终主表。
+5. **① 当前首项 — Q 反事实 + dish_id 泄漏审计。** 冻结初始状态，对合法动作分支执行；比较 oracle、\(Q_\phi\)、Rule Utility、Random、Fixed Pipeline。报最优动作识别率、实现误差改善、相对 oracle 的 regret、预算曲线、价值校准。weak-step fit/hold-out **按 dish_id 分组**。**不**借此重训 Q 或 Mass。新产物另写路径，不覆盖冻结结果。
+6. **② 锁定 — #51 food-id 语义审计。** Exact / Near / Wrong，Protein / Carb / Fat MAE，人工复查换码的 37/50 多组件。kcal 变好不等于身份变对。
+7. **③ 锁定 — 外部 held-out 规划。** 200–500 薄标注可承担一部分；按 dish / source 隔离；**不得**用于方法选择。
+8. **④ 锁定 — 真实 Tool Cost。** VLM 调用次数、延迟、token、单盘成本，以及能量 MAE–Cost Pareto。调用次数不等于真实成本。
+9. **⑤ 锁定 — 忠实 B1/B2 + 相关工作。** B1 必须按官方协议重做（历史非忠实数字见 §13，本节不改；scaffold / dry-run 不算）。B2 能完整则完整，否则诚实 approx。优先对照：arXiv **2610.11144**、CVPRW 2025 **Decomposing Food Images**、**NutriVision** arXiv **2609.33076**。不编造 DOI。
+10. **⑥ 锁定 — Provenance + Semantic。** Provenance 自动全量；Semantic 人工提前到核心实验。
+11. **⑦ 锁定 — 然后才共决**是否解锁 P1 或重训 Mass/Q。在此之前 **禁止自动开 P1**，**禁止**重训。
+
+**可推迟**：RL；Route B 多目标 Q；体积；RGB-D 主表；VLM LoRA 营养头；kcal 代理弃权作主故事；在开发 505 上继续调方法冒充最终主表。完整金标准仍可分期，但 **③** 的隔离要求不因此取消。
 
 Schema 仍冻结于 `schemas/`；说明见 `docs/schema.md`。执行状态见 [`docs/STATUS.md`](docs/STATUS.md)。
 
-Canvas 真源：https://cursor.com/canvas/store-745bdf38-f3d7-4313-8d66-08e4b6903e93/d7be617d-d37e-4fe1-a4b5-9da2c86b27a2（**VDR — Evidence-Guided Active Multimodal Nutrition Estimation**）
+Canvas 真源：https://cursor.com/canvas/store-745bdf38-f3d7-4313-8d66-08e4b6903e93/d7be617d-d37e-4fe1-a4b5-9da2c86b27a2（**Coverage-Constrained Active Specialist Selection**；任务框架 **Evidence-Guided Active Multimodal Nutrition Estimation**）

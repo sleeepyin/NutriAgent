@@ -4,7 +4,7 @@
 
 输出 \(y=(n, G, s, \tau)\)：营养向量 + 证据图 + 核验状态（`pass` / `corrected` / `abstain`）+ 纠错轨迹。  
 kcal-proxy 弃权不作主创新。  
-主方法：**Evidence-Guided Active Multimodal Nutrition Estimation** — **Error-Aware Active Specialist Selection**（Mass / 检索专家 + 监督 \(Q_\phi\) 选工具；**先**审计 traces 门禁，**再**训 Mass）。State-aware 闭环与开环 31 维 BC 为 **Ours-old / B5 对照**。暂不上 RL。  
+主方法：**Evidence-Guided Active Multimodal Nutrition Estimation**（任务框架）— **Coverage-Constrained Active Specialist Selection** + **Error-Aware Q**（Route A：能量 + 质量；宏量辅助）。执行门禁见 [`docs/STATUS.md`](docs/STATUS.md)（当前首项 ①；P1 与 Mass/Q 重训仍锁）。State-aware 闭环与开环 31 维 BC 为 **Ours-old / 消融对照**。暂不上 RL。  
 **主投 ACM Multimedia（CCF-A）**；备选 AAAI/IJCAI。算力假设 **2×4090D 24GB**。
 
 > **方案真源（请先读）**：[PLAN.md](PLAN.md)

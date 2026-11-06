@@ -1,9 +1,9 @@
-> **历史脚手架 · 仅 Ours-old 对照，非现行主方法。** 本文件是 **Evidence-Aware Closed-Loop** 的状态特征设计，只作 **Ours-old** 对照。**现行方法中心**见 [`PLAN.md`](../PLAN.md)：**Error-Aware Active Specialist Selection**（选择用 **U_*** + 校准 **Q_φ**）。执行门禁见 [`docs/STATUS.md`](STATUS.md)。下文接口与字段表保留作历史对照。
+> **历史脚手架 · 仅 Ours-old 对照，非现行主方法。** 本文件是 **Evidence-Aware Closed-Loop** 的状态特征设计，只作 **Ours-old** 对照。**现行方法中心**见 [`PLAN.md`](../PLAN.md)：**Coverage-Constrained Active Specialist Selection**（+ Error-Aware Q；Route A）。执行门禁见 [`docs/STATUS.md`](STATUS.md)。下文接口与字段表保留作历史对照。
 
 # State-Aware Feature Design / 状态感知特征设计
 
 > Landed design note for NutriAgent / VDR (P0), **Ours-old 对照**. Aligned with [`PLAN.md`](../PLAN.md) after `#17` / `7ad3cfb`（当时快照，不是现行门禁）。
-> 对照中心（**Ours-old**，非现行）= **Evidence-Aware Closed-Loop Tool Control**。现行方法中心见 [`PLAN.md`](../PLAN.md)：**Error-Aware Active Specialist Selection**。
+> 对照中心（**Ours-old**，非现行）= **Evidence-Aware Closed-Loop Tool Control**。现行方法中心见 [`PLAN.md`](../PLAN.md)：**Coverage-Constrained Active Specialist Selection**（+ Error-Aware Q；Route A）。
 > 当时的闭环策略：\(\pi(a_t \mid h_t, o_{t-1}, b_t)\) — **must** read the prior tool observation。这是相对开环 B5 的 **Ours-old** 接口，不是现行 Q_φ 选择器。
 > Open-loop 31-d BC (no \(o_{t-1}\)) = **ablation B5 only**，相对上述闭环对照，也不是现行主方法。
 > The encoder in `vdr/controller/state_features.py` is **trainable** (`CLOSED_LOOP_READY = True` after `scripts/closed_loop_bc_train.py` + `results/closed_loop/metrics_holdout.json`). Open-loop 31-d remains ablation **B5**. `CLOSED_LOOP_READY` 只表示 **Ours-old** 脚手架就绪。
