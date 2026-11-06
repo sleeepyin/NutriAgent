@@ -245,8 +245,8 @@ Primary 叙事：**Full-set MAE@energy + mass MAE + Tool cost**。禁止 kcal-pr
 1. **P0a 门禁 — 审计 traces（必须先做）**：在现有 on-policy（#34 jsonl）与 hold-out logged traces 上统计 CORRECT_CODE / RE_PORTION（及同类改证据工具）执行后，终态营养向量 \(n\) **是否真的变化**——报变更率、无变化比例、按动作分层；**未落盘审计摘要前禁止开训 Mass**。
 2. **P0b — Mass Estimator（仅 P0a 通过后）**：ViT-B/16 或 ResNet101；ImageNet → N5K train；**RGB-only**；多任务 [M,E,P,C,F]+σ；工具 `estimate_mass` 接入（禁止空壳 RE_PORTION）。
 3. **P0c — U_* + Q_φ（Mass  wired 后）**：定义 U_id / U_mass / U_nutrient / U_evidence；先规则启发式 utility，再监督 **\(Q_\phi(z,a)=\mathbb{E}[\Delta L\mid z,a]\)**（**无 RL**）。
-4. **P0d — 同预算主表**（**已完成 #46 / `b9c4c5e7`**）→ **误差审计**（**已完成 #48 / `91a05d8`**，见 [`docs/STATUS.md`](docs/STATUS.md)）→ **当前首项：等 Triste + 调研共决下一步**（P1 **未自动解锁**）。
-5. **P1  later**：检索+重排；忠实 B1/B2 **并行 OK，不挡、不替代 P0a 门禁**。
+4. **P0d — 同预算主表**（**已完成 #46 / `b9c4c5e7`**）→ **误差审计**（**已完成 #48 / `91a05d8`**）→ **共决**（**已完成 2026-11-06**；**②>①≫③**）→ **当前首项：food-id / 密度轻修（多组件；STATUS 合并后改码）** → **覆盖+早停（未解锁）**；**P1 仍未自动解锁**（见 [`docs/STATUS.md`](docs/STATUS.md)）。
+5. **P1 later**：检索+重排；忠实 B1/B2 **并行 OK** — **暂缓 / 未解锁**，**不得**跳步。
 
 **可推迟**：RL；完整 200–500 金标准可分期；体积；RGB-D 主表；VLM LoRA 营养头；kcal 代理弃权作主故事。
 
