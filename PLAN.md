@@ -240,13 +240,18 @@ Primary 叙事：**Full-set MAE@energy + mass MAE + Tool cost**。禁止 kcal-pr
 
 ## 14. MVP-for-A（严格顺序；前一项未完成不得跳步）
 
+**当前首项 = 等 Triste + 营养论文调研共决**（议题：**冻结主表写稿** / **P1 暂缓**）。这是**共决建议**，**待 Triste 拍板写入** [`docs/STATUS.md`](docs/STATUS.md)。STATUS（#54，`cdfe115b`）仍写「等共决」，**没有**把「冻结主表写稿」锁进门禁。在写入之前：**禁止自动开 P1**；代码侧 **idle**（不得开工、训练、评测，也不得把写稿当服务器任务）。
+
+调研票（同样**未**写入 STATUS，不得据此开工）：冻结 **#53** 主表写稿；**P1 检索重排仍暂缓**；残留 **2** 盘 honeycomb 可选小修。
+
 **Checklist（给代码 Agent）**
 
-1. **P0a 门禁 — 审计 traces（必须先做）**：在现有 on-policy（#34 jsonl）与 hold-out logged traces 上统计 CORRECT_CODE / RE_PORTION（及同类改证据工具）执行后，终态营养向量 \(n\) **是否真的变化**——报变更率、无变化比例、按动作分层；**未落盘审计摘要前禁止开训 Mass**。
-2. **P0b — Mass Estimator（仅 P0a 通过后）**：ViT-B/16 或 ResNet101；ImageNet → N5K train；**RGB-only**；多任务 [M,E,P,C,F]+σ；工具 `estimate_mass` 接入（禁止空壳 RE_PORTION）。
-3. **P0c — U_* + Q_φ（Mass  wired 后）**：定义 U_id / U_mass / U_nutrient / U_evidence；先规则启发式 utility，再监督 **\(Q_\phi(z,a)=\mathbb{E}[\Delta L\mid z,a]\)**（**无 RL**）。
-4. **P0d — 同预算主表**（**已完成 #46 / `b9c4c5e7`**）→ **误差审计**（**已完成 #48 / `91a05d8`**）→ **共决**（**已完成 2026-11-06**；**②>①≫③**）→ **当前首项：food-id / 密度轻修（多组件；STATUS 合并后改码）** → **覆盖+早停（未解锁）**；**P1 仍未自动解锁**（见 [`docs/STATUS.md`](docs/STATUS.md)）。
-5. **P1 later**：检索+重排；忠实 B1/B2 **并行 OK** — **暂缓 / 未解锁**，**不得**跳步。
+1. **P0a 门禁 — 审计 traces — 已完成（#37，`2e0e180`）**：在现有 on-policy（#34 jsonl）与 hold-out logged traces 上统计 CORRECT_CODE / RE_PORTION（及同类改证据工具）执行后，终态营养向量 \(n\) **是否真的变化**——报变更率、无变化比例、按动作分层；审计摘要已落盘后才开训 Mass（该步已完成，见下条）。
+2. **P0b — Mass Estimator — 已完成（#39，`4b6ccec`）**：ViT-B/16 或 ResNet101；ImageNet → N5K train；**RGB-only**；多任务 [M,E,P,C,F]+σ；工具 `estimate_mass` 接入（禁止空壳 RE_PORTION）。
+3. **P0c — U_* + Q_φ — 已完成（#41，`54c32e8`）**；Q 校准 **已完成（#44，`3fc611d`）**：定义 U_id / U_mass / U_nutrient / U_evidence；先规则启发式 utility，再监督 **\(Q_\phi(z,a)=\mathbb{E}[\Delta L\mid z,a]\)**（**无 RL**）。
+4. **P0d — 同预算主表 — 已完成（#46，`b9c4c5e7`）** → **误差审计已完成（#48，`91a05d8`）** → **共决已完成（2026-11-06；②>①≫③）** → **food-id / 密度轻修已完成（#51，`6c8fda02`）** → **覆盖未写组件 + 早停已完成（#53，`2a406df4`）**。
+5. **当前首项 — 等 Triste + 调研共决**（**冻结主表写稿** / **P1 暂缓**）：**共决建议 / 待 Triste 拍板写入 STATUS**。STATUS 仍为等共决，**不要**把冻结写成已锁门禁。**禁止自动开 P1。** 代码侧 **idle**，直到 STATUS 解锁。见 [`docs/STATUS.md`](docs/STATUS.md)。
+6. **P1 later**：检索+重排；忠实 B1/B2 **不得**替代当前首项 — **暂缓 / 未解锁**，**禁止自动开 P1**，**不得**跳步。
 
 **可推迟**：RL；完整 200–500 金标准可分期；体积；RGB-D 主表；VLM LoRA 营养头；kcal 代理弃权作主故事。
 
