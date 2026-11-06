@@ -1,11 +1,13 @@
 # 执行状态（STATUS）
 
 > 供 GitHub 同步：服务器跑完实验后，请在本文件更新。`notes/` 历史周报已删除，见 [`notes/README.md`](../notes/README.md)。执行助手据此继续改代码/方案。  
-> **截止日期（文档写入时）**：2026-11-06（Asia/Shanghai）。**方法真源已锁**：Canvas「**VDR — Evidence-Guided Active Multimodal Nutrition Estimation**」；Triste + 营养论文调研 **2026-11-05 锁定**。**技术中心**：Error-Aware Active Specialist Selection（**非** ABSTAIN/AURC/BC 补丁叙事）。旧「Evidence-Aware Closed-Loop Tool Control」→ **Ours-old / 纯控制器对照**，不作方法证明。  
+> **截止日期（文档写入时）**：2026-11-06（Asia/Shanghai）。**方法真源**：Canvas「**Coverage-Constrained Active Specialist Selection**」（https://cursor.com/canvas/store-745bdf38-f3d7-4313-8d66-08e4b6903e93/d7be617d-d37e-4fe1-a4b5-9da2c86b27a2）；Triste **2026-11-06** 按外部评审改方案。**技术中心**：**Coverage-Constrained Active Specialist Selection**（覆盖约束下的主动专家选择）+ **Error-Aware Q**。**Route A**：论文主张收窄为误差感知的**能量 + 质量**决策系统；蛋白质 / 碳水 / 脂肪作辅助。**任务框架**仍是 Evidence-Guided Active Multimodal Nutrition Estimation。旧「Evidence-Aware Closed-Loop Tool Control」→ **Ours-old / 纯控制器对照**，不作方法证明。  
+> **#53 冻结为 Ours-new 开发检查点。** 配对 **505** 盘 rgb_test 是**开发 / 诊断集**（**#48→#51→#53** 用了测试集误差分析反馈；GT 未作选码 / 克重 / 阈值的程序输入），**不是**最终独立泛化主表。**#53 数字保留**为有价值的开发结果，不删、不覆盖冻结结果。**禁止**声称 #53 已证明方法。**#51 / #53 增益 ≠ Q 学习改进**（Mass / Q / τ 冻结：#51 是确定性食物码 / 密度轻修；#53 是覆盖约束，未写完组件时 **A_legal** 去掉 **STOP / ABSTAIN**）。  
 > **#24/#26/#28/#31/#34 数字保留**：offline **n=356** Full MAE **30.7085** 打平、Ours AURC **13.5311 ≤ B5 32.1474**；on-policy **n=488** Full MAE **96.2769** 打平 B5、Ours AURC **47.1737 ≤ B5 81.5857**（**勿声称** on-policy 能量赢；**勿混** offline 与 on-policy 人群）。弱 `abstain_score=clip(kcal/2500)` 已降权。  
-> **下一步（严格顺序，不可跳步）**：**① P0a 已完成（#37，`2e0e180`）** → **② P0b 已完成（#39，`4b6ccec`）** → **③ P0c 已完成（#41，`54c32e8`）** → **④ Q 校准 已完成（#44，`3fc611d`）** → **⑤ P0d 已完成（#46，`b9c4c5e7`）** → **⑥ 误差审计 已完成（#48，`91a05d8`）** → **⑦ 共决下一步 已完成（2026-11-06；调研 ②>①≫③，Triste 锁定）** → **⑧ food-id / 密度轻修 已完成（#51，squash `6c8fda02`）** → **⑨ 覆盖未写组件 + 早停处理 已完成（#53，squash `2a406df4`）** → **当前 = 共决下一步（P1 仍暂缓）**。**P1 检索重排仍未解锁 / 暂缓。禁止自动开 P1。** 代码侧 **idle**，直到共决后本文件再次更新。详见下文「下一步（立即执行）」。**Mass 在 U_* / Q_φ 之前，不可跳步。**  
+> **硬锁**：**P1 检索重排锁定 / 暂缓**；**不重训 Mass**；**不重训 Q**；**无 RL**；**不开 fast Cloud Agent**；**禁止** rgb_test GT 调参；**禁**空壳 RE_PORTION。  
+> **下一步（严格顺序，不可跳步）**：**P0a 已完成（#37，`2e0e180`）** → **P0b 已完成（#39，`4b6ccec`）** → **P0c 已完成（#41，`54c32e8`）** → **Q 校准已完成（#44，`3fc611d`）** → **P0d 已完成（#46，`b9c4c5e7`）** → **误差审计已完成（#48，`91a05d8`）** → **food-id / 密度轻修已完成（#51，squash `6c8fda02`）** → **覆盖约束已完成（#53，squash `2a406df4`；开发检查点）** → **当前首项 = ①** 反事实 Q 动作价值实验 + weak-step **dish_id 分组**泄漏审计。其后锁定：**②** #51 food-id 语义审计 → **③** 外部 held-out 规划 → **④** 真实 Tool Cost → **⑤** 忠实 B1/B2 + 相关工作 → **⑥** Provenance + Semantic → **⑦** 再共决是否解锁 P1 / 重训。**只许开工 ①。禁止自动开 ②–⑦、P1、Mass/Q 重训。** 详见下文「下一步（立即执行）」。  
 > **可执行的下一步只在本文件。** 聊天不是 runbook。助手改下一步、跑法或方案时，先更新文档并推到 GitHub；服务器上的人或 AI 先 `git pull --ff-only`，再读「下一步」执行。  
-> **服务器执行看「下一步」。** 这一节没有新的弱标签 / 507 命令。**#53 覆盖+早停已完成，不要再跑。** **P1 未解锁，不要开。** 代码侧 **idle**，直到共决后本文件更新。历史 `--n 50`、俯拍池 `--n 507`、弱标签 jsonl、开环 BC 数字都是已完成记录，不要再执行。
+> **服务器执行看「下一步」。** 这一节没有新的弱标签 / 507 命令。**#53 不要再跑，也不要在同一 505 盘上再调方法冒充最终主表。** **P1 未解锁，不要开。②–⑦ 未解锁，不要自动开。** 历史 `--n 50`、俯拍池 `--n 507`、弱标签 jsonl、开环 BC 数字都是已完成记录，不要再执行。
 
 ## 下一步（立即执行）
 
@@ -13,39 +15,63 @@
 
 **营养论文代码编写 — 严格顺序（前一步未落盘/未通过门禁，不得开始下一步）**
 
+**归因与卫生（2026-11-06 外部评审；先读这段）**
+
+- **#53 冻结为 Ours-new 开发检查点。** 配对 **505** 盘 rgb_test 标为**开发 / 诊断集**：误差审计 → 码表轻修 → 覆盖约束，已经用测试集误差分析决定下一轮修改（标签没有直接输入选码、克重或阈值）。**禁止**再把这 505 盘当独立最终泛化主表，也**禁止**在同一 505 上继续调方法冒充最终主表。
+- **#53 数字保留**，不删、不覆盖冻结结果。开发集上超过 Direct-VLM **不等于**方法创新已经成立，也**不等于** #53 证明了方法。
+- **#51 / #53 增益 ≠ Q 学习改进。** 两步都没有重训 Mass、没有改 Q、没有重拟合 τ。#51 是确定性食物码 / 密度轻修。#53 是 **Coverage-Constrained Active Specialist Selection**：未写完组件时 **A_legal** 去掉 **STOP / ABSTAIN**，再在合法集上按 **Q_φ / Cost** 选动作。覆盖只保证初始清单内的组件被处理，**不能**证明 VLM 没有漏掉整道食物。
+- **方法中心**：Coverage-Constrained Active Specialist Selection + **Error-Aware Q**。**Route A**：论文主张是误差感知的**能量 + 质量**决策系统；蛋白质 / 碳水 / 脂肪作辅助。不把 Q 扩成多目标向量。
+
 **food-id / 密度轻修 — 已完成（#51，squash `6c8fda02`，2026-11-06）**
 
 - **范围**：finished 多组件上，在**已有检索窗**内做**同头 FNDDS code swap**（food-table 能量 **≥15%** 更靠近 mass-estimator calorie head）；**克重与动作保持**。**无** Mass 重训、**无** Q 改、**无** P1。**#51 未改本文件**。
 - paired **n=505**：能量 MAE **98.5521 → 92.6963**（质量不变 **58.9952**）；vs Direct-VLM **ΔE +1.42 → −4.43**。
 - 多组件全写 **n=50**：food-table 能量 **190.79 → 131.65**；vs Direct **+10.01 → −49.13**；换码 **37/50**（**30↓ / 7↑**），**68** codes；calorie head 仍 **77.75**（目标；记分 commit 仍是 food-table）。
 - Mass RE_PORTION **827** 成功、**0** hollow。全文见「助手进度」。
+- **归因**：确定性码表 / 密度，**不是** Q 变强。换码 **37/50** 的 Exact / Near / Wrong 人审属于门禁 **②**，**未解锁**。
 
-**覆盖未写组件 + 早停处理 — 已完成（#53，squash `2a406df4`，2026-11-06）**
+**覆盖约束 — 已完成（#53，squash `2a406df4`，2026-11-06；Ours-new 开发检查点）**
 
-- **顺序（已锁）**：共决 **② food-id / 密度 > ① 覆盖未写组件 + 早停 ≫ ③ P1 检索重排**；Triste 锁定 **先做 ②、再做 ①、暂缓 ③**。**② 已完成（#51）**。**① 已完成（#53）**。**③ P1 检索重排仍未解锁 / 暂缓。禁止自动开 P1。**
+- **当时顺序（已做完；food-id / 覆盖 / P1 那套编号退役）**：先 food-id / 密度（#51），再覆盖未写组件 + 早停（#53），P1 暂缓。下文 **①–⑦** 是另一套门禁。**P1 仍锁定。禁止自动开 P1。**
 - **方法**：冻结 Q + fence 之后，未写组件没有 `estimate_mass` 写则 **拒绝 STOP/ABSTAIN**（defer 到 rule utility）；已回到检索 top code 的 swap 改为 **portion**，不开第二轮 top-code swap。**#51 同头 swap 保留**。**无** Mass / Q / τ 重训。**#53 未改本文件**。
 - **paired n=505**（相对 **#51**）：能量 MAE **92.6963 → 64.2792**；质量 MAE **58.9952 → 32.9908**；tool mean **4.6970 → 6.0257**（max **17**，**505/505** 在 K=32 内）。
 - **vs Direct-VLM**：ΔE **−4.43 → −32.85**；ΔM **−17.35 → −43.36**。
 - **覆盖**：全部组件 mass 已写 **199/505 → 503/505**；STOP-unwritten **78 → 0**；Mass 成功 **827 → 1479**；hollow **0**。
 - **残留 2 盘**（`dish_1565020895`、`dish_1565020926`）：`honeycomb` 的 FNDDS 检索失败 → 卡在 **RETRIEVE**；**不编造克重**；两盘都 **未 STOP**。全文见「助手进度」。
+- **归因**：上列开发集变化来自覆盖约束（**A_legal** 在未写完时去掉 STOP/ABSTAIN），**不是** Q 学得更好，**不是**最终独立泛化主表。
 
-**当前首项 — 等 Triste + 营养论文调研共决（是否解锁 P1 检索重排、写主表、或其他）**
+**当前首项 = ① 反事实 Q 动作价值实验 + weak-step dish_id 分组泄漏审计**
 
-- **P1 仍未解锁 / 暂缓。禁止自动开 P1。** 共决可以选解锁 P1、写主表、或其他；**在写入本文件之前，不得自行开工。**
-- **代码侧 idle**：不得开工、训练或评测，直到共决后本文件再次更新。
-- **禁止**：**不得**重训 Mass；**不得**改 Q / 重训 **Q_φ**；**不得**开 **P1** 检索重排。**禁止** Cloud Agent **fast**；**无 RL**；**禁止** rgb_test GT 调参；**勿覆盖**冻结 n5k / weak_steps；**禁**空壳 RE_PORTION。
+- **只许这一项。** **禁止**自动开 **②–⑦**。**P1 锁定 / 暂缓。禁止**重训 Mass。**禁止**重训 Q：① 只评估已经冻结的 **Q_φ**，不更新权重。
+- **① 协议**：从**未参与 #51/#53 方法修改**的数据取一批状态。同一初始状态上，对 **A_legal** 里每个合法动作分支执行，记下真实误差变化（Route A 看能量，并行记质量）。比较 oracle 最优、**Q_φ**、Rule Utility、Random、Fixed Pipeline。统计：最优动作识别率、所选动作的实现误差改善、相对 oracle 的 regret、不同预算下的收益、Q 价值校准。
+- **泄漏审计（同一项 ①，不可省）**：检查 weak-step 的 fit / hold-out 是否按 **dish_id** 分组。**禁止**把同一道菜的不同决策步随机拆进 train 与 test。
+- **现有 Q 数字只说明有预测力，不说明学到了动作价值**：hold-out 回归 MAE **0.0368**（零基线 **0.0518**）、Pearson **0.7799**。若反事实实验否定 Q，主卖点改为覆盖约束 + Mass，不把「学到的 Q」写成贡献。
+- **产物**：另写新路径。**勿覆盖**冻结 n5k、weak_steps，以及 #46 / #48 / #51 / #53 已落盘结果。**禁止** rgb_test GT 调参。**禁止** fast Cloud Agent。**无 RL。** **禁**空壳 RE_PORTION。
 
-- **审计结论（背景；方法标签仍用 B0 / Ours-old）**：paired **n=505** 上 Ours-new 相对 **B0** 的 **ΔM −17.3513 g**（bootstrap 95% **[−24.94, −10.13]**，**万次 resample 均值均为负**）；**ΔE +1.4210 kcal**（95% **[−8.10, +11.05]** **跨 0**）；**median ΔE −4.54 kcal**；去掉 **2** 盘最大能量回归（`dish_1562172643`、`dish_1564675411`）后 **503** 盘 mean **−0.14 kcal**（敏感性，**主表 MAE 仍含该两盘**）。能量误差可拆 **克重项 vs 食物密度（kcal/g）项**；B0 上两项**更常反向抵消**，Mass 写克重后部分盘**打破抵消** → mass↓ 但 energy↑ 共存。**未完成 mass 写**的 **306** 盘对 pooled 能量均值 **+5.74 kcal**；其中 **78** 盘 **STOP 且仍有未写组件**，mean signed kcal err **−87.6**，对均值 **+6.06 kcal**。**481** 盘 **hold food-id 固定**对比写前克重：ΔM **−20.24 g**、ΔE **−17.90 kcal** — **不是**「用能量换质量」相对 prior grams。**Q fence 重放 2858/2858**；505 盘 **committing action 均为 Q/Cost**（本审计**未**去掉 fence 重跑轨迹）。本段 paired **ΔE +1.4210** 是 **#51 之前**；**#51** 后同池 vs Direct **ΔE −4.43**（能量 MAE **92.6963**）。**#53** 后同池能量 MAE **64.2792**、质量 MAE **32.9908**；vs Direct **ΔE −32.85** / **ΔM −43.36**（见上与「助手进度」）。
-- **分层要点（#48 报告）**：**199** 盘 **全部组件 mass 已写**：ΔE **−10.96** / ΔM **−39.17** kcal·g；**149** 盘 **单组件** ΔE **−17.99**；**50** 盘 **多组件全写** ΔE **+10.01** / ΔM **−91.80** — food-table commit 能量 MAE **190.79** vs 同盘 stored calorie head **77.75**，**grams 与 head 一致**（commit 用 FNDDS kcal/100g×克重，**非** head）。相对 **Ours-old**（closed-loop BC）点估计 ΔE **−1.8588**、ΔM **−3.4147**，bootstrap 区间**仍跨 0**。本段是 **#48 写前**基线；**#51** 后同一切片 food-table 能量 MAE 为 **131.65**。**#53** 后全部组件 mass 已写 **503/505**、STOP-unwritten **0**（见上与「助手进度」）。
+**锁定（本文件逐项改写之前不得自动开工）**
+
+- **②** #51 food-id 语义审计：Exact / Near / Wrong，并报 Protein / Carb / Fat MAE；人工复查换过码的 **37/50** 多组件。kcal 变好不等于身份变对。
+- **③** 外部 held-out 规划。200–500 薄标注可以承担一部分；按菜品 / 来源隔离；**不得**用于方法选择。最终论文主表来自外测或严格隔离的 held-out，不是当前开发 505。
+- **④** 真实 Tool Cost：VLM 调用次数、延迟、token、单盘成本，以及能量 MAE–Cost Pareto。#53 的 tool mean **6.0257** 只是调用次数，不是真实成本。
+- **⑤** 忠实重做 B1，并做 B2（能完整复现就完整复现，否则诚实标明 approx）与相关工作。优先：arXiv **2610.11144**（食物身份验证 / 恢复）、CVPRW 2025 **Decomposing Food Images**、**NutriVision** arXiv **2609.33076**。不编造 DOI。历史 B1 **110.72** 非忠实；scaffold / dry-run 不算。
+- **⑥** 证据效度：Provenance（程序复算，自动，全量）与 Semantic（人工，提前到核心实验）。
+- **⑦** ①–⑥ 有结论之后，再共决是否解锁 **P1** 或重训 Mass / Q。在此之前两项都锁定。
 
 **Checklist（给代码 Agent）**
 
-1. **P0a–P0c、Q 校准 #44、P0d #46、误差审计 #48** — **已完成**。
-2. **Triste + 调研共决（2026-11-06 排序）** — **已完成**；排序 **②>①≫③**（② #51、① #53 均已落盘）。下一轮共决是第 5 条，不是本条。
-3. **food-id / 密度轻修（多组件优先）** — **已完成（#51，squash `6c8fda02`）**。
-4. **覆盖未写组件 + 早停处理** — **已完成（#53，squash `2a406df4`）**。
-5. **等 Triste + 营养论文调研共决** — **当前首项**（是否解锁 P1 检索重排、写主表、或其他）。**代码侧 idle**，直到共决写入本文件。
-6. **P1 检索重排** — **仍未解锁 / 暂缓**；**禁止自动开 P1**。
+1. **P0a–P0d、Q 校准 #44、误差审计 #48、food-id #51、覆盖约束 #53** — **已完成**。#53 = Ours-new **开发检查点**。**不**声称 #53 证明方法。**#51 / #53 ≠ Q 学习改进。**
+2. **① 反事实 Q + dish_id 分组泄漏审计** — **当前首项。只许开工这一项。**
+3. **② #51 food-id 语义审计** — **锁定。禁止自动开。**
+4. **③ 外部 held-out 规划** — **锁定。禁止自动开。**
+5. **④ 真实 Tool Cost** — **锁定。禁止自动开。**
+6. **⑤ 忠实 B1/B2 + 相关工作** — **锁定。禁止自动开。**
+7. **⑥ Provenance + Semantic** — **锁定。禁止自动开。**
+8. **⑦ 共决是否解锁 P1 / 重训** — **锁定。P1 仍暂缓。禁止自动开 P1。禁止重训 Mass / Q。**
+
+**保留的 #48 诊断背景（下面两段原文不改。这是 #51 之前的对照；#53 的开发数字见上，仍不是最终主表）**
+
+- **审计结论（背景；方法标签仍用 B0 / Ours-old）**：paired **n=505** 上 Ours-new 相对 **B0** 的 **ΔM −17.3513 g**（bootstrap 95% **[−24.94, −10.13]**，**万次 resample 均值均为负**）；**ΔE +1.4210 kcal**（95% **[−8.10, +11.05]** **跨 0**）；**median ΔE −4.54 kcal**；去掉 **2** 盘最大能量回归（`dish_1562172643`、`dish_1564675411`）后 **503** 盘 mean **−0.14 kcal**（敏感性，**主表 MAE 仍含该两盘**）。能量误差可拆 **克重项 vs 食物密度（kcal/g）项**；B0 上两项**更常反向抵消**，Mass 写克重后部分盘**打破抵消** → mass↓ 但 energy↑ 共存。**未完成 mass 写**的 **306** 盘对 pooled 能量均值 **+5.74 kcal**；其中 **78** 盘 **STOP 且仍有未写组件**，mean signed kcal err **−87.6**，对均值 **+6.06 kcal**。**481** 盘 **hold food-id 固定**对比写前克重：ΔM **−20.24 g**、ΔE **−17.90 kcal** — **不是**「用能量换质量」相对 prior grams。**Q fence 重放 2858/2858**；505 盘 **committing action 均为 Q/Cost**（本审计**未**去掉 fence 重跑轨迹）。本段 paired **ΔE +1.4210** 是 **#51 之前**；**#51** 后同池 vs Direct **ΔE −4.43**（能量 MAE **92.6963**）。**#53** 后同池能量 MAE **64.2792**、质量 MAE **32.9908**；vs Direct **ΔE −32.85** / **ΔM −43.36**（见上与「助手进度」）。
+- **分层要点（#48 报告）**：**199** 盘 **全部组件 mass 已写**：ΔE **−10.96** / ΔM **−39.17** kcal·g；**149** 盘 **单组件** ΔE **−17.99**；**50** 盘 **多组件全写** ΔE **+10.01** / ΔM **−91.80** — food-table commit 能量 MAE **190.79** vs 同盘 stored calorie head **77.75**，**grams 与 head 一致**（commit 用 FNDDS kcal/100g×克重，**非** head）。相对 **Ours-old**（closed-loop BC）点估计 ΔE **−1.8588**、ΔM **−3.4147**，bootstrap 区间**仍跨 0**。本段是 **#48 写前**基线；**#51** 后同一切片 food-table 能量 MAE 为 **131.65**。**#53** 后全部组件 mass 已写 **503/505**、STOP-unwritten **0**（见上与「助手进度」）。
 
 - **背景 — Q 保守性门禁（#41；选 B 的原因）**：P0c hold-out 上 Q/Cost **STOP-heavy**（2771 行：STOP **1360** / RE_PORTION **608** / RETRIEVE **499** / ABSTAIN **266** / CORRECT_CODE **38**）；Q/Cost 与规则 heuristic **一致率 0.4489**；stub **首步 STOP**。**#44 已缓解**（一致率 **0.7712**；stub **RETRIEVE→RE_PORTION→STOP**，1 次 mass，`portion_src=mass_estimator`）。
 
@@ -55,7 +81,7 @@
    - 产物：`results/closed_loop/tool_state_audit.json`、`report_tool_state_audit.txt`、`report_tool_state_audit.md`。  
    - **改码/改份量 edit 动作**（CORRECT_CODE / RE_PORTION；hold-out **无** RE_DECOMPOSE）：hold-out logged **变更率 1.0000（1106/1106）**。  
    - on-policy edit：**变更率 0.9175（1647/1795）**、无变化 **0.0825**；分层 **CORRECT_CODE 0.7822**、**RE_PORTION 0.9476**。  
-   - **结论**：「工具跑了但 n 不变」**不是**多数；**门禁通过**（仍禁空壳 RE_PORTION）。**P0b #39**、**P0c #41**、**Q 校准 #44**、**P0d #46**、**误差审计 #48**、**food-id #51**、**覆盖+早停 #53** 已落盘 → **当前 = 等 Triste + 调研共决**（**P1 仍暂缓**；代码侧 idle）。
+   - **结论**：「工具跑了但 n 不变」**不是**多数；**门禁通过**（仍禁空壳 RE_PORTION）。**P0b #39**、**P0c #41**、**Q 校准 #44**、**P0d #46**、**误差审计 #48**、**food-id #51**、**覆盖+早停 #53** 已落盘 → **当前首项 = ①**（只许反事实 Q + dish_id 泄漏审计；**②–⑦ 与 P1 仍锁**；**不**重训 Mass/Q）。
 
 2. **P0b — Mass Estimator（已完成 #39，squash `4b6ccec`）**  
    - **Backbone**：**ViT-B/16**（fit-internal probe 优于 ResNet101：probe-val mass MAE **52.48** vs **57.52**）；ImageNet-1K → Nutrition5K **rgb_train fit** 微调，**12 epoch**，**last checkpoint**。  
@@ -94,21 +120,21 @@
    - **产物**：`results/audit/report_error_audit.md`、`report_error_audit.txt`、`error_audit.json`、`paired_residuals.jsonl`、`fig_*.svg`。  
    - **结论摘要**：见「助手进度」#48 段。**#53** 已处理覆盖与早停（见该项）。**不**自动解锁 Mass 重训 / Q 改 / P1。
 
-7. **food-id / 密度轻修（多组件优先；已完成 #51，squash `6c8fda02`）**：同头码替换（已有检索窗，≥15% 更靠近 calorie head）；克重与动作保持。paired **n=505** 能量 **98.5521 → 92.6963**（质量 **58.9952** 不变）；多组件全写 **n=50** food-table **190.79 → 131.65**。**827** 成功 mass、**0** hollow。**#51 未改 STATUS**。详见「助手进度」。**不得**据此开 Mass 重训 / Q 改 / **P1**。
+7. **food-id / 密度轻修（多组件优先；已完成 #51，squash `6c8fda02`）**：同头码替换（已有检索窗，≥15% 更靠近 calorie head）；克重与动作保持。paired **n=505** 能量 **98.5521 → 92.6963**（质量 **58.9952** 不变）；多组件全写 **n=50** food-table **190.79 → 131.65**。**827** 成功 mass、**0** hollow。**#51 未改 STATUS**。详见「助手进度」。**不得**据此开 Mass 重训 / Q 改 / **P1**。语义审计是门禁 **②**，**未解锁**。
 
-8. **覆盖未写组件 + 早停处理（已完成 #53，squash `2a406df4`）**：冻结 Q+fence 后，未写组件无 `estimate_mass` 写则拒绝 STOP/ABSTAIN（defer rule utility）；回到检索 top code 则 portion，不开第二轮 top-code swap；**#51 同头 swap 保留**。paired **n=505** 能量 **92.6963 → 64.2792**、质量 **58.9952 → 32.9908**、tool mean **4.6970 → 6.0257**（max **17**，均在 K=32）。全部组件已写 **199/505 → 503/505**；STOP-unwritten **78 → 0**；Mass 成功 **827 → 1479**；hollow **0**。残留 **2** 盘（`dish_1565020895`、`dish_1565020926`）honeycomb 检索失败，卡 RETRIEVE，不编造克重、未 STOP。**无** Mass/Q/τ 重训。**#53 未改 STATUS**。**不得**据此开 **P1**。
+8. **覆盖未写组件 + 早停处理（已完成 #53，squash `2a406df4`）**：冻结 Q+fence 后，未写组件无 `estimate_mass` 写则拒绝 STOP/ABSTAIN（defer rule utility）；回到检索 top code 则 portion，不开第二轮 top-code swap；**#51 同头 swap 保留**。paired **n=505** 能量 **92.6963 → 64.2792**、质量 **58.9952 → 32.9908**、tool mean **4.6970 → 6.0257**（max **17**，均在 K=32）。全部组件已写 **199/505 → 503/505**；STOP-unwritten **78 → 0**；Mass 成功 **827 → 1479**；hollow **0**。残留 **2** 盘（`dish_1565020895`、`dish_1565020926`）honeycomb 检索失败，卡 RETRIEVE，不编造克重、未 STOP。**无** Mass/Q/τ 重训。**#53 未改 STATUS**。这是开发检查点，**不**证明方法；增益 **≠** Q 学习改进。**当前首项 = ①**，不在本条。**不得**据此开 **P1**。
 
-9. **等 Triste + 营养论文调研共决（当前首项）**：是否解锁 P1 检索重排、写主表、或其他。**代码侧 idle**，直到本文件在共决后再次更新。**禁止自动开 P1。**
+9. **① 反事实 Q 动作价值 + dish_id 分组泄漏审计（当前首项）**：只许开工本条。冻结初始状态，分支跑尽 **A_legal**；比较 oracle / **Q_φ** / Rule Utility / Random / Fixed Pipeline；报识别率、实现误差改善、regret、预算曲线、价值校准。fit/hold-out **按 dish_id 分组**。**不**更新 Q 或 Mass 权重。新产物另写路径，**勿覆盖**冻结结果。**禁止**自动开 **②–⑦**。
 
-10. **P1（later，未解锁；仍禁自动跳步）**：图文检索 + FNDDS 重排；忠实 B1/B2 live API（[`docs/B1_B2_SCAFFOLD.md`](B1_B2_SCAFFOLD.md)）**不得**替代当前首项，也**不得**在共决前开工。**P0a–P0c、Q 校准 #44、P0d #46、误差审计 #48、共决 2026-11-06、food-id #51、覆盖+早停 #53 已完成** — **P1 暂缓**，**禁止自动开 P1**。
+10. **②–⑦ 与 P1（锁定）**：**②** food-id 语义审计（Exact / Near / Wrong + Protein / Carb / Fat MAE + **37/50** 人审）→ **③** 外部 held-out 规划（200–500 薄标可承担一部分；按菜品 / 来源隔离；不用于方法选择）→ **④** 真实 Tool Cost（VLM 次数、延迟、token、单盘成本、能量 MAE–Cost Pareto）→ **⑤** 忠实 B1/B2 + 相关工作（优先 arXiv **2610.11144**、CVPRW 2025 Decomposing Food Images、NutriVision arXiv **2609.33076**；不编 DOI）→ **⑥** Provenance + Semantic → **⑦** 再共决是否解锁 **P1** 或重训 Mass/Q。**P1 仍锁定 / 暂缓。禁止自动开 P1。禁止**重训 Mass / Q。忠实 B1/B2（[`docs/B1_B2_SCAFFOLD.md`](B1_B2_SCAFFOLD.md)）**不得**替代 **①**，也**不得**在 **⑤** 解锁前开工。
 
-**禁令（仍有效）**：**不得**重训 Mass；**不得**重训 Q；**禁止自动开 P1**；不上 RL；不开 fast Cloud Agent；禁止 rgb_test GT 调参；勿覆盖冻结 n5k / weak_steps；**禁**空壳 RE_PORTION；kcal-proxy AURC 作主 claim；本机 Qwen closed-loop **≠** 忠实 C；体积默认关。
+**禁令（仍有效）**：**不得**重训 Mass；**不得**重训 Q；**禁止自动开 P1**；**禁止自动开 ②–⑦**；不上 RL；不开 fast Cloud Agent；禁止 rgb_test GT 调参；勿覆盖冻结 n5k / weak_steps / #46 / #48 / #51 / #53 结果；**禁**空壳 RE_PORTION；kcal-proxy AURC 作主 claim；**禁止**把 #51/#53 写成 Q 学得更好；**禁止**把开发 505 当独立最终测试；**禁止**声称 #53 已证明方法；本机 Qwen closed-loop **≠** 忠实 DietAI24 / FoodAgent。
 
-> 真源：[`PLAN.md`](../PLAN.md)、Canvas「**VDR — Evidence-Guided Active Multimodal Nutrition Estimation**」（https://cursor.com/canvas/store-745bdf38-f3d7-4313-8d66-08e4b6903e93/d7be617d-d37e-4fe1-a4b5-9da2c86b27a2）、[`docs/VDR_P0.md`](VDR_P0.md)、[`docs/STATE_FEATURE_DESIGN.md`](STATE_FEATURE_DESIGN.md)。`CLOSED_LOOP_READY=true` 指 **Ours-old** 脚手架就绪，**不是** Ours-new 已证明。**不上 RL。不开 fast Cloud Agent。** 冻结结果不重写。
+> 真源：[`PLAN.md`](../PLAN.md)、Canvas「**Coverage-Constrained Active Specialist Selection**」（https://cursor.com/canvas/store-745bdf38-f3d7-4313-8d66-08e4b6903e93/d7be617d-d37e-4fe1-a4b5-9da2c86b27a2）、[`docs/VDR_P0.md`](VDR_P0.md)、[`docs/STATE_FEATURE_DESIGN.md`](STATE_FEATURE_DESIGN.md)。`CLOSED_LOOP_READY=true` 指 **Ours-old** 脚手架就绪，**不是** Ours-new 已证明。**不上 RL。不开 fast Cloud Agent。** 冻结结果不重写。#53 是开发检查点，不是方法证明。
 
 ### 服务器
 
-**没有新的 507 / 弱标签重跑命令。** **覆盖未写组件 + 早停 #53（squash `2a406df4`）已落盘**（**#53 未改本文件**）。**food-id / 密度轻修 #51（squash `6c8fda02`）已落盘**。**当前首项 = 等 Triste + 营养论文调研共决**（是否解锁 P1 检索重排、写主表、或其他）。**代码侧 idle**（共决写入本文件之前不得开工、训练或评测）。**#44 Q 校准已落盘，不再重训 Q 权重**。**不得**重训 Mass。**禁止** Cloud Agent **fast** 代跑 Full-set / 审计 / 未解锁训练。**P1 检索重排仍未解锁 / 暂缓。禁止自动开 P1**。冻结文件勿覆盖，也不要重跑：
+**没有新的 507 / 弱标签重跑命令。** **#53（squash `2a406df4`）与 #51（squash `6c8fda02`）已落盘，不要重跑，也不要在同一 505 开发池上再调方法。** **当前首项 = ①** 反事实 Q + dish_id 泄漏审计：**只许**这一项；新产物另写路径。**禁止**自动开 **②–⑦**。**#44 的 Q 权重不再重训。不得**重训 Mass。**禁止** Cloud Agent **fast**。**P1 仍锁定 / 暂缓。禁止自动开 P1。** 冻结文件勿覆盖，也不要重跑：
 
 - `results/n5k_rgb_test_overhead_b0_b1.json` 与 `.jsonl`（sha256 前缀 `a4dfdd82e3a595f4…`）
 - 默认的 `results/n5k_subset_b0_b1.json` 与 `.jsonl`（现在就是上面这一对）
@@ -121,7 +147,7 @@
 
 ### 助手进度
 
-> **解读**：以下 #24–#34 段均为 **Ours-old（纯闭环控制器 / 弱弃权）对照**；支撑「#34 MAE 打平 → 需要 Mass + Q_φ」叙事，**不是** Ours-new 方法证明。主指标顺序见 [`PLAN.md`](../PLAN.md)：Full MAE + mass MAE + Tool cost 优先。
+> **解读**：以下 #24–#34 段均为 **Ours-old（纯闭环控制器 / 弱弃权）对照**；支撑「#34 MAE 打平 → 需要 Mass + Q_φ」叙事，**不是** Ours-new 方法证明。**#46–#53** 的数字是**开发结果**。**#51/#53 增益 ≠ Q 学习改进。** #53（Coverage-Constrained Active Specialist Selection）**不**证明方法已在独立测试上成立。主指标见 [`PLAN.md`](../PLAN.md)：能量 MAE + mass MAE + 真实 Tool cost 优先；宏量辅助。
 
 **P0a 工具态审计门禁已通过（Ours-new 前置）**（2026-11-05 Asia/Shanghai，#37，squash **`2e0e180`**）。
 
@@ -154,7 +180,7 @@
 - **门禁结论**：调研门槛 **通过** → **P0d #46 已落盘**。**不是** P0d Full-set 主表（主表见下段 P0d）。  
 - **产物**：`results/qphi/calibration.json`、`calibration_holdout.json`、`report_calibration.txt`。冻结 n5k / weak_steps **未改**（#44 未 touch 弱标签 jsonl 内容）。
 
-**P0d 同预算 Full-set 已评测（Ours-new 主表）**（2026-11-05 Asia/Shanghai，#46，squash **`b9c4c5e7`**）。
+**P0d 同预算 Full-set 已评测（当时称 Ours-new 主表；现标开发结果，不是最终独立泛化主表）**
 
 - **定义**：`p0d_same_budget_overhead_force_answer`（`scripts/p0d_same_budget.py`；`vdr/eval/same_budget.py`）。官方 rgb_test **507** 有俯拍；paired 四法皆可记分 **n=505**；Cafe 标签只计误差；**未**在 rgb_test 上拟合阈值。  
 - **Ours-new**（Mass + **校准后** Q/Cost）：Energy MAE **98.5521** / Mass MAE **58.9952** / Tool cost mean **4.6970**。  
@@ -162,7 +188,7 @@
 - **vs Direct-VLM（B0）**：ΔM **−17.3513**，ΔE **+1.4210** — **能量未稳赢 B0**（质量主赢、能量主 claim 未成立）。  
 - **Mass RE_PORTION**：**827** success，**0** hollow。Coverage **0.5921**；ABSTAIN **206** — **辅助**，非 pass 门禁。  
 - **锚点**：B0 own-pool **n=507** E **97.0256** / M **76.4556**；closed-loop STOP **n=488** E **96.2769**。开环 BC 读同一 closed-loop trace → **E/M/tool 与 closed-loop 相同**。  
-- **诚实解读**：P0d 证明 Mass + 校准 Q 在同预算下 **降 mass、降 tool、略优于 Ours-old 能量**，但 **未**在 paired Full-set 上 **稳定击败 B0 能量**；**#48 误差审计** 已解释 pooled **+1.42 kcal** 机制。多组件 food-table 一侧由 **food-id #51（`6c8fda02`）** 落盘；覆盖与早停由 **#53（`2a406df4`）** 落盘（见「助手进度」）。**当前 = 等共决**。**P1 仍暂缓。**
+- **诚实解读**：P0d 证明 Mass + 校准 Q 在同预算下 **降 mass、降 tool、略优于 Ours-old 能量**，但 **未**在 paired Full-set 上 **稳定击败 B0 能量**；**#48 误差审计** 已解释 pooled **+1.42 kcal** 机制。多组件 food-table 一侧由 **food-id #51（`6c8fda02`）** 落盘；覆盖与早停由 **#53（`2a406df4`）** 落盘（见「助手进度」）。该表是开发结果，**不是**最终独立主表。**当前首项 = ①**。**P1 仍暂缓。**
 - **产物**：`results/p0d/report_same_budget.txt`、`same_budget.json`、`same_budget_dishes.jsonl`、`ours_new_rgb_test.jsonl`、`ours_new_rgb_test_summary.json`。冻结 n5k / weak_steps **未改**。
 
 **P0d 误差审计已落盘（只读 #46；Ours-new 诊断）**（2026-11-05 Asia/Shanghai，#48，squash **`91a05d8`**）。
@@ -174,7 +200,7 @@
 - **hold food-id fixed（481）**：mass rewrite ΔM **−20.24** / ΔE **−17.90** — **非**相对 prior grams 用能量换质量。  
 - **Q fence replay 2858/2858**；505 盘 **committing actions 均为 Q/Cost**。  
 - **产物**：`results/audit/report_error_audit.md`、`report_error_audit.txt`、`error_audit.json`、`paired_residuals.jsonl`、`fig_energy_gap_by_quadrant.svg`、`fig_error_channels.svg`、`fig_mass_energy_delta.svg`。冻结 n5k / weak_steps **未改**。  
-- **门禁解读**：审计 **不**启动 Mass 重训 / Q 改 / P1。**2026-11-06 共决**后 **food-id #51** 与 **覆盖+早停 #53** 已完成。**当前 = 等下一轮共决**。**P1 仍暂缓。禁止自动开 P1。**
+- **门禁解读**：审计 **不**启动 Mass 重训 / Q 改 / P1。**2026-11-06 共决**后 **food-id #51** 与 **覆盖+早停 #53** 已完成。**现行门禁见文首：当前首项 = ①。** **P1 仍暂缓。禁止自动开 P1。禁止**重训 Mass/Q。
 
 **food-id / 密度轻修已完成（多组件优先）**（2026-11-06 Asia/Shanghai，#51，squash **`6c8fda02`**）。
 
@@ -184,9 +210,9 @@
 - **Mass RE_PORTION**：**827** 成功，**0** hollow（成功且非 mass estimator 的 portion = 0；下一步营养不变 = 0）。swap 不新增 portion 步。
 - **未做**：Mass 重训；Q 权重与 terminal-margin fence 未改、未重拟合；无检索重排、无新候选列表；覆盖与早停未动；**本文件在 #51 未改**。
 - **产物**：`results/food_id_density/report.md`、`report.txt`、`summary.json`；脚本 `scripts/food_id_density_align.py`。冻结 n5k / weak_steps **未改**。
-- **门禁解读**：**不**解锁 Mass 重训 / Q 改 / **P1**。Triste 顺序的下一项 **覆盖未写组件 + 早停** 已由 **#53（`2a406df4`）** 完成。**当前 = 等共决**；代码侧 **idle**。
+- **门禁解读**：**不**解锁 Mass 重训 / Q 改 / **P1**。Triste 顺序的下一项 **覆盖未写组件 + 早停** 已由 **#53（`2a406df4`）** 完成。**现行门禁见文首：当前首项 = ①**（语义审计是 **②**，未解锁）；**不**在本段开工。
 
-**覆盖未写组件 + 早停处理已完成**（2026-11-06 Asia/Shanghai，#53，squash **`2a406df4`**）。
+**覆盖约束已完成（Coverage-Constrained Active Specialist Selection；Ours-new 开发检查点，不证明方法）**
 
 - **方法**：冻结 Q 权重与 fit-set terminal-margin fence **不变**。在该选择之后，未写组件若没有 `estimate_mass` 写，**不能**提交 STOP/ABSTAIN，改为已有 rule utility。码替换若已回到检索 top code，则做 **portion**，不再开下一轮 swap；离开 top code 的一次 swap 保持。克重仍来自 `estimate_mass`。**#51 同头 swap** 在多组件盘写完后仍运行。**无** Mass 重训、**无** Q 重训、**无** τ 重拟合。标签只用于事后记分。**#53 未改本文件**。
 - **paired n=505**（相对 **#51** 基线）：能量 MAE **92.6963 → 64.2792** kcal；质量 MAE **58.9952 → 32.9908** g；tool cost mean **4.6970 → 6.0257**（max **17**；**505/505** 在 K=32 内）。
@@ -195,7 +221,7 @@
 - **残留 2 盘**：`dish_1565020895`（7 个组件里 5 个已写）、`dish_1565020926`（8 个里 7 个已写）。`honeycomb` 的 FNDDS 检索失败，状态不变，既有三步 stuck guard 停在 **RETRIEVE**。没有 code 时 RE_PORTION 不合法，**不编造克重**。两盘都 **没有 STOP**。
 - **未做**：Mass checkpoint、Q 权重、τ **未改**；无 P1 检索重排；无 RL；**未**用 rgb_test 标签选阈值。冻结 n5k / weak_steps **未改**。
 - **产物**：`results/coverage_early_stop/report.md`、`report.txt`、`summary.json`、`continued_steps.jsonl`、`paired_scores.jsonl`。脚本 `scripts/coverage_early_stop.py`；`vdr/controller/coverage.py`。
-- **门禁解读**：**不**解锁 Mass 重训 / Q 改 / **P1**。**当前首项 = 等 Triste + 营养论文调研共决**（是否解锁 P1 检索重排、写主表、或其他）。共决写入本文件之前，代码侧 **idle**。
+- **门禁解读**：**不**解锁 Mass 重训 / Q 改 / **P1**。增益来自覆盖约束，**不是** Q 变强，**不**证明方法。**现行门禁见文首：当前首项 = ①。** **禁止**自动开 **②–⑦** / **P1** / Mass 或 Q 重训。
 
 **闭环 State-aware BC 已落地（Ours-old 组件）**（2026-11-04 Asia/Shanghai，自托管 `gpu-12-container`，分支 `cursor/closed-loop-bc-20261104`）。
 
@@ -259,7 +285,7 @@
 
 ### 助手 / 本地（优先）
 
-1. **等 Triste + 营养论文调研共决（当前首项；代码侧 idle）**：是否解锁 P1 检索重排、写主表、或其他，**须共决后先改本文件**。在此之前 **不得**开工、训练或评测。**P1 仍未解锁 / 暂缓。禁止自动开 P1。** **不得** Mass 重训、改 Q。见「当前首项」与 Checklist。**#48 `results/audit/`、#51 `results/food_id_density/`、#53 `results/coverage_early_stop/` 只读**。**禁止** Cloud Agent **fast**；**禁**空壳 RE_PORTION。
+1. **① 反事实 Q + dish_id 泄漏审计（当前首项；只许这一项）**：分支评估已冻结的 **Q_φ**，不更新权重，不重训 Mass。**②–⑦ 锁定，禁止自动开。** **P1 仍未解锁 / 暂缓。禁止自动开 P1。** 见「当前首项」与 Checklist。**#48 `results/audit/`、#51 `results/food_id_density/`、#53 `results/coverage_early_stop/` 只读**。**禁止** Cloud Agent **fast**；**禁**空壳 RE_PORTION。
 2. **覆盖未写组件 + 早停 #53 已完成**（squash `2a406df4`）。paired n=505 能量 **64.2792** / 质量 **32.9908** / tool mean **6.0257**（max **17**，均在 K=32）。全部组件已写 **503/505**；STOP-unwritten **0**；Mass 成功 **1479**；hollow **0**。残留 2 盘 honeycomb 检索失败，不编造克重、未 STOP。
 3. **food-id / 密度轻修 #51 已完成**（squash `6c8fda02`）。calorie head **77.75** 是目标读数；记分 commit 仍是 food-table。
 4. **#34 / #31 / #28 已冻结为 Ours-old 对照**；勿声称 on-policy 能量赢 B5。
@@ -268,7 +294,7 @@
 
 ### 协作
 
-docs-first：改下一步先改本文件并推仓。Cloud Agent **永远不开 fast**。**2026-11-06**：**覆盖未写组件 + 早停 #53（`2a406df4`）已完成**；**food-id / 密度轻修 #51（`6c8fda02`）已完成** → **当前首项 = 等 Triste + 营养论文调研共决**（是否解锁 P1 检索重排、写主表、或其他）。**代码侧 idle**（共决写入本文件之前不得开工、训练或评测）。**P1 仍未解锁 / 暂缓。禁止自动开 P1。** **Triste 2026-11-06**：代码/结果可以分批推；派工前仍须先过 STATUS「下一步」门禁。**不得**助手用 fast 代跑 Full-set、审计或未解锁训练。
+docs-first：改下一步先改本文件并推仓。Cloud Agent **永远不开 fast**。**2026-11-06**：**#53（`2a406df4`）冻结为 Ours-new 开发检查点**；**#51（`6c8fda02`）已完成** → **当前首项 = ①** 反事实 Q + dish_id 泄漏审计（**只许 ①**）。**②–⑦ 锁定。P1 仍未解锁 / 暂缓。禁止自动开 P1。禁止**重训 Mass/Q。**Triste 2026-11-06**：代码/结果可以分批推；派工前仍须先过 STATUS「下一步」门禁。**不得**助手用 fast 代跑 Full-set、审计或未解锁训练。
 
 ## 历史跑数（开环 v2 / 非主方法）
 
@@ -458,7 +484,7 @@ CUDA_VISIBLE_DEVICES=0 /var/tmp/nutri-venv/bin/python -u scripts/eval_n5k_subset
 W1 基础设施在这台 2×4090D 上已打通：**schema + 骨架 + toy 冒烟 + 真实 FNDDS catalog（5624）+ N5K 元数据/官方 split + 俯拍 RGB + Qwen2.5-VL-7B 单盘冒烟**。  
 B1 第二轮先验（菜品形态、未点名的仿肉、100 g 以上的高密度克重、Cheese+Crust 碎片合并）后，同一 50 盘子集已重跑：能量 MAE 为 B0 **98.3**、B1 **88.2**。上一轮是 97.4 / 107.9，硬化前是 98.2 / 112.1。  
 有俯拍 RGB 的官方 `rgb_test` 池已跑完：能量 MAE 为 B0 **97.03**（Direct-VLM 锚点）、B1 **110.72**（**不是忠实 DietAI24**；中位 63.51 / 63.57）。配对 506 盘上中位差距约 +3.5 kcal，MAE 差距在右尾。50 盘子集仍是 B0 **98.3**、B1 **88.2**，是偏有利的一抽，不能代替这 507 盘。见「507 分析（助手）」。  
-**现行缺口**在文首「下一步」：**P0a #37**、**P0b #39**、**P0c #41（`54c32e8`）**、**Q 校准 #44（`3fc611d`）**、**P0d #46（`b9c4c5e7`）**、**误差审计 #48（`91a05d8`）**、**共决（2026-11-06）**、**food-id #51（`6c8fda02`）**、**覆盖+早停 #53（`2a406df4`）** 已完成 → **当前 = 等 Triste + 调研共决（P1 仍暂缓；代码侧 idle）**。Ours-old（#24–#34）已落盘作对照。**P1 未解锁 / 暂缓；禁止自动开 P1。** 试标 30（kappa **0.7–0.8**）仍为 P2。**暂不上 RL。**
+**现行缺口**在文首「下一步」：**P0a #37**、**P0b #39**、**P0c #41（`54c32e8`）**、**Q 校准 #44（`3fc611d`）**、**P0d #46（`b9c4c5e7`）**、**误差审计 #48（`91a05d8`）**、**2026-11-06 排序（先 #51 再 #53，P1 暂缓）**、**food-id #51（`6c8fda02`）**、**覆盖约束 #53（`2a406df4`，开发检查点）** 已完成 → **当前首项 = ①** 反事实 Q + dish_id 泄漏审计（**只许 ①**；**②–⑦ 锁定**）。Ours-old（#24–#34）已落盘作对照。**P1 未解锁 / 暂缓；禁止自动开 P1；禁止重训 Mass/Q。** #53 **不**证明方法。试标 30（kappa **0.7–0.8**）仍为 P2。**暂不上 RL。**
 
 ## 已完成（box）
 
@@ -480,26 +506,32 @@ B1 第二轮先验（菜品形态、未点名的仿肉、100 g 以上的高密�
 | BC 小 MLP（CPU） | **开环 v2 / 消融 B5。** `PolicyMLP` 31→64→64→6，numpy，只在 fit 行上训练。hold-out 动作准确率 **0.9700**（2688/2771），不能当方法证明。`CORRECT_CODE` 142/157，`RE_PORTION` 917/949，`ABSTAIN` 仍是 **0/24（红警）**。不读 `obs_t`，没有 `VOLUME_ESTIMATE`。冒烟：`scripts/bc_mlp_smoke.py` |
 | DAgger 第 1 轮（CPU） | **开环 v2。旧 Ours-BC 已停，暂不上 RL。** 规则老师当专家，`PolicyMLP` 当学习者。只在 fit 池展开。全池新行 **1490**（novel 117 + 犯错副本 1373）。hold-out 动作准确率 **0.9592**（2658/2771），低于纯 BC **0.9700**。`CORRECT_CODE` 117/157，`RETRIEVE` 1285/1285，`ABSTAIN` 仍是 **0/24（红警）**。不读 `obs_t`，没有 `VOLUME_ESTIMATE`。冒烟：`scripts/dagger_smoke.py` |
 | 标注指南 v0 | `docs/annotation_guide_v0.md`。文首横幅：字段是 v0，相对 PLAN P2（Visibility / Code Match / …，kappa 0.7–0.8）部分过时；试标可用，不是最终协议 |
-| 方案 MD | 根目录 `PLAN.md`（2026-11-05 起与 Canvas「VDR — Evidence-Guided Active Multimodal Nutrition Estimation」对齐） |
+| 方案 MD | 根目录 `PLAN.md`（2026-11-06 起与 Canvas「Coverage-Constrained Active Specialist Selection」对齐；任务框架仍是 Evidence-Guided Active Multimodal Nutrition Estimation） |
 | P0 离线脚手架（未训练） | 设计 `docs/STATE_FEATURE_DESIGN.md`；混淆 / Provenance / Selective 脚本在 `scripts/`；mock `tests/fixtures/fndds_mock_foods.json`；草图 `vdr/controller/state_features.py`（`CLOSED_LOOP_READY` 假）。开环 31 维仍是 B5。**2026-11-04 离线冒烟已跑完**（数字在文首「助手进度」；不是方法证明，不是训练）。索引 [`docs/VDR_P0.md`](VDR_P0.md) |
 | Q/Cost 校准 #44 | fit-only terminal-margin **τ≈0.001645**；hold-out 一致率 **0.4489→0.7712**（**n=2771**）；产物 `results/qphi/calibration*.json`、`report_calibration.txt`；**无 RL**；**未**改 `q_phi.npz` 权重；冻结 weak_steps / n5k **未改** |
 | P0d 同预算 #46 | paired **n=505** Ours-new E **98.5521** / M **58.9952** / tool **4.6970**；vs B0 ΔE **+1.4210**（能量未稳赢）；产物 `results/p0d/`；squash **`b9c4c5e7`** |
 | P0d 误差审计 #48 | 只读 #46；paired ΔM **−17.3513** / ΔE **+1.4210**；产物 `results/audit/report_error_audit.md`（+ json/jsonl/figs）；脚本 `scripts/p0d_error_audit.py`；squash **`91a05d8`** |
-| 共决下一步（Triste + 调研） | **2026-11-06** 锁定：**② food-id/密度 → ① 覆盖+早停；暂缓 ③ P1**（调研 **②>①≫③**）。**② 已完成（#51）**；**① 已完成（#53）**。下一轮共决（是否解锁 P1、写主表、或其他）**未做**；代码侧 idle |
+| 共决下一步（Triste + 调研） | **2026-11-06** 已执行：先 food-id/密度（#51），再覆盖+早停（#53），暂缓 P1。**同日外部评审**把 #53 标为开发检查点，下一门禁改为文首 **①–⑦**（**当前首项 = ①**；P1 与重训仍锁到 **⑦**） |
 | food-id / 密度轻修 #51 | 同头 FNDDS 码替换（已有检索窗，≥15% 靠近 calorie head）；克重与动作保持。paired **n=505** 能量 **98.5521 → 92.6963**（质量 **58.9952** 不变）；vs Direct **ΔE +1.42 → −4.43**。多组件全写 **n=50** food-table **190.79 → 131.65**；**37/50**（**30↓ / 7↑**），**68** codes；head **77.75** 为目标，记分仍是 food-table。**827** mass / **0** hollow。squash **`6c8fda02`**；**#51 未改本文件** |
-| 覆盖未写组件 + 早停 #53 | 冻结 Q+fence 后，未写组件无 `estimate_mass` 写则拒绝 STOP/ABSTAIN（defer rule utility）；回到检索 top code 则 portion，不开第二轮 top-code swap；**#51 同头 swap 保留**。paired **n=505** vs #51：能量 **92.6963 → 64.2792**；质量 **58.9952 → 32.9908**；tool mean **4.6970 → 6.0257**（max **17**，均在 K=32）。vs Direct **ΔE −4.43 → −32.85**；**ΔM −17.35 → −43.36**。全部组件已写 **199/505 → 503/505**；STOP-unwritten **78 → 0**；Mass 成功 **827 → 1479**；hollow **0**。残留 **2** 盘（`dish_1565020895`、`dish_1565020926`）honeycomb 检索失败，卡 RETRIEVE，不编造克重、未 STOP。**无** Mass/Q/τ 重训。squash **`2a406df4`**；**#53 未改本文件** |
+| 覆盖未写组件 + 早停 #53 | 冻结 Q+fence 后，未写组件无 `estimate_mass` 写则拒绝 STOP/ABSTAIN（defer rule utility）；回到检索 top code 则 portion，不开第二轮 top-code swap；**#51 同头 swap 保留**。paired **n=505** vs #51：能量 **92.6963 → 64.2792**；质量 **58.9952 → 32.9908**；tool mean **4.6970 → 6.0257**（max **17**，均在 K=32）。vs Direct **ΔE −4.43 → −32.85**；**ΔM −17.35 → −43.36**。全部组件已写 **199/505 → 503/505**；STOP-unwritten **78 → 0**；Mass 成功 **827 → 1479**；hollow **0**。残留 **2** 盘（`dish_1565020895`、`dish_1565020926`）honeycomb 检索失败，卡 RETRIEVE，不编造克重、未 STOP。**无** Mass/Q/τ 重训。squash **`2a406df4`**；**#53 未改本文件**。**开发检查点，不证明方法；增益 ≠ Q 学习改进** |
 
 ## 明确未完成
 
 | 项 | 阻塞 |
 |----|------|
-| 下一轮共决（Triste + 营养论文调研） | **当前。** 是否解锁 P1 检索重排、写主表、或其他。写入本文件前代码侧 **idle**。**禁止**自动开工、训练或评测 |
-| P1 检索重排 | **未解锁 / 暂缓。禁止自动开 P1。** 不得重训 Mass / Q |
+| ① 反事实 Q + dish_id 泄漏审计 | **当前首项。只许这一项。** 比较冻结 Q_φ 与 oracle / 规则 / 随机 / 固定流水线。**不**重训 Q 或 Mass |
+| ② food-id 语义审计 | **锁定。** Exact / Near / Wrong + Protein / Carb / Fat MAE + **37/50** 人审 |
+| ③ 外部 held-out 规划 | **锁定。** 200–500 薄标可承担一部分；按菜品 / 来源隔离；不用于方法选择 |
+| ④ 真实 Tool Cost | **锁定。** VLM 次数、延迟、token、单盘成本、能量 MAE–Cost Pareto |
+| ⑤ 忠实 B1/B2 + 相关工作 | **锁定。** 优先 arXiv 2610.11144、CVPRW 2025 Decomposing Food Images、NutriVision arXiv 2609.33076 |
+| ⑥ Provenance + Semantic | **锁定。** |
+| ⑦ 共决 P1 / 重训 | **锁定。** ①–⑥ 有结论后再共决。在此之前禁止开 P1、禁止重训 Mass/Q |
+| P1 检索重排 | **锁定 / 暂缓。禁止自动开 P1。** 须等门禁 **⑦**。不得重训 Mass / Q |
 | 有俯拍 RGB 的官方 rgb_test（507/709） | **已完成（历史锚点）。** 能量 MAE：B0 **97.03**（Direct-VLM），B1 **110.72**（**非忠实 DietAI24**，主表须重做）。不要重跑。50 盘基线仍是 B0 **98.3**、B1 **88.2** |
 | 无俯拍 RGB 的官方 test 盘 | 不进入这次命令，也不要写成 709 盘全表 |
 | 步骤弱标签全量（仅 train） | **已完成。** fit 3679 + hold-out 380。没有新的生成命令。阈值仍只许在 hold-out 上看，禁止用 test GT |
 | 试标 30 + 新标签 / kappa 0.7–0.8 | **人工，P2。** 指南仍是 v0，文首已标明相对 PLAN P2 部分过时。正式协议仍要扩到 Visibility / Code Match 等。不作 0.6 凑合 |
-| 200–500 金标准 | **人工**，可分期；协议与 kappa 门禁不能省 |
+| 200–500 金标准 | **人工**，可分期；协议与 kappa 门禁不能省。若其中一部分充当外部 held-out，归门禁 **③**（按菜品 / 来源隔离；**禁止**用于方法选择）。**③ 未解锁**，不要现在开标 |
 | 旧开环 Ours-BC / RL | **已停 / 暂不上。** 31 维开环只作消融 B5：线性 **0.9206**，MLP **0.9700**，DAgger r1 **0.9592**（新行 1490）。`ABSTAIN` **0/24 是红警**。没有新的服务器训练命令。P0 脚本与未训练草图已进仓库（文首）；闭环训练仍要等额度 |
 | 体积工具 | **保持默认关闭**（刻意不做） |
 | 旧回归权重 | **禁止接入** |
