@@ -14,6 +14,10 @@ Caps are the existing ones, not a search on rgb_test:
 score window (``MIN_RETRIEVE_SCORE``, ``MAX_SCORE_DROP``). It does not compare
 kcal/g to an ingredient label. ``RE_PORTION`` calls ``estimate_mass`` and writes
 that RGB specialist's component grams. It does not re-score the portion grid.
+On the write that finishes a multi-component plate, those grams stay, and a
+same-head code already in the retrieve window may replace the bound code when
+that brings the food-table sum closer to the specialist's dish energy. That
+swap is not a new retrieval and does not read a cafe label.
 ``RETRIEVE`` still places the first grams with the blind 100 g grid; that guess
 is what RE_PORTION replaces. ``VOLUME_ESTIMATE`` is refused. ``RE_DECOMPOSE``
 is not a second VLM call: the #24 checkpoint masks that class (fit weight 0).
@@ -44,6 +48,7 @@ from vdr.controller.selector import decision_features
 from vdr.controller.state_features import TOOL_CAP
 from vdr.perception.hypotheses import dedupe_hypotheses, merge_complementary_fragments
 from vdr.schemas.loader import IR_STEP_SCHEMA_PATH, load_schema, validate_instance
+from vdr.tools.density_align import DensityAlignError, align_multicomponent_codes
 from vdr.tools.rule_verify import verify
 from vdr.weak.teacher import (
     BLIND_PORTION_HINT_G,
@@ -358,6 +363,7 @@ class ClosedLoopRollout:
         self.vlm_alias = vlm_alias
         self.vlm_serving = vlm_serving
         self.finalized: list[dict[str, Any]] = []
+        self.plate_components: list[dict[str, Any]] = []
         self.n_unresolved = 0
         self.corrected = False
         self.step_i = 0
@@ -657,7 +663,12 @@ class ClosedLoopRollout:
         self.live_nutri = nutri
         self.live_edges = _binding_edges(self.comp_i, self.live_code, query, new_portion)
         self.corrected = True
+        component = self._component_record(candidates, new_portion)
+        align_info = self._align_finished_plate(component, estimate)
+        if align_info.get("applied") and self.live_nutri is not None:
+            nutri = self.live_nutri
         self.finalized.append(dict(nutri))
+        self.plate_components.append(component)
         self._clear_live()
         self.comp_i += 1
         self.query_i = 0
@@ -668,7 +679,93 @@ class ClosedLoopRollout:
             from_portion_g=round(old_portion, 4),
             **_mass_obs(estimate),
         )
+        if align_info.get("reason") != "not_last_component":
+            obs["density_align"] = align_info
         return obs
+
+    def _candidate_rows(self, candidates: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+        rows: list[dict[str, Any]] = []
+        for cand in candidates:
+            code = str(cand.get("code") or "")
+            if not code:
+                continue
+            try:
+                per = self.lookup_fn(code, catalog_path=self.catalog_path)
+            except KeyError:
+                continue
+            keep = {
+                key: float(per[key])
+                for key in ("energy_kcal", "protein_g", "carb_g", "fat_g")
+                if isinstance(per, Mapping) and per.get(key) is not None
+            }
+            if "energy_kcal" not in keep:
+                continue
+            score = cand.get("score")
+            try:
+                score_f = 0.0 if score is None else float(score)
+            except (TypeError, ValueError):
+                score_f = 0.0
+            rows.append(
+                {
+                    "code": code,
+                    "name": "" if cand.get("name") is None else str(cand.get("name")),
+                    "score": score_f,
+                    "per_100g": keep,
+                }
+            )
+        return rows
+
+    def _component_record(self, candidates: Sequence[Mapping[str, Any]], grams: float) -> dict[str, Any]:
+        rows = self._candidate_rows(candidates)
+        code = str(self.live_code or "")
+        name = next((row["name"] for row in rows if row["code"] == code and row["name"]), self.hyps[self.comp_i].name)
+        return {
+            "query": self.hyps[self.comp_i].name,
+            "code": code,
+            "name": name,
+            "grams": float(grams),
+            "candidates": rows,
+        }
+
+    def _align_finished_plate(self, component: dict[str, Any], estimate: Any) -> dict[str, Any]:
+        """Swap same-head codes only on the write that finishes a multi-component plate."""
+        if len(self.hyps) < 2 or self.comp_i + 1 != len(self.hyps):
+            return {"applied": False, "reason": "not_last_component"}
+        nutrients = estimate.get("nutrients") if isinstance(estimate, Mapping) else None
+        head = None if not isinstance(nutrients, Mapping) else nutrients.get("energy_kcal")
+        try:
+            head_f = float(head)
+        except (TypeError, ValueError):
+            return {"applied": False, "reason": "no_head"}
+        try:
+            result = align_multicomponent_codes([*self.plate_components, component], dish_energy_kcal=head_f)
+        except DensityAlignError:
+            return {"applied": False, "reason": "no_head"}
+        if not result.get("applied"):
+            return _public_align(result)
+        scaled_rows: list[dict[str, Any]] = []
+        for chosen in result["components"]:
+            scaled = _scaled(str(chosen["code"]), float(chosen["grams"]), self.lookup_fn, self.catalog_path)
+            if scaled is None:
+                refused = _public_align(result)
+                refused["applied"] = False
+                refused["reason"] = "lookup_miss"
+                refused["n_changed"] = 0
+                refused["changes"] = []
+                return refused
+            scaled_rows.append(scaled)
+        for index, scaled in enumerate(scaled_rows[:-1]):
+            self.finalized[index] = dict(scaled)
+            self.plate_components[index]["code"] = result["components"][index]["code"]
+            self.plate_components[index]["name"] = result["components"][index]["name"]
+        last = result["components"][-1]
+        self.live_code = str(last["code"])
+        self.live_nutri = scaled_rows[-1]
+        component["code"] = self.live_code
+        component["name"] = str(last.get("name") or component.get("name") or "")
+        query = self.accepted_query or self.hyps[self.comp_i].name
+        self.live_edges = _binding_edges(self.comp_i, self.live_code, query, float(component["grams"]))
+        return _public_align(result)
 
     def _clear_live(self) -> None:
         self.live_code = None
@@ -710,6 +807,33 @@ class ClosedLoopRollout:
         validate_instance(record, _schema())
         assert_no_label_keys([record])
         return record
+
+
+def _public_align(result: Mapping[str, Any]) -> dict[str, Any]:
+    """Compact observation. The per-100g table stays out of the IR row."""
+    changes = []
+    for row in result.get("components") or []:
+        if not row.get("changed"):
+            continue
+        changes.append(
+            {
+                "query": row.get("query"),
+                "from_code": row.get("from_code"),
+                "to_code": row.get("code"),
+                "from_name": row.get("from_name"),
+                "to_name": row.get("name"),
+            }
+        )
+    return {
+        "applied": bool(result.get("applied")),
+        "reason": result.get("reason"),
+        "n_components": result.get("n_components"),
+        "n_changed": result.get("n_changed"),
+        "dish_energy_kcal": result.get("dish_energy_kcal"),
+        "before_energy_kcal": result.get("before_energy_kcal"),
+        "after_energy_kcal": result.get("after_energy_kcal"),
+        "changes": changes,
+    }
 
 
 def _portion_grams(estimate: Any) -> float | None:
@@ -1047,3 +1171,79 @@ def run_self_check() -> None:
         pass
     else:
         raise AssertionError("teacher logs were accepted as on-policy")
+
+    def multi_retrieve(query: str, top_k: int = 5, catalog_path: str | None = None) -> Any:
+        del top_k, catalog_path
+
+        class Result:
+            pass
+
+        result = Result()
+        if "spinach" in query.casefold():
+            result.cands = [
+                {"code": "raw", "score": 1.1, "name": "Spinach, raw"},
+                {"code": "cooked", "score": 1.1, "name": "Spinach, fresh, cooked, no added fat"},
+            ]
+        else:
+            result.cands = [{"code": "potato", "score": 0.9, "name": "Potato, NFS"}]
+        result.selected_code = result.cands[0]["code"]
+        return result
+
+    def multi_lookup(code: str, catalog_path: str | None = None) -> dict[str, float]:
+        del catalog_path
+        table = {
+            "raw": {"energy_kcal": 27.0, "protein_g": 2.0, "carb_g": 3.0, "fat_g": 0.0},
+            "cooked": {"energy_kcal": 55.0, "protein_g": 3.0, "carb_g": 4.0, "fat_g": 1.0},
+            "potato": {"energy_kcal": 130.0, "protein_g": 2.0, "carb_g": 30.0, "fat_g": 0.0},
+        }
+        return dict(table[code])
+
+    def multi_mass(
+        image: Any,
+        candidates: Sequence[Mapping[str, Any]],
+        component_index: int | None = None,
+        component_hints_g: Sequence[float | None] | None = None,
+        catalog_path: str | None = None,
+        **_kwargs: Any,
+    ) -> dict[str, Any]:
+        del image, candidates, component_index, component_hints_g, catalog_path
+        return {
+            "portion_g": 100.0,
+            "mass_g": 200.0,
+            "sigma": {"mass_g": 10.0},
+            "intervals": {"mass_g": {"low": 180.0, "high": 220.0, "coverage": 0.95}},
+            "confidence": 0.9,
+            "nutrient_refs": {"model_rgb": {"energy_kcal": 200.0}, "fndds": []},
+            "nutrients": {"energy_kcal": 200.0, "protein_g": 4.0, "carb_g": 20.0, "fat_g": 1.0},
+            "rgb_only": True,
+            "depth_used": False,
+            "backbone": "stub",
+            "portion_src": "mass_estimator",
+        }
+
+    multi = rollout_dish(
+        dish_id,
+        ListPolicy(["RETRIEVE", "RE_PORTION", "RETRIEVE", "RE_PORTION", "STOP"]),
+        image_path=None,
+        perceive_fn=lambda _path: (
+            [{"name": "spinach", "portion_g": None}, {"name": "potato", "portion_g": None}],
+            {"model_alias": "qwen3.8-27b", "serving": "self-check"},
+        ),
+        retrieve_fn=multi_retrieve,
+        lookup_fn=multi_lookup,
+        portion_fn=portion_fn,
+        mass_fn=multi_mass,
+        check_replay=False,
+    )
+    # Raw spinach plus potato is 157 kcal. Cooked spinach plus potato is 185, closer to the head's 200.
+    terminal_energy = multi.steps[-1]["nutri_dish"]["energy_kcal"]
+    terminal_mass = multi.steps[-1]["nutri_dish"]["mass_g"]
+    if abs(float(terminal_energy) - 185.0) > 1e-6 or abs(float(terminal_mass) - 200.0) > 1e-6:
+        raise AssertionError((terminal_energy, terminal_mass))
+    align_obs = multi.steps[3]["obs_t"].get("density_align") or {}
+    if align_obs.get("applied") is not True or align_obs.get("n_changed") != 1:
+        raise AssertionError(align_obs)
+    if multi.steps[1]["obs_t"].get("density_align", {}).get("reason") not in (None, "not_last_component"):
+        raise AssertionError(multi.steps[1]["obs_t"])
+    if multi.steps[1]["obs_t"].get("portion_src") != "mass_estimator":
+        raise AssertionError("multi-component portion did not come from estimate_mass")
