@@ -4,7 +4,9 @@
 ``U_*``. ``feature_kind="z"`` is the error state. Heuristic utility and
 ``Q_φ`` both select with ``argmax value / Cost``. A positive
 ``terminal_margin`` is the Q calibration fence: an unresolved stop or
-abstain defers to the rule utility. ``None`` keeps the uncalibrated argmax.
+abstain defers to the rule utility, and an open component with no mass
+write cannot commit a terminal action. ``None`` keeps the uncalibrated
+argmax and does not apply that coverage guard.
 """
 
 from __future__ import annotations
@@ -13,8 +15,8 @@ from typing import Any
 
 import numpy as np
 
+from vdr.controller.coverage import guarded_action
 from vdr.controller.policy_bc import BC_ACTIONS
-from vdr.controller.q_calibration import calibrated_action
 from vdr.controller.q_phi import QPhi
 from vdr.controller.q_state import Z_DIM, build_z
 from vdr.controller.state_features import build_state_features
@@ -60,8 +62,12 @@ class QCostPolicy:
 
     ``terminal_margin`` is the fit-set fence from ``q_calibration``. When it
     is set, a stop or abstain that beats the best legal specialist by less
-    than that fence uses the rule utility. The learned ``Q`` weights are
-    unchanged.
+    than that fence uses the rule utility. The same calibrated path then
+    refuses to commit ``STOP`` or ``ABSTAIN`` while the open component has
+    no mass write, and it portions instead of starting a second code-swap
+    cycle. The learned ``Q`` weights and the fence ``τ`` are unchanged.
+    ``terminal_margin is None`` is the uncalibrated argmax and does not
+    apply that coverage guard.
     """
 
     feature_kind = "z"
@@ -91,7 +97,7 @@ class QCostPolicy:
             if self.terminal_margin is None:
                 chosen.append(argmax_value_over_cost(payload, legal_actions(row_z)))
             else:
-                chosen.append(calibrated_action(payload, row_z, self.terminal_margin))
+                chosen.append(guarded_action(payload, row_z, self.terminal_margin))
         return chosen
 
     def predict_q(self, Z: Any) -> np.ndarray:
