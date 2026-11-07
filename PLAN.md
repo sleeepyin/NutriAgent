@@ -114,7 +114,7 @@ y = (n,\ G,\ s,\ \tau)
 
 Grounding 为 P2/P3：细粒度分割未必自动改善营养 MAE，**份量/质量**才是瓶颈（待补正式引用，勿编造 DOI）。
 
-**P1 检索重排仍暂缓**，STATUS 门禁 ⑦ 之前不开，也不重训 Mass / Q。**Coverage Guard** 已在 #53 落地，应写成 \(A_{legal}\) 方法，不是空壳，也不是 Bug Fix。#51 同头换码已落地；语义审计仍锁在门禁 ②。
+**P1 检索重排仍暂缓**，STATUS 门禁 ⑦ 之前不开，也不重训 Mass / Q。**Coverage Guard** 已在 #53 落地，应写成 \(A_{legal}\) 方法，不是空壳，也不是 Bug Fix。#51 同头换码已落地；语义审计是门禁 **②**，**现为当前已解锁项**（见 §14）。**③–⑦** 仍锁。
 
 ---
 
@@ -234,7 +234,7 @@ Primary 叙事（Route A）：**Full-set MAE@energy + mass MAE + 真实 Tool cos
 - A5 忠实 B1/B2（不挡 Mass P0）  
 - F1 案例：Mass 纠正 / 检索重排 / PARTIAL ABSTAIN  
 
-早期取舍是保住 **M1 + mass + Tool cost + A1/A2**。**现行顺序以 §14 为准（① 已完成；代码空闲，等解锁仍锁定的 ②）**；切勿再把 Policy Acc、kcal-proxy AURC 或开发 505 当最终主表。
+早期取舍是保住 **M1 + mass + Tool cost + A1/A2**。**现行顺序以 §14 为准（① 已完成；当前第一项 = ②，已解锁；③–⑦ 仍锁）**；切勿再把 Policy Acc、kcal-proxy AURC 或开发 505 当最终主表。
 
 ---
 
@@ -252,7 +252,7 @@ Primary 叙事（Route A）：**Full-set MAE@energy + mass MAE + 真实 Tool cos
 
 **B1/B2 并行，不挡 Mass P0。**
 
-上表是早期周程。**现行严格顺序以 §14 与 [`docs/STATUS.md`](docs/STATUS.md) 为准**：**① 已完成**；当前等解锁 **②**（**②–⑦** 仍锁定）；P1 与 Mass/Q 重训仍锁。
+上表是早期周程。**现行严格顺序以 §14 与 [`docs/STATUS.md`](docs/STATUS.md) 为准**：**① 已完成**；当前第一项 = **②**（已解锁；**③–⑦** 仍锁定）；P1 与 Mass/Q 重训仍锁。
 
 ---
 
@@ -274,7 +274,7 @@ Primary 叙事（Route A）：**Full-set MAE@energy + mass MAE + 真实 Tool cos
 
 ## 14. MVP-for-A（严格顺序；前一项未完成不得跳步）
 
-**① 已完成（#57，squash `0aa30537`）。当前 = 等解锁 ②（② 仍锁定；代码空闲）。** 以 [`docs/STATUS.md`](docs/STATUS.md) 为准：**禁止**自动开 **②–⑦**。须等 Triste（+ 调研）把 **②** 写进 STATUS 之后才许再写代码。**P1 仍暂缓 / 锁定。禁止**重训 Mass。**禁止**重训 Q。#53 冻结为 Ours-new **开发检查点**（配对 505 是开发 / 诊断集，不是最终独立泛化主表）。#51/#53 的开发数字不在这里改写。2026-11-06 的旧排序（先 #51 再 #53，P1 暂缓）已经做完，那套编号退役。
+**① 已完成（#57，squash `0aa30537`）。当前第一项 = ② #51 food-id 语义审计（已解锁；唯一允许写代码的项）。** 以 [`docs/STATUS.md`](docs/STATUS.md) 为准：**② 的代码只在该解锁进入主分支之后才许开工。禁止**自动开 **③–⑦**。**P1 仍暂缓 / 锁定。禁止**重训 Mass。**禁止**重训 Q。**禁止**重拟合 τ。解锁依据：Triste 点头（群聊 2026-11-07）+ 调研建议（CORRECT_CODE 几乎无校准 → 身份审计马上做）。#53 冻结为 Ours-new **开发检查点**（配对 505 是开发 / 诊断集，不是最终独立泛化主表）。#51/#53 的开发数字不在这里改写。2026-11-06 的旧排序（先 #51 再 #53，P1 暂缓）已经做完，那套编号退役。
 
 **已完成**：P0a–P0d、Q 校准 #44、误差审计 #48、food-id #51、覆盖约束 #53、**① #57**。**#51/#53 增益 ≠ Q 学习改进**（Mass / Q / τ 冻结；① 一步评测 Q ≈ 规则 ≪ oracle）。
 
@@ -286,7 +286,7 @@ Primary 叙事（Route A）：**Full-set MAE@energy + mass MAE + 真实 Tool cos
 
 4. **P0d / #48 / #51 / #53 — 已完成。** P0d（#46，`b9c4c5e7`）→ 误差审计（#48，`91a05d8`）→ food-id / 密度轻修（#51，`6c8fda02`）→ 覆盖约束（#53，`2a406df4`）。#53 把「未写完就不许 STOP/ABSTAIN」写成 **Coverage-Constrained Active Specialist Selection** 的 \(A_{legal}\) 门，**不是** Bug Fix，也**不是** Q 变强，**不是**最终主表。
 5. **① 已完成（#57，squash `0aa30537`）— Q 反事实 + dish_id 泄漏审计。** 产物 `results/qphi_counterfactual/`。fit/hold-out **按 dish_id 分组**，交集 0，**无**重训。头条 n=1914（coverage-choice + mass forward；rgb_train hold-out；与 #53 的 505 交集 0）：Q Best-ID 0.6165、ΔE improve 24.14、E regret 49.96；规则 0.6102 / 23.03 / 50.91；固定 0.5914 / 20.62 / 52.99；随机 0.4338 / 4.04 / 78.15；oracle regret 0、improve 82.19。Q 略优于规则（约 0.96 kcal），约 50 kcal 落后 oracle。241/1914 的 oracle 最优是 RE_DECOMPOSE no-op（冻结 Q 不能发出）；去掉后 Q regret ~17.33 vs 规则 ~18.28。价值校准 n=3475：MAE(Q, ΔL) 0.0226，Pearson 0.747；RE_PORTION 0.805，CORRECT_CODE 0.016。**Q ≈ 规则 ≪ oracle**，加固 #53 增益 ≠ Q 学习。**不**重训 Q 或 Mass。
-6. **② 仍锁定 — 不是当前开工项。** #51 food-id 语义审计：Exact / Near / Wrong，Protein / Carb / Fat MAE，人工复查换码的 37/50 多组件。kcal 变好不等于身份变对。**代码空闲**，直到 Triste（+ 调研）把 ② 写进 STATUS。
+6. **② 当前第一项 — 已解锁，唯一允许写代码的项。** #51 food-id 语义审计，审的是 #51 同头换码（`results/food_id_density/`，squash `6c8fda02`）。报 Exact / Near / Wrong，Protein / Carb / Fat MAE，人工复查换码的 37/50 多组件。**kcal 变好 ≠ 身份变对。** 新产物另写路径（例如 `results/food_id_semantic_audit/`），不覆盖冻结 #51/#53/#57。**不**重训 Mass / Q / τ，**不**开 P1，**不**重跑 #51/#53/#57。代码只在 STATUS 的解锁进入主分支之后才许开工。**禁止**自动开 **③–⑦**。
 7. **③ 锁定 — 外部 held-out 规划。** 200–500 薄标注可承担一部分；按 dish / source 隔离；**不得**用于方法选择。
 8. **④ 锁定 — 真实 Tool Cost。** VLM 调用次数、延迟、token、单盘成本，以及能量 MAE–Cost Pareto。调用次数不等于真实成本。
 9. **⑤ 锁定 — 忠实 B1/B2 + 相关工作。** B1 必须按官方协议重做（历史非忠实数字见 §13，本节不改；scaffold / dry-run 不算）。B2 能完整则完整，否则诚实 approx。优先对照：arXiv **2610.11144**、CVPRW 2025 **Decomposing Food Images**、**NutriVision** arXiv **2609.33076**。不编造 DOI。
