@@ -348,8 +348,11 @@ class ClosedLoopRollout:
         mass_fn: Callable[..., Any] | None = None,
         vlm_alias: str = "qwen3.8-27b",
         vlm_serving: str = "llama.cpp llama-server 127.0.0.1:18080",
+        allow_outside_rgb_test: bool = False,
     ) -> None:
-        if dish_id not in rgb_test_ids():
+        # Default stays the rgb_test rollout. Held-out passes True only after
+        # the dish list has been proved disjoint from that split.
+        if not allow_outside_rgb_test and dish_id not in rgb_test_ids():
             raise OnPolicyRefused(f"{dish_id} is not an official rgb_test id")
         self.dish_id = dish_id
         self.hyps = list(hypotheses)
@@ -888,9 +891,14 @@ def rollout_dish(
     mass_fn: Callable[..., Any] | None = None,
     catalog_path: str | None = None,
     check_replay: bool = True,
+    allow_outside_rgb_test: bool = False,
 ) -> RolloutResult:
-    """Roll one rgb_test dish. The default perception function calls local Qwen3.8."""
-    if dish_id not in rgb_test_ids():
+    """Roll one dish. The default perception function calls local Qwen3.8.
+
+    Official rgb_test is required unless ``allow_outside_rgb_test`` is set.
+    That flag does not read labels and does not change the selector.
+    """
+    if not allow_outside_rgb_test and dish_id not in rgb_test_ids():
         raise OnPolicyRefused(f"{dish_id} is not an official rgb_test id")
     if perceive_fn is None:
         from vdr.perception.qwen38 import ingredient_hypotheses
@@ -923,6 +931,7 @@ def rollout_dish(
         mass_fn=mass_fn,
         vlm_alias=alias,
         vlm_serving=serving,
+        allow_outside_rgb_test=allow_outside_rgb_test,
     )
     result = env.run()
     assert_on_policy_marker({dish_id: result.steps})

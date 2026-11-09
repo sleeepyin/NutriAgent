@@ -32,16 +32,33 @@ _DIRECT_PROMPT = (
 _model = None
 _processor = None
 _loaded_path: str | None = None
+_loaded_placement: str | None = None
 
 
 def vlm_path() -> Path:
     return Path(os.environ.get("VDR_VLM_PATH") or DEFAULT_VLM_PATH)
 
 
+def _placement() -> tuple[str, dict[Any, str] | None]:
+    """Where the unchanged bf16 checkpoint is placed.
+
+    Unset ``VDR_VLM_MAX_MEMORY`` keeps the historical ``cuda:0`` load.
+    A cap such as ``10GiB`` is only a placement limit when that GPU is shared.
+    It does not quantize, prune, or change the prompt.
+    """
+    cap = os.environ.get("VDR_VLM_MAX_MEMORY", "").strip()
+    if not cap:
+        return "cuda:0", None
+    cpu = os.environ.get("VDR_VLM_CPU_MEMORY", "64GiB").strip() or "64GiB"
+    return "auto", {0: cap, "cpu": cpu}
+
+
 def _load():
-    global _model, _processor, _loaded_path
+    global _model, _processor, _loaded_path, _loaded_placement
     path = str(vlm_path())
-    if _model is not None and _loaded_path == path:
+    placement = _placement()
+    placement_key = repr(placement)
+    if _model is not None and _loaded_path == path and _loaded_placement == placement_key:
         return _model, _processor
     import torch
     from transformers import AutoProcessor, Qwen2_5_VLForConditionalGeneration
@@ -50,15 +67,22 @@ def _load():
         raise FileNotFoundError(
             f"Qwen2.5-VL weights not found at {path}. Set VDR_VLM_PATH."
         )
-    model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
-        path,
-        dtype=torch.bfloat16,
-        device_map="cuda:0",
-    )
+    device_map, max_memory = placement
+    kwargs: dict[str, Any] = {"dtype": torch.bfloat16, "device_map": device_map}
+    if max_memory is not None:
+        kwargs["max_memory"] = max_memory
+    model = Qwen2_5_VLForConditionalGeneration.from_pretrained(path, **kwargs)
     model.eval()
     processor = AutoProcessor.from_pretrained(path)
-    _model, _processor, _loaded_path = model, processor, path
+    _model, _processor, _loaded_path, _loaded_placement = model, processor, path, placement_key
     return model, processor
+
+
+def _input_device(model: Any) -> Any:
+    try:
+        return model.device
+    except Exception:
+        return next(model.parameters()).device
 
 
 def generate(image_path: str | Path, prompt: str, max_new_tokens: int = 256) -> str:
@@ -87,7 +111,7 @@ def generate(image_path: str | Path, prompt: str, max_new_tokens: int = 256) -> 
         padding=True,
         return_tensors="pt",
     )
-    inputs = inputs.to(model.device)
+    inputs = inputs.to(_input_device(model))
     with torch.inference_mode():
         generated = model.generate(**inputs, max_new_tokens=max_new_tokens)
     trimmed = generated[:, inputs["input_ids"].shape[1] :]
