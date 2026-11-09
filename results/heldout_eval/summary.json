@@ -1,0 +1,162 @@
+{
+  "protocol": "heldout_cafe2_frozen_53_plus_51",
+  "main_table": true,
+  "definition": "External cafe2 held-out. The main method is the frozen calibrated Q/Cost selector with the coverage guard and the same-head density swap already inside the rollout. Direct-VLM is one Qwen2.5-VL nutrition guess. Mass-only is one frozen estimate_mass RGB forward. Cafe2 dish-level energy is 0 on every row, so the energy target is the sum of ingredient calories. Mass is the dish-level gram total, which matches the ingredient grams. Labels are read only here, to score. No threshold, code, or portion was chosen from these labels.",
+  "n_planned": 228,
+  "n_rollout": 228,
+  "n_direct": 228,
+  "n_mass_only": 228,
+  "n_paired": 228,
+  "missing_attempts": {
+    "rollout": 0,
+    "direct": 0,
+    "mass": 0
+  },
+  "failures": [],
+  "methods": {
+    "coverage_constrained": {
+      "method": "coverage_constrained",
+      "n": 228,
+      "energy_mae_kcal": 116.84940205562714,
+      "mass_mae_g": 50.94828289473687,
+      "energy_minus_direct_kcal": 11.233745073728016,
+      "mass_minus_direct_g": -22.797331140350856,
+      "energy_minus_mass_only_kcal": 41.46244659221932,
+      "mass_minus_mass_only_g": -0.7624600877192762
+    },
+    "direct_vlm": {
+      "method": "direct_vlm",
+      "n": 228,
+      "energy_mae_kcal": 105.61565698189912,
+      "mass_mae_g": 73.74561403508773
+    },
+    "mass_only": {
+      "method": "mass_only",
+      "n": 228,
+      "energy_mae_kcal": 75.38695546340782,
+      "mass_mae_g": 51.710742982456146
+    }
+  },
+  "coverage_paired": {
+    "n": 228,
+    "complete": 222,
+    "coverage": 0.9736842105263158,
+    "stop_unwritten": 0,
+    "mass_writes": 575
+  },
+  "coverage_all_rollouts": {
+    "n": 228,
+    "complete": 222,
+    "coverage": 0.9736842105263158,
+    "stop_unwritten": 0,
+    "mass_writes": 575
+  },
+  "steps_paired": {
+    "n": 228,
+    "mean": 6.219298245614035,
+    "median": 5.0,
+    "min": 3,
+    "max": 15
+  },
+  "tools_paired": {
+    "budget_K": 32,
+    "n_dishes": 228,
+    "mean": 5.245614035087719,
+    "median": 4.0,
+    "min": 2,
+    "max": 14,
+    "mean_capped_at_K": 5.245614035087719,
+    "median_capped_at_K": 4.0,
+    "n_within_budget": 228,
+    "n_over_budget": 0,
+    "fraction_within_budget": 1.0
+  },
+  "steps_all_rollouts": {
+    "n": 228,
+    "mean": 6.219298245614035,
+    "median": 5.0,
+    "min": 3,
+    "max": 15
+  },
+  "tools_all_rollouts": {
+    "budget_K": 32,
+    "n_dishes": 228,
+    "mean": 5.245614035087719,
+    "median": 4.0,
+    "min": 2,
+    "max": 14,
+    "mean_capped_at_K": 5.245614035087719,
+    "median_capped_at_K": 4.0,
+    "n_within_budget": 228,
+    "n_over_budget": 0,
+    "fraction_within_budget": 1.0
+  },
+  "density_align_applied_dishes": 106,
+  "unwritten_residuals": [
+    {
+      "dish_id": "dish_1571946063",
+      "n_mass_writes": 3,
+      "n_hypotheses": 5,
+      "decision_action": "RETRIEVE"
+    },
+    {
+      "dish_id": "dish_1572464284",
+      "n_mass_writes": 3,
+      "n_hypotheses": 4,
+      "decision_action": "RETRIEVE"
+    },
+    {
+      "dish_id": "dish_1574269685",
+      "n_mass_writes": 4,
+      "n_hypotheses": 5,
+      "decision_action": "RETRIEVE"
+    },
+    {
+      "dish_id": "dish_1575664962",
+      "n_mass_writes": 3,
+      "n_hypotheses": 6,
+      "decision_action": "RETRIEVE"
+    },
+    {
+      "dish_id": "dish_1575923893",
+      "n_mass_writes": 1,
+      "n_hypotheses": 2,
+      "decision_action": "RETRIEVE"
+    },
+    {
+      "dish_id": "dish_1576100046",
+      "n_mass_writes": 1,
+      "n_hypotheses": 2,
+      "decision_action": "RETRIEVE"
+    }
+  ],
+  "hollow_re_portion": {
+    "epsilon": 5e-05,
+    "re_portion_success": 575,
+    "re_portion_failed": 0,
+    "re_portion_changed_dish_nutrition": 575,
+    "re_portion_unchanged_dish_nutrition": 0,
+    "re_portion_success_without_next_step": 0,
+    "hollow": 0,
+    "note": "Success means the observation is estimate_mass, RGB-only, with a finite portion. Change compares dish energy and mass with the next IR row at 5e-5. This is not the full-set MAE."
+  },
+  "q_weights_retrained": false,
+  "mass_retrained": false,
+  "tau_retuned": false,
+  "p1_unlocked": false,
+  "rl": false,
+  "heldout_used_for_selection": false,
+  "real_tool_cost": "not measured; that is gate ④",
+  "framing": {
+    "development_505_is_not_this_table": true,
+    "status_53_does_not_prove_the_method": true,
+    "status_51_is_density_kcal_heuristic_auto_exact_0": true,
+    "q_approx_rule_much_worse_than_oracle": true
+  },
+  "tool_actions": [
+    "CORRECT_CODE",
+    "RETRIEVE",
+    "RE_DECOMPOSE",
+    "RE_PORTION"
+  ]
+}

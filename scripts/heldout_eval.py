@@ -553,6 +553,16 @@ def score_phase(ids: list[str], directory: Path, *, allow_partial: bool) -> None
         "steps_all_rollouts": all_steps,
         "tools_all_rollouts": all_tools,
         "density_align_applied_dishes": sum(1 for row in per_dish if int(row["density_align_applied"]) > 0),
+        "unwritten_residuals": [
+            {
+                "dish_id": row["dish_id"],
+                "n_mass_writes": int(row["n_mass_writes"]),
+                "n_hypotheses": int(row["n_hypotheses"]),
+                "decision_action": row["decision_action"],
+            }
+            for row in per_dish
+            if not row["plate_complete"]
+        ],
         "hollow_re_portion": hollow,
         "q_weights_retrained": False,
         "mass_retrained": False,
@@ -649,6 +659,25 @@ def render_report(payload: Mapping[str, Any]) -> str:
             f"({coverage['coverage']:.4f}). STOP while a named component is still unwritten: {coverage['stop_unwritten']}. "
             f"Mass-estimator writes: {coverage['mass_writes']}.",
             "",
+        ]
+    )
+    residuals = payload.get("unwritten_residuals") or []
+    if residuals:
+        actions = sorted({str(residual["decision_action"]) for residual in residuals})
+        ended = " and ".join(actions)
+        lines.append(
+            f"{len(residuals)} dishes still leave a named component without a mass write. "
+            f"They ended on {ended}, not on STOP. The rollout does not invent a portion when retrieval has not produced a code."
+        )
+        lines.append("")
+        for residual in residuals:
+            lines.append(
+                f"- `{residual['dish_id']}`: {residual['n_mass_writes']} of {residual['n_hypotheses']} "
+                f"components mass-written, ended on {residual['decision_action']}."
+            )
+        lines.append("")
+    lines.extend(
+        [
             f"Steps on the paired dishes: mean {steps['mean']:.4f}, median {steps['median']}, "
             f"min {steps['min']}, max {steps['max']}.",
             "",
