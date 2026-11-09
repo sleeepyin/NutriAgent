@@ -4,16 +4,9 @@
 
 输出 \(y=(n, G, s, \tau)\)：营养向量 + 证据图 + 核验状态（`pass` / `corrected` / `abstain`）+ 纠错轨迹。  
 kcal-proxy 弃权不作主创新。  
-主方法：**Evidence-Guided Active Multimodal Nutrition Estimation**（任务框架）— **Coverage-Constrained Active Specialist Selection** + **Error-Aware Q**（Route A：能量 + 质量；宏量辅助）。执行门禁见 [`docs/STATUS.md`](docs/STATUS.md)（① #57、② #60、③ #63 squash `27d1dbfa` 已完成；**主声称：质量稳赢可外推；能量开发集赢、外测未稳**；当前第一项 = Cafe2 能量审计，已解锁，不是门禁 ④；④–⑦ 仍锁；P1 与 Mass/Q 重训仍锁）。代码只在该解锁进入 `main` 之后才许开工。State-aware 闭环与开环 31 维 BC 为 **Ours-old / 消融对照**。暂不上 RL。  
+主方法：**Evidence-Guided Active Multimodal Nutrition Estimation**（任务框架）— **Coverage-Constrained Active Specialist Selection** + **Error-Aware Q**（Route A：能量 + 质量；宏量辅助）。执行门禁见 [`docs/STATUS.md`](docs/STATUS.md)（① #57、② #60、③ #63 squash `27d1dbfa` 已完成；Cafe2 能量审计 #65 squash `ecf859f5` 已完成；**主声称仍是：质量稳赢可外推；能量开发集赢、外测未稳**；**当前 = 代码空闲**，没有当前可写代码的项，不是门禁 ④；④–⑦ 仍锁；P1 与 Mass/Q 重训仍锁）。下一次写代码只在以后的 STATUS 改写进入 `main` 之后。本文件这次改写不是开工许可。State-aware 闭环与开环 31 维 BC 为 **Ours-old / 消融对照**。暂不上 RL。  
 
-Cafe2 能量审计是 ③ 的诊断后续，**不是门禁 ④**。配对 505 仍是开发 / 诊断集。只读冻结 Cafe2 n=228，不重画划分。协议：
-
-1. 只在冻结的 Cafe2 n=228 名单上做诊断。不做方法选择，不早停，不调阈值 / τ，不换方法，不用 GT 改码或份量。Diagnostic only on the frozen Cafe2 n=228 list. No method selection, no early stopping, no threshold/τ tuning, no swapping the method, no GT-driven code or portion edits.
-2. 与 #48 同一组切分，写明白。Same cuts as #48, written plainly:
-   - 固定 food-id 时，mass 重写是否同时降低 energy（hold identity/codes fixed, then ask whether the mass rewrite also drops energy）。
-   - oracle 标签密度 + 我方克数（oracle label density with our grams）。
-   - 另拆 #51 density swap 开/关，重点看换过码的 106 盘。
-3. 基线仍是 Direct-VLM 与 Mass-only。头条问题：相对 Mass-only 的能量损失 +41.46 kcal（质量几乎打平，−0.76 g）是否来自 food-id / 密度。Baselines remain Direct-VLM and Mass-only. The headline question is whether the energy loss vs Mass-only of +41.46 kcal (mass almost tied, −0.76 g) comes from food-id / density.
+Cafe2 能量审计已完成（#65），是 ③ 的诊断后续，与 #48 同口径，**不是门禁 ④**，也**不**解锁 **④–⑦**。配对 505 仍是开发 / 诊断集。冻结 Cafe2 n=228 不重画。#63 主表不变：能量相对 Direct **+11.23**、相对 Mass-only **+41.46**；质量相对 Direct **−22.80**、相对 Mass-only **−0.76**。#51 换码 **106** 盘已在该审计里拆开。**不**声称双赢。**不**从这些标签开工改方法。**代码空闲。禁止**自动开 **④–⑦**。
 
 **主投 ACM Multimedia（CCF-A）**；备选 AAAI/IJCAI。算力假设 **2×4090D 24GB**。
 
