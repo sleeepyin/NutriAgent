@@ -1,0 +1,57 @@
+{
+  "counts": {
+    "cafe1": 4768,
+    "cafe2": 238,
+    "cafe2_missing_overhead": 10,
+    "cafe2_with_overhead": 228,
+    "dev505": 505,
+    "fit": 3679,
+    "fit_with_overhead": 2498,
+    "heldout": 228,
+    "rgb_test": 709,
+    "rgb_train": 4059,
+    "rgb_train_internal_holdout": 380
+  },
+  "dev505_intersection_heldout_empty": true,
+  "files": {
+    "cafe2_missing_overhead.txt": "c7795f2e35e25f84fd6fc2ae00a069aa3638656d19844fbfc198e4098984ede2",
+    "dev505_dish_ids.txt": "36d4534d6e8e8a3fb539ca31ad202fbadfea3f0015fe3b1db50babb716369be6",
+    "fit_dish_ids.txt": "d4cd748b863f54ab59723da250d59076f069129619ade2a26ea7303bf702bb0d",
+    "heldout_dish_ids.txt": "0dc24b471b217d2147f62314e1ed5dfe4cb984c134e140fba2c13510c94685fc"
+  },
+  "fit_intersection_heldout_empty": true,
+  "intersections_with_heldout": {
+    "cafe1": 0,
+    "dev505": 0,
+    "fit": 0,
+    "rgb_test": 0,
+    "rgb_train": 0,
+    "rgb_train_internal_holdout": 0
+  },
+  "rule": {
+    "dev505": "A development dish is a dish_id in results/p0d/same_budget_dishes.jsonl with method=='ours_new' and paired==true. That set equals the paired ids of direct_vlm, ours_old, and open_loop_bc, and equals results/coverage_early_stop/paired_scores.jsonl.",
+    "fit": "Fit is an official rgb_train dish_id with pool_of_dish=='fit': int(sha256(dish_id).hexdigest()[:8], 16) % 10 != 0. This is vdr.weak.teacher.pool_of_dish. The same ids are the dish set of results/weak_steps/rgb_train_fit_all.jsonl. Mass training used the overhead-RGB subset of this set. Q and tau used the weak steps of this set. The rgb_train internal hold-out (% 10 == 0) is not fit and is also excluded from this external list.",
+    "heldout": "Held-out is every dish_id in data/nutrition5k/metadata/dish_metadata_cafe2.csv whose overhead rgb.png exists. The list is sorted by dish_id. Cafe2 is the source. The first CSV field is the only field read. No nutrition number, error, or component count is a filter. Ids are kept whole; decision steps are not split. Missing images are listed and are not a label drop.",
+    "not_used": "Held-out membership is fixed before evaluation. It is not a method choice, an early stop, a tau choice, or a food-code or portion edit."
+  },
+  "score_labels": {
+    "development_505_label": "unchanged cafe1 dish-level load_labels; not recomputed here",
+    "energy": "sum of ingredient energy_kcal on the same cafe2 row. The dish-level energy column is 0 on every cafe2 row, so that column is not used.",
+    "mass": "dish-level mass_g. It equals the sum of ingredient grams on every cafe2 row.",
+    "max_abs_dish_mass_minus_ingredient_g": 1.900000000887303e-05,
+    "membership_uses_these_numbers": false,
+    "n_cafe2": 238,
+    "n_dish_energy_column_zero": 238,
+    "n_ingredient_energy_zero": 0
+  },
+  "source_isolation": "Held-out is cafe2 only. The paired 505 and rgb_train are cafe1",
+  "sources": {
+    "cafe2_metadata_sha256": "ef9f800d7b9c2e7e9a9e7cda5cbb4cfe51c760a8c1af4c05786ccf051bf5d77d",
+    "coverage_paired_scores_sha256": "dedb9c985441a17c82423ad007cc6c7c4bd1df5d8b7802cdc8448b221e7666de",
+    "coverage_summary_paired_n": 505,
+    "p0d_same_budget_dishes_sha256": "3b6324cbf8269dba43744e1c469fbf9dc9ff282a777deada426ec19ed035d4f4",
+    "rgb_test_ids_sha256": "560ff0eedb1a2027c21f5da3a4c38a53fa201c87d108e76b11cceaa1d956ac8e",
+    "rgb_train_ids_sha256": "efd34a682b5483b01e6bd0a7c1267efec28440a8194985f9d3817d8ebc8169bd",
+    "weak_steps_fit_sha256": "ed47f9239bfecb3c84dc4ecd4d7c034116c476dc83f708e3a1fe0793df88cf7f"
+  }
+}
