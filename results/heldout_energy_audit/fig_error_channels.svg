@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="480" viewBox="0 0 820 480">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="64" y="28" font-family="DejaVu Sans, sans-serif" font-size="16" fill="#111827">Where the calorie error comes from</text>
+<text x="64" y="46" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#4b5563">Means over 228 plates. Cancellation is |gram term| + |kcal/g term| − calorie absolute error.</text>
+<line x1="64" y1="392" x2="796" y2="392" stroke="#111827"/>
+<line x1="64" y1="64" x2="64" y2="392" stroke="#111827"/>
+<rect x="118.5" y="189.9" width="22" height="202.1" fill="#c2410c"/>
+<text x="129.5" y="185.9" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#111827">88</text>
+<rect x="144.5" y="250.8" width="22" height="141.2" fill="#1d4e89"/>
+<text x="155.5" y="246.8" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#111827">61</text>
+<rect x="170.5" y="146.6" width="22" height="245.4" fill="#4b5563"/>
+<text x="181.5" y="142.6" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#111827">107</text>
+<text x="155.5" y="416" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#111827">|gram term|</text>
+<rect x="301.5" y="191.4" width="22" height="200.6" fill="#c2410c"/>
+<text x="312.5" y="187.4" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#111827">87</text>
+<rect x="327.5" y="180.7" width="22" height="211.3" fill="#1d4e89"/>
+<text x="338.5" y="176.7" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#111827">92</text>
+<rect x="353.5" y="186.4" width="22" height="205.6" fill="#4b5563"/>
+<text x="364.5" y="182.4" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#111827">89</text>
+<text x="338.5" y="416" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#111827">|kcal/g term|</text>
+<rect x="484.5" y="123.1" width="22" height="268.9" fill="#c2410c"/>
+<text x="495.5" y="119.1" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#111827">117</text>
+<rect x="510.5" y="218.5" width="22" height="173.5" fill="#1d4e89"/>
+<text x="521.5" y="214.5" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#111827">75</text>
+<rect x="536.5" y="149.0" width="22" height="243.0" fill="#4b5563"/>
+<text x="547.5" y="145.0" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#111827">106</text>
+<text x="521.5" y="416" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#111827">calorie MAE</text>
+<rect x="667.5" y="258.2" width="22" height="133.8" fill="#c2410c"/>
+<text x="678.5" y="254.2" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#111827">58</text>
+<rect x="693.5" y="212.9" width="22" height="179.1" fill="#1d4e89"/>
+<text x="704.5" y="208.9" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#111827">78</text>
+<rect x="719.5" y="184.0" width="22" height="208.0" fill="#4b5563"/>
+<text x="730.5" y="180.0" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#111827">90</text>
+<text x="704.5" y="416" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#111827">cancellation</text>
+<rect x="64" y="452" width="12" height="12" fill="#c2410c"/>
+<text x="82" y="463" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#111827">Commit</text>
+<rect x="244" y="452" width="12" height="12" fill="#1d4e89"/>
+<text x="262" y="463" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#111827">Mass-only</text>
+<rect x="424" y="452" width="12" height="12" fill="#4b5563"/>
+<text x="442" y="463" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#111827">Direct-VLM</text>
+</svg>
