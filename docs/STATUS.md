@@ -5,9 +5,9 @@
 > **#53 冻结为 Ours-new 开发检查点。** 配对 **505** 盘 rgb_test 是**开发 / 诊断集**（**#48→#51→#53** 用了测试集误差分析反馈；GT 未作选码 / 克重 / 阈值的程序输入），**不是**最终独立泛化主表。**#53 数字保留**为有价值的开发结果，不删、不覆盖冻结结果。**禁止**声称 #53 已证明方法。**#51 / #53 增益 ≠ Q 学习改进**（Mass / Q / τ 冻结：#51 是确定性食物码 / 密度轻修；#53 是覆盖约束，未写完组件时 **A_legal** 去掉 **STOP / ABSTAIN**）。**①（#57，squash `0aa30537`）** 在 rgb_train hold-out 一步评测上 **Q ≈ 规则 ≪ oracle**，加固上一句；**不**因此解锁重训。  
 > **#24/#26/#28/#31/#34 数字保留**：offline **n=356** Full MAE **30.7085** 打平、Ours AURC **13.5311 ≤ B5 32.1474**；on-policy **n=488** Full MAE **96.2769** 打平 B5、Ours AURC **47.1737 ≤ B5 81.5857**（**勿声称** on-policy 能量赢；**勿混** offline 与 on-policy 人群）。弱 `abstain_score=clip(kcal/2500)` 已降权。  
 > **硬锁**：**P1 检索重排锁定 / 暂缓**；**不重训 Mass**；**不重训 Q**；**不重拟合 τ**；**无 RL**；**不开 fast Cloud Agent**；**禁止** rgb_test GT 调参；**禁止**用 held-out 做方法选择、早停、阈值 / τ 或 GT 驱动的码 / 份量修改；**禁**空壳 RE_PORTION。  
-> **下一步（严格顺序，不可跳步）**：**P0a 已完成（#37，`2e0e180`）** → **P0b 已完成（#39，`4b6ccec`）** → **P0c 已完成（#41，`54c32e8`）** → **Q 校准已完成（#44，`3fc611d`）** → **P0d 已完成（#46，`b9c4c5e7`）** → **误差审计已完成（#48，`91a05d8`）** → **food-id / 密度轻修已完成（#51，squash `6c8fda02`）** → **覆盖约束已完成（#53，squash `2a406df4`；开发检查点）** → **① 反事实 Q + dish_id 泄漏审计已完成（#57，squash `0aa30537`）** → **② food-id 语义审计已完成（#60，squash `c52ffaa2`）** → **当前第一项 = ③ 外部 held-out（已解锁；唯一允许写代码的项）**。其后仍锁定：**④** 真实 Tool Cost → **⑤** 忠实 B1/B2 + 相关工作 → **⑥** Provenance + Semantic → **⑦** 再共决是否解锁 P1 / 重训。**禁止自动开 ④–⑦、P1、Mass/Q/τ 重训。** **③ 的代码只在本文件进入主分支之后才许开工**（合并前的 PR 不算开工许可）。解锁依据：Triste 点头（群聊 2026-11-09）+ 调研建议（505 开发集隔离 held-out；别急开 P1/重训）。协议冻结为 **#53+#51** 同预算主路径。自动 Exact / Near / Wrong 只是建议，**不**把 #51 的 kcal 下降写成身份成功。详见下文「下一步（立即执行）」。  
+> **下一步（严格顺序，不可跳步）**：**P0a 已完成（#37，`2e0e180`）** → **P0b 已完成（#39，`4b6ccec`）** → **P0c 已完成（#41，`54c32e8`）** → **Q 校准已完成（#44，`3fc611d`）** → **P0d 已完成（#46，`b9c4c5e7`）** → **误差审计已完成（#48，`91a05d8`）** → **food-id / 密度轻修已完成（#51，squash `6c8fda02`）** → **覆盖约束已完成（#53，squash `2a406df4`；开发检查点）** → **① 反事实 Q + dish_id 泄漏审计已完成（#57，squash `0aa30537`）** → **② food-id 语义审计已完成（#60，squash `c52ffaa2`）** → **③ 外部 held-out 已完成（#63，squash `27d1dbfa`）** → **当前第一项 = Cafe2 能量审计（已解锁；唯一允许写代码的项；不是门禁 ④）**。其后仍锁定：**④** 真实 Tool Cost → **⑤** 忠实 B1/B2 + 相关工作 → **⑥** Provenance + Semantic → **⑦** 再共决是否解锁 P1 / 重训。**禁止自动开 ④–⑦、P1、Mass/Q/τ 重训。** **Cafe2 能量审计的代码只在本文件进入主分支之后才许开工**（合并前的 PR 不算开工许可）。解锁依据：Triste 点头「继续吧」（群聊 2026-11-09 晚，Asia/Shanghai）+ 调研建议。**主声称：质量稳赢可外推；能量开发集赢、外测未稳。** 自动 Exact / Near / Wrong 只是建议，**不**把 #51 的 kcal 下降写成身份成功。详见下文「下一步（立即执行）」。  
 > **可执行的下一步只在本文件。** 聊天不是 runbook。助手改下一步、跑法或方案时，先更新文档并推到 GitHub；服务器上的人或 AI 先 `git pull --ff-only`，再读「下一步」执行。  
-> **服务器执行看「下一步」。** 这一节没有新的弱标签 / 507 命令。**#53 不要再跑，也不要在同一 505 盘上再调方法冒充最终主表。** **①（#57）与 ②（#60）已完成，不要重跑。#51 / #53 / #57 / #60 都不要重跑。不要改 `results/food_id_semantic_audit/`，也不要覆盖 #51 / #53 / #57 / #60。** **当前第一项 = ③（已解锁）。③ 的代码只在本文件进入主分支之后才许开工。P1 未解锁，不要开。④–⑦ 未解锁，不要自动开。不要重训 Mass / Q / τ。** 历史 `--n 50`、俯拍池 `--n 507`、弱标签 jsonl、开环 BC 数字都是已完成记录，不要再执行。
+> **服务器执行看「下一步」。** 这一节没有新的弱标签 / 507 命令。**#53 不要再跑，也不要在同一 505 盘上再调方法冒充最终主表。** **①（#57）、②（#60）与 ③（#63，squash `27d1dbfa`）已完成，不要重跑。#48 / #51 / #53 / #57 / #60 / #63 都不要重跑。不要改 `results/food_id_semantic_audit/`，也不要覆盖 `results/heldout_plan/`、`results/heldout_eval/`、#51 / #53 / #57 / #60。** **当前第一项 = Cafe2 能量审计（已解锁；不是门禁 ④）。代码只在本文件进入主分支之后才许开工。P1 未解锁，不要开。④–⑦ 未解锁，不要自动开。不要重训 Mass / Q / τ。** 历史 `--n 50`、俯拍池 `--n 507`、弱标签 jsonl、开环 BC 数字都是已完成记录，不要再执行。
 
 ## 下一步（立即执行）
 
@@ -62,21 +62,40 @@
 - **身份（自动标签，仅建议）**：换码后 Exact **0** / Near **50**（**73.53%**）/ Wrong **18**（**26.47%**）。换码前同一 cafe 行：Exact **27** / Near **23** / Wrong **18**。Exact→Near **27**。自动身份变差 **28**、变好 **1**、不变 **39**。换码后自动 Exact 为 **0**。
 - **宏量（food-table × 存克 vs cafe 盘总量）**：finished 多组件 **n=50**：蛋白质 **10.57→10.07**，碳水 **13.00→16.17**，脂肪 **17.56→11.97**，能量 **190.79→131.65**（能量与冻结 #51 一致）。换码 **37** 盘：碳水 MAE **+4.28 g**，能量 MAE **−79.92 kcal**。
 - **kcal 变好 ≠ 身份变对**：能量绝对误差下降的 **30** 盘换码盘里，全自动 Exact **0**；至少一码 Wrong **12**；仅 Near **18**。这 **30** 盘上的 **50** 个换码全部是 Near 或 Wrong。**不**把 #51 的 kcal 下降写成身份成功。
-- **人审**：全部 **68** 个组件行 `needs_human_review=yes`（并 `auto_label_is_suggestion_only=yes`）。自动标签**不**关闭审计。文件：`human_review_components.csv`、`human_review_dishes.csv`、`human_review.md`。人审包仍开放。这**不是**代码项。人审**不**改写 ③ 的协议，也**不**把 #51 的 kcal 下降写成身份成功。
+- **人审**：全部 **68** 个组件行 `needs_human_review=yes`（并 `auto_label_is_suggestion_only=yes`）。自动标签**不**关闭审计。文件：`human_review_components.csv`、`human_review_dishes.csv`、`human_review.md`。人审包仍开放。这**不是**代码项。人审**不**改写已完成的 ③ 协议，也**不**改写 Cafe2 能量审计的协议，也**不**把 #51 的 kcal 下降写成身份成功。
 
-**当前第一项 = ③ 外部 held-out（已解锁；唯一允许写代码的项）**
+**③ 外部 held-out — 已完成（#63，squash `27d1dbfa`，2026-11-09 Asia/Shanghai）**
 
-- **① 已完成（#57，squash `0aa30537`）。不要重跑，不要在同一协议上再调选择器。② 已完成（#60，squash `c52ffaa2`）。不要重跑，不要改 `results/food_id_semantic_audit/`。**
-- **解锁依据**：Triste 点头（群聊 **2026-11-09**）+ 调研建议（配对 **505** 开发集必须隔离出 held-out；**别急开 P1 / 重训**）。
-- **开工条件**：**③ 的代码只在本文件进入主分支之后才许开工**（合并前的 PR 不算开工许可）。**禁止**自动开 **④–⑦**。**P1 锁定 / 暂缓。禁止**重训 Mass。**禁止**重训 Q。**禁止**重拟合 τ。**禁止** fast Cloud Agent。**无 RL。禁**空壳 RE_PORTION。
-- **505 仍是开发 / 诊断集。** 配对 **505** 盘 rgb_test（#53）留在诊断侧，**不是**最终独立泛化主表。**禁止**声称 #53 已证明方法。Held-out **必须**按 **dish_id** 分组，并且与这 **505** 的 dish_id **不相交**。优先按菜品 / 来源隔离。200–500 薄标注可以承担一部分 held-out 需求，标签**不得**反过来改方法。
-- **禁止**用 held-out 做方法选择、早停、阈值 / τ 调节，或 GT 驱动的食物码 / 份量修改。
-- **协议冻结为 #53+#51 同预算主路径**：Coverage-Constrained Active Specialist Selection + 密度 / 同头换码。主方法是 **Coverage-Constrained + Mass**。**不**重训 Mass。**不**重训 Q。**不**开 P1。**不**改 τ。
-- **写作口径（保持）**：#51 是密度 / kcal 启发式（换码后自动 Exact=**0**）。① 上 **Q ≈ 规则 ≪ oracle**。**#51 / #53 增益 ≠ Q 学习改进。** **kcal 变好 ≠ 身份变对。** 自动 Exact / Near / Wrong 只是建议。
-- **主指标（Route A）**：**Energy MAE + Mass MAE**。基线：**Direct-VLM** 与 **Mass-only**（冻结 Mass，不重训，不新开方法）。同时报告覆盖率，以及步数 / 工具调用次数。真实 Tool Cost（延迟、token、单盘成本、能量 MAE–Cost Pareto）仍是 **④**，**本条不开**。
-- **本文件进入主分支之后的顺序**：先写划分脚本和 dish 列表（例如 `results/heldout_plan/`），再在该划分上跑上面的冻结协议，再交主表数字。其后的评测目录另开新路径。**不要**覆盖 #51（`results/food_id_density/`）、#53（`results/coverage_early_stop/`）、#57（`results/qphi_counterfactual/`）、#60（`results/food_id_semantic_audit/`），也不要覆盖冻结 n5k / weak_steps / #46 / #48。
+- **产物**：划分 `results/heldout_plan/`；主表与轨迹 `results/heldout_eval/`。**#63 未改本文件。** **不要重跑，不要覆盖这两个目录。** **无** Mass / Q / τ 重训。**无 RL。** **无 P1。**
+- **划分**：Cafe2 held-out，**n=228**，与配对 **505** 的 dish_id **不相交**，也与 fit（**3679** 官方 rgb_train 且 `pool_of_dish==fit`）、rgb_train、rgb_test、cafe1 **不相交**。
+- **主表（三法皆有限，n=228）**。开发 505 的能量 MAE **64.2792**、质量 MAE **32.9908** **不是**本表的行。
+  - **Coverage-Constrained + density/same-head**：能量 MAE **116.8494** kcal，质量 MAE **50.9483** g，覆盖 **0.9737**（222/228），步数均值 **6.2193**，工具调用均值 **5.2456**
+  - **Direct-VLM**：能量 **105.6157**，质量 **73.7456**
+  - **Mass-only**（冻结 Mass）：能量 **75.3870**，质量 **51.7107**
+- 能量 MAE 比 Direct-VLM **高 11.23** kcal，比 Mass-only **高 41.46** kcal。质量 MAE 比 Direct-VLM **低 22.80** g，比 Mass-only **低 0.76** g。
+- STOP 且仍有未写组件：**0**。**6** 盘停在 **RETRIEVE**，组件仍未写完；**没有编造份量**。同头密度换码 **106** 盘。空壳 RE_PORTION **0**。工具调用：中位 **4**，最大 **14**，**228/228** 在 K=32 内。Mass 写：**575**。
+- Cafe2 盘级能量列每行都是 **0**，所以能量目标是配料卡路里之和。质量是盘级克重总量。
+- **诚实限制（短，不是重跑请求）**：这次 Direct-VLM 行记下 `placement_max_memory=8GiB`（共享 GPU）。同一 bf16 checkpoint 与 prompt，**不是**历史上满 GPU 的 `cuda:0` 放置。**不要重跑。不要据此解锁重训。**
+- **#53 不证明方法。** #51 是密度 / kcal 启发式（自动 Exact=**0**）。另一次一步审计上 **Q ≈ 规则 ≪ oracle**。
+- **主声称：质量稳赢可外推；能量开发集赢、外测未稳。** **不**声称 held-out 上能量与质量双赢。**不**把开发 505 的双赢数字写进本表。
 
-**其后仍锁定（本文件逐项改写之前不得自动开工；①② 已完成，③ 已解锁，不在下面）**
+**当前第一项 = Cafe2 能量审计（已解锁；唯一允许写代码的项；不是门禁 ④）**
+
+- **① 已完成（#57，squash `0aa30537`）。不要重跑。② 已完成（#60，squash `c52ffaa2`）。不要重跑，不要改 `results/food_id_semantic_audit/`。③ 已完成（#63，squash `27d1dbfa`）。不要重跑，不要覆盖 `results/heldout_plan/` 或 `results/heldout_eval/`。**
+- **这是 ③ 的诊断后续，与 #48 同口径，不是门禁 ④（真实 Tool Cost），不是 ⑤–⑦，不是 P1，不是 Mass / Q / τ 重训。**
+- **解锁依据**：Triste 点头「继续吧」（群聊 **2026-11-09** 晚，Asia/Shanghai），在调研建议之后。
+- **开工条件**：**代码只在本文件进入主分支之后才许开工**（合并前的 PR 不算开工许可）。**禁止**自动开 **④–⑦**。**P1 锁定 / 暂缓。禁止**重训 Mass。**禁止**重训 Q。**禁止**重拟合 τ。**禁止** fast Cloud Agent。**无 RL。禁**空壳 RE_PORTION。
+- **505 仍是开发 / 诊断集。** **禁止**声称 #53 已证明方法。**不**重画 Cafe2 划分。
+- **协议（#48 同口径）**。只读 `results/heldout_plan/` 与 `results/heldout_eval/`。新产物写到新路径，例如 `results/heldout_energy_audit/`。**不要**覆盖 `results/heldout_plan/`、`results/heldout_eval/`、`results/food_id_density/`、`results/coverage_early_stop/`、`results/qphi_counterfactual/`、`results/food_id_semantic_audit/`。**不要**重跑 #63 闭环主表。**不要**重跑 #48 / #51 / #53 / #57 / #60。
+   1. 只在冻结的 Cafe2 n=228 名单上做诊断。不做方法选择，不早停，不调阈值 / τ，不换方法，不用 GT 改码或份量。Diagnostic only on the frozen Cafe2 n=228 list. No method selection, no early stopping, no threshold/τ tuning, no swapping the method, no GT-driven code or portion edits.
+   2. 与 #48 同一组切分，写明白。Same cuts as #48, written plainly:
+      - 固定 food-id 时，mass 重写是否同时降低 energy（hold identity/codes fixed, then ask whether the mass rewrite also drops energy）。
+      - oracle 标签密度 + 我方克数（oracle label density with our grams）。
+      - 另拆 #51 density swap 开/关，重点看换过码的 106 盘。
+   3. 基线仍是 Direct-VLM 与 Mass-only。头条问题：相对 Mass-only 的能量损失 +41.46 kcal（质量几乎打平，−0.76 g）是否来自 food-id / 密度。Baselines remain Direct-VLM and Mass-only. The headline question is whether the energy loss vs Mass-only of +41.46 kcal (mass almost tied, −0.76 g) comes from food-id / density.
+- **主声称：质量稳赢可外推；能量开发集赢、外测未稳。**
+
+**其后仍锁定（本文件逐项改写之前不得自动开工；①②③ 已完成，Cafe2 能量审计已解锁且不是门禁 ④，不在下面）**
 
 - **④** 真实 Tool Cost：VLM 调用次数、延迟、token、单盘成本，以及能量 MAE–Cost Pareto。#53 的 tool mean **6.0257** 只是调用次数，不是真实成本。
 - **⑤** 忠实重做 B1，并做 B2（能完整复现就完整复现，否则诚实标明 approx）与相关工作。优先：arXiv **2610.11144**（食物身份验证 / 恢复）、CVPRW 2025 **Decomposing Food Images**、**NutriVision** arXiv **2609.33076**。不编造 DOI。历史 B1 **110.72** 非忠实；scaffold / dry-run 不算。
@@ -85,8 +104,14 @@
 
 **Checklist（给代码 Agent）**
 
-1. **P0a–P0d、Q 校准 #44、误差审计 #48、food-id #51、覆盖约束 #53、① #57、② #60** — **已完成**。#53 = Ours-new **开发检查点**。**不**声称 #53 证明方法。**#51 / #53 ≠ Q 学习改进**（①：Q ≈ 规则 ≪ oracle）。**②** 的自动标签只是建议。**kcal 变好 ≠ 身份变对。不**把 #51 能量下降写成身份成功。#51 是密度 / kcal 启发式（换码后自动 Exact=**0**）。
-2. **当前第一项 = ③ 外部 held-out** — **已解锁；唯一允许写代码的项。** 代码只在本文件进入主分支之后才许开工。顺序：划分脚本 + dish 列表（例如 `results/heldout_plan/`）→ 冻结的 **#53+#51** 同预算协议（Coverage-Constrained + 密度 / 同头换码）→ 主表数字。Held-out 按 **dish_id** 分组且与配对 **505** 不相交。**禁止**用 held-out 做方法选择、早停、阈值 / τ 或 GT 驱动的码 / 份量修改。主指标 **Energy MAE + Mass MAE**；基线 **Direct-VLM** 与 **Mass-only**；另报覆盖率与步数 / 工具次数。**禁止**重训 Mass / Q / τ；**禁止**重跑或覆盖 #51 / #53 / #57 / #60；**禁止**开 P1；**禁止**自动开 **④–⑦**；**无 RL**；**禁止** fast Cloud Agent。
+1. **P0a–P0d、Q 校准 #44、误差审计 #48、food-id #51、覆盖约束 #53、① #57、② #60、③ #63** — **已完成**。#53 = Ours-new **开发检查点**。**不**声称 #53 证明方法。**#51 / #53 ≠ Q 学习改进**（①：Q ≈ 规则 ≪ oracle）。**②** 的自动标签只是建议。**kcal 变好 ≠ 身份变对。不**把 #51 能量下降写成身份成功。#51 是密度 / kcal 启发式（换码后自动 Exact=**0**）。**③（#63，squash `27d1dbfa`）** 的 Cafe2 主表**不是**能量与质量双赢。**主声称：质量稳赢可外推；能量开发集赢、外测未稳。**
+2. **当前第一项 = Cafe2 能量审计** — **已解锁；唯一允许写代码的项；不是门禁 ④。** 代码只在本文件进入主分支之后才许开工。只读冻结 Cafe2 **n=228**（`results/heldout_plan/` 与 `results/heldout_eval/`），**不**重画划分。新产物例如 `results/heldout_energy_audit/`。**不要**覆盖 `results/heldout_plan/`、`results/heldout_eval/`、`results/food_id_density/`、`results/coverage_early_stop/`、`results/qphi_counterfactual/`、`results/food_id_semantic_audit/`。**不要**重跑 #63 闭环主表，也**不要**重跑 #48 / #51 / #53 / #57 / #60。**505** 仍是开发 / 诊断集。**禁止**重训 Mass / Q / τ；**禁止**开 P1；**禁止**自动开 **④–⑦**；**无 RL**；**禁止** fast Cloud Agent。协议：
+    1. 只在冻结的 Cafe2 n=228 名单上做诊断。不做方法选择，不早停，不调阈值 / τ，不换方法，不用 GT 改码或份量。Diagnostic only on the frozen Cafe2 n=228 list. No method selection, no early stopping, no threshold/τ tuning, no swapping the method, no GT-driven code or portion edits.
+    2. 与 #48 同一组切分，写明白。Same cuts as #48, written plainly:
+       - 固定 food-id 时，mass 重写是否同时降低 energy（hold identity/codes fixed, then ask whether the mass rewrite also drops energy）。
+       - oracle 标签密度 + 我方克数（oracle label density with our grams）。
+       - 另拆 #51 density swap 开/关，重点看换过码的 106 盘。
+    3. 基线仍是 Direct-VLM 与 Mass-only。头条问题：相对 Mass-only 的能量损失 +41.46 kcal（质量几乎打平，−0.76 g）是否来自 food-id / 密度。Baselines remain Direct-VLM and Mass-only. The headline question is whether the energy loss vs Mass-only of +41.46 kcal (mass almost tied, −0.76 g) comes from food-id / density.
 3. **④ 真实 Tool Cost** — **锁定。禁止自动开。**
 4. **⑤ 忠实 B1/B2 + 相关工作** — **锁定。禁止自动开。**
 5. **⑥ Provenance + Semantic** — **锁定。禁止自动开。**
@@ -105,7 +130,7 @@
    - 产物：`results/closed_loop/tool_state_audit.json`、`report_tool_state_audit.txt`、`report_tool_state_audit.md`。  
    - **改码/改份量 edit 动作**（CORRECT_CODE / RE_PORTION；hold-out **无** RE_DECOMPOSE）：hold-out logged **变更率 1.0000（1106/1106）**。  
    - on-policy edit：**变更率 0.9175（1647/1795）**、无变化 **0.0825**；分层 **CORRECT_CODE 0.7822**、**RE_PORTION 0.9476**。  
-   - **结论**：「工具跑了但 n 不变」**不是**多数；**门禁通过**（仍禁空壳 RE_PORTION）。**P0b #39**、**P0c #41**、**Q 校准 #44**、**P0d #46**、**误差审计 #48**、**food-id #51**、**覆盖+早停 #53**、**① #57**、**② #60** 已落盘 → **当前第一项 = ③**（**已解锁**；**④–⑦ 与 P1 仍锁**；**不**重训 Mass/Q/τ）。
+   - **结论**：「工具跑了但 n 不变」**不是**多数；**门禁通过**（仍禁空壳 RE_PORTION）。**P0b #39**、**P0c #41**、**Q 校准 #44**、**P0d #46**、**误差审计 #48**、**food-id #51**、**覆盖+早停 #53**、**① #57**、**② #60**、**③ #63** 已落盘 → **当前第一项 = Cafe2 能量审计**（**已解锁**；**不是门禁 ④**；**④–⑦ 与 P1 仍锁**；**不**重训 Mass/Q/τ）。
 
 2. **P0b — Mass Estimator（已完成 #39，squash `4b6ccec`）**  
    - **Backbone**：**ViT-B/16**（fit-internal probe 优于 ResNet101：probe-val mass MAE **52.48** vs **57.52**）；ImageNet-1K → Nutrition5K **rgb_train fit** 微调，**12 epoch**，**last checkpoint**。  
@@ -146,19 +171,19 @@
 
 7. **food-id / 密度轻修（多组件优先；已完成 #51，squash `6c8fda02`）**：同头码替换（已有检索窗，≥15% 更靠近 calorie head）；克重与动作保持。paired **n=505** 能量 **98.5521 → 92.6963**（质量 **58.9952** 不变）；多组件全写 **n=50** food-table **190.79 → 131.65**。**827** 成功 mass、**0** hollow。**#51 未改 STATUS**。详见「助手进度」。**不得**据此开 Mass 重训 / Q 改 / **P1**。语义审计是门禁 **②**，**已由 #60（squash `c52ffaa2`）完成**（见文首）。自动标签只是建议。**kcal 变好 ≠ 身份变对。不**在本条重跑 #51，也**不**把能量下降写成身份成功。
 
-8. **覆盖未写组件 + 早停处理（已完成 #53，squash `2a406df4`）**：冻结 Q+fence 后，未写组件无 `estimate_mass` 写则拒绝 STOP/ABSTAIN（defer rule utility）；回到检索 top code 则 portion，不开第二轮 top-code swap；**#51 同头 swap 保留**。paired **n=505** 能量 **92.6963 → 64.2792**、质量 **58.9952 → 32.9908**、tool mean **4.6970 → 6.0257**（max **17**，均在 K=32）。全部组件已写 **199/505 → 503/505**；STOP-unwritten **78 → 0**；Mass 成功 **827 → 1479**；hollow **0**。残留 **2** 盘（`dish_1565020895`、`dish_1565020926`）honeycomb 检索失败，卡 RETRIEVE，不编造克重、未 STOP。**无** Mass/Q/τ 重训。**#53 未改 STATUS**。这是开发检查点，**不**证明方法；增益 **≠** Q 学习改进。**① 已由 #57 完成，② 已由 #60 完成**，不在本条重开。**不得**据此重开本条或开 **P1**。**③** 见文首，不在本条开工，也**不**在这 505 盘上再调方法。
+8. **覆盖未写组件 + 早停处理（已完成 #53，squash `2a406df4`）**：冻结 Q+fence 后，未写组件无 `estimate_mass` 写则拒绝 STOP/ABSTAIN（defer rule utility）；回到检索 top code 则 portion，不开第二轮 top-code swap；**#51 同头 swap 保留**。paired **n=505** 能量 **92.6963 → 64.2792**、质量 **58.9952 → 32.9908**、tool mean **4.6970 → 6.0257**（max **17**，均在 K=32）。全部组件已写 **199/505 → 503/505**；STOP-unwritten **78 → 0**；Mass 成功 **827 → 1479**；hollow **0**。残留 **2** 盘（`dish_1565020895`、`dish_1565020926`）honeycomb 检索失败，卡 RETRIEVE，不编造克重、未 STOP。**无** Mass/Q/τ 重训。**#53 未改 STATUS**。这是开发检查点，**不**证明方法；增益 **≠** Q 学习改进。**① 已由 #57 完成，② 已由 #60 完成**，不在本条重开。**不得**据此重开本条或开 **P1**。**③ 已由 #63（`27d1dbfa`）完成**，不在本条重开，也**不**在这 505 盘上再调方法。现行第一项是 Cafe2 能量审计（见文首；**不是门禁 ④**）。
 
-9. **① 反事实 Q 动作价值 + dish_id 分组泄漏审计（已完成 #57，squash `0aa30537`）**：产物 `results/qphi_counterfactual/`。fit/hold-out **按 dish_id 分组**，交集 **0**，**无**重训。头条 n=**1914**（coverage-choice + mass forward；rgb_train hold-out；与 #53 **505** 交集 **0**）：Q Best-ID **0.6165** / ΔE improve **24.14** / E regret **49.96**；规则 **0.6102** / **23.03** / **50.91**；固定 **0.5914** / **20.62** / **52.99**；随机 **0.4338** / **4.04** / **78.15**；oracle improve **82.19**、regret **0**。Q 约 **0.96** kcal 优于规则，约 **50** kcal 落后 oracle。**241/1914** 的 oracle 最优是 RE_DECOMPOSE no-op（冻结 Q 不能发出）；去掉后 Q regret **~17.33** vs 规则 **~18.28**。价值校准 n=**3475**：MAE(Q, ΔL) **0.0226**，Pearson **0.747**；RE_PORTION **0.805**，CORRECT_CODE **0.016**。预算曲线在该目录 `report.md`（一步 cost cap，不是全程 rollout）。**Q ≈ 规则 ≪ oracle**。**② 已完成**，不在本条重开。**③** 见文首，不在本条重跑，也不用本条数字选 held-out。
+9. **① 反事实 Q 动作价值 + dish_id 分组泄漏审计（已完成 #57，squash `0aa30537`）**：产物 `results/qphi_counterfactual/`。fit/hold-out **按 dish_id 分组**，交集 **0**，**无**重训。头条 n=**1914**（coverage-choice + mass forward；rgb_train hold-out；与 #53 **505** 交集 **0**）：Q Best-ID **0.6165** / ΔE improve **24.14** / E regret **49.96**；规则 **0.6102** / **23.03** / **50.91**；固定 **0.5914** / **20.62** / **52.99**；随机 **0.4338** / **4.04** / **78.15**；oracle improve **82.19**、regret **0**。Q 约 **0.96** kcal 优于规则，约 **50** kcal 落后 oracle。**241/1914** 的 oracle 最优是 RE_DECOMPOSE no-op（冻结 Q 不能发出）；去掉后 Q regret **~17.33** vs 规则 **~18.28**。价值校准 n=**3475**：MAE(Q, ΔL) **0.0226**，Pearson **0.747**；RE_PORTION **0.805**，CORRECT_CODE **0.016**。预算曲线在该目录 `report.md`（一步 cost cap，不是全程 rollout）。**Q ≈ 规则 ≪ oracle**。**② 已完成**，不在本条重开。**③ 已由 #63 完成**，不在本条重跑，也不用本条数字选 held-out 或 Cafe2 能量审计。
 
-10. **④–⑦ 与 P1（锁定）**：**①② 已完成。③** 外部 held-out **已解锁，是当前第一项、唯一允许写代码的项**（见文首；代码只在本文件进入主分支之后才许开工）。顺序：划分脚本 + dish 列表（例如 `results/heldout_plan/`）→ 跑冻结的 **#53+#51** 同预算主路径（Coverage-Constrained Active Specialist Selection + 密度 / 同头换码）→ 交主表。Held-out 按 **dish_id** 分组且与配对 **505** 不相交。**禁止**用 held-out 做方法选择、早停、阈值 / τ 或 GT 驱动的码 / 份量修改。主指标 **Energy MAE + Mass MAE**；基线 **Direct-VLM** 与 **Mass-only**；另报覆盖率与步数 / 工具次数。200–500 薄标注可以承担一部分需求，**不得**用来改方法。新评测目录另开，不覆盖 #51 / #53 / #57 / #60。其后仍锁定：**④** 真实 Tool Cost（VLM 次数、延迟、token、单盘成本、能量 MAE–Cost Pareto）→ **⑤** 忠实 B1/B2 + 相关工作（优先 arXiv **2610.11144**、CVPRW 2025 Decomposing Food Images、NutriVision arXiv **2609.33076**；不编 DOI）→ **⑥** Provenance + Semantic → **⑦** 再共决是否解锁 **P1** 或重训 Mass/Q。**禁止自动开 ④–⑦。P1 仍锁定 / 暂缓。禁止自动开 P1。禁止**重训 Mass / Q / τ。人审包仍开放，自动标签只是建议，**不**改写 ③ 的协议，也**不**把 #51 的 kcal 下降写成身份成功。忠实 B1/B2（[`docs/B1_B2_SCAFFOLD.md`](B1_B2_SCAFFOLD.md)）**不得**在 **⑤** 解锁前开工。
+10. **④–⑦ 与 P1（锁定）**：**①②③ 已完成。** 当前第一项是 **Cafe2 能量审计**（已解锁；唯一允许写代码的项；**不是门禁 ④**；见文首；代码只在本文件进入主分支之后才许开工）。只读冻结 Cafe2 **n=228**。新产物例如 `results/heldout_energy_audit/`，不覆盖 `results/heldout_plan/`、`results/heldout_eval/`、#51 / #53 / #57 / #60。**禁止**用该审计做方法选择、早停、换方法、阈值 / τ，或 GT 驱动的码 / 份量修改。基线仍是 **Direct-VLM** 与 **Mass-only**。其后仍锁定：**④** 真实 Tool Cost（VLM 次数、延迟、token、单盘成本、能量 MAE–Cost Pareto）→ **⑤** 忠实 B1/B2 + 相关工作（优先 arXiv **2610.11144**、CVPRW 2025 Decomposing Food Images、NutriVision arXiv **2609.33076**；不编 DOI）→ **⑥** Provenance + Semantic → **⑦** 再共决是否解锁 **P1** 或重训 Mass/Q。**禁止自动开 ④–⑦。P1 仍锁定 / 暂缓。禁止自动开 P1。禁止**重训 Mass / Q / τ。人审包仍开放，自动标签只是建议，**不**改写已完成的 ③ 协议，也**不**改写 Cafe2 能量审计的协议，也**不**把 #51 的 kcal 下降写成身份成功。忠实 B1/B2（[`docs/B1_B2_SCAFFOLD.md`](B1_B2_SCAFFOLD.md)）**不得**在 **⑤** 解锁前开工。
 
-**禁令（仍有效）**：**不得**重训 Mass；**不得**重训 Q；**不得**重拟合 τ；**禁止自动开 P1**；**①② 已完成，不是开工项**；**③ 已解锁，是唯一允许写代码的项**（代码只在本文件进入主分支之后；先划分脚本和 dish 列表，再跑冻结的 **#53+#51** 协议，再交主表；新产物另写路径，例如 `results/heldout_plan/` 及之后的评测目录）；**禁止自动开 ④–⑦**；**禁止**用 held-out 做方法选择、早停、阈值 / τ 或 GT 驱动的码 / 份量修改；不上 RL；不开 fast Cloud Agent；禁止 rgb_test GT 调参；勿覆盖冻结 n5k / weak_steps / #46 / #48 / #51 / #53 / #57（`results/qphi_counterfactual/`）/ #60（`results/food_id_semantic_audit/`）结果；**禁**空壳 RE_PORTION；kcal-proxy AURC 作主 claim；**禁止**把 #51/#53 或 ① 写成 Q 学得更好；**禁止**把 #51 的 kcal 下降写成身份成功；**禁止**把开发 505 当独立最终测试；**禁止**声称 #53 已证明方法；**禁止**重跑 #51 / #53 / ① / ②；本机 Qwen closed-loop **≠** 忠实 DietAI24 / FoodAgent。
+**禁令（仍有效）**：**不得**重训 Mass；**不得**重训 Q；**不得**重拟合 τ；**禁止自动开 P1**；**①②③ 已完成，不是开工项**；**当前第一项 = Cafe2 能量审计，已解锁，是唯一允许写代码的项，不是门禁 ④**（代码只在本文件进入主分支之后；只读 `results/heldout_plan/` 与 `results/heldout_eval/`；新产物例如 `results/heldout_energy_audit/`）；**禁止自动开 ④–⑦**；**禁止**用 held-out 做方法选择、早停、阈值 / τ 或 GT 驱动的码 / 份量修改；不上 RL；不开 fast Cloud Agent；禁止 rgb_test GT 调参；勿覆盖冻结 n5k / weak_steps / #46 / #48 / #51 / #53 / #57（`results/qphi_counterfactual/`）/ #60（`results/food_id_semantic_audit/`）/ #63（`results/heldout_plan/`、`results/heldout_eval/`）结果；**禁**空壳 RE_PORTION；kcal-proxy AURC 作主 claim；**禁止**把 #51/#53 或 ① 写成 Q 学得更好；**禁止**把 #51 的 kcal 下降写成身份成功；**禁止**把开发 505 当独立最终测试；**禁止**声称 #53 已证明方法；**禁止**重跑 #48 / #51 / #53 / ① / ② / ③（#63）；本机 Qwen closed-loop **≠** 忠实 DietAI24 / FoodAgent。
 
 > 真源：[`PLAN.md`](../PLAN.md)、Canvas「**Coverage-Constrained Active Specialist Selection**」（https://cursor.com/canvas/store-745bdf38-f3d7-4313-8d66-08e4b6903e93/d7be617d-d37e-4fe1-a4b5-9da2c86b27a2）、[`docs/VDR_P0.md`](VDR_P0.md)、[`docs/STATE_FEATURE_DESIGN.md`](STATE_FEATURE_DESIGN.md)。`CLOSED_LOOP_READY=true` 指 **Ours-old** 脚手架就绪，**不是** Ours-new 已证明。**不上 RL。不开 fast Cloud Agent。** 冻结结果不重写。#53 是开发检查点，不是方法证明。
 
 ### 服务器
 
-**没有新的 507 / 弱标签重跑命令。** **#60（squash `c52ffaa2`）、#57（squash `0aa30537`）、#53（squash `2a406df4`）与 #51（squash `6c8fda02`）已落盘，不要重跑，也不要在同一 505 开发池上再调方法。不要改 `results/food_id_semantic_audit/`。** **当前第一项 = ③。③ 的代码只在本文件进入主分支之后才许开工**（先 `results/heldout_plan/` 一类的划分与 dish 列表，再跑冻结协议）。**禁止**自动开 **④–⑦**。**#44 的 Q 权重不再重训。不得**重训 Mass。**不得**重拟合 τ。**禁止** Cloud Agent **fast**。**P1 仍锁定 / 暂缓。禁止自动开 P1。** `results/qphi_counterfactual/` 不要覆盖。冻结文件勿覆盖，也不要重跑：
+**没有新的 507 / 弱标签重跑命令。** **#63（squash `27d1dbfa`）、#60（squash `c52ffaa2`）、#57（squash `0aa30537`）、#53（squash `2a406df4`）与 #51（squash `6c8fda02`）已落盘，不要重跑，也不要在同一 505 开发池上再调方法。不要改 `results/food_id_semantic_audit/`，也不要覆盖 `results/heldout_plan/` 或 `results/heldout_eval/`。** **当前第一项 = Cafe2 能量审计（不是门禁 ④）。代码只在本文件进入主分支之后才许开工**（只读上述 held-out 目录，新产物例如 `results/heldout_energy_audit/`）。**禁止**自动开 **④–⑦**。**不要**重跑 #48，也**不要**重跑 #63 闭环主表。**#44 的 Q 权重不再重训。不得**重训 Mass。**不得**重拟合 τ。**禁止** Cloud Agent **fast**。**P1 仍锁定 / 暂缓。禁止自动开 P1。** `results/qphi_counterfactual/` 不要覆盖。冻结文件勿覆盖，也不要重跑：
 
 - `results/n5k_rgb_test_overhead_b0_b1.json` 与 `.jsonl`（sha256 前缀 `a4dfdd82e3a595f4…`）
 - 默认的 `results/n5k_subset_b0_b1.json` 与 `.jsonl`（现在就是上面这一对）
@@ -171,7 +196,7 @@
 
 ### 助手进度
 
-> **解读**：以下 #24–#34 段均为 **Ours-old（纯闭环控制器 / 弱弃权）对照**；支撑「#34 MAE 打平 → 需要 Mass + Q_φ」叙事，**不是** Ours-new 方法证明。**#46–#53** 的数字是**开发结果**。**#51/#53 增益 ≠ Q 学习改进**（① #57：rgb_train hold-out 一步评测上 Q ≈ 规则 ≪ oracle）。#53（Coverage-Constrained Active Specialist Selection）**不**证明方法已在独立测试上成立。主指标见 [`PLAN.md`](../PLAN.md)：能量 MAE + mass MAE + 真实 Tool cost 优先；宏量辅助。
+> **解读**：以下 #24–#34 段均为 **Ours-old（纯闭环控制器 / 弱弃权）对照**；支撑「#34 MAE 打平 → 需要 Mass + Q_φ」叙事，**不是** Ours-new 方法证明。**#46–#53** 的数字是**开发结果**。**#51/#53 增益 ≠ Q 学习改进**（① #57：rgb_train hold-out 一步评测上 Q ≈ 规则 ≪ oracle）。#53（Coverage-Constrained Active Specialist Selection）**不**证明方法已在独立测试上成立。**#63（`27d1dbfa`）** 的 Cafe2 外测**不是**能量与质量双赢。**主声称：质量稳赢可外推；能量开发集赢、外测未稳。**主指标见 [`PLAN.md`](../PLAN.md)：能量 MAE + mass MAE + 真实 Tool cost 优先；宏量辅助。
 
 **P0a 工具态审计门禁已通过（Ours-new 前置）**（2026-11-05 Asia/Shanghai，#37，squash **`2e0e180`**）。
 
@@ -212,7 +237,7 @@
 - **vs Direct-VLM（B0）**：ΔM **−17.3513**，ΔE **+1.4210** — **能量未稳赢 B0**（质量主赢、能量主 claim 未成立）。  
 - **Mass RE_PORTION**：**827** success，**0** hollow。Coverage **0.5921**；ABSTAIN **206** — **辅助**，非 pass 门禁。  
 - **锚点**：B0 own-pool **n=507** E **97.0256** / M **76.4556**；closed-loop STOP **n=488** E **96.2769**。开环 BC 读同一 closed-loop trace → **E/M/tool 与 closed-loop 相同**。  
-- **诚实解读**：P0d 证明 Mass + 校准 Q 在同预算下 **降 mass、降 tool、略优于 Ours-old 能量**，但 **未**在 paired Full-set 上 **稳定击败 B0 能量**；**#48 误差审计** 已解释 pooled **+1.42 kcal** 机制。多组件 food-table 一侧由 **food-id #51（`6c8fda02`）** 落盘；覆盖与早停由 **#53（`2a406df4`）** 落盘（见「助手进度」）。该表是开发结果，**不是**最终独立主表。**① 已完成（#57）。② 已完成（#60）。当前第一项 = ③（已解锁）。④–⑦ 仍锁。** **P1 仍暂缓。**
+- **诚实解读**：P0d 证明 Mass + 校准 Q 在同预算下 **降 mass、降 tool、略优于 Ours-old 能量**，但 **未**在 paired Full-set 上 **稳定击败 B0 能量**；**#48 误差审计** 已解释 pooled **+1.42 kcal** 机制。多组件 food-table 一侧由 **food-id #51（`6c8fda02`）** 落盘；覆盖与早停由 **#53（`2a406df4`）** 落盘（见「助手进度」）。该表是开发结果，**不是**最终独立主表。**①②③ 已完成（#57 / #60 / #63）。当前第一项 = Cafe2 能量审计（已解锁；不是门禁 ④）。④–⑦ 仍锁。** **P1 仍暂缓。**
 - **产物**：`results/p0d/report_same_budget.txt`、`same_budget.json`、`same_budget_dishes.jsonl`、`ours_new_rgb_test.jsonl`、`ours_new_rgb_test_summary.json`。冻结 n5k / weak_steps **未改**。
 
 **P0d 误差审计已落盘（只读 #46；Ours-new 诊断）**（2026-11-05 Asia/Shanghai，#48，squash **`91a05d8`**）。
@@ -224,7 +249,7 @@
 - **hold food-id fixed（481）**：mass rewrite ΔM **−20.24** / ΔE **−17.90** — **非**相对 prior grams 用能量换质量。  
 - **Q fence replay 2858/2858**；505 盘 **committing actions 均为 Q/Cost**。  
 - **产物**：`results/audit/report_error_audit.md`、`report_error_audit.txt`、`error_audit.json`、`paired_residuals.jsonl`、`fig_energy_gap_by_quadrant.svg`、`fig_error_channels.svg`、`fig_mass_energy_delta.svg`。冻结 n5k / weak_steps **未改**。  
-- **门禁解读**：审计 **不**启动 Mass 重训 / Q 改 / P1。**2026-11-06 共决**后 **food-id #51** 与 **覆盖+早停 #53** 已完成。**现行门禁见文首：①② 已完成；当前第一项 = ③（已解锁）；④–⑦ 仍锁。** **P1 仍暂缓。禁止自动开 P1。禁止**重训 Mass/Q。
+- **门禁解读**：审计 **不**启动 Mass 重训 / Q 改 / P1。**2026-11-06 共决**后 **food-id #51** 与 **覆盖+早停 #53** 已完成。**现行门禁见文首：①②③ 已完成；当前第一项 = Cafe2 能量审计（已解锁；不是门禁 ④）；④–⑦ 仍锁。** **P1 仍暂缓。禁止自动开 P1。禁止**重训 Mass/Q。
 
 **food-id / 密度轻修已完成（多组件优先）**（2026-11-06 Asia/Shanghai，#51，squash **`6c8fda02`**）。
 
@@ -234,7 +259,7 @@
 - **Mass RE_PORTION**：**827** 成功，**0** hollow（成功且非 mass estimator 的 portion = 0；下一步营养不变 = 0）。swap 不新增 portion 步。
 - **未做**：Mass 重训；Q 权重与 terminal-margin fence 未改、未重拟合；无检索重排、无新候选列表；覆盖与早停未动；**本文件在 #51 未改**。
 - **产物**：`results/food_id_density/report.md`、`report.txt`、`summary.json`；脚本 `scripts/food_id_density_align.py`。冻结 n5k / weak_steps **未改**。
-- **门禁解读**：**不**解锁 Mass 重训 / Q 改 / **P1**。Triste 顺序的下一项 **覆盖未写组件 + 早停** 已由 **#53（`2a406df4`）** 完成。**现行门禁见文首：①② 已完成；当前第一项 = ③（已解锁）。** 语义审计已由 **#60** 完成。**kcal 变好 ≠ 身份变对。不**在本段重跑或覆盖 `results/food_id_density/`。
+- **门禁解读**：**不**解锁 Mass 重训 / Q 改 / **P1**。Triste 顺序的下一项 **覆盖未写组件 + 早停** 已由 **#53（`2a406df4`）** 完成。**现行门禁见文首：①②③ 已完成；当前第一项 = Cafe2 能量审计（已解锁；不是门禁 ④）。** 语义审计已由 **#60** 完成。**kcal 变好 ≠ 身份变对。不**在本段重跑或覆盖 `results/food_id_density/`。
 
 **覆盖约束已完成（Coverage-Constrained Active Specialist Selection；Ours-new 开发检查点，不证明方法）**
 
@@ -245,7 +270,7 @@
 - **残留 2 盘**：`dish_1565020895`（7 个组件里 5 个已写）、`dish_1565020926`（8 个里 7 个已写）。`honeycomb` 的 FNDDS 检索失败，状态不变，既有三步 stuck guard 停在 **RETRIEVE**。没有 code 时 RE_PORTION 不合法，**不编造克重**。两盘都 **没有 STOP**。
 - **未做**：Mass checkpoint、Q 权重、τ **未改**；无 P1 检索重排；无 RL；**未**用 rgb_test 标签选阈值。冻结 n5k / weak_steps **未改**。
 - **产物**：`results/coverage_early_stop/report.md`、`report.txt`、`summary.json`、`continued_steps.jsonl`、`paired_scores.jsonl`。脚本 `scripts/coverage_early_stop.py`；`vdr/controller/coverage.py`。
-- **门禁解读**：**不**解锁 Mass 重训 / Q 改 / **P1**。增益来自覆盖约束，**不是** Q 变强，**不**证明方法。**①（#57）** 在另一次一步评测上给出 **Q ≈ 规则 ≪ oracle**，加固该归因。**现行门禁见文首：当前第一项 = ③（② 已完成）。** **禁止**自动开 **④–⑦** / **P1** / Mass 或 Q 重训。**不**在本段开工，也**不**在这 505 盘上再调方法。
+- **门禁解读**：**不**解锁 Mass 重训 / Q 改 / **P1**。增益来自覆盖约束，**不是** Q 变强，**不**证明方法。**①（#57）** 在另一次一步评测上给出 **Q ≈ 规则 ≪ oracle**，加固该归因。**现行门禁见文首：①②③ 已完成；当前第一项 = Cafe2 能量审计（已解锁；不是门禁 ④）。** **禁止**自动开 **④–⑦** / **P1** / Mass 或 Q 重训。**不**在本段开工，也**不**在这 505 盘上再调方法。
 
 **① 反事实 Q + dish_id 泄漏审计已完成（一步评测；不重训）**（2026-11-06 Asia/Shanghai，#57，squash **`0aa305379a7cc02045d07ec9c513bb9c2a3d3061`**，短 **`0aa30537`**）。
 
@@ -262,7 +287,7 @@
 - **归因**：**Q ≈ 规则 ≪ oracle**。这**加固** #53 的能量下降来自覆盖约束，**不是** Q 学得更好。一步分支，不是全程 rollout，也不是开发 505 的 MAE。**不**证明方法。
 - **未做**：Mass checkpoint、Q 权重、τ **未改**；无 P1；无 RL；**未**用 rgb_test 标签选阈值。冻结 n5k / weak_steps / #46 / #48 / #51 / #53 **未改**。**#57 未改本文件。**
 - **产物**：`results/qphi_counterfactual/report.md`、`report.txt`、`summary.json`、`decisions.jsonl`、`leakage_audit.md`、`leakage_audit.json`。
-- **门禁解读**：本条数字**不**解锁 **④–⑦**，**不**解锁 Mass 重训 / Q 改 / **P1**，也**不**定义 held-out。**② 已由 #60 完成**，不在本段重开。**③** 的解锁来自 Triste 点头（群聊 2026-11-09）+ 调研建议（505 开发集隔离 held-out；别急开 P1/重训）；现行见文首。**不**在本段重跑或覆盖 `results/qphi_counterfactual/`。
+- **门禁解读**：本条数字**不**解锁 **④–⑦**，**不**解锁 Mass 重训 / Q 改 / **P1**，也**不**定义 held-out。**② 已由 #60 完成**，不在本段重开。**③ 已由 #63（`27d1dbfa`）完成。** 现行第一项是 Cafe2 能量审计（见文首；**不是门禁 ④**）。**不**在本段重跑或覆盖 `results/qphi_counterfactual/`。
 
 **② food-id 语义审计已完成（只读 #51；自动标签仅建议）**（2026-11-07 Asia/Shanghai，#60，squash **`c52ffaa2`**）。
 
@@ -270,9 +295,22 @@
 - **身份（自动标签，仅建议）**：换码后 Exact **0** / Near **50**（**73.53%**）/ Wrong **18**（**26.47%**）。换码前同一 cafe 行：Exact **27** / Near **23** / Wrong **18**。Exact→Near **27**。自动身份变差 **28**、变好 **1**、不变 **39**。
 - **宏量（food-table × 存克 vs cafe）**：finished 多组件 **n=50**：蛋白质 **10.57→10.07**，碳水 **13.00→16.17**，脂肪 **17.56→11.97**，能量 **190.79→131.65**（能量与冻结 #51 一致）。换码 **37** 盘：碳水 MAE **+4.28 g**，能量 MAE **−79.92 kcal**。
 - **kcal 变好 ≠ 身份变对**：能量绝对误差下降的 **30** 盘换码盘里，全自动 Exact **0**；至少一码 Wrong **12**；仅 Near **18**。这 **30** 盘上的 **50** 个换码全部是 Near 或 Wrong。**不**把 #51 的 kcal 下降写成身份成功。
-- **人审**：全部 **68** 个组件行 `needs_human_review=yes`。自动标签**不**关闭审计。文件：`human_review_components.csv`、`human_review_dishes.csv`、`human_review.md`。人审包仍开放。人审**不**改写 ③ 的协议。
+- **人审**：全部 **68** 个组件行 `needs_human_review=yes`。自动标签**不**关闭审计。文件：`human_review_components.csv`、`human_review_dishes.csv`、`human_review.md`。人审包仍开放。人审**不**改写已完成的 ③ 协议，也**不**改写 Cafe2 能量审计的协议。
 - **产物**：`results/food_id_semantic_audit/`；脚本 `scripts/food_id_semantic_audit.py`。不要重跑，不要改该目录。
-- **门禁解读**：本条**不**解锁 **④–⑦**，**不**解锁 Mass 重训 / Q 改 / **P1**，也**不**定义 held-out。**③** 的解锁来自 Triste 点头（群聊 2026-11-09）；现行见文首。
+- **门禁解读**：本条**不**解锁 **④–⑦**，**不**解锁 Mass 重训 / Q 改 / **P1**，也**不**定义 held-out。**③ 已由 #63（`27d1dbfa`）完成。** 现行第一项是 Cafe2 能量审计（见文首；**不是门禁 ④**）。
+
+**③ Cafe2 外部 held-out 已完成（冻结 #53+#51；不证明双赢）**（2026-11-09 Asia/Shanghai，#63，squash **`27d1dbfa`**）。
+
+- **划分**：`results/heldout_plan/`。Cafe2，**n=228**，与配对 **505**、fit（**3679** 官方 rgb_train 且 `pool_of_dish==fit`）、rgb_train、rgb_test、cafe1 的 dish_id **不相交**。
+- **主表与轨迹**：`results/heldout_eval/`。三法皆有限，**n=228**。开发 505 能量 MAE **64.2792**、质量 MAE **32.9908** **不是**本表的行。
+- **Coverage-Constrained + density/same-head**：能量 MAE **116.8494** kcal，质量 MAE **50.9483** g，覆盖 **0.9737**（222/228），步数均值 **6.2193**，工具调用均值 **5.2456**。
+- **Direct-VLM**：能量 **105.6157**，质量 **73.7456**。**Mass-only**（冻结 Mass）：能量 **75.3870**，质量 **51.7107**。
+- 能量 MAE 比 Direct-VLM **高 11.23** kcal，比 Mass-only **高 41.46** kcal。质量 MAE 比 Direct-VLM **低 22.80** g，比 Mass-only **低 0.76** g。
+- STOP 且仍有未写组件：**0**。**6** 盘停在 **RETRIEVE**，组件仍未写完，**没有编造份量**。同头密度换码 **106** 盘。空壳 RE_PORTION **0**。工具调用中位 **4**、最大 **14**，**228/228** 在 K=32 内。Mass 写：**575**。
+- Cafe2 盘级能量列每行都是 **0**，能量目标是配料卡路里之和。质量是盘级克重总量。
+- **诚实限制**：这次 Direct-VLM 行记下 `placement_max_memory=8GiB`（共享 GPU）。同一 bf16 checkpoint 与 prompt，**不是**历史上满 GPU 的 `cuda:0` 放置。**不要重跑。不要据此解锁重训。**
+- **主声称：质量稳赢可外推；能量开发集赢、外测未稳。** **不**声称 held-out 上能量与质量双赢。**#53 不证明方法。** #51 是密度 / kcal 启发式（自动 Exact=**0**）。一步审计上 **Q ≈ 规则 ≪ oracle**。
+- **门禁解读**：本条**不**解锁 **④–⑦**，**不**解锁 Mass / Q / τ 重训，**不**开 **P1**。**不要重跑，不要覆盖** `results/heldout_plan/` 与 `results/heldout_eval/`。现行第一项是 **Cafe2 能量审计**（见文首；**不是门禁 ④**）。
 
 **闭环 State-aware BC 已落地（Ours-old 组件）**（2026-11-04 Asia/Shanghai，自托管 `gpu-12-container`，分支 `cursor/closed-loop-bc-20261104`）。
 
@@ -336,16 +374,22 @@
 
 ### 助手 / 本地（优先）
 
-1. **当前第一项 = ③ 外部 held-out（已解锁；唯一允许写代码的项）**：代码只在本文件进入主分支之后才许开工。顺序：划分脚本 + dish 列表（例如 `results/heldout_plan/`）→ 冻结的 **#53+#51** 同预算协议 → 主表（**Energy MAE + Mass MAE**；基线 **Direct-VLM** 与 **Mass-only**；覆盖率与步数 / 工具次数）。Held-out 按 **dish_id** 分组且与配对 **505** 不相交。**禁止**用 held-out 做方法选择、早停、阈值 / τ 或 GT 驱动的码 / 份量修改。**④–⑦ 锁定，禁止自动开。** **不要**重跑 #51 / #53 / #57 / #60，也不要改 `results/food_id_semantic_audit/`。自动标签只是建议；**68** 行 `needs_human_review=yes`，人审包仍开放。**kcal 变好 ≠ 身份变对。** #51 是密度 / kcal 启发式（自动 Exact=**0**）。**Q ≈ 规则 ≪ oracle**。**P1 仍未解锁 / 暂缓。禁止自动开 P1。禁止**重训 Mass/Q/τ。见文首与 Checklist。**#48 `results/audit/`、#51 `results/food_id_density/`、#53 `results/coverage_early_stop/`、#57 `results/qphi_counterfactual/`、#60 `results/food_id_semantic_audit/` 只读**。**禁止** Cloud Agent **fast**；**禁**空壳 RE_PORTION。**无 RL。**
+1. **当前第一项 = Cafe2 能量审计（已解锁；唯一允许写代码的项；不是门禁 ④）**：代码只在本文件进入主分支之后才许开工。①②③ 已完成（#57 `0aa30537`、#60 `c52ffaa2`、#63 `27d1dbfa`）。只读冻结 Cafe2 **n=228**，**不**重画划分。新产物例如 `results/heldout_energy_audit/`。**④–⑦ 锁定，禁止自动开。** **不要**重跑 #48 / #51 / #53 / #57 / #60 / #63，也不要改 `results/food_id_semantic_audit/`，也不要覆盖 `results/heldout_plan/` 或 `results/heldout_eval/`。自动标签只是建议；**68** 行 `needs_human_review=yes`，人审包仍开放。**kcal 变好 ≠ 身份变对。** #51 是密度 / kcal 启发式（自动 Exact=**0**）。**Q ≈ 规则 ≪ oracle**。**主声称：质量稳赢可外推；能量开发集赢、外测未稳。** **P1 仍未解锁 / 暂缓。禁止自动开 P1。禁止**重训 Mass/Q/τ。见文首与 Checklist。**#48 `results/audit/`、#51 `results/food_id_density/`、#53 `results/coverage_early_stop/`、#57 `results/qphi_counterfactual/`、#60 `results/food_id_semantic_audit/`、#63 `results/heldout_plan/` 与 `results/heldout_eval/` 只读**。**禁止** Cloud Agent **fast**；**禁**空壳 RE_PORTION。**无 RL。** 协议：
+    1. 只在冻结的 Cafe2 n=228 名单上做诊断。不做方法选择，不早停，不调阈值 / τ，不换方法，不用 GT 改码或份量。Diagnostic only on the frozen Cafe2 n=228 list. No method selection, no early stopping, no threshold/τ tuning, no swapping the method, no GT-driven code or portion edits.
+    2. 与 #48 同一组切分，写明白。Same cuts as #48, written plainly:
+       - 固定 food-id 时，mass 重写是否同时降低 energy（hold identity/codes fixed, then ask whether the mass rewrite also drops energy）。
+       - oracle 标签密度 + 我方克数（oracle label density with our grams）。
+       - 另拆 #51 density swap 开/关，重点看换过码的 106 盘。
+    3. 基线仍是 Direct-VLM 与 Mass-only。头条问题：相对 Mass-only 的能量损失 +41.46 kcal（质量几乎打平，−0.76 g）是否来自 food-id / 密度。Baselines remain Direct-VLM and Mass-only. The headline question is whether the energy loss vs Mass-only of +41.46 kcal (mass almost tied, −0.76 g) comes from food-id / density.
 2. **覆盖未写组件 + 早停 #53 已完成**（squash `2a406df4`）。paired n=505 能量 **64.2792** / 质量 **32.9908** / tool mean **6.0257**（max **17**，均在 K=32）。全部组件已写 **503/505**；STOP-unwritten **0**；Mass 成功 **1479**；hollow **0**。残留 2 盘 honeycomb 检索失败，不编造克重、未 STOP。
 3. **food-id / 密度轻修 #51 已完成**（squash `6c8fda02`）。calorie head **77.75** 是目标读数；记分 commit 仍是 food-table。
 4. **#34 / #31 / #28 已冻结为 Ours-old 对照**；勿声称 on-policy 能量赢 B5。
 5. **P1 未解锁 / 暂缓**：B1/B2 忠实 API **不得**跳步开 retrieval-rerank。
-6. **禁止：** 自动进 **P1** 或 Mass/Q/τ 训练；自动开 **④–⑦**（**③** 只在本文件进入主分支之后，且不得扩到 ④–⑦，也不得用 held-out 做方法选择、早停、阈值 / τ 或 GT 驱动的码 / 份量修改）；把 FixRate / AURC / #44 hold-out 动作表当 Ours-new Full-set 主证明；混 offline n=356 与 on-policy n=488；空壳 RE_PORTION；RL；fast Cloud Agent；test GT 调参；覆盖冻结文件；**110.72** 当忠实 DietAI24；**勿**重训 Q 权重覆盖 #44 校准产物；重跑 507 / P0d Full-set（#46 已落盘）；重跑误差审计（#48 已落盘）；重跑 food-id 对齐（#51 已落盘）；重跑覆盖+早停（#53 已落盘）；重跑反事实 Q（#57 已落盘）；重跑 food-id 语义审计（#60 已落盘）。
+6. **禁止：** 自动进 **P1** 或 Mass/Q/τ 训练；自动开 **④–⑦**（**Cafe2 能量审计**只在本文件进入主分支之后，**不是门禁 ④**，且不得扩到 ④–⑦，也不得用该审计做方法选择、早停、换方法、阈值 / τ 或 GT 驱动的码 / 份量修改）；把 FixRate / AURC / #44 hold-out 动作表当 Ours-new Full-set 主证明；混 offline n=356 与 on-policy n=488；空壳 RE_PORTION；RL；fast Cloud Agent；test GT 调参；覆盖冻结文件；**110.72** 当忠实 DietAI24；**勿**重训 Q 权重覆盖 #44 校准产物；重跑 507 / P0d Full-set（#46 已落盘）；重跑误差审计（#48 已落盘）；重跑 food-id 对齐（#51 已落盘）；重跑覆盖+早停（#53 已落盘）；重跑反事实 Q（#57 已落盘）；重跑 food-id 语义审计（#60 已落盘）；重跑 ③ 闭环主表（#63 已落盘）；覆盖 `results/heldout_plan/` 或 `results/heldout_eval/`。
 
 ### 协作
 
-docs-first：改下一步先改本文件并推仓。Cloud Agent **永远不开 fast**。**2026-11-09**：**③ 外部 held-out 已解锁**，为当前第一项、唯一允许写代码的项；代码只在本文件进入主分支之后才许开工。**2026-11-07**：**②（#60，`c52ffaa2`）已完成**；**①（#57，`0aa30537`）已完成**；**#53（`2a406df4`）仍是 Ours-new 开发检查点**；**#51（`6c8fda02`）已完成**。**④–⑦ 锁定。禁止自动开 ④–⑦。P1 仍未解锁 / 暂缓。禁止自动开 P1。禁止**重训 Mass/Q/τ。解锁：Triste 点头（群聊 **2026-11-09**）+ 调研建议（505 开发集隔离 held-out；别急开 P1/重训）。协议冻结为 **#53+#51**。自动标签只是建议，人审包仍开放，**不**把 #51 的 kcal 下降写成身份成功。**Triste 2026-11-06**：代码/结果可以分批推；派工前仍须先过 STATUS「下一步」门禁。**不得**助手用 fast 代跑 Full-set、审计或未解锁训练。
+docs-first：改下一步先改本文件并推仓。Cloud Agent **永远不开 fast**。**2026-11-09**：**③（#63，`27d1dbfa`）已完成**。同日晚，Triste 点头「继续吧」后，**Cafe2 能量审计已解锁**，为当前第一项、唯一允许写代码的项，**不是门禁 ④**；代码只在本文件进入主分支之后才许开工。**主声称：质量稳赢可外推；能量开发集赢、外测未稳。** **2026-11-07**：**②（#60，`c52ffaa2`）已完成**；**①（#57，`0aa30537`）已完成**；**#53（`2a406df4`）仍是 Ours-new 开发检查点**；**#51（`6c8fda02`）已完成**。**④–⑦ 锁定。禁止自动开 ④–⑦。P1 仍未解锁 / 暂缓。禁止自动开 P1。禁止**重训 Mass/Q/τ。早先解锁 ③ 的依据是 Triste 点头（群聊 **2026-11-09**）+ 调研建议（505 开发集隔离 held-out；别急开 P1/重训），协议冻结为 **#53+#51**，该门禁现已由 #63 做完。自动标签只是建议，人审包仍开放，**不**把 #51 的 kcal 下降写成身份成功。**Triste 2026-11-06**：代码/结果可以分批推；派工前仍须先过 STATUS「下一步」门禁。**不得**助手用 fast 代跑 Full-set、审计或未解锁训练。
 
 ## 历史跑数（开环 v2 / 非主方法）
 
@@ -535,7 +579,7 @@ CUDA_VISIBLE_DEVICES=0 /var/tmp/nutri-venv/bin/python -u scripts/eval_n5k_subset
 W1 基础设施在这台 2×4090D 上已打通：**schema + 骨架 + toy 冒烟 + 真实 FNDDS catalog（5624）+ N5K 元数据/官方 split + 俯拍 RGB + Qwen2.5-VL-7B 单盘冒烟**。  
 B1 第二轮先验（菜品形态、未点名的仿肉、100 g 以上的高密度克重、Cheese+Crust 碎片合并）后，同一 50 盘子集已重跑：能量 MAE 为 B0 **98.3**、B1 **88.2**。上一轮是 97.4 / 107.9，硬化前是 98.2 / 112.1。  
 有俯拍 RGB 的官方 `rgb_test` 池已跑完：能量 MAE 为 B0 **97.03**（Direct-VLM 锚点）、B1 **110.72**（**不是忠实 DietAI24**；中位 63.51 / 63.57）。配对 506 盘上中位差距约 +3.5 kcal，MAE 差距在右尾。50 盘子集仍是 B0 **98.3**、B1 **88.2**，是偏有利的一抽，不能代替这 507 盘。见「507 分析（助手）」。  
-**现行缺口**在文首「下一步」：**P0a #37**、**P0b #39**、**P0c #41（`54c32e8`）**、**Q 校准 #44（`3fc611d`）**、**P0d #46（`b9c4c5e7`）**、**误差审计 #48（`91a05d8`）**、**2026-11-06 排序（先 #51 再 #53，P1 暂缓）**、**food-id #51（`6c8fda02`）**、**覆盖约束 #53（`2a406df4`，开发检查点）**、**① 反事实 Q #57（`0aa30537`）**、**② food-id 语义审计 #60（`c52ffaa2`）** 已完成 → **当前第一项 = ③ 外部 held-out（已解锁）**（**④–⑦ 锁定**；③ 的代码只在本文件进入主分支之后才许开工。解锁：Triste 点头，群聊 2026-11-09，+ 调研建议把配对 505 隔离出 held-out，别急开 P1/重训。协议冻结为 **#53+#51**。自动标签只是建议，人审包仍开放，**不**把 #51 的 kcal 下降写成身份成功）。Ours-old（#24–#34）已落盘作对照。**P1 未解锁 / 暂缓；禁止自动开 P1；禁止重训 Mass/Q。** #53 **不**证明方法。① 一步评测 **Q ≈ 规则 ≪ oracle**，加固该归因。试标 30（kappa **0.7–0.8**）仍为 P2。**暂不上 RL。**
+**现行缺口**在文首「下一步」：**P0a #37**、**P0b #39**、**P0c #41（`54c32e8`）**、**Q 校准 #44（`3fc611d`）**、**P0d #46（`b9c4c5e7`）**、**误差审计 #48（`91a05d8`）**、**2026-11-06 排序（先 #51 再 #53，P1 暂缓）**、**food-id #51（`6c8fda02`）**、**覆盖约束 #53（`2a406df4`，开发检查点）**、**① 反事实 Q #57（`0aa30537`）**、**② food-id 语义审计 #60（`c52ffaa2`）**、**③ 外部 held-out #63（`27d1dbfa`）** 已完成 → **当前第一项 = Cafe2 能量审计（已解锁；不是门禁 ④）**（**④–⑦ 锁定**；代码只在本文件进入主分支之后才许开工。解锁：Triste 点头「继续吧」，群聊 2026-11-09 晚 Asia/Shanghai，+ 调研建议。**主声称：质量稳赢可外推；能量开发集赢、外测未稳。** 自动标签只是建议，人审包仍开放，**不**把 #51 的 kcal 下降写成身份成功）。Ours-old（#24–#34）已落盘作对照。**P1 未解锁 / 暂缓；禁止自动开 P1；禁止重训 Mass/Q。** #53 **不**证明方法。① 一步评测 **Q ≈ 规则 ≪ oracle**，加固该归因。试标 30（kappa **0.7–0.8**）仍为 P2。**暂不上 RL。**
 
 ## 已完成（box）
 
@@ -567,14 +611,16 @@ B1 第二轮先验（菜品形态、未点名的仿肉、100 g 以上的高密�
 | food-id / 密度轻修 #51 | 同头 FNDDS 码替换（已有检索窗，≥15% 靠近 calorie head）；克重与动作保持。paired **n=505** 能量 **98.5521 → 92.6963**（质量 **58.9952** 不变）；vs Direct **ΔE +1.42 → −4.43**。多组件全写 **n=50** food-table **190.79 → 131.65**；**37/50**（**30↓ / 7↑**），**68** codes；head **77.75** 为目标，记分仍是 food-table。**827** mass / **0** hollow。squash **`6c8fda02`**；**#51 未改本文件** |
 | 覆盖未写组件 + 早停 #53 | 冻结 Q+fence 后，未写组件无 `estimate_mass` 写则拒绝 STOP/ABSTAIN（defer rule utility）；回到检索 top code 则 portion，不开第二轮 top-code swap；**#51 同头 swap 保留**。paired **n=505** vs #51：能量 **92.6963 → 64.2792**；质量 **58.9952 → 32.9908**；tool mean **4.6970 → 6.0257**（max **17**，均在 K=32）。vs Direct **ΔE −4.43 → −32.85**；**ΔM −17.35 → −43.36**。全部组件已写 **199/505 → 503/505**；STOP-unwritten **78 → 0**；Mass 成功 **827 → 1479**；hollow **0**。残留 **2** 盘（`dish_1565020895`、`dish_1565020926`）honeycomb 检索失败，卡 RETRIEVE，不编造克重、未 STOP。**无** Mass/Q/τ 重训。squash **`2a406df4`**；**#53 未改本文件**。**开发检查点，不证明方法；增益 ≠ Q 学习改进** |
 | ① 反事实 Q + dish_id 泄漏审计 #57 | 产物 `results/qphi_counterfactual/`。fit/hold-out 按 dish_id 分组，交集 **0**，无重训。头条 n=**1914**（rgb_train hold-out；coverage-choice + mass forward；与 #53 **505** 交集 **0**）：Q **0.6165** / **24.14** / **49.96**；规则 **0.6102** / **23.03** / **50.91**；固定 **0.5914** / **20.62** / **52.99**；随机 **0.4338** / **4.04** / **78.15**；oracle improve **82.19**、regret **0**。Q 约 **0.96** kcal 优于规则，约 **50** kcal 落后 oracle。**241/1914** 为 RE_DECOMPOSE no-op（冻结 Q 不能发出）；敏感性 Q **~17.33** vs 规则 **~18.28**。价值校准 n=**3475**：MAE **0.0226**，Pearson **0.747**；RE_PORTION **0.805**，CORRECT_CODE **0.016**。**Q ≈ 规则 ≪ oracle**。squash **`0aa305379a7cc02045d07ec9c513bb9c2a3d3061`**（短 **`0aa30537`**）。**#57 未改本文件** |
-| ② food-id 语义审计 #60 | 只读 #51 `results/food_id_density/`（squash `6c8fda02`）。**68** 个同头换码，覆盖 **37/50** 多组件盘。自动标签（仅建议）：换码后 Exact **0** / Near **50**（**73.53%**）/ Wrong **18**（**26.47%**）；换码前同一 cafe 行 Exact **27** / Near **23** / Wrong **18**；Exact→Near **27**；变差 **28** / 变好 **1** / 不变 **39**。宏量 food-table vs cafe，finished 多组件 **n=50**：P **10.57→10.07**，C **13.00→16.17**，F **17.56→11.97**，E **190.79→131.65**（能量与冻结 #51 一致）。换码 **37**：碳水 MAE **+4.28 g**，能量 MAE **−79.92 kcal**。能量变好的 **30** 盘：全 Exact **0**，至少一码 Wrong **12**，仅 Near **18**；这 **30** 盘上 **50** 个码全是 Near 或 Wrong。**kcal 变好 ≠ 身份变对。** 人审：68 行全部 `needs_human_review=yes`；自动标签不关闭审计。文件 `human_review_components.csv`、`human_review_dishes.csv`、`human_review.md`。产物 `results/food_id_semantic_audit/`；脚本 `scripts/food_id_semantic_audit.py`。squash **`c52ffaa2`**。**#60 未改本文件**。不要重跑，不要改该目录。本条不定义 held-out；③ 的解锁见下行 |
-| 解锁 ③（Triste + 调研） | **2026-11-09** 群聊点头 + 调研建议（配对 **505** 仍是开发 / 诊断集；held-out 必须按 dish_id 隔离；别急开 P1 / 重训）。**③ 已解锁**，为当前第一项、唯一允许写代码的项。代码只在本文件进入主分支之后才许开工。协议冻结为 **#53+#51** 同预算主路径（Coverage-Constrained + 密度 / 同头换码）。先划分脚本和 dish 列表（例如 `results/heldout_plan/`），再跑该冻结协议，再交主表（**Energy MAE + Mass MAE**；基线 **Direct-VLM** 与 **Mass-only**；覆盖率与步数 / 工具次数）。**禁止**用 held-out 做方法选择、早停、阈值 / τ 或 GT 驱动的码 / 份量修改。**④–⑦** 与 P1 / Mass·Q·τ 重训仍锁。不覆盖 #51 / #53 / #57 / #60 |
+| ② food-id 语义审计 #60 | 只读 #51 `results/food_id_density/`（squash `6c8fda02`）。**68** 个同头换码，覆盖 **37/50** 多组件盘。自动标签（仅建议）：换码后 Exact **0** / Near **50**（**73.53%**）/ Wrong **18**（**26.47%**）；换码前同一 cafe 行 Exact **27** / Near **23** / Wrong **18**；Exact→Near **27**；变差 **28** / 变好 **1** / 不变 **39**。宏量 food-table vs cafe，finished 多组件 **n=50**：P **10.57→10.07**，C **13.00→16.17**，F **17.56→11.97**，E **190.79→131.65**（能量与冻结 #51 一致）。换码 **37**：碳水 MAE **+4.28 g**，能量 MAE **−79.92 kcal**。能量变好的 **30** 盘：全 Exact **0**，至少一码 Wrong **12**，仅 Near **18**；这 **30** 盘上 **50** 个码全是 Near 或 Wrong。**kcal 变好 ≠ 身份变对。** 人审：68 行全部 `needs_human_review=yes`；自动标签不关闭审计。文件 `human_review_components.csv`、`human_review_dishes.csv`、`human_review.md`。产物 `results/food_id_semantic_audit/`；脚本 `scripts/food_id_semantic_audit.py`。squash **`c52ffaa2`**。**#60 未改本文件**。不要重跑，不要改该目录。本条不定义 held-out。③ 已由 #63 完成（见「③ 外部 held-out #63」行）。当前第一项见「解锁 Cafe2 能量审计」。历史解锁见「解锁 ③」行 |
+| 解锁 ③（Triste + 调研） | **2026-11-09** 群聊点头 + 调研建议（配对 **505** 仍是开发 / 诊断集；held-out 必须按 dish_id 隔离；别急开 P1 / 重训）。该解锁随后由 **#63**（squash `27d1dbfa`）做完。当时约定：代码只在本文件进入主分支之后才许开工。协议冻结为 **#53+#51** 同预算主路径（Coverage-Constrained + 密度 / 同头换码）。先划分脚本和 dish 列表（`results/heldout_plan/`），再跑该冻结协议，再交主表（**Energy MAE + Mass MAE**；基线 **Direct-VLM** 与 **Mass-only**；覆盖率与步数 / 工具次数）。**禁止**用 held-out 做方法选择、早停、阈值 / τ 或 GT 驱动的码 / 份量修改。当时 **④–⑦** 与 P1 / Mass·Q·τ 重训仍锁。不覆盖 #51 / #53 / #57 / #60。本行不是当前开工项 |
+| ③ 外部 held-out #63 | Cafe2，**n=228**，与配对 **505**、fit（**3679** 官方 rgb_train 且 `pool_of_dish==fit`）、rgb_train、rgb_test、cafe1 的 dish_id **不相交**。划分 `results/heldout_plan/`；主表与轨迹 `results/heldout_eval/`。主表（三法皆有限，n=228）：Coverage-Constrained + density/same-head 能量 MAE **116.8494** kcal，质量 MAE **50.9483** g，覆盖 **0.9737**（222/228），步数均值 **6.2193**，工具调用均值 **5.2456**；Direct-VLM 能量 **105.6157**、质量 **73.7456**；Mass-only（冻结 Mass）能量 **75.3870**、质量 **51.7107**。能量 MAE 比 Direct-VLM **高 11.23** kcal，比 Mass-only **高 41.46** kcal；质量 MAE 比 Direct-VLM **低 22.80** g，比 Mass-only **低 0.76** g。STOP 且仍有未写组件 **0**。**6** 盘停在 RETRIEVE，组件仍未写完，没有编造份量。同头密度换码 **106** 盘。空壳 RE_PORTION **0**。工具调用中位 **4**、最大 **14**，**228/228** 在 K=32 内。Mass 写 **575**。Cafe2 盘级能量列每行都是 **0**，能量目标是配料卡路里之和；质量是盘级克重总量。这次 Direct-VLM 行记下 `placement_max_memory=8GiB`（共享 GPU）；同一 bf16 checkpoint 与 prompt，不是历史上满 GPU 的 `cuda:0` 放置。不要重跑，不要据此解锁重训。开发 505 的能量 MAE **64.2792**、质量 MAE **32.9908** **不是**本表的行。**#53 不证明方法。** #51 是密度 / kcal 启发式（自动 Exact=**0**）。一步审计上 **Q ≈ 规则 ≪ oracle**。**主声称：质量稳赢可外推；能量开发集赢、外测未稳。** **不**声称 held-out 上能量与质量双赢。squash **`27d1dbfa`**。**#63 未改本文件**。不要重跑，不要覆盖这两个目录 |
+| 解锁 Cafe2 能量审计（Triste + 调研） | **2026-11-09** 晚（Asia/Shanghai）群聊点头「继续吧」，在调研建议之后。**当前第一项 = Cafe2 能量审计**（已解锁；唯一允许写代码的项；**不是门禁 ④**）。代码只在本文件进入主分支之后才许开工。这是 ③ 的诊断后续，与 #48 同口径，不是真实 Tool Cost，不是 ⑤–⑦，不是 P1，不是 Mass / Q / τ 重训。**505** 仍是开发 / 诊断集。只读冻结 Cafe2 **n=228**，不重画划分；只读 `results/heldout_plan/` 与 `results/heldout_eval/`。新产物例如 `results/heldout_energy_audit/`。不要覆盖 `results/heldout_plan/`、`results/heldout_eval/`、`results/food_id_density/`、`results/coverage_early_stop/`、`results/qphi_counterfactual/`、`results/food_id_semantic_audit/`。不要重跑 #63 闭环主表，也不要重跑 #48 / #51 / #53 / #57 / #60。**主声称：质量稳赢可外推；能量开发集赢、外测未稳。** 协议：（1）只在冻结的 Cafe2 n=228 名单上做诊断。不做方法选择，不早停，不调阈值 / τ，不换方法，不用 GT 改码或份量。Diagnostic only on the frozen Cafe2 n=228 list. No method selection, no early stopping, no threshold/τ tuning, no swapping the method, no GT-driven code or portion edits.（2）与 #48 同一组切分，写明白。Same cuts as #48, written plainly: 固定 food-id 时，mass 重写是否同时降低 energy（hold identity/codes fixed, then ask whether the mass rewrite also drops energy）。oracle 标签密度 + 我方克数（oracle label density with our grams）。另拆 #51 density swap 开/关，重点看换过码的 106 盘。（3）基线仍是 Direct-VLM 与 Mass-only。头条问题：相对 Mass-only 的能量损失 +41.46 kcal（质量几乎打平，−0.76 g）是否来自 food-id / 密度。Baselines remain Direct-VLM and Mass-only. The headline question is whether the energy loss vs Mass-only of +41.46 kcal (mass almost tied, −0.76 g) comes from food-id / density。**④–⑦** 与 P1 / Mass·Q·τ 重训仍锁 |
 
 ## 明确未完成
 
 | 项 | 阻塞 |
 |----|------|
-| ③ 外部 held-out | **当前第一项。已解锁；唯一允许写代码的项。** 代码只在本文件进入主分支之后才许开工。顺序：划分脚本 + dish 列表（例如 `results/heldout_plan/`）→ 冻结的 **#53+#51** 同预算主路径（Coverage-Constrained Active Specialist Selection + 密度 / 同头换码）→ 主表数字。配对 **505** 仍只是开发 / 诊断集。Held-out 按 **dish_id** 分组且与该 **505** 不相交；优先菜品 / 来源隔离。200–500 薄标注可以承担一部分需求。**禁止**用 held-out 做方法选择、早停、阈值 / τ 或 GT 驱动的码 / 份量修改。主指标 **Energy MAE + Mass MAE**；基线 **Direct-VLM** 与 **Mass-only**；另报覆盖率与步数 / 工具次数。新目录不覆盖 #51 / #53 / #57 / #60。**不**重训 Mass / Q / τ；**不**开 P1。解锁：Triste 点头（群聊 2026-11-09）+ 调研建议（505 开发集隔离 held-out；别急开 P1/重训）。人审包仍开放；自动标签只是建议；#51 是密度 / kcal 启发式（Exact=**0**）；**Q ≈ 规则 ≪ oracle**；**不**把 #51 的 kcal 下降写成身份成功 |
+| Cafe2 能量审计 | **当前第一项。已解锁；唯一允许写代码的项；不是门禁 ④。** 代码只在本文件进入主分支之后才许开工。③ 的诊断后续，与 #48 同口径，**不是**真实 Tool Cost，**不是** ⑤–⑦，**不是** P1，**不是** Mass / Q / τ 重训。配对 **505** 仍只是开发 / 诊断集。只读冻结 Cafe2 **n=228**，不重画划分。新产物例如 `results/heldout_energy_audit/`，不覆盖 `results/heldout_plan/`、`results/heldout_eval/`、#48 / #51 / #53 / #57 / #60。不要重跑 #63 闭环主表。**主声称：质量稳赢可外推；能量开发集赢、外测未稳。** 协议：（1）Diagnostic only on the frozen Cafe2 n=228 list. No method selection, no early stopping, no threshold/τ tuning, no swapping the method, no GT-driven code or portion edits.（2）Same cuts as #48, written plainly: 固定 food-id 时，mass 重写是否同时降低 energy（hold identity/codes fixed, then ask whether the mass rewrite also drops energy）。oracle 标签密度 + 我方克数（oracle label density with our grams）。另拆 #51 density swap 开/关，重点看换过码的 106 盘。（3）Baselines remain Direct-VLM and Mass-only. The headline question is whether the energy loss vs Mass-only of +41.46 kcal (mass almost tied, −0.76 g) comes from food-id / density. 解锁：Triste 点头「继续吧」（群聊 2026-11-09 晚，Asia/Shanghai）+ 调研建议 |
 | ④ 真实 Tool Cost | **锁定。禁止自动开。** VLM 次数、延迟、token、单盘成本、能量 MAE–Cost Pareto |
 | ⑤ 忠实 B1/B2 + 相关工作 | **锁定。禁止自动开。** 优先 arXiv 2610.11144、CVPRW 2025 Decomposing Food Images、NutriVision arXiv 2609.33076 |
 | ⑥ Provenance + Semantic | **锁定。禁止自动开。** |
@@ -584,7 +630,7 @@ B1 第二轮先验（菜品形态、未点名的仿肉、100 g 以上的高密�
 | 无俯拍 RGB 的官方 test 盘 | 不进入这次命令，也不要写成 709 盘全表 |
 | 步骤弱标签全量（仅 train） | **已完成。** fit 3679 + hold-out 380。没有新的生成命令。阈值仍只许在 hold-out 上看，禁止用 test GT |
 | 试标 30 + 新标签 / kappa 0.7–0.8 | **人工，P2。** 指南仍是 v0，文首已标明相对 PLAN P2 部分过时。正式协议仍要扩到 Visibility / Code Match 等。不作 0.6 凑合 |
-| 200–500 金标准 | **人工**，可分期；协议与 kappa 门禁不能省。若其中一部分充当外部 held-out，归门禁 **③**（按菜品 / 来源隔离；与配对 **505** 的 dish_id 不相交；**禁止**用于方法选择、早停或调 τ）。**③ 已解锁**：薄标注可以承担一部分划分需求，但先有 dish 列表，再跑冻结的 **#53+#51** 协议。开标**不是**重训许可 |
+| 200–500 金标准 | **人工**，可分期；协议与 kappa 门禁不能省。若其中一部分再充当外部 held-out，仍须按菜品 / 来源隔离，并与配对 **505** 的 dish_id 不相交；**禁止**用于方法选择、早停或调 τ。**③ 已由 #63 完成**（Cafe2 **n=228**）。开标**不是**重训许可，也**不**自动开 **④–⑦** 或 P1，也**不**把 Cafe2 能量审计改叫门禁 ④ |
 | 旧开环 Ours-BC / RL | **已停 / 暂不上。** 31 维开环只作消融 B5：线性 **0.9206**，MLP **0.9700**，DAgger r1 **0.9592**（新行 1490）。`ABSTAIN` **0/24 是红警**。没有新的服务器训练命令。P0 脚本与未训练草图已进仓库（文首）；闭环训练仍要等额度 |
 | 体积工具 | **保持默认关闭**（刻意不做） |
 | 旧回归权重 | **禁止接入** |
