@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="460" viewBox="0 0 860 460">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="72" y="28" font-family="DejaVu Sans, sans-serif" font-size="16" fill="#111827">Cafe2 energy MAE, n=228</text>
+<text x="72" y="46" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#4b5563">Accounting rows use the stored grams and codes. Oracle density is arithmetic.</text>
+<line x1="72" y1="372" x2="836" y2="372" stroke="#111827"/>
+<line x1="72" y1="56" x2="72" y2="372" stroke="#111827"/>
+<rect x="90.0" y="104.2" width="106.3" height="267.8" fill="#a16207"/>
+<text x="143.2" y="98.2" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#111827">195.7</text>
+<text x="143.2" y="394" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#111827">
+<tspan x="143.2" dy="0">100 g grid</tspan>
+<tspan x="143.2" dy="15">bound codes</tspan>
+</text>
+<rect x="214.3" y="200.6" width="106.3" height="171.4" fill="#9a3412"/>
+<text x="267.5" y="194.6" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#111827">125.2</text>
+<text x="267.5" y="394" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#111827">
+<tspan x="267.5" dy="0">Mass grams</tspan>
+<tspan x="267.5" dy="15">bound codes</tspan>
+</text>
+<rect x="338.7" y="212.1" width="106.3" height="159.9" fill="#c2410c"/>
+<text x="391.8" y="206.1" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#111827">116.8</text>
+<text x="391.8" y="394" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#111827">
+<tspan x="391.8" dy="0">Swap on</tspan>
+<tspan x="391.8" dy="15">commit</tspan>
+</text>
+<rect x="463.0" y="237.0" width="106.3" height="135.0" fill="#1f7a4d"/>
+<text x="516.2" y="231.0" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#111827">98.6</text>
+<text x="516.2" y="394" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#111827">
+<tspan x="516.2" dy="0">Oracle density</tspan>
+<tspan x="516.2" dy="15">x our grams</tspan>
+</text>
+<rect x="587.3" y="268.8" width="106.3" height="103.2" fill="#1d4e89"/>
+<text x="640.5" y="262.8" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#111827">75.4</text>
+<text x="640.5" y="394" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#111827">
+<tspan x="640.5" dy="0">Mass-only</tspan>
+</text>
+<rect x="711.7" y="227.4" width="106.3" height="144.6" fill="#4b5563"/>
+<text x="764.8" y="221.4" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#111827">105.6</text>
+<text x="764.8" y="394" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#111827">
+<tspan x="764.8" dy="0">Direct-VLM</tspan>
+</text>
+<text x="22" y="214" text-anchor="middle" transform="rotate(-90 22 214)" font-family="DejaVu Sans, sans-serif" font-size="13" fill="#111827">kcal</text>
+</svg>
