@@ -4,9 +4,9 @@
 
 输出 \(y=(n, G, s, \tau)\)：营养向量 + 证据图 + 核验状态（`pass` / `corrected` / `abstain`）+ 纠错轨迹。  
 kcal-proxy 弃权不作主创新。  
-主方法：**Evidence-Guided Active Multimodal Nutrition Estimation**（任务框架）— **Coverage-Constrained Active Specialist Selection** + **Error-Aware Q**（Route A：能量 + 质量；宏量辅助）。执行门禁见 [`docs/STATUS.md`](docs/STATUS.md)（① #57、② #60、③ #63 squash `27d1dbfa` 已完成；Cafe2 能量审计 #65 squash `ecf859f5` 已完成；**主声称仍是：质量稳赢可外推；能量开发集赢、外测未稳**；**当前 = 代码空闲**，没有当前可写代码的项，不是门禁 ④；④–⑦ 仍锁；P1 与 Mass/Q 重训仍锁）。下一次写代码只在以后的 STATUS 改写进入 `main` 之后。本文件这次改写不是开工许可。State-aware 闭环与开环 31 维 BC 为 **Ours-old / 消融对照**。暂不上 RL。  
+主方法：**Evidence-Guided Active Multimodal Nutrition Estimation**（任务框架）— **Coverage-Constrained Active Specialist Selection** + **Error-Aware Q**（Route A：能量 + 质量；宏量辅助）。执行门禁见 [`docs/STATUS.md`](docs/STATUS.md)（① #57、② #60、③ #63 squash `27d1dbfa` 已完成；Cafe2 能量审计 #65 squash `ecf859f5` 已完成；**主声称仍是：质量稳赢可外推；能量开发集赢、外测未稳**；**当前 = Mass-only 能量路径便宜诊断（说清 98 vs 75）**，不是门禁 ④；④–⑦ 仍锁；P1 与 Mass/Q 重训仍锁）。本文件这次改写**是**这一项的开工许可，**不是** ④ 或更后项的开工许可。代码只在本文件进入 `main` 之后才许开工。State-aware 闭环与开环 31 维 BC 为 **Ours-old / 消融对照**。暂不上 RL。  
 
-Cafe2 能量审计已完成（#65），是 ③ 的诊断后续，与 #48 同口径，**不是门禁 ④**，也**不**解锁 **④–⑦**。配对 505 仍是开发 / 诊断集。冻结 Cafe2 n=228 不重画。#63 主表不变：能量相对 Direct **+11.23**、相对 Mass-only **+41.46**；质量相对 Direct **−22.80**、相对 Mass-only **−0.76**。#51 换码 **106** 盘已在该审计里拆开。**不**声称双赢。**不**从这些标签开工改方法。**代码空闲。禁止**自动开 **④–⑦**。
+Cafe2 能量审计已完成（#65），是 ③ 的诊断后续，与 #48 同口径，**不是门禁 ④**，也**不**解锁 **④–⑦**。配对 505 仍是开发 / 诊断集。冻结 Cafe2 n=228 不重画。#63 主表不变：能量相对 Direct **+11.23**、相对 Mass-only **+41.46**；质量相对 Direct **−22.80**、相对 Mass-only **−0.76**。#51 换码 **106** 盘已在该审计里拆开。**不**声称双赢。**不**从这些标签开工改方法。**当前 = Mass-only 能量路径便宜诊断（说清 98 vs 75）**：只解释 oracle 标签密度 × 我方克数 **98.6201** 与 Mass-only **75.3870**（#65 已冻结不加权 kcal/g MAE **0.631** vs **0.753**、抵消 **77.8** vs **58.2**）。不改方法，不调超参，不在 Cafe2 上早停或做模型选择。写明 Mass-only 用的 food-id / 密度 / calorie head，以及它和食物表 commit、和 oracle × 我方克数的差别。本诊断落盘后不要自动开下一道门。**禁止**自动开 **④–⑦**。
 
 **主投 ACM Multimedia（CCF-A）**；备选 AAAI/IJCAI。算力假设 **2×4090D 24GB**。
 
