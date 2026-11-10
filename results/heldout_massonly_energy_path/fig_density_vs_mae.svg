@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="420" viewBox="0 0 880 420">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="64" y="32" font-family="DejaVu Sans, sans-serif" font-size="16" fill="#111827">Energy error and density error on the same 228 plates</text>
+<text x="64" y="52" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#4b5563">Each group has its own scale. Oracle density error is 0.</text>
+<rect x="198.0" y="134.4" width="36.0" height="207.6" fill="#1f7a4d"/>
+<text x="216.0" y="130.4" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#111827">98.6</text>
+<rect x="240.0" y="183.3" width="36.0" height="158.7" fill="#1d4e89"/>
+<text x="258.0" y="179.3" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#111827">75.4</text>
+<rect x="282.0" y="96.0" width="36.0" height="246.0" fill="#c2410c"/>
+<text x="300.0" y="92.0" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#111827">116.8</text>
+<text x="258.0" y="370" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#111827">Energy MAE (kcal)</text>
+<rect x="586.0" y="342.0" width="36.0" height="0.0" fill="#1f7a4d"/>
+<text x="604.0" y="338.0" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#111827">0.000</text>
+<rect x="628.0" y="96.0" width="36.0" height="246.0" fill="#1d4e89"/>
+<text x="646.0" y="92.0" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#111827">0.753</text>
+<rect x="670.0" y="135.7" width="36.0" height="206.3" fill="#c2410c"/>
+<text x="688.0" y="131.7" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="11" fill="#111827">0.631</text>
+<text x="646.0" y="370" text-anchor="middle" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#111827">kcal/g MAE</text>
+<rect x="64" y="396" width="12" height="12" fill="#1f7a4d"/>
+<text x="82" y="406" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#111827">Oracle × our grams</text>
+<rect x="244" y="396" width="12" height="12" fill="#1d4e89"/>
+<text x="262" y="406" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#111827">Mass-only energy head</text>
+<rect x="424" y="396" width="12" height="12" fill="#c2410c"/>
+<text x="442" y="406" font-family="DejaVu Sans, sans-serif" font-size="12" fill="#111827">Food-table commit</text>
+</svg>
