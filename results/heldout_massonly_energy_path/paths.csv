@@ -1,0 +1,6 @@
+name,food_id,density_source,grams,energy_mae_kcal,mass_mae_g,density_mae_kcal_per_g,scored_commit
+mass_only_energy_head,none,"dish-level energy head / mass head, accounting identity only",mass head,75.3869554634,51.7107429825,0.7529871262,True
+oracle_density_x_our_grams,"label density, not a food code",ingredient-sum kcal / dish grams,food-table commit grams,98.6201298897,50.9482828947,0.0000000000,False
+oracle_density_x_mass_only_grams,"label density, not a food code",ingredient-sum kcal / dish grams,mass head,100.3152313616,51.7107429825,0.0000000000,False
+head_implied_density_x_our_grams,none,energy head / mass head,food-table commit grams,75.1005448329,50.9482828947,0.7529871262,False
+food_table_commit,FNDDS code from retrieval; same-head swap on 106 plates,FNDDS kcal per 100 g,"mass-estimator component grams, summed",116.8494020556,50.9482828947,0.6313931705,True
