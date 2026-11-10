@@ -114,7 +114,7 @@ y = (n,\ G,\ s,\ \tau)
 
 Grounding 为 P2/P3：细粒度分割未必自动改善营养 MAE，**份量/质量**才是瓶颈（待补正式引用，勿编造 DOI）。
 
-**P1 检索重排仍暂缓**，STATUS 门禁 ⑦ 之前不开，也不重训 Mass / Q。**Coverage Guard** 已在 #53 落地，应写成 \(A_{legal}\) 方法，不是空壳，也不是 Bug Fix。#51 同头换码已落地；语义审计（门禁 **②**）已由 #60 完成（见 §14）。**①②③ 已完成。Cafe2 能量审计已完成（#65，squash `ecf859f5`）。当前 = 代码空闲。④–⑦** 仍锁。**禁止**自动开 **④–⑦**。
+**P1 检索重排仍暂缓**，STATUS 门禁 ⑦ 之前不开，也不重训 Mass / Q。**Coverage Guard** 已在 #53 落地，应写成 \(A_{legal}\) 方法，不是空壳，也不是 Bug Fix。#51 同头换码已落地；语义审计（门禁 **②**）已由 #60 完成（见 §14）。**①②③ 已完成。Cafe2 能量审计已完成（#65，squash `ecf859f5`）。当前 = Mass-only 能量路径便宜诊断（说清 98 vs 75）。④–⑦** 仍锁。**禁止**自动开 **④–⑦**。
 
 ---
 
@@ -234,7 +234,7 @@ Primary 叙事（Route A）：**Full-set MAE@energy + mass MAE + 真实 Tool cos
 - A5 忠实 B1/B2（不挡 Mass P0）  
 - F1 案例：Mass 纠正 / 检索重排 / PARTIAL ABSTAIN  
 
-早期取舍是保住 **M1 + mass + Tool cost + A1/A2**。**现行顺序以 §14 为准（①②③ 与 Cafe2 能量审计已完成；代码空闲，不是门禁 ④；④–⑦ 仍锁）**；切勿再把 Policy Acc、kcal-proxy AURC 或开发 505 当最终主表。真实 Tool cost 仍是门禁 **④**，审计已完成，不在这里开。
+早期取舍是保住 **M1 + mass + Tool cost + A1/A2**。**现行顺序以 §14 为准（①②③ 与 Cafe2 能量审计已完成；当前 = Mass-only 能量路径便宜诊断，不是门禁 ④；④–⑦ 仍锁）**；切勿再把 Policy Acc、kcal-proxy AURC 或开发 505 当最终主表。真实 Tool cost 仍是门禁 **④**，不在这项诊断里开。
 
 ---
 
@@ -252,7 +252,7 @@ Primary 叙事（Route A）：**Full-set MAE@energy + mass MAE + 真实 Tool cos
 
 **B1/B2 并行，不挡 Mass P0。**
 
-上表是早期周程。**现行严格顺序以 §14 与 [`docs/STATUS.md`](docs/STATUS.md) 为准**：**①②③ 与 Cafe2 能量审计已完成**；**当前 = 代码空闲**（**不是门禁 ④**；**④–⑦** 仍锁定；**禁止**自动开）；P1 与 Mass/Q 重训仍锁。
+上表是早期周程。**现行严格顺序以 §14 与 [`docs/STATUS.md`](docs/STATUS.md) 为准**：**①②③ 与 Cafe2 能量审计已完成**；**当前 = Mass-only 能量路径便宜诊断（说清 98 vs 75）**（**不是门禁 ④**；**④–⑦** 仍锁定；**禁止**自动开）；P1 与 Mass/Q 重训仍锁。
 
 ---
 
@@ -274,7 +274,7 @@ Primary 叙事（Route A）：**Full-set MAE@energy + mass MAE + 真实 Tool cos
 
 ## 14. MVP-for-A（严格顺序；前一项未完成不得跳步）
 
-**① 已完成（#57，squash `0aa30537`）。② 已完成（#60，squash `c52ffaa2`）。③ 已完成（#63，squash `27d1dbfa`）。Cafe2 能量审计已完成（#65，squash `ecf859f5`）。当前 = 代码空闲。没有当前可写代码的项。不是门禁 ④，也不是新的代码项。** 以 [`docs/STATUS.md`](docs/STATUS.md) 为准：**该审计已完成。禁止**自动开 **④–⑦**。下一次写代码只在以后的 STATUS 改写之后（本文件这次改写不是开工许可）。**P1 仍暂缓 / 锁定。禁止**重训 Mass。**禁止**重训 Q。**禁止**重拟合 τ。**无 RL。不开 fast Cloud Agent。** 该审计的解锁依据（已做完，不是新的开工许可）：Triste 点头「继续吧」（群聊 2026-11-09 晚，Asia/Shanghai）+ 调研建议。#65 是已完成的诊断。**主声称：质量稳赢可外推；能量开发集赢、外测未稳。** **不**声称 held-out 上能量与质量双赢。开发 505 的能量 MAE **64.2792**、质量 MAE **32.9908** **不是** Cafe2 主表的行。自动 Exact / Near / Wrong 只是建议，人审包仍开放；**kcal 变好 ≠ 身份变对**，不把 #51 的能量下降写成身份成功。#51 是密度 / kcal 启发式（换码后自动 Exact=0）。① 上 Q ≈ 规则 ≪ oracle。#53 冻结为 Ours-new **开发检查点**（配对 505 是开发 / 诊断集，不是最终独立泛化主表）。#51/#53 的开发数字不在这里改写。2026-11-06 的旧排序（先 #51 再 #53，P1 暂缓）已经做完，那套编号退役。
+**① 已完成（#57，squash `0aa30537`）。② 已完成（#60，squash `c52ffaa2`）。③ 已完成（#63，squash `27d1dbfa`）。Cafe2 能量审计已完成（#65，squash `ecf859f5`）。当前 = Mass-only 能量路径便宜诊断（说清 98 vs 75）。不是门禁 ④。** 以 [`docs/STATUS.md`](docs/STATUS.md) 为准：**该审计已完成。禁止**自动开 **④–⑦**。本文件这次改写**是**这一项便宜诊断的开工许可，**不是** ④ 或更后项的开工许可。代码只在本文件进入主分支之后才许开工。**P1 仍暂缓 / 锁定。禁止**重训 Mass。**禁止**重训 Q。**禁止**重拟合 τ。**无 RL。不开 fast Cloud Agent。** #65 的解锁依据（已做完）：Triste 点头「继续吧」（群聊 2026-11-09 晚，Asia/Shanghai）+ 调研建议。本诊断的解锁依据：Triste 点头「继续吧」（群聊 2026-11-10 早，Asia/Shanghai）+ 调研建议。#65 是已完成的诊断。**主声称：质量稳赢可外推；能量开发集赢、外测未稳。** **不**声称 held-out 上能量与质量双赢。开发 505 的能量 MAE **64.2792**、质量 MAE **32.9908** **不是** Cafe2 主表的行。自动 Exact / Near / Wrong 只是建议，人审包仍开放；**kcal 变好 ≠ 身份变对**，不把 #51 的能量下降写成身份成功。#51 是密度 / kcal 启发式（换码后自动 Exact=0）。① 上 Q ≈ 规则 ≪ oracle。#53 冻结为 Ours-new **开发检查点**（配对 505 是开发 / 诊断集，不是最终独立泛化主表）。#51/#53 的开发数字不在这里改写。2026-11-06 的旧排序（先 #51 再 #53，P1 暂缓）已经做完，那套编号退役。
 
 **已完成**：P0a–P0d、Q 校准 #44、误差审计 #48、food-id #51、覆盖约束 #53、**① #57**、**② #60**、**③ #63**、**Cafe2 能量审计 #65**。**#51/#53 增益 ≠ Q 学习改进**（Mass / Q / τ 冻结；① 一步评测 Q ≈ 规则 ≪ oracle）。**②** 不把换码后的 kcal 下降写成身份正确。**③** 不把外测写成能量与质量双赢。**#65** 不把外测改写成双赢，也**不**开工改方法。**主声称仍是：质量稳赢可外推；能量开发集赢、外测未稳。**
 
@@ -289,13 +289,18 @@ Primary 叙事（Route A）：**Full-set MAE@energy + mass MAE + 真实 Tool cos
 6. **② 已完成（#60，squash `c52ffaa2`）— 不是当前开工项。** 只读 #51 同头换码（`results/food_id_density/`，squash `6c8fda02`）：**68** 码，**37/50** 多组件盘。自动标签（仅建议）：换码后 Exact **0** / Near **50**（73.53%）/ Wrong **18**（26.47%）；换码前同一 cafe 行 Exact **27** / Near **23** / Wrong **18**；Exact→Near **27**；变差 **28**、变好 **1**、不变 **39**。宏量 food-table vs cafe，finished 多组件 n=50：P 10.57→10.07，C 13.00→**16.17**，F 17.56→11.97，E 190.79→131.65（能量与冻结 #51 一致）。换码 37：碳水 MAE **+4.28 g**，能量 MAE **−79.92 kcal**。能量变好的 30 盘：全 Exact **0**，任一 Wrong **12**，仅 Near **18**；其上 **50** 码全是 Near 或 Wrong。**kcal 变好 ≠ 身份变对。** 人审包仍开放：68 行 `needs_human_review=yes`（`human_review_*.csv` / `human_review.md`）。产物 `results/food_id_semantic_audit/`；脚本 `scripts/food_id_semantic_audit.py`。**不**重跑，**不**改该目录，**不**重训 Mass / Q / τ，**不**开 P1。本条不定义 held-out。
 7. **③ 已完成（#63，squash `27d1dbfa`）— 不是当前开工项。** Cafe2 held-out，**n=228**，与配对 **505**、fit（**3679** 官方 rgb_train 且 `pool_of_dish==fit`）、rgb_train、rgb_test、cafe1 的 dish_id 不相交。划分 `results/heldout_plan/`；主表与轨迹 `results/heldout_eval/`。主表（三法皆有限，n=228）：Coverage-Constrained + density/same-head 能量 MAE **116.8494** kcal、质量 MAE **50.9483** g、覆盖 **0.9737**（222/228）、步数均值 **6.2193**、工具调用均值 **5.2456**；Direct-VLM 能量 **105.6157**、质量 **73.7456**；Mass-only（冻结 Mass）能量 **75.3870**、质量 **51.7107**。能量 MAE 比 Direct-VLM **高 11.23** kcal，比 Mass-only **高 41.46** kcal。质量 MAE 比 Direct-VLM **低 22.80** g，比 Mass-only **低 0.76** g。STOP 且仍有未写组件 **0**。**6** 盘停在 RETRIEVE，组件仍未写完，没有编造份量。同头密度换码 **106** 盘。空壳 RE_PORTION **0**。工具调用中位 **4**、最大 **14**，**228/228** 在 K=32 内。Mass 写 **575**。Cafe2 盘级能量列每行都是 **0**，能量目标是配料卡路里之和；质量是盘级克重总量。这次 Direct-VLM 行记下 `placement_max_memory=8GiB`（共享 GPU）；同一 bf16 checkpoint 与 prompt，不是历史上满 GPU 的 `cuda:0` 放置。不要重跑，不要据此解锁重训。开发 505 的能量 MAE **64.2792**、质量 MAE **32.9908** **不是**本表的行。**不**声称 #53 证明方法。#51 是密度 / kcal 启发式（自动 Exact=0）。① 上 Q ≈ 规则 ≪ oracle。**主声称：质量稳赢可外推；能量开发集赢、外测未稳。** **不**声称 held-out 上能量与质量双赢。**不**重跑，**不**覆盖这两个目录，**不**重训 Mass / Q / τ，**不**开 P1。
 8. **Cafe2 能量审计已完成（#65，squash `ecf859f5`，2026-11-09 Asia/Shanghai）— 不是当前开工项，不是门禁 ④。** ③ 的诊断后续，与 #48 同口径，已做完。不是真实 Tool Cost，不是 ⑤–⑦，不是 P1，不是 Mass / Q / τ 重训，也不是新的代码项。配对 **505** 仍是开发 / 诊断集。只读冻结 Cafe2 **n=228**，不重画划分。产物 `results/heldout_energy_audit/`；脚本 `scripts/heldout_energy_audit.py`。**没有**重跑 #63 闭环、Direct-VLM 或 Mass-only。**不**覆盖 `results/heldout_plan/`、`results/heldout_eval/`、`results/food_id_density/`、`results/coverage_early_stop/`、`results/qphi_counterfactual/`、`results/food_id_semantic_audit/`，也**不**改 `results/heldout_energy_audit/`。**不**重跑 #48 / #51 / #53 / #57 / #60 / #65。**#65 未改 STATUS。** **#63 主表不变**：Coverage-Constrained 能量 MAE **116.8494** kcal、质量 MAE **50.9483** g；Direct-VLM **105.6157** / **73.7456**；Mass-only **75.3870** / **51.7107**。能量相对 Direct **+11.23**、相对 Mass-only **+41.46**。质量相对 Direct **−22.80**、相对 Mass-only **−0.76**。覆盖 **0.9737**（222/228）。开发 505 的 **64.2792** / **32.9908** **仍不是**该表的行。**222**/228 盘上已提交克重与 Mass-only 克重相差小于 0.001 g；整段 **−0.76** g 质量优势是停在 RETRIEVE 的 **6** 盘（这 6 盘对 +41.46 均值的能量贡献 **−0.52** kcal）。**+41.46** kcal 是食物表密度打在已经与 Mass-only 对齐的克重上；Mass-only 用冻结质量估计器的 calorie head 给同一克重记分。码固定，相对 100 g 网格的 mass 重写：能量 MAE **195.6564 → 125.2060** kcal，质量 MAE **116.9123 → 50.9483** g。汇合下降来自多组件（**216.37 → 115.21**）。**58** 盘单组件上同一重写把能量 MAE **134.93 → 154.51**，质量仍近 51 g；这 58 盘贡献 **+29.62** kcal。Oracle 标签密度 × 我方克数：能量 MAE **98.6201** kcal，低于食物表 commit，低于 Direct-VLM，仍高于 Mass-only **75.3870**。不加权 kcal/g MAE：commit **0.631**，calorie head **0.753**；head 抵消更大（**77.8** vs **58.2** kcal）。#51 密度换码在 **106** 盘触发。全表能量 MAE 关 **125.2060** / 开 **116.8494**（**−8.3566** kcal），质量不变。**67** 盘更靠近 cafe 标签，**39** 盘更远。未换码的 **122** 盘贡献 **+38.30** kcal。#51 仍是密度 / kcal 启发式（开发集自动 Exact 为 **0**）。Bootstrap **10,000** 次、种子 **0**：能量差 vs Mass-only **[+25.35, +58.28]** kcal（每次均为正）；质量差 vs Direct-VLM **[−29.80, −15.66]** g（每次均为负）；能量差 vs Direct **[−6.22, +29.16]** 含两种符号；质量差 vs Mass-only **[−2.33, +0.10]** 含两种符号。**主声称仍是：质量稳赢可外推；能量开发集赢、外测未稳。** **不**声称双赢。**不**从这些标签开工改方法。**不**重训 Mass，**不**重训 Q，**不**开 P1，**不**改 τ。**禁止**自动开 **④–⑦**。已执行的协议（不是新开工）：Diagnostic only on the frozen Cafe2 n=228 list. No method selection, no early stopping, no threshold/τ tuning, no swapping the method, no GT-driven code or portion edits. 固定 food-id 的 mass 重写、oracle 标签密度 × 我方克数、#51 density swap 开/关（换过码的 106 盘）。基线仍是 Direct-VLM 与 Mass-only。
-**当前 = 代码空闲。** 上条已完成。**没有**已解锁的代码项。下一次写代码只在以后的 STATUS 改写之后。本文件这次改写不是开工许可。
-9. **④ 锁定 — 真实 Tool Cost。** VLM 调用次数、延迟、token、单盘成本，以及能量 MAE–Cost Pareto。调用次数不等于真实成本。
-10. **⑤ 锁定 — 忠实 B1/B2 + 相关工作。** B1 必须按官方协议重做（历史非忠实数字见 §13，本节不改；scaffold / dry-run 不算）。B2 能完整则完整，否则诚实 approx。优先对照：arXiv **2610.11144**、CVPRW 2025 **Decomposing Food Images**、**NutriVision** arXiv **2609.33076**。不编造 DOI。
-11. **⑥ 锁定 — Provenance + Semantic。** Provenance 自动全量；Semantic 人工提前到核心实验。
-12. **⑦ 锁定 — 然后才共决**是否解锁 P1 或重训 Mass/Q。在此之前 **禁止自动开 P1**，**禁止**重训。
+9. **Mass-only 能量路径便宜诊断 — 当前可执行（不是门禁 ④；说清 98 vs 75）。** 唯一允许写代码的项。不是在 505 上改 food-id，不是 Cafe2 重测，不是 ⑤–⑦，不是 P1，不是 Mass / Q / τ 重训。本文件这次改写**是**这一项的开工许可，**不是** ④ 或更后项的开工许可。代码只在 STATUS 的这份解锁进入主分支之后才许开工。配对 **505** 仍是开发 / 诊断集。只读冻结 Cafe2 **n=228**、`results/heldout_plan/`、`results/heldout_eval/`、`results/heldout_energy_audit/`，不重画划分。新产物优先 `results/heldout_massonly_energy_path/`。**不**覆盖冻结结果目录。**不**重跑 #63 闭环主表、Direct-VLM 或 Mass-only，也**不**重跑 #65 / #48 / #51 / #53 / #57 / #60。**不**重训 Mass，**不**重训 Q，**不**开 P1，**不**改 τ。**禁止**自动开 **④–⑦**。协议：
+    1. 下一步只做这一项便宜诊断。不改方法，不调超参，不在 Cafe2 上做早停或模型选择。No method changes, no hyperparameter tuning, and no early stopping or model selection on Cafe2.
+    2. 写明 Mass-only 能量怎么记分：用哪一个 food-id / 密度 / calorie head，以及这和我方食物表 commit、和 oracle 标签密度 × 我方克数有什么不同。冻结质量估计器的 calorie head × 已经在 222/228 盘上对齐的同一克重。The diagnostic must document how Mass-only energy is scored: which food-id / density / calorie head it uses, and how that differs from our food-table commit and from oracle label density × our grams.
+    3. 回答 oracle × 我方克数 **98.6201** 相对 Mass-only **75.3870**，主要是更大的有符号抵消（#65 已冻结：不加权 kcal/g MAE head **0.753** vs 食物表 **0.631**；抵消 **77.8** vs **58.2** kcal），还是 Mass-only 的密度 / 食物码其实更准。It must answer whether 98.6201 vs 75.3870 is mainly greater signed cancellation or whether Mass-only density/codes are actually more accurate.
+    4. 本诊断落盘之后，不要自动开下一道门。P1 / Mass·Q·τ 重训 / ④–⑦ 仍锁定。冻结后写作（「Coverage+Mass，能量外测未稳」）对比只在 505 上改 food-id 再重测 Cafe2，要等以后的调研阅读 + Triste 点头 + 再一次 STATUS 改写。After this diagnostic is filed, do not auto-open the next gate.
+    基线仍是 Direct-VLM 与 Mass-only。**主声称仍是：质量稳赢可外推；能量开发集赢、外测未稳。** **不**声称双赢。冻结 #63 / #65 数字不改，包括 **116.8494** / **50.9483**、**105.6157** / **73.7456**、**75.3870** / **51.7107**、**+11.23**、**+41.46**、**−22.80**、**−0.76**、**0.9737**（222/228），以及开发 505 的 **64.2792** / **32.9908**（**仍不是** held-out 表的行）。
+10. **④ 锁定 — 真实 Tool Cost。** VLM 调用次数、延迟、token、单盘成本，以及能量 MAE–Cost Pareto。调用次数不等于真实成本。
+11. **⑤ 锁定 — 忠实 B1/B2 + 相关工作。** B1 必须按官方协议重做（历史非忠实数字见 §13，本节不改；scaffold / dry-run 不算）。B2 能完整则完整，否则诚实 approx。优先对照：arXiv **2610.11144**、CVPRW 2025 **Decomposing Food Images**、**NutriVision** arXiv **2609.33076**。不编造 DOI。
+12. **⑥ 锁定 — Provenance + Semantic。** Provenance 自动全量；Semantic 人工提前到核心实验。
+13. **⑦ 锁定 — 然后才共决**是否解锁 P1 或重训 Mass/Q。在此之前 **禁止自动开 P1**，**禁止**重训。
 
-**可推迟**：RL；Route B 多目标 Q；体积；RGB-D 主表；VLM LoRA 营养头；kcal 代理弃权作主故事；在开发 505 上继续调方法冒充最终主表。完整金标准仍可分期。**③** 已完成，其 dish_id 隔离要求不因此取消。Cafe2 能量审计（#65，`ecf859f5`）已完成，不重画该划分，也**不**叫门禁 ④，也**不**解锁 **④–⑦**。**当前 = 代码空闲。**
+**可推迟**：RL；Route B 多目标 Q；体积；RGB-D 主表；VLM LoRA 营养头；kcal 代理弃权作主故事；在开发 505 上继续调方法冒充最终主表。完整金标准仍可分期。**③** 已完成，其 dish_id 隔离要求不因此取消。Cafe2 能量审计（#65，`ecf859f5`）已完成，不重画该划分，也**不**叫门禁 ④，也**不**解锁 **④–⑦**。**当前 = Mass-only 能量路径便宜诊断（说清 98 vs 75）。** 本诊断落盘之后不要自动开下一道门。
 
 Schema 仍冻结于 `schemas/`；说明见 `docs/schema.md`。执行状态见 [`docs/STATUS.md`](docs/STATUS.md)。
 
