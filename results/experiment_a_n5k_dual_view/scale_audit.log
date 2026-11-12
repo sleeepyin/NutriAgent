@@ -1,0 +1,68 @@
+[23:06:03] scanning /var/tmp/nutri-downloads/nutrition5k/nutrition5k_dataset.tar.gz
+[23:06:24] decoded side frames 100
+[23:06:39] decoded side frames 200
+[23:06:55] decoded side frames 300
+[23:07:05] members 2000 side_dishes 402 overhead 0 decoded 362
+[23:07:10] decoded side frames 400
+[23:07:28] decoded side frames 500
+[23:07:43] decoded side frames 600
+[23:08:03] decoded side frames 700
+[23:08:19] members 4000 side_dishes 812 overhead 0 decoded 772
+[23:08:22] decoded side frames 800
+[23:08:39] decoded side frames 900
+[23:08:56] decoded side frames 1000
+[23:09:17] decoded side frames 1100
+[23:09:32] members 6000 side_dishes 1219 overhead 0 decoded 1179
+[23:09:36] decoded side frames 1200
+[23:09:51] decoded side frames 1300
+[23:10:08] decoded side frames 1400
+[23:10:32] decoded side frames 1500
+[23:10:46] members 8000 side_dishes 1630 overhead 0 decoded 1590
+[23:10:47] decoded side frames 1600
+[23:11:07] decoded side frames 1700
+[23:11:26] decoded side frames 1800
+[23:11:42] decoded side frames 1900
+[23:11:57] members 10000 side_dishes 2036 overhead 0 decoded 1996
+[23:11:57] decoded side frames 2000
+[23:12:13] decoded side frames 2100
+[23:12:28] decoded side frames 2200
+[23:12:44] decoded side frames 2300
+[23:13:00] decoded side frames 2400
+[23:13:01] members 12000 side_dishes 2442 overhead 0 decoded 2402
+[23:13:17] decoded side frames 2500
+[23:13:32] decoded side frames 2600
+[23:13:53] decoded side frames 2700
+[23:14:13] decoded side frames 2800
+[23:14:14] members 14000 side_dishes 2851 overhead 0 decoded 2811
+[23:14:29] decoded side frames 2900
+[23:14:45] decoded side frames 3000
+[23:15:09] decoded side frames 3100
+[23:15:33] decoded side frames 3200
+[23:15:35] members 16000 side_dishes 3260 overhead 0 decoded 3220
+[23:15:50] decoded side frames 3300
+[23:16:08] decoded side frames 3400
+[23:16:25] decoded side frames 3500
+[23:16:46] decoded side frames 3600
+[23:16:51] members 18000 side_dishes 3668 overhead 0 decoded 3628
+[23:17:03] decoded side frames 3700
+[23:17:18] decoded side frames 3800
+[23:17:35] decoded side frames 3900
+[23:17:51] decoded side frames 4000
+[23:17:57] members 20000 side_dishes 4077 overhead 0 decoded 4037
+[23:18:15] decoded side frames 4100
+[23:18:30] decoded side frames 4200
+[23:18:46] decoded side frames 4300
+[23:19:03] decoded side frames 4400
+[23:19:17] members 22000 side_dishes 4485 overhead 0 decoded 4445
+[23:19:24] decoded side frames 4500
+[23:19:41] decoded side frames 4600
+[23:19:58] decoded side frames 4700
+[23:20:12] members 24000 side_dishes 4793 overhead 122 decoded 4754
+[23:20:19] members 26000 side_dishes 4793 overhead 622 decoded 4754
+[23:20:28] members 28000 side_dishes 4793 overhead 1121 decoded 4754
+[23:20:36] members 30000 side_dishes 4793 overhead 1621 decoded 4754
+[23:20:45] members 32000 side_dishes 4793 overhead 2121 decoded 4754
+[23:20:54] members 34000 side_dishes 4793 overhead 2621 decoded 4754
+[23:21:01] members 36000 side_dishes 4793 overhead 3121 decoded 4754
+[23:21:05] scan done members=37478 elapsed_s=902.4
+[23:21:06] usable_pairs 3289 train 2638 test 474
