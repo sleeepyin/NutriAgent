@@ -698,6 +698,15 @@ def write_report(out_dir: Path) -> None:
     simple_beats = bool(simple["versus_top"]["stably_beats_top"])
     geometric_beats = bool(geometric["versus_top"]["stably_beats_top"])
     stop = not (simple_beats and geometric_beats)
+    train_fit = {}
+    for setting, filename in SETTING_FILE.items():
+        log_path = out_dir / "logs" / f"{filename}.json"
+        if log_path.is_file():
+            log = json.loads(log_path.read_text(encoding="utf-8"))
+            train_fit[setting] = {
+                "clean_train_mass_mae_g": log["clean_train_mass_mae_g"],
+                "n_ingredient_labels": log.get("n_ingredient_labels", 0),
+            }
     if stop:
         decision = (
             "停止。简单融合与几何融合没有都稳定胜过单张俯视。"
@@ -716,6 +725,7 @@ def write_report(out_dir: Path) -> None:
         "train_mass_mean_g": train_mean,
         "constant_train_mean_mass_mae_g": float(np.mean(constant_abs)),
         "settings": rows,
+        "train_fit": train_fit,
         "consistency": consistency,
         "simple_fusion_stably_beats_top": simple_beats,
         "geometric_fusion_stably_beats_top": geometric_beats,
@@ -748,6 +758,7 @@ def _write_report_md(path: Path, audit: dict, payload: dict) -> None:
         "## 规模",
         "",
         f"可用配对 {counts['usable_pairs']} 盘。其中官方 rgb_train {counts['usable_rgb_train']} 盘，官方 rgb_test {counts['usable_rgb_test']} 盘，不在官方 RGB 划分里的 {counts['usable_outside_rgb_split']} 盘没有进入训练或主表。",
+        f"同一归档里，达标顶视 RGB 是 {counts['official_overhead_rgb']} 盘，达标侧视视频是 {counts['official_side_video']} 盘。可用配对是这两路按 dish_id 对齐、并且侧视帧能解码的交集，不是顶视文件数，也不是论文里的约 3.5k。",
         "纳入规则、互斥排除原因和官方文件哈希见 `scale_audit.md`。",
         "",
         "## 五项对照",
@@ -756,11 +767,29 @@ def _write_report_md(path: Path, audit: dict, payload: dict) -> None:
         "",
         "单张俯视是主基线。简单特征融合把两个视角的全局特征拼在一起。几何融合用空间交叉注意力让两个视角的图像块互相对照，并惩罚两个视角各自质量预测的不一致；视角嵌入只区分俯视和侧视，不是相机外参。食物语义约束在几何融合上多加一个配料多标签损失，权重在训练前固定。测试时不读取配料头，也不因配料不确定而跳过盘子。",
         "",
+    ]
+    semantic_labels = payload.get("train_fit", {}).get("双视角+食物语义约束", {}).get("n_ingredient_labels", 0)
+    if semantic_labels:
+        lines.append(f"食物语义约束使用的配料标签来自训练集，共 {semantic_labels} 个。测试集没有用来增删这些标签。")
+        lines.append("")
+    if payload.get("train_fit"):
+        lines.append("训练结束后、打开测试集之前，在训练集上再算了一次无增强的质量 MAE。它只说明模型有没有拟合训练盘，不用来挑设置或挑 epoch。")
+        lines.append("")
+        lines.append("| 设置 | 训练集质量 MAE（克） |")
+        lines.append("| --- | ---: |")
+        for setting in SETTINGS:
+            fit = payload["train_fit"].get(setting)
+            if fit:
+                lines.append(f"| {setting} | {_fmt(fit['clean_train_mass_mae_g'])} |")
+        lines.append("")
+    lines.extend(
+        [
         f"训练集质量均值常数预测在测试集上的质量 MAE 是 {_fmt(payload['constant_train_mean_mass_mae_g'])} 克。这只是参照，不是第六个方法。",
         "",
         "| 设置 | 测试盘数 | 质量 MAE（克） | 质量误差中位数（克） | 相对单张俯视的 MAE 差（克） | 95% 区间 | 是否稳定低于单张俯视 |",
         "| --- | ---: | ---: | ---: | ---: | --- | --- |",
-    ]
+        ]
+    )
     for row in payload["settings"]:
         if row["versus_top"] is None:
             diff = "0"
