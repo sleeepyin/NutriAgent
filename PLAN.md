@@ -1,10 +1,11 @@
 # Verified Dietary Reasoning（VDR）实验方案
 
-> **本文档是投稿叙事与执行的 Markdown 真源。** 方法方案以 Canvas 为准（2026-11-12，Asia/Shanghai）：「**VDR 官方方案（2026-11-12 调整）：覆盖约束组分分解 + 少样本质量校准（候选）**」。2026-11-06 的旧标题不再作现行主张。  
+> **本文档是投稿叙事与执行的 Markdown 真源。** 方法方案以 Canvas 为准（2026-11-12 晚，Asia/Shanghai）：「**VDR 官方方案（2026-11-12 晚）：面向物理约束营养估计的主动多模态证据获取（候选）**」。同日早间把少样本质量校准当作候选创新点二的定位，以及 2026-11-06 的旧标题，都不再作现行主张。  
 > Canvas：https://cursor.com/canvas/store-745bdf38-f3d7-4313-8d66-08e4b6903e93/d7be617d-d37e-4fe1-a4b5-9da2c86b27a2  
 > 算力假设：**2×4090D 24GB**。数据：**公开 Nutrition5K + FNDDS 2019–2020**；人工 **200–500** 盘薄标注；**无私有大规模采集**。  
-> **任务框架**：**Evidence-Guided Active Multimodal Nutrition Estimation**（证据引导的主动式多模态营养估计）。**2026-11-12 模块**：Mass Estimator 是深度学习质量专家；Coverage Constraint 是辅助机制；Q_φ 与同头密度换码降为对照 / 消融，停止继续训练 Q、停止继续改 food-id。该页取代以前「Coverage-Constrained Active Specialist Selection + Error-Aware Q（Route A 能量+质量双赢）」的主张写法。蛋白质 / 碳水 / 脂肪仍作辅助。**暂不上 RL。**  
-> **历史对照**：旧中心「Evidence-Aware Closed-Loop Tool Control」仅作对照叙事，不再作主标题。#53 是开发检查点，不是本卖点的证明。2026-11-06 把技术中心写成 Coverage-Constrained Active Specialist Selection + Error-Aware Q 的那一版，自 2026-11-12 起改为上面的模块定位。
+> **项目名仍是 VDR。** 输出仍是 \(y=(n,G,s,\tau)\)。**候选定位（未证实）**：Active Multimodal Evidence Acquisition for Physically Grounded Food Nutrition Estimation（面向物理约束营养估计的主动多模态证据获取）。研究问题升级为：多模态模型如何理解物理尺度、食物组分与营养密度的耦合，并主动获取最有价值的视觉证据。输入协议是低成本多视角 RGB；主表仍不要求 RGB-D。若只能得到单张 RGB，这条路线严重受限。**2026-11-12 晚模块**：VLM 食物理解是语义分支基础；Mass Estimator 是预训练几何-质量专家，冻结结果作历史证据；FNDDS 是营养密度知识来源；Coverage Constraint 是可选的输出完整性机制，保留为辅助；Nutrient Verifier 保留为辅助；Q_φ 与同头密度换码降为对照，停止继续训练 Q、停止继续改 food-id；分层少样本质量校准是普通基线，不再是创新点二；两路径能量融合 / Energy Router 仅作对照。该页取代同日早间「覆盖约束组分分解 + 少样本质量校准」定位，也取代以前「Coverage-Constrained Active Specialist Selection + Error-Aware Q（Route A 能量+质量双赢）」的主张写法。蛋白质 / 碳水 / 脂肪仍作辅助。**暂不上 RL。**  
+> **历史对照**：旧中心「Evidence-Aware Closed-Loop Tool Control」仅作对照叙事，不再作主标题。更早的任务框架名 Evidence-Guided Active Multimodal Nutrition Estimation 不再作现行方法标题。#53 是开发检查点，不是本卖点的证明。2026-11-06 把技术中心写成 Coverage-Constrained Active Specialist Selection + Error-Aware Q 的那一版，自 2026-11-12 起改为上面的模块定位；同日晚再撤回少样本校准作为创新点二。  
+> **会刊**：ACM MM 2027 或更晚。MM 2026 Regular Paper 截稿为 2026-04-01 AoE；会议 2026-11-10 至 2026-11-14（里约热内卢）。MM 2027 在香港；日期与截稿尚未公布。不虚构 2027 截稿。
 
 ---
 
@@ -18,7 +19,7 @@
 | FixRate | #26 **Δ0.5554**（CI≠0）**保留**；须审计 CORRECT_CODE / RE_PORTION 后**终态 n 是否真变**——纠错有效 ≠ 最终预测有效。 |
 | 主创新迁移 | 从「弃权 / 开环 BC 小修 / AURC 补丁」→ **Mass + 主动专家选择 + Q_φ**；AURC / 弃权降为**辅助**。 |
 | 开环 31 维 BC | 仍仅消融 **B5**；State-aware BC 仅**启动 / 消融**，不作主贡献标题。 |
-| RL | **暂不上 RL**；MVP 以监督 **Q_φ(z,a)** 为中心。 |
+| RL | **暂不上 RL**。相对旧闭环，当时的 MVP 以监督 **Q_φ(z,a)** 为中心；2026-11-12 晚起 Q_φ 只作对照，停止继续训练。 |
 
 ---
 
@@ -40,7 +41,7 @@ y = (n,\ G,\ s,\ \tau)
 ### 三条主贡献（2026-11-12 起以 Canvas 为准）
 
 1. **任务**：形式化 VDR；\(y=(n,G,s,\tau)\)；证据链可程序复算 + 可人工语义核；支持盘级/成分级弃权。
-2. **已冻结控制器（2026-11-12 起不再当作全部贡献）**：Coverage 是辅助机制，Q_φ 是对照。已落地的选择式仍是：未写完组件时 \(A_{legal}\) 去掉 STOP/ABSTAIN，再在合法集上 \(a^*=\arg\max_{a\in A_{legal}} Q_\phi(z,a)/\mathrm{Cost}(a)\)，\(Q_\phi(z,a)=\mathbb{E}[\Delta L\mid z,a]\)。Mass Estimator 已落地并冻结；图文检索重排（P1）暂缓；Grounding 非主创新；Nutrient Verifier 为护栏。**State-aware BC 仅 bootstrap/消融。** #51/#53 在冻结 Mass 与 Q/τ 上的开发集变化是确定性策略，**不是** Q 学得更好。#57 一步反事实同向：Q ≈ 规则 ≪ oracle（约 0.96 kcal、远落后 Oracle）。**2026-11-12**：Mass Estimator 是深度学习质量专家。候选方法二 Evidence-aware Few-shot Mass Calibration 尚未证实，Phase 1 不实现其公式或分层结构。两路能量融合只作 Phase 3 对照。
+2. **已冻结控制器（2026-11-12 起不再当作全部贡献）**：Coverage 是辅助机制，Q_φ 是对照。已落地的选择式仍是：未写完组件时 \(A_{legal}\) 去掉 STOP/ABSTAIN，再在合法集上 \(a^*=\arg\max_{a\in A_{legal}} Q_\phi(z,a)/\mathrm{Cost}(a)\)，\(Q_\phi(z,a)=\mathbb{E}[\Delta L\mid z,a]\)。Mass Estimator 已落地并冻结；图文检索重排（P1）暂缓；Grounding 非主创新；Nutrient Verifier 为护栏。**State-aware BC 仅 bootstrap/消融。** #51/#53 在冻结 Mass 与 Q/τ 上的开发集变化是确定性策略，**不是** Q 学得更好。#57 一步反事实同向：Q ≈ 规则 ≪ oracle（约 0.96 kcal、远落后 Oracle）。**2026-11-12 晚**：Mass Estimator 是预训练几何-质量专家，冻结结果作历史证据。Evidence-aware Few-shot Mass Calibration 降为普通基线，不再是创新点二；#70（squash `d622e6db`）的 Phase 1 已取消，不实现其公式或分层结构。两路径能量融合 / Energy Router 只作对照，不预定为贡献。候选关系（未证实，本文件不据此写网络）是：组分质量 \(m_i=V_i\rho_i\)，盘级营养 \(N=\sum_i m_i D(c_i,h_i)\)；用尺度、身份、密度的联合不确定性驱动下一证据。这不是单独一个 3D 分支，也不是 Q 选择专家。
 3. **证明（外测已记下，但不是能量与质量同时获胜，也不是 #53 或 #57 已完成该证明）**：#63（squash `27d1dbfa`）在 Cafe2 held-out 上记下能量与质量 MAE（见 §14，本句不重抄表内数字）。**主声称：质量对 Direct 可外推（bootstrap 区间均为负）；对 Mass-only 基本打平（0.76 g 不算赢，不要当作方法优越性证据）；能量外测未稳。** #57 已记下反事实动作价值（一步评测 Q ≈ 规则 ≪ oracle，见 §14；不单独构成该证明）。真实成本 Pareto、Provenance / Semantic、忠实 B1/B2，以及相对 arXiv 2610.11144、CVPRW 2025 Decomposing Food Images、NutriVision（arXiv 2609.33076）的差异仍在锁定门禁 **④–⑦**。开发集超过 Direct-VLM **不**等于该证明。Coverage / Selective / AURC 仍辅助。
 
 ---
@@ -67,7 +68,7 @@ y = (n,\ G,\ s,\ \tau)
 | **编造 DOI** / 未核对文献 | 写「待补正式引用」 |
 | 把 B1 叫「弱 RAG-once」或 B2 叫 Fixed-MoE | 对照不忠实 |
 
-**2026-11-12 追加（不改上表已有行）**：主表只 RGB，depth 只进附录。不靠弃权制造质量优势。AURC / 弃权不作主故事。FNDDS 默认 2019–2020，换版触发全基线重跑。禁止把相对 Mass-only 的 0.76 g 写成优越性。禁止在 Phase 1 改主分支方法代码，或实现候选校准网络的公式和分层结构。Cafe2 不再用于新方法调参，也不再当下一轮完全盲测。外部集许可未核对，不得写成已可商用或已可投稿使用。
+**2026-11-12 追加（不改上表已有行）**：主表只 RGB，depth 只进附录。不靠弃权制造质量优势。AURC / 弃权不作主故事。FNDDS 默认 2019–2020，换版触发全基线重跑。禁止把相对 Mass-only 的 0.76 g 写成优越性。Cafe2 不再用于新方法调参，也不再当下一轮完全盲测。**2026-11-12 晚再追加**：禁止把少样本 / 分层质量校准写成创新点二；禁止把 #70 的 Phase 1 当现行下一步；禁止在外部配对第二视图的缺口被正视之前搭建完整联合网络；禁止本文件解锁实验 A/B/C；禁止编造 Nutrition5k 可用配对条数，也禁止把非官方目录条数写成官方配对数。官方只写约 3.5k / 5,006 盘含顶视 RGB-D（论文约数）。禁止编造 ACM MM 2027 截稿。外部集许可未核对，不得写成已可商用或已可投稿使用。
 
 ---
 
@@ -84,6 +85,8 @@ y = (n,\ G,\ s,\ \tau)
 | **H3** | 相对忠实 B1/B2，优势在主动专家 + 证据；无法完全复现则诚实声明 approx |
 
 **主张边界（2026-11-12）**：输出仍可含 \(n=(E,P,C,F,M)\)。冻结 Q 的监督核心仍是能量误差改善，但 Q 已降为对照，停止继续训练。论文现行主声称不是能量与质量同时获胜：质量对 Direct 可外推（bootstrap 区间均为负），对 Mass-only 基本打平（0.76 g 不算赢），能量外测未稳。蛋白质 / 碳水 / 脂肪作辅助。多目标 Q（Route B）不开。
+
+**候选研究问题（2026-11-12 晚，未证实，本文件不据此开工）**：多模态模型如何理解食物图像中物理尺度、食物组分与营养密度的耦合，并主动获取最有价值的视觉证据。要展示的关系是质量、体积与密度不独立，能量也不是质量的简单放缩。预期差距是尺度、身份、密度的联合不确定性，以及由该因子化驱动的证据获取。Open-KNEAD（arXiv:2607.12911，2026-07-14）已把邻近方向列为未来工作。若只做少样本校准或单独 3D 分支，差距不成立。上表 RQ1–H3 是已冻结 VDR 控制器的历史问题，不是实验 A/B/C 的开工许可。Q1 有条件支持源域双视图设计；Q2 未完全通过，外部混合餐基本没有配对第二视图，因此先不要搭建完整联合网络；Q3 已锁定，没有实验 A/C 时不得写成已解；Q4 可描述，但偏薄。
 
 ---
 
@@ -109,14 +112,14 @@ y = (n,\ G,\ s,\ \tau)
 
 | 优先级 | 专家 | 骨干 / 接口 | 主创新? |
 |--------|------|-------------|---------|
-| **P0** | **Mass Estimator** | ViT-B/16 或 ResNet101；ImageNet → N5K train 微调；**RGB-only 主表**；多任务 **[M,E,P,C,F]+σ**；`estimate_mass(image, candidates)` | **是 — 主增益来源** |
+| **P0** | **Mass Estimator** | ViT-B/16 或 ResNet101；ImageNet → N5K train 微调；**RGB-only 主表**；多任务 **[M,E,P,C,F]+σ**；`estimate_mass(image, candidates)` | **保留为预训练专家**；冻结结果是历史证据，不是本晚候选贡献本身 |
 | **P1** | 图文检索 + FNDDS 重排 | SigLIP/CLIP + 向量库 + cross-modal/VLM rerank | 次主，**现暂缓**（⑦ 之前不开） |
 | **P2/P3** | 区域定位 | Grounding DINO / SAM2 + 局部再问 VLM | **否** — 不当主创新 |
 | 配套 | Nutrient Verifier | FNDDS 查表 + 规则/一致性 | 护栏 |
 
-Grounding 为 P2/P3：细粒度分割未必自动改善营养 MAE，**份量/质量**才是瓶颈（待补正式引用，勿编造 DOI）。
+Grounding 为 P2/P3：细粒度分割未必自动改善营养 MAE。Effects of segmentation granularity on nutrient prediction from real-world food images（doi:10.3389/fnut.2026.1927530）在 1,056 张 Nutrition5K 子集上：未分割均值 PMAE 19.91%，最佳二值食物区域 20.18%，配料级 23.76%–25.62%。本晚候选不是再加一个分割网络或单独的 3D 分支。
 
-**P1 检索重排仍暂缓**，STATUS 门禁 ⑦ 之前不开，也不重训 Mass / Q。**Coverage Guard** 已在 #53 落地，应写成 \(A_{legal}\) 方法，不是空壳，也不是 Bug Fix。#51 同头换码已落地；语义审计（门禁 **②**）已由 #60 完成（见 §14）。**①②③ 已完成。Cafe2 能量审计已完成（#65，squash `ecf859f5`）。Mass-only 能量路径便宜诊断已完成（#68，squash `f578e8f4`）。**当前 = Phase 1 跨域诊断（0/8）。** Phase 2、Phase 3、④–⑦ 仍锁。**禁止**自动开 Phase 2、Phase 3 与 **④–⑦**。
+**P1 检索重排仍暂缓**，STATUS 门禁 ⑦ 之前不开，也不重训 Mass / Q。**Coverage Guard** 已在 #53 落地，应写成 \(A_{legal}\) 方法，不是空壳，也不是 Bug Fix。#51 同头换码已落地；语义审计（门禁 **②**）已由 #60 完成（见 §14）。**①②③ 已完成。Cafe2 能量审计已完成（#65，squash `ecf859f5`）。Mass-only 能量路径便宜诊断已完成（#68，squash `f578e8f4`）。**当前 = 可行性审计已完成（Q1/Q2/Q4 公开资料结论已写入官方方案页；Q3 不得写成已解）。代码空闲。** #70 的 Phase 1 已取消。实验 A/B/C、完整联合网络与 ④–⑦ 仍锁。**禁止**自动开实验 A/B/C、完整联合网络与 **④–⑦**。
 
 ---
 
@@ -213,12 +216,17 @@ a^*=\arg\max_{a\in A_{legal}(s_t)}\frac{Q_\phi(s_t,a)}{Cost(a)}
 
 **B1 必须忠实重做**后再进主表。历史 B1 能量 MAE 不是忠实 DietAI24（数字在 §13，本节不改）；scaffold / dry-run 不算完成。
 
-优先对照的相关工作（不编 DOI；刊名、arXiv 号与日期来自 2026-11-06 评审和 Canvas）：
+优先对照的相关工作（不编造未核对的 DOI。下面 Frontiers 的 DOI 是官方 Canvas 已核对的那一个；其余用标题 + arXiv。刊名、arXiv 号与日期来自既有评审和 2026-11-12 晚 Canvas）：
 
 - **DietAI24**（简报所给刊名 Communications Medicine 2025；代码 https://github.com/Runz96/DietAI24）：忠实复现为 B1。数据库检索本身不作主创新。
 - **Decomposing Food Images**（CVPRW 2025）：两步分解本身不构成新意。
 - arXiv **2610.11144**（2026-10，食物身份验证 / 恢复；https://arxiv.org/abs/2610.11144）：与覆盖约束有交集，是重点对比。须划清「清单内写齐」和「身份验证 / 恢复」，并补人工身份审计。
 - **NutriVision**，arXiv **2609.33076**（2026-09；https://arxiv.org/abs/2609.33076）：专用营养预测方向，不是同型 Agent。
+- **Open-KNEAD**，arXiv **2607.12911**（2026-07-14；https://arxiv.org/abs/2607.12911）：agentic 分解、FNDDS、逐项质量与组分营养。文中把学习式盘级能量路由器，以及多视角或尺度参考下的视觉工具，列为未来工作。
+- **Single-Image Food Mass Estimators Do Not Transfer Their Gram Scale Across Datasets**，arXiv **2610.29025**（2026-10-21；https://arxiv.org/abs/2610.29025）：与早间少样本质量校准重叠。该文已知食物设定下，每类 1 张标注照片把 ASA24 测试 MAE 从 42.6 g 降到 28.3 g（2 张 27.3 g，3 张 26.7 g）。这是该论文的结果，不是我们的结果。少样本校准因此只作普通基线。
+- **Effects of segmentation granularity on nutrient prediction from real-world food images**，doi:10.3389/fnut.2026.1927530：1,056 张 Nutrition5K 子集上，未分割均值 PMAE 19.91%，最佳二值食物区域 20.18%，配料级 23.76%–25.62%。
+- **MFP3D**，arXiv **2411.10492**；**Food Portion Estimation via 3D Object Scaling**，arXiv **2404.12257**；**Implicit-Scale 3D Reconstruction**，arXiv **2602.13041**；可选对照 **Size Matters**，arXiv **2601.20051**。单独 3D 分支不够。
+- **ACETADA**，arXiv **2507.07048**（https://arxiv.org/abs/2507.07048）：实验使用 806 张餐前智能手机图像；配对餐后是剩余食物，不是几何侧视。
 
 ---
 
@@ -236,7 +244,7 @@ a^*=\arg\max_{a\in A_{legal}(s_t)}\frac{Q_\phi(s_t,a)}{Cost(a)}
 - A5 忠实 B1/B2（不挡 Mass P0）  
 - F1 案例：Mass 纠正 / 检索重排 / PARTIAL ABSTAIN  
 
-早期取舍是保住 **M1 + mass + Tool cost + A1/A2**。**现行顺序以 §14 为准（①②③、Cafe2 能量审计与 Mass-only 能量路径便宜诊断已完成；当前 = Phase 1 跨域诊断（0/8），不是门禁 ④；④–⑦ 仍锁）**；切勿再把 Policy Acc、kcal-proxy AURC 或开发 505 当最终主表。真实 Tool cost 仍是门禁 **④**，该诊断已完成，不在这里开。
+早期取舍是保住 **M1 + mass + Tool cost + A1/A2**。**现行顺序以 §14 为准（①②③、Cafe2 能量审计与 Mass-only 能量路径便宜诊断已完成；当前 = 可行性审计已完成（Q1/Q2/Q4 公开资料结论已写入官方方案页；Q3 不得写成已解）。代码空闲，不是门禁 ④；④–⑦ 仍锁）**；切勿再把 Policy Acc、kcal-proxy AURC 或开发 505 当最终主表。真实 Tool cost 仍是门禁 **④**，该诊断已完成，不在这里开。
 
 ---
 
@@ -254,7 +262,7 @@ a^*=\arg\max_{a\in A_{legal}(s_t)}\frac{Q_\phi(s_t,a)}{Cost(a)}
 
 **B1/B2 并行，不挡 Mass P0。**
 
-上表是早期周程。**现行严格顺序以 §14 与 [`docs/STATUS.md`](docs/STATUS.md) 为准**：**①②③、Cafe2 能量审计与 Mass-only 能量路径便宜诊断已完成**；**当前 = Phase 1 跨域诊断（0/8）**（**不是门禁 ④**，也不是 Phase 2、Phase 3 或新网络；**④–⑦** 仍锁定；**禁止**自动开）；P1 与 Mass/Q 重训仍锁。
+上表是早期周程。**现行严格顺序以 §14 与 [`docs/STATUS.md`](docs/STATUS.md) 为准**：**①②③、Cafe2 能量审计与 Mass-only 能量路径便宜诊断已完成**；**当前 = 可行性审计已完成（Q1/Q2/Q4 公开资料结论已写入官方方案页；Q3 不得写成已解）。代码空闲**（**不是门禁 ④**，也不是 Phase 2、Phase 3 或新网络；**④–⑦** 仍锁定；**禁止**自动开）；P1 与 Mass/Q 重训仍锁。
 
 ---
 
@@ -276,7 +284,9 @@ a^*=\arg\max_{a\in A_{legal}(s_t)}\frac{Q_\phi(s_t,a)}{Cost(a)}
 
 ## 14. MVP-for-A（严格顺序；前一项未完成不得跳步）
 
-**① 已完成（#57，squash `0aa30537`）。② 已完成（#60，squash `c52ffaa2`）。③ 已完成（#63，squash `27d1dbfa`）。Cafe2 能量审计已完成（#65，squash `ecf859f5`）。Mass-only 能量路径便宜诊断已完成（#68，squash `f578e8f4`）。当前 = Phase 1 跨域诊断（0/8）。唯一已解锁的代码项是 Phase 1 跨域诊断（0/8，进入 main 之后才许开工）。不是门禁 ④。Phase 2、Phase 3 与新网络仍锁。** 以 [`docs/STATUS.md`](docs/STATUS.md) 为准：**该诊断已完成。禁止**自动开 **④–⑦**。代码只在本文件进入主分支之后才许开工。本文件这次改写是 Phase 1 的开工许可，不是 Phase 2、Phase 3、新网络或 ④–⑦ 的开工许可。**P1 仍暂缓 / 锁定。禁止**重训 Mass。**禁止**重训 Q。**禁止**重拟合 τ。**无 RL。不开 fast Cloud Agent。** #65 的解锁依据（已做完）：Triste 点头「继续吧」（群聊 2026-11-09 晚，Asia/Shanghai）+ 调研建议。本诊断的解锁依据（已做完，记录在 #67 / `7d5e034d`，不是新的开工许可）：Triste 点头「继续吧」（群聊 2026-11-10 早，Asia/Shanghai）+ 调研建议。#65 与 #68 是已完成的诊断。**主声称：质量对 Direct 可外推（bootstrap 区间均为负）；对 Mass-only 基本打平（0.76 g 不算赢，不要当作方法优越性证据）；能量外测未稳。** **不**声称 held-out 上能量与质量双赢。开发 505 的能量 MAE **64.2792**、质量 MAE **32.9908** **不是** Cafe2 主表的行。自动 Exact / Near / Wrong 只是建议，人审包仍开放；**kcal 变好 ≠ 身份变对**，不把 #51 的能量下降写成身份成功。#51 是密度 / kcal 启发式（换码后自动 Exact=0）。① 上 Q ≈ 规则 ≪ oracle。#53 冻结为 Ours-new **开发检查点**（配对 505 是开发 / 诊断集，不是最终独立泛化主表）。#51/#53 的开发数字不在这里改写。2026-11-06 的旧排序（先 #51 再 #53，P1 暂缓）已经做完，那套编号退役。
+本节标题里的 A 是早期 MVP 代号，不是 2026-11-12 晚锁定的实验 A。实验 A/B/C 没有开工许可。
+
+**① 已完成（#57，squash `0aa30537`）。② 已完成（#60，squash `c52ffaa2`）。③ 已完成（#63，squash `27d1dbfa`）。Cafe2 能量审计已完成（#65，squash `ecf859f5`）。Mass-only 能量路径便宜诊断已完成（#68，squash `f578e8f4`）。**当前 = 可行性审计已完成（Q1/Q2/Q4 公开资料结论已写入官方方案页；Q3 不得写成已解）。代码空闲。** 没有当前可写代码的项。不是门禁 ④，也不是实验 A/B/C 或完整联合网络。以 [`docs/STATUS.md`](docs/STATUS.md) 为准。**禁止**自动开 **④–⑦**、实验 A/B/C 与完整联合网络。合并进 main 之后代码仍空闲。本文件这次改写不是开工许可。**P1 仍暂缓 / 锁定。禁止**重训 Mass。**禁止**重训 Q。**禁止**重拟合 τ。**无 RL。不开 fast Cloud Agent。** #65 的解锁依据（已做完）：Triste 点头「继续吧」（群聊 2026-11-09 晚，Asia/Shanghai）+ 调研建议。本诊断的解锁依据（已做完，记录在 #67 / `7d5e034d`，不是新的开工许可）：Triste 点头「继续吧」（群聊 2026-11-10 早，Asia/Shanghai）+ 调研建议。#65 与 #68 是已完成的诊断。**主声称：质量对 Direct 可外推（bootstrap 区间均为负）；对 Mass-only 基本打平（0.76 g 不算赢，不要当作方法优越性证据）；能量外测未稳。** **不**声称 held-out 上能量与质量双赢。开发 505 的能量 MAE **64.2792**、质量 MAE **32.9908** **不是** Cafe2 主表的行。自动 Exact / Near / Wrong 只是建议，人审包仍开放；**kcal 变好 ≠ 身份变对**，不把 #51 的能量下降写成身份成功。#51 是密度 / kcal 启发式（换码后自动 Exact=0）。① 上 Q ≈ 规则 ≪ oracle。#53 冻结为 Ours-new **开发检查点**（配对 505 是开发 / 诊断集，不是最终独立泛化主表）。#51/#53 的开发数字不在这里改写。2026-11-06 的旧排序（先 #51 再 #53，P1 暂缓）已经做完，那套编号退役。
 
 **已完成**：P0a–P0d、Q 校准 #44、误差审计 #48、food-id #51、覆盖约束 #53、**① #57**、**② #60**、**③ #63**、**Cafe2 能量审计 #65**、**Mass-only 能量路径便宜诊断 #68**。**#51/#53 增益 ≠ Q 学习改进**（Mass / Q / τ 冻结；① 一步评测 Q ≈ 规则 ≪ oracle）。**②** 不把换码后的 kcal 下降写成身份正确。**③** 不把外测写成能量与质量双赢。**#65** 不把外测改写成双赢，也**不**开工改方法。**#68** 记下 **98.6201** 对 **75.3870** 是更大的有符号抵消，不是更准的密度或食物码，也**不**开工改方法。**主声称：质量对 Direct 可外推（bootstrap 区间均为负）；对 Mass-only 基本打平（0.76 g 不算赢，不要当作方法优越性证据）；能量外测未稳。**
 
@@ -293,18 +303,18 @@ a^*=\arg\max_{a\in A_{legal}(s_t)}\frac{Q_\phi(s_t,a)}{Cost(a)}
 8. **Cafe2 能量审计已完成（#65，squash `ecf859f5`，2026-11-09 Asia/Shanghai）— 不是当前开工项，不是门禁 ④。** ③ 的诊断后续，与 #48 同口径，已做完。不是真实 Tool Cost，不是 ⑤–⑦，不是 P1，不是 Mass / Q / τ 重训，也不是新的代码项。配对 **505** 仍是开发 / 诊断集。只读冻结 Cafe2 **n=228**，不重画划分。产物 `results/heldout_energy_audit/`；脚本 `scripts/heldout_energy_audit.py`。**没有**重跑 #63 闭环、Direct-VLM 或 Mass-only。**不**覆盖 `results/heldout_plan/`、`results/heldout_eval/`、`results/food_id_density/`、`results/coverage_early_stop/`、`results/qphi_counterfactual/`、`results/food_id_semantic_audit/`，也**不**改 `results/heldout_energy_audit/`。**不**重跑 #48 / #51 / #53 / #57 / #60 / #65。**#65 未改 STATUS。** **#63 主表不变**：Coverage-Constrained 能量 MAE **116.8494** kcal、质量 MAE **50.9483** g；Direct-VLM **105.6157** / **73.7456**；Mass-only **75.3870** / **51.7107**。能量相对 Direct **+11.23**、相对 Mass-only **+41.46**。质量相对 Direct **−22.80**、相对 Mass-only **−0.76**。覆盖 **0.9737**（222/228）。开发 505 的 **64.2792** / **32.9908** **仍不是**该表的行。**222**/228 盘上已提交克重与 Mass-only 克重相差小于 0.001 g；整段 **−0.76** g 质量优势是停在 RETRIEVE 的 **6** 盘（这 6 盘对 +41.46 均值的能量贡献 **−0.52** kcal）。**+41.46** kcal 是食物表密度打在已经与 Mass-only 对齐的克重上；Mass-only 用冻结质量估计器的 calorie head 给同一克重记分。码固定，相对 100 g 网格的 mass 重写：能量 MAE **195.6564 → 125.2060** kcal，质量 MAE **116.9123 → 50.9483** g。汇合下降来自多组件（**216.37 → 115.21**）。**58** 盘单组件上同一重写把能量 MAE **134.93 → 154.51**，质量仍近 51 g；这 58 盘贡献 **+29.62** kcal。Oracle 标签密度 × 我方克数：能量 MAE **98.6201** kcal，低于食物表 commit，低于 Direct-VLM，仍高于 Mass-only **75.3870**。不加权 kcal/g MAE：commit **0.631**，calorie head **0.753**；head 抵消更大（**77.8** vs **58.2** kcal）。#51 密度换码在 **106** 盘触发。全表能量 MAE 关 **125.2060** / 开 **116.8494**（**−8.3566** kcal），质量不变。**67** 盘更靠近 cafe 标签，**39** 盘更远。未换码的 **122** 盘贡献 **+38.30** kcal。#51 仍是密度 / kcal 启发式（开发集自动 Exact 为 **0**）。Bootstrap **10,000** 次、种子 **0**：能量差 vs Mass-only **[+25.35, +58.28]** kcal（每次均为正）；质量差 vs Direct-VLM **[−29.80, −15.66]** g（每次均为负）；能量差 vs Direct **[−6.22, +29.16]** 含两种符号；质量差 vs Mass-only **[−2.33, +0.10]** 含两种符号。**主声称仍是：质量稳赢可外推；能量开发集赢、外测未稳。** **不**声称双赢。**不**从这些标签开工改方法。**不**重训 Mass，**不**重训 Q，**不**开 P1，**不**改 τ。**禁止**自动开 **④–⑦**。已执行的协议（不是新开工）：Diagnostic only on the frozen Cafe2 n=228 list. No method selection, no early stopping, no threshold/τ tuning, no swapping the method, no GT-driven code or portion edits. 固定 food-id 的 mass 重写、oracle 标签密度 × 我方克数、#51 density swap 开/关（换过码的 106 盘）。基线仍是 Direct-VLM 与 Mass-only。
 9. **Mass-only 能量路径便宜诊断已完成（#68，squash `f578e8f4`，2026-11-10 Asia/Shanghai）— 不是当前开工项，不是门禁 ④。** 说清 98 vs 75，已做完。不是在 505 上改 food-id，不是 Cafe2 重测，不是 ⑤–⑦，不是 P1，不是 Mass / Q / τ 重训，也不是新的代码项。配对 **505** 仍是开发 / 诊断集。只读冻结 Cafe2 **n=228**，不重画划分。产物 `results/heldout_massonly_energy_path/`（`report.md`、`report.txt`、`summary.json`、`dishes.jsonl`、`paths.csv`、`slices.csv`、两张图 `fig_density_vs_mae.svg` 与 `fig_gap_split.svg`）；脚本 `scripts/heldout_massonly_energy_path.py`。**没有**重跑 #63 闭环、Direct-VLM 或 Mass-only，也**没有**重跑 #65。**不**覆盖 `results/heldout_plan/`、`results/heldout_eval/`、`results/heldout_energy_audit/` 或其他冻结结果目录，也**不**改 `results/heldout_massonly_energy_path/`。**不**重跑 #48 / #51 / #53 / #57 / #60 / #68。**#68 未改 STATUS。** Mass-only 能量是冻结质量估计器的盘级 `energy_kcal` 头，`vit_b_16` checkpoint，目标 `mass_g`、`energy_kcal`、`protein_g`、`carb_g`、`fat_g`。记分器存 `estimate_mass(...).nutrients.energy_kcal`。不读 food-id，也不把 FNDDS kcal/100 g 乘以克重。**222 / 228** 盘上质量头与已提交克重相差在 0.001 g 以内（测得最大 **0.0002** g）。另外 **6** 盘停在 RETRIEVE；Mass-only 仍给整盘头记分。Oracle 标签密度 × 我方克数能量 MAE **98.6201**，Mass-only 能量头 **75.3870**，差距 **23.2332** kcal：更大的有符号抵消，不是更准的密度或食物码。不加权 kcal/g MAE：标签密度 **0**，食物表 commit **0.631**，calorie head **0.753**。#65 通道抵消（kcal）：oracle **0**，食物表 **58.2**，head **77.8**。保持真密度、换成 Mass-only 克重，能量 MAE **98.6201 → 100.3152**（**+1.6951**）。在这些克重上把真密度换成能量头，**100.3152 → 75.3870**（**−24.9283**）。净差 **23.2332** kcal。在头自己的克重上，把头的密度换成标签密度，会把能量 MAE 从 **75.3870** 抬到 **100.3152**。食物表在 kcal/g 上更近 **139** 盘，头更近 **89** 盘。没有一盘的头密度误差低于 **0.0001** kcal/g。**58** 盘单组件贡献 **+23.23** 里的 **+19.85**；这一片 kcal/g MAE 头 **1.023** vs 食物表 **0.811**，能量 MAE **38.06** vs 食物表 **154.51** / oracle **116.08**。**6** 盘 RETRIEVE 贡献 **−1.56**。按盘 bootstrap **10,000** 次、种子 **0**：**98.6201 − 75.3870** 在 **[+7.92, +39.06]** kcal，**99.83%** 的抽样为正均值。这个区间没有用来选方法。**#63 主表句子不改。** 冻结数字不改，包括 **116.8494** / **50.9483**、**105.6157** / **73.7456**、**75.3870** / **51.7107**、**+11.23**、**+41.46**、**−22.80**、**−0.76**、**0.9737**（222/228）、**98.6201**、**0.631** vs **0.753**、**77.8** vs **58.2**、开发 505 的 **64.2792** / **32.9908**（**仍不是** held-out 表的行）、**195.6564 → 125.2060**、**134.93 → 154.51** / **+29.62**、**−8.3566**、未换码 **122** 盘 **+38.30**，以及 #65 bootstrap **[+25.35, +58.28]**、**[−29.80, −15.66]**、**[−6.22, +29.16]**、**[−2.33, +0.10]**。相对 Mass-only 的 **−0.76** g 仍只是 **6** 盘 RETRIEVE（#65 / #66 已记下）。**不**把它写成质量赢。**不**把只修 food-id 写成能量双赢。**主声称仍是：质量稳赢可外推；能量开发集赢、外测未稳。** **不**声称双赢。**不**从这些标签开工改方法。**不**重训 Mass，**不**重训 Q，**不**开 P1，**不**改 τ。**禁止**自动开 **④–⑦**。已执行的协议（不是新开工）：（1）只做了这一项便宜诊断。不改方法，不调超参，不在 Cafe2 上做早停或模型选择。No method changes, no hyperparameter tuning, and no early stopping or model selection on Cafe2。（2）已写明记分路径：冻结质量估计器 calorie head，不读 food-id，不把 FNDDS kcal/100 g 乘以克重。The diagnostic documented how Mass-only energy is scored: which food-id / density / calorie head it uses, and how that differs from our food-table commit and from oracle label density × our grams。（3）**98.6201** vs **75.3870** 是更大的有符号抵消，不是更准的密度或食物码。It answered that 98.6201 vs 75.3870 is greater signed cancellation, not more accurate density or food codes。（4）落盘之后没有自动开下一道门。冻结后写作（「Coverage+Mass，能量外测未稳」）对比只在 505 上改 food-id、再重测 Cafe2，仍要等以后的调研阅读 + Triste 点头 + 再一次 STATUS 改写。After this diagnostic is filed, do not auto-open the next gate. Freeze-and-write vs 505-only food-id waits for a later research reading + Triste nod + a later STATUS rewrite。
 
-**当前 = Phase 1 跨域诊断（0/8）。** 上条诊断已完成，不再是开工项。代码只在本文件进入主分支之后才许开工。本文件这次改写**是** Phase 1 跨域诊断的开工许可，**不是** Phase 2、Phase 3、分层校准网络、Q/Mass/τ 重训、food-id 改写、505 调参、P1 或门禁 ④–⑦ 的开工许可。不改主分支方法代码。不实现候选校准网络。Cafe2 只作已探索诊断集，不再用于新方法调参，也不再当下一轮完全盲测。E1–E5 未开跑。清单（不得重排）：
+**当前 = 可行性审计已完成（Q1/Q2/Q4 公开资料结论已写入官方方案页；Q3 不得写成已解）。代码空闲。** 上条诊断已完成，不再是开工项。合并进 main 之后代码仍空闲。本文件这次改写**不是**开工许可。实验 A/B/C、完整联合网络、已取消的 Phase 1、Q/Mass/τ 重训、food-id 改写、505 或 Cafe2 调新方法、P1 与门禁 ④–⑦ 都没有开工许可。不改主分支方法代码。不实现候选校准网络。Cafe2 只作已探索诊断集，不再用于新方法调参，也不再当下一轮完全盲测。E1–E5 没有开跑。下面八句只复述 #70（squash `d622e6db`）当时写下、现已取消的清单，不是命令，也不是实验 A 的前置：
 
-1. 冻结当前 VDR：保存权重、配置、预测和数据划分。新产物放 `results/phase1_cross_domain/`。不要覆盖 `results/heldout_plan/`、`results/heldout_eval/`、`results/heldout_energy_audit/`、`results/heldout_massonly_energy_path/`，也不要改 `results/food_id_semantic_audit/`、`results/food_id_density/`、`results/coverage_early_stop/`、`results/qphi_counterfactual/`、`results/qphi/`、`results/mass_estimator/`、`results/p0d/`、`results/audit/`。不改主分支方法代码。
-2. 下载并检查 ACETADA（https://skynet.ecn.purdue.edu/~coburn6/ACETADA/）与 VLM Food Benchmark（https://github.com/Metabolic-Intelligence-Lab/vlm-food-benchmark）的数据和使用许可。Canvas 所记规模：ACETADA **806** 张餐前 / 餐后图像；VLM Food Benchmark **200** 餐 / **870** 个食物项 / **6** 名参与者。许可与标签定义尚未核对，不得写成已可商用或已可投稿使用。
-3. 统一 Nutrition5k 与外部集的质量标签单位和定义。
-4. 按参与者或 dish_id 建立跨域训练、支持集和独立测试划分。同一食物实例，或同一拍摄者的关联样本，不得跨过划分边界。
-5. 跑 E1 Direct-VLM、E2 Frozen Mass-only、E3 当前完整 VDR。三者都冻结，现为未开跑。不改 Mass、Q 或控制器。
-6. 增加两个简单对照：E4 Global Affine Calibration（全局仿射校准）、E5 Category-wise Calibration（类别级校准）。这是对照，不是分层校准网络。现为未开跑。
-7. 记录 Mass MAE、相对误差、平均有符号偏差；按食物类别分层；拍摄设备、视角、构图在数据里有才分层；逐盘 bootstrap 置信区间；预测不确定性与真实误差的相关。据此看误差有没有可学习的跨域、类别或视角偏差。尚未测得的数不预填。
-8. 由诊断决定是否进入 Phase 2。本文件不解锁 Phase 2，也不开始做分层校准网络。
+1. 当时拟冻结当前 VDR，并把新产物放到 `results/phase1_cross_domain/`。该目录不要为这项已取消的工作去建。
+2. 当时拟下载 ACETADA 与 VLM Food Benchmark 并核对许可。早间把 ACETADA 写成 806 张餐前 / 餐后图像；本晚审计改为：实验使用 **806** 张餐前智能手机图像，配对餐后不是几何侧视。VLM Food Benchmark 是 **200** 张食堂餐图 / **870** 项 / **6** 名参与者，不是多视角集。
+3. 当时拟统一质量标签的单位和定义。
+4. 当时拟按参与者或 dish_id 做跨域划分。
+5. 当时拟跑冻结的 E1 Direct-VLM、E2 Frozen Mass-only、E3 当前完整 VDR。三者都没有开跑。
+6. 当时拟加 E4 全局仿射与 E5 类别级校准，作为对照，不是分层校准网络。没有开跑。
+7. 当时拟记录 Mass MAE 等，看有没有可学习的跨域偏差。没有测得的数，不预填。
+8. 当时拟由该诊断决定是否进入早间的 Phase 2。Phase 2 没有解锁，并已随创新点二撤回。以上 1–8 都不要执行。
 
-**主声称：质量对 Direct 可外推（bootstrap 区间均为负）；对 Mass-only 基本打平（0.76 g 不算赢，不要当作方法优越性证据）；能量外测未稳。** 动机文献只写标题和 arXiv，不编 DOI：Open-KNEAD: Knowledge-grounded Nutrition Estimation via Agentic Decomposition（arXiv:2607.12911，2026-07-14）；Single-Image Food Mass Estimators Do Not Transfer Their Gram Scale Across Datasets（arXiv:2610.29025，2026-10-21）。Phase 2 的写入门槛现在记下，但不解锁 Phase 2：至少两个独立外部数据集上质量 MAE 改善约 5%–10%，且配对 bootstrap 置信区间支持改善；否则不要把分层校准写成方法贡献。Triste 原文审阅在此句被截断，上述是恢复后的工作门槛，不是另推的新标准。Nutrition5k 是源域。ACETADA（Canvas 所记 806 张餐前 / 餐后图像）与 VLM Food Benchmark（Canvas 所记 200 餐 / 870 项 / 6 名参与者）是优先外部测试，许可尚未核对。ECUSTFD 只作辅助校准，ASA24 份量图只作辅助检索 / 份量检查；这两处份数留空。
+**主声称：质量对 Direct 可外推（bootstrap 区间均为负）；对 Mass-only 基本打平（0.76 g 不算赢，不要当作方法优越性证据）；能量外测未稳。** 动机文献只写标题和 arXiv，不编 DOI：Open-KNEAD: Knowledge-grounded Nutrition Estimation via Agentic Decomposition（arXiv:2607.12911，2026-07-14）；Single-Image Food Mass Estimators Do Not Transfer Their Gram Scale Across Datasets（arXiv:2610.29025，2026-10-21）。早间 Phase 2 的写入门槛现已撤回，不解锁任何实验：至少两个独立外部数据集上质量 MAE 改善约 5%–10%，且配对 bootstrap 置信区间支持改善；否则不要把分层校准写成方法贡献。Triste 原文审阅在此句被截断，上述是恢复后的工作门槛，不是另推的新标准。Nutrition5k 官方 **5,006** 盘；顶视 RGB-D 只写论文约数约 3.5k / 5k，不编造可用配对条数。ACETADA（arXiv:2507.07048）实验使用 **806** 张餐前智能手机图像；配对餐后是剩余食物，不是几何侧视。本轮项目主页返回 500，不从主页采集额外数字。VLM Food Benchmark 官方 README：200 张食堂餐图，870 项已核验逐项质量，6 名参与者，多为自由条件俯视，不是多视角集。ECUSTFD（Hugging Face）：2,978 张手机图，19 类，顶视与侧视，25 mm 硬币，逐对象质量与体积；只作辅助几何-质量校准，不是混合膳食主测试，不编造可用配对条数。ASA24 官方页：超过 17,000 张与 FNDDS 份量关联的图像。17,135 / 6,469 是 arXiv:2610.29025 的处理计数，不是 NCI 官方可用质量标签总数。外部混合餐基本不能支撑请求真实第二视图，因此先不要搭建完整联合网络。
 
 
 10. **④ 锁定 — 真实 Tool Cost。** VLM 调用次数、延迟、token、单盘成本，以及能量 MAE–Cost Pareto。调用次数不等于真实成本。
@@ -312,8 +322,8 @@ a^*=\arg\max_{a\in A_{legal}(s_t)}\frac{Q_\phi(s_t,a)}{Cost(a)}
 12. **⑥ 锁定 — Provenance + Semantic。** Provenance 自动全量；Semantic 人工提前到核心实验。
 13. **⑦ 锁定 — 然后才共决**是否解锁 P1 或重训 Mass/Q。在此之前 **禁止自动开 P1**，**禁止**重训。
 
-**可推迟**：RL；Route B 多目标 Q；体积；RGB-D 主表；VLM LoRA 营养头；kcal 代理弃权作主故事；在开发 505 上继续调方法冒充最终主表。完整金标准仍可分期。**③** 已完成，其 dish_id 隔离要求不因此取消。Cafe2 能量审计（#65，`ecf859f5`）与 Mass-only 能量路径便宜诊断（#68，`f578e8f4`）已完成，不重画该划分，也**不**叫门禁 ④，也**不**解锁 **④–⑦**。**当前 = Phase 1 跨域诊断（0/8）。** 唯一已解锁的代码项是 Phase 1 跨域诊断（0/8，进入 main 之后才许开工）。本文件这次改写是 Phase 1 的开工许可（进入 main 之后），不是 Phase 2、Phase 3、新网络或 ④–⑦ 的开工许可。
+**可推迟**：RL；Route B 多目标 Q；体积；RGB-D 主表；VLM LoRA 营养头；kcal 代理弃权作主故事；在开发 505 上继续调方法冒充最终主表。完整金标准仍可分期。**③** 已完成，其 dish_id 隔离要求不因此取消。Cafe2 能量审计（#65，`ecf859f5`）与 Mass-only 能量路径便宜诊断（#68，`f578e8f4`）已完成，不重画该划分，也**不**叫门禁 ④，也**不**解锁 **④–⑦**。**当前 = 可行性审计已完成（Q1/Q2/Q4 公开资料结论已写入官方方案页；Q3 不得写成已解）。代码空闲。** 没有当前可写代码的项。本文件这次改写不是开工许可。合并进 main 之后代码仍空闲。实验 A/B/C、完整联合网络与 ④–⑦ 都没有开工许可。
 
 Schema 仍冻结于 `schemas/`；说明见 `docs/schema.md`。执行状态见 [`docs/STATUS.md`](docs/STATUS.md)。
 
-Canvas 真源：https://cursor.com/canvas/store-745bdf38-f3d7-4313-8d66-08e4b6903e93/d7be617d-d37e-4fe1-a4b5-9da2c86b27a2（**Coverage-Constrained Active Specialist Selection**；任务框架 **Evidence-Guided Active Multimodal Nutrition Estimation**）
+Canvas 真源：https://cursor.com/canvas/store-745bdf38-f3d7-4313-8d66-08e4b6903e93/d7be617d-d37e-4fe1-a4b5-9da2c86b27a2（**VDR 官方方案（2026-11-12 晚）：面向物理约束营养估计的主动多模态证据获取（候选）**）
