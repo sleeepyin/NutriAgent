@@ -1,0 +1,482 @@
+{
+  "summary": {
+    "composition_difference": {
+      "n_test_dishes": 268,
+      "n_mass_better_and_energy_worse": 38
+    },
+    "alignment_path": {
+      "n_test_dishes": 268,
+      "n_mass_better_and_energy_worse": 57
+    }
+  },
+  "examples": {
+    "composition_difference": [
+      {
+        "sequence_id": "cafe1-0512",
+        "dish_id": "dish_1565811000",
+        "position": 1,
+        "added": "chicken 205.000 g",
+        "energy_abs_error_increase_kcal": 217.0414284101044,
+        "true": {
+          "mass_g": 225.0,
+          "kcal": 342.850006,
+          "fat_g": 7.46,
+          "carb_g": 0.72,
+          "protein_g": 64.129997
+        },
+        "baseline_abs_error": {
+          "mass_g": 102.02921950861389,
+          "kcal": 46.749976242194464,
+          "fat_g": 6.6294879678167495,
+          "carb_g": 7.918935843483628,
+          "protein_g": 5.562146791770516
+        },
+        "model_abs_error": {
+          "mass_g": 262.2408009364434,
+          "kcal": 263.79140465229887,
+          "fat_g": 19.822456391476457,
+          "carb_g": 28.35664962844962,
+          "protein_g": 6.383319602169863
+        },
+        "model": "单图像基线加组成差异监督"
+      },
+      {
+        "sequence_id": "cafe1-0536",
+        "dish_id": "dish_1566328831",
+        "position": 4,
+        "added": "olives 12.000 g",
+        "energy_abs_error_increase_kcal": 181.15437042700296,
+        "true": {
+          "mass_g": 500.0,
+          "kcal": 941.609985,
+          "fat_g": 30.021,
+          "carb_g": 85.809998,
+          "protein_g": 78.080002
+        },
+        "baseline_abs_error": {
+          "mass_g": 56.72094149890222,
+          "kcal": 92.72526021042313,
+          "fat_g": 7.763313266234924,
+          "carb_g": 39.855998067503805,
+          "protein_g": 0.7679925028807588
+        },
+        "model_abs_error": {
+          "mass_g": 97.70097264233823,
+          "kcal": 273.8796306374261,
+          "fat_g": 3.764278215694283,
+          "carb_g": 55.570477011110036,
+          "protein_g": 7.351236425050502
+        },
+        "model": "单图像基线加组成差异监督"
+      },
+      {
+        "sequence_id": "cafe1-0468",
+        "dish_id": "dish_1565035858",
+        "position": 5,
+        "added": "watermelon 117.000 g",
+        "energy_abs_error_increase_kcal": 166.0508824736437,
+        "true": {
+          "mass_g": 531.0,
+          "kcal": 375.227997,
+          "fat_g": 6.709,
+          "carb_g": 23.677,
+          "protein_g": 55.419998
+        },
+        "baseline_abs_error": {
+          "mass_g": 2.6333840242700717,
+          "kcal": 74.43621873860951,
+          "fat_g": 4.960929109542725,
+          "carb_g": 0.5151884090540833,
+          "protein_g": 4.0751295618492875
+        },
+        "model_abs_error": {
+          "mass_g": 34.91494033303593,
+          "kcal": 240.4871012122532,
+          "fat_g": 17.519557999847407,
+          "carb_g": 7.10580075299621,
+          "protein_g": 7.648430996360553
+        },
+        "model": "单图像基线加组成差异监督"
+      },
+      {
+        "sequence_id": "cafe1-0534",
+        "dish_id": "dish_1566316726",
+        "position": 1,
+        "added": "egg whites 563.000 g",
+        "energy_abs_error_increase_kcal": 150.40299853117654,
+        "true": {
+          "mass_g": 685.0,
+          "kcal": 409.522888,
+          "fat_g": 4.10161,
+          "carb_g": 25.365391,
+          "protein_g": 57.490242
+        },
+        "baseline_abs_error": {
+          "mass_g": 41.229251475995625,
+          "kcal": 23.564194379829303,
+          "fat_g": 5.519522529028065,
+          "carb_g": 1.1813897354301837,
+          "protein_g": 4.276433174741548
+        },
+        "model_abs_error": {
+          "mass_g": 59.17441557091661,
+          "kcal": 173.96719291100584,
+          "fat_g": 14.992120474563432,
+          "carb_g": 6.132014527477796,
+          "protein_g": 7.112771426754854
+        },
+        "model": "单图像基线加组成差异监督"
+      },
+      {
+        "sequence_id": "cafe1-0040",
+        "dish_id": "dish_1559849412",
+        "position": 0,
+        "added": "",
+        "energy_abs_error_increase_kcal": 145.5328045979577,
+        "true": {
+          "mass_g": 61.0,
+          "kcal": 352.641022,
+          "fat_g": 30.195,
+          "carb_g": 13.847,
+          "protein_g": 13.664001
+        },
+        "baseline_abs_error": {
+          "mass_g": 17.874371074357242,
+          "kcal": 38.66455678305692,
+          "fat_g": 6.026819067109937,
+          "carb_g": 0.42971301829685693,
+          "protein_g": 3.2285758828987383
+        },
+        "model_abs_error": {
+          "mass_g": 74.57282127051684,
+          "kcal": 184.19736138101462,
+          "fat_g": 20.860104312540145,
+          "carb_g": 0.8518457539737412,
+          "protein_g": 4.5783118677685675
+        },
+        "model": "单图像基线加组成差异监督"
+      },
+      {
+        "sequence_id": "cafe1-0055",
+        "dish_id": "dish_1560367952",
+        "position": 2,
+        "added": "spinach (raw) 27.000 g",
+        "energy_abs_error_increase_kcal": 145.20891518962677,
+        "true": {
+          "mass_g": 221.0,
+          "kcal": 414.733154,
+          "fat_g": 21.073912,
+          "carb_g": 45.956913,
+          "protein_g": 24.938904
+        },
+        "baseline_abs_error": {
+          "mass_g": 46.0004600944427,
+          "kcal": 202.71316121751758,
+          "fat_g": 5.924779867249342,
+          "carb_g": 34.25042501958355,
+          "protein_g": 16.64782198063901
+        },
+        "model_abs_error": {
+          "mass_g": 125.4890238331844,
+          "kcal": 347.92207640714435,
+          "fat_g": 17.922066002528503,
+          "carb_g": 38.262983182970075,
+          "protein_g": 22.06221724586834
+        },
+        "model": "单图像基线加组成差异监督"
+      },
+      {
+        "sequence_id": "cafe1-0536",
+        "dish_id": "dish_1566328805",
+        "position": 3,
+        "added": "pineapple 52.000 g",
+        "energy_abs_error_increase_kcal": 144.68981056688506,
+        "true": {
+          "mass_g": 488.0,
+          "kcal": 927.809998,
+          "fat_g": 28.737,
+          "carb_g": 85.054001,
+          "protein_g": 77.984001
+        },
+        "baseline_abs_error": {
+          "mass_g": 62.21135482612658,
+          "kcal": 125.15310680144285,
+          "fat_g": 5.3515179844768035,
+          "carb_g": 39.014277123471715,
+          "protein_g": 5.177789965945152
+        },
+        "model_abs_error": {
+          "mass_g": 99.58802519886103,
+          "kcal": 269.8429173683279,
+          "fat_g": 2.6518269410094852,
+          "carb_g": 54.419720275395605,
+          "protein_g": 9.32149480675261
+        },
+        "model": "单图像基线加组成差异监督"
+      },
+      {
+        "sequence_id": "cafe1-0536",
+        "dish_id": "dish_1566328776",
+        "position": 2,
+        "added": "pizza 233.000 g",
+        "energy_abs_error_increase_kcal": 139.4725322740344,
+        "true": {
+          "mass_g": 436.0,
+          "kcal": 901.810059,
+          "fat_g": 28.684999,
+          "carb_g": 78.293999,
+          "protein_g": 77.723999
+        },
+        "baseline_abs_error": {
+          "mass_g": 51.42304462677657,
+          "kcal": 102.03955506692239,
+          "fat_g": 5.123633629476888,
+          "carb_g": 40.890489325812794,
+          "protein_g": 3.7180170910623787
+        },
+        "model_abs_error": {
+          "mass_g": 153.46290182049302,
+          "kcal": 241.51208734095678,
+          "fat_g": 2.569629936581471,
+          "carb_g": 47.94342849665854,
+          "protein_g": 8.315348805532082
+        },
+        "model": "单图像基线加组成差异监督"
+      }
+    ],
+    "alignment_path": [
+      {
+        "sequence_id": "cafe1-0536",
+        "dish_id": "dish_1566328776",
+        "position": 2,
+        "added": "pizza 233.000 g",
+        "energy_abs_error_increase_kcal": 143.92977947431564,
+        "true": {
+          "mass_g": 436.0,
+          "kcal": 901.810059,
+          "fat_g": 28.684999,
+          "carb_g": 78.293999,
+          "protein_g": 77.723999
+        },
+        "baseline_abs_error": {
+          "mass_g": 51.42304462677657,
+          "kcal": 102.03955506692239,
+          "fat_g": 5.123633629476888,
+          "carb_g": 40.890489325812794,
+          "protein_g": 3.7180170910623787
+        },
+        "model_abs_error": {
+          "mass_g": 117.29361940007357,
+          "kcal": 245.96933454123803,
+          "fat_g": 3.4962313372469502,
+          "carb_g": 26.912868162456377,
+          "protein_g": 21.040164620199334
+        },
+        "model": "差异特征对齐、营养差异预测与路径一致性"
+      },
+      {
+        "sequence_id": "cafe1-0536",
+        "dish_id": "dish_1566328805",
+        "position": 3,
+        "added": "pineapple 52.000 g",
+        "energy_abs_error_increase_kcal": 129.92642564221865,
+        "true": {
+          "mass_g": 488.0,
+          "kcal": 927.809998,
+          "fat_g": 28.737,
+          "carb_g": 85.054001,
+          "protein_g": 77.984001
+        },
+        "baseline_abs_error": {
+          "mass_g": 62.21135482612658,
+          "kcal": 125.15310680144285,
+          "fat_g": 5.3515179844768035,
+          "carb_g": 39.014277123471715,
+          "protein_g": 5.177789965945152
+        },
+        "model_abs_error": {
+          "mass_g": 103.98472996280111,
+          "kcal": 255.0795324436615,
+          "fat_g": 4.143221888882952,
+          "carb_g": 26.354559068550245,
+          "protein_g": 23.154820231748417
+        },
+        "model": "差异特征对齐、营养差异预测与路径一致性"
+      },
+      {
+        "sequence_id": "cafe1-0536",
+        "dish_id": "dish_1566328831",
+        "position": 4,
+        "added": "olives 12.000 g",
+        "energy_abs_error_increase_kcal": 123.05421579501899,
+        "true": {
+          "mass_g": 500.0,
+          "kcal": 941.609985,
+          "fat_g": 30.021,
+          "carb_g": 85.809998,
+          "protein_g": 78.080002
+        },
+        "baseline_abs_error": {
+          "mass_g": 56.72094149890222,
+          "kcal": 92.72526021042313,
+          "fat_g": 7.763313266234924,
+          "carb_g": 39.855998067503805,
+          "protein_g": 0.7679925028807588
+        },
+        "model_abs_error": {
+          "mass_g": 90.55872479443144,
+          "kcal": 215.77947600544212,
+          "fat_g": 2.2350755456320712,
+          "carb_g": 23.036235110460375,
+          "protein_g": 21.539484909865223
+        },
+        "model": "差异特征对齐、营养差异预测与路径一致性"
+      },
+      {
+        "sequence_id": "cafe1-0040",
+        "dish_id": "dish_1559849466",
+        "position": 1,
+        "added": "pears 201.000 g",
+        "energy_abs_error_increase_kcal": 111.22509299910539,
+        "true": {
+          "mass_g": 262.0,
+          "kcal": 467.613037,
+          "fat_g": 30.396,
+          "carb_g": 44.398998,
+          "protein_g": 14.468
+        },
+        "baseline_abs_error": {
+          "mass_g": 49.86359435980353,
+          "kcal": 133.09409620511894,
+          "fat_g": 13.590345475024183,
+          "carb_g": 5.192122597511052,
+          "protein_g": 4.1279075105119
+        },
+        "model_abs_error": {
+          "mass_g": 82.29275750711872,
+          "kcal": 244.31918920422433,
+          "fat_g": 18.705037218987293,
+          "carb_g": 22.895819923435514,
+          "protein_g": 4.642233409631352
+        },
+        "model": "差异特征对齐、营养差异预测与路径一致性"
+      },
+      {
+        "sequence_id": "cafe1-0040",
+        "dish_id": "dish_1559849412",
+        "position": 0,
+        "added": "",
+        "energy_abs_error_increase_kcal": 103.88544978510393,
+        "true": {
+          "mass_g": 61.0,
+          "kcal": 352.641022,
+          "fat_g": 30.195,
+          "carb_g": 13.847,
+          "protein_g": 13.664001
+        },
+        "baseline_abs_error": {
+          "mass_g": 17.874371074357242,
+          "kcal": 38.66455678305692,
+          "fat_g": 6.026819067109937,
+          "carb_g": 0.42971301829685693,
+          "protein_g": 3.2285758828987383
+        },
+        "model_abs_error": {
+          "mass_g": 22.809784259166463,
+          "kcal": 142.55000656816085,
+          "fat_g": 16.202423417673586,
+          "carb_g": 4.724270758241174,
+          "protein_g": 1.6621998985228768
+        },
+        "model": "差异特征对齐、营养差异预测与路径一致性"
+      },
+      {
+        "sequence_id": "cafe1-0631",
+        "dish_id": "dish_1568401302",
+        "position": 4,
+        "added": "fried rice 118.000 g",
+        "energy_abs_error_increase_kcal": 82.84854949639657,
+        "true": {
+          "mass_g": 561.0,
+          "kcal": 716.47937,
+          "fat_g": 28.946722,
+          "carb_g": 69.864967,
+          "protein_g": 44.677963
+        },
+        "baseline_abs_error": {
+          "mass_g": 21.783565063577043,
+          "kcal": 10.424584139410172,
+          "fat_g": 13.358613398365957,
+          "carb_g": 15.951106772588993,
+          "protein_g": 43.37447591747988
+        },
+        "model_abs_error": {
+          "mass_g": 10.726030896683483,
+          "kcal": 93.27313363580674,
+          "fat_g": 3.0214383258327544,
+          "carb_g": 19.80405639302421,
+          "protein_g": 36.74663604216128
+        },
+        "model": "差异特征对齐、营养差异预测与路径一致性"
+      },
+      {
+        "sequence_id": "cafe1-0055",
+        "dish_id": "dish_1560367952",
+        "position": 2,
+        "added": "spinach (raw) 27.000 g",
+        "energy_abs_error_increase_kcal": 82.51223614109128,
+        "true": {
+          "mass_g": 221.0,
+          "kcal": 414.733154,
+          "fat_g": 21.073912,
+          "carb_g": 45.956913,
+          "protein_g": 24.938904
+        },
+        "baseline_abs_error": {
+          "mass_g": 46.0004600944427,
+          "kcal": 202.71316121751758,
+          "fat_g": 5.924779867249342,
+          "carb_g": 34.25042501958355,
+          "protein_g": 16.64782198063901
+        },
+        "model_abs_error": {
+          "mass_g": 74.8000400003663,
+          "kcal": 285.22539735860886,
+          "fat_g": 12.5150694332962,
+          "carb_g": 39.99030677163383,
+          "protein_g": 16.353621221631226
+        },
+        "model": "差异特征对齐、营养差异预测与路径一致性"
+      },
+      {
+        "sequence_id": "cafe1-0512",
+        "dish_id": "dish_1565811025",
+        "position": 2,
+        "added": "broccoli 52.000 g",
+        "energy_abs_error_increase_kcal": 80.55380434747889,
+        "true": {
+          "mass_g": 277.0,
+          "kcal": 361.050018,
+          "fat_g": 7.668,
+          "carb_g": 4.36,
+          "protein_g": 65.377998
+        },
+        "baseline_abs_error": {
+          "mass_g": 64.81743943872505,
+          "kcal": 1.7073313587588927,
+          "fat_g": 5.645499775508635,
+          "carb_g": 10.172047270409667,
+          "protein_g": 17.717985118981012
+        },
+        "model_abs_error": {
+          "mass_g": 10.239455062852414,
+          "kcal": 82.26113570623778,
+          "fat_g": 2.787645042006516,
+          "carb_g": 2.7622357842341563,
+          "protein_g": 26.405135111956206
+        },
+        "model": "差异特征对齐、营养差异预测与路径一致性"
+      }
+    ]
+  }
+}
