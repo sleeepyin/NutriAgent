@@ -1312,7 +1312,7 @@ def render_report(summary: dict) -> str:
             "python3 scripts/icdl_phase1_sequence_audit.py",
             "```",
             "",
-            "脚本先跑合成例子，再读本地官方元数据，并与归档前缀的 sha256 核对。完整成员清单写在 `archive_inventory.json`。有效阶段对在 `valid_pairs.jsonl`，序列在 `valid_sequences.jsonl`。图像数字来自本地 `imagery/realsense_overhead/<dish_id>/rgb.png`。实验 A 的预测只读，不改 `results/experiment_a_n5k_dual_view/predictions/`。",
+            "脚本先跑合成例子，再读本地官方元数据，并与归档前缀的 sha256 核对。完整成员清单写在 `archive_inventory.json`。有效阶段对在 `valid_pairs.jsonl`，序列在 `valid_sequences.jsonl`。逐对俯视差异在 `visual_pairs.jsonl`（相邻阶段和同一组成的重复拍摄）。汇总表在 `visual_summary.json`。图像来自本地 `imagery/realsense_overhead/<dish_id>/rgb.png`。实验 A 的预测只读，不改 `results/experiment_a_n5k_dual_view/predictions/`。",
             "",
         ]
     )
@@ -1785,6 +1785,7 @@ def main() -> None:
     write_jsonl(output / "valid_sequences.jsonl", all_sequences)
     if visual_summary is not None:
         write_json(output / "visual_summary.json", visual_summary)
+    if visual_rows:
         write_jsonl(output / "visual_pairs.jsonl", visual_rows)
     if bootstrap is not None:
         write_json(output / "bootstrap.json", bootstrap)

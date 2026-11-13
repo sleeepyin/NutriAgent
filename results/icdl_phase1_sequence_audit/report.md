@@ -160,4 +160,4 @@ cafe2 的 238 个盘子不在官方 RGB 训练或测试清单里。它们的增�
 python3 scripts/icdl_phase1_sequence_audit.py
 ```
 
-脚本先跑合成例子，再读本地官方元数据，并与归档前缀的 sha256 核对。完整成员清单写在 `archive_inventory.json`。有效阶段对在 `valid_pairs.jsonl`，序列在 `valid_sequences.jsonl`。图像数字来自本地 `imagery/realsense_overhead/<dish_id>/rgb.png`。实验 A 的预测只读，不改 `results/experiment_a_n5k_dual_view/predictions/`。
+脚本先跑合成例子，再读本地官方元数据，并与归档前缀的 sha256 核对。完整成员清单写在 `archive_inventory.json`。有效阶段对在 `valid_pairs.jsonl`，序列在 `valid_sequences.jsonl`。逐对俯视差异在 `visual_pairs.jsonl`（相邻阶段和同一组成的重复拍摄）。汇总表在 `visual_summary.json`。图像来自本地 `imagery/realsense_overhead/<dish_id>/rgb.png`。实验 A 的预测只读，不改 `results/experiment_a_n5k_dual_view/predictions/`。
