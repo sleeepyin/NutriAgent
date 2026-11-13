@@ -243,4 +243,4 @@ python -m unittest tests/test_u2_phase1_partial_label_audit.py
 
 只读引用的 #78 提交是 `9d7822f9e8f3597889d00de76b31b3c40d096170`。本分支状态文件所在提交是 `4f5c09d218543c8c75fdf62f94c3cb0c8789c836`。
 
-拉取请求以 `u2-partial-label` 为基线，不是 `main`。链接在打开之后写入本节。
+拉取请求：https://github.com/sleeepyin/NutriAgent/pull/80。基线是 `u2-partial-label`，不是 `main`。

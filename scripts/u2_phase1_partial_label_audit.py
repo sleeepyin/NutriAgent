@@ -66,7 +66,7 @@ DISH_BLOB_SHA = "32ae4b8cd7c625856b5f5cf50c10392f6df0dfd3"
 INGREDIENT_BLOB_SHA = "2cd1176104461379b04436f68b6d03f75477021a"
 U78_COMMIT = "9d7822f9e8f3597889d00de76b31b3c40d096170"
 STATUS_COMMIT = "4f5c09d218543c8c75fdf62f94c3cb0c8789c836"
-PULL_REQUEST_URL = ""
+PULL_REQUEST_URL = "https://github.com/sleeepyin/NutriAgent/pull/80"
 
 # Published #78 field record. Used only as a comparison target, not as a pass.
 U78_RECORD = {
