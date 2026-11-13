@@ -1,0 +1,959 @@
+{
+  "protocol_version": "u2-phase1-2026-11-13",
+  "split_version": "u2-physical-plate-v1",
+  "decision": "phase1_conditions_met_status_unchanged",
+  "decision_zh": "三条条件在这次复核里成立。不修改 STATUS，不宣布第二阶段解锁。",
+  "stopped": false,
+  "protocol_clear": true,
+  "protocol_problems": [],
+  "structure_ok": true,
+  "structure_reasons": [],
+  "holdout_nutrition_error_computed": false,
+  "status_modified": false,
+  "phase2_unlocked": false,
+  "public": {
+    "dishes": 1056,
+    "unique_dish_ids": 1056,
+    "duplicate_dish_ids": 0,
+    "instances": 2922,
+    "classes": 40,
+    "class_counts": {
+      "herb": 24,
+      "cruciferous": 221,
+      "fruit_fatty": 40,
+      "squash_eggplant": 67,
+      "poultry": 123,
+      "meat_red": 98,
+      "cucumber": 28,
+      "egg": 72,
+      "berry": 264,
+      "bacon": 66,
+      "tuber": 155,
+      "melon": 121,
+      "fruit_tree": 120,
+      "leafy_greens": 327,
+      "nuts_seeds": 97,
+      "sausage": 46,
+      "rice": 78,
+      "tomato": 93,
+      "mushroom": 8,
+      "grain_other": 61,
+      "root_vegetable": 106,
+      "corn": 50,
+      "fruit_tropical": 84,
+      "legumes_other": 20,
+      "peppers": 32,
+      "alium_vegetable": 43,
+      "pizza": 125,
+      "vegetable_other": 16,
+      "salad_prepared": 66,
+      "dessert": 11,
+      "bread": 17,
+      "fish": 67,
+      "tofu": 16,
+      "yogurt": 5,
+      "legumes_green": 38,
+      "cheese": 26,
+      "condiment_dressing": 14,
+      "pasta": 7,
+      "fruit_other": 4,
+      "egg_whites": 66
+    },
+    "has_nutrition": {
+      "1": 2824,
+      "0": 98
+    },
+    "dish_split": {
+      "train": 898,
+      "test": 158
+    },
+    "ingredient_split": {
+      "train": 2253,
+      "test": 669
+    },
+    "same_dish_id_set": true,
+    "invalid_dish_ids": [],
+    "split_conflicts": [],
+    "dishes_without_instances": [],
+    "unparsed_plate_nutrients": 0
+  },
+  "flag_notes": {
+    "has_nutrition_1_with_blank": 0,
+    "has_nutrition_0_with_number": 0
+  },
+  "images": {
+    "checked": true,
+    "expected": 1056,
+    "opened": 1056,
+    "missing": [],
+    "unreadable": [],
+    "size_counts": {
+      "640x480": 1056
+    },
+    "mode_counts": {
+      "RGB": 1056
+    }
+  },
+  "cafe_counts": {
+    "cafe1": 1056
+  },
+  "merge": {
+    "library_rows": 5006,
+    "library_physical_plates": 2482,
+    "library_links": 2524,
+    "library_multi_scan_plates": 1142,
+    "library_multi_scan_dishes": 3666,
+    "official_cross_plates": 2,
+    "official_cross_plate_ids": [
+      "dish_1559844458",
+      "dish_1561662814"
+    ],
+    "hand_physical_plates": 663,
+    "hand_multi_annotation_plates": 208,
+    "hand_dishes_on_multi_annotation_plates": 601,
+    "gaps": {
+      "nested_mass_increasing_seconds": {
+        "n": 2544,
+        "min": 11,
+        "p50": 33,
+        "p99": 157,
+        "max": 6224,
+        "le_180": 2524
+      },
+      "other_consecutive_seconds": {
+        "n": 2461,
+        "min": 10,
+        "p50": 92,
+        "p99": 242698,
+        "max": 5004372,
+        "le_180": 1608
+      }
+    },
+    "gap_rule_edited": false
+  },
+  "legacy_u78": {
+    "complete_nutrition_dishes": 970,
+    "partial_nutrition_dishes": 86,
+    "complete_and_sums_match": 546,
+    "partial_and_sums_match": 18,
+    "mismatch_n": 424,
+    "mass_gap_median_g": 17.729873999999995,
+    "mass_gap_median_abs_relative": 0.0970719075342465,
+    "mass_plate_heavier_abs_0_5": 418,
+    "mass_sum_heavier_abs_0_5": 1,
+    "fail_counts": {
+      "mass": 361,
+      "calories": 422,
+      "fat": 383,
+      "carb": 284,
+      "protein": 174
+    },
+    "partial_mass_median_g": 19.715323000000012,
+    "partial_plate_heavier_abs_0_5": 68,
+    "partial_sum_heavier_abs_0_5": 0,
+    "meta_mass_max_abs": 0.0,
+    "meta_mass_within_0_5": 1056,
+    "meta_mass_n": 1056
+  },
+  "u78_comparison": [
+    {
+      "item": "盘级行数",
+      "recomputed": 1056,
+      "published": 1056,
+      "match": true
+    },
+    {
+      "item": "食材实例",
+      "recomputed": 2922,
+      "published": 2922,
+      "match": true
+    },
+    {
+      "item": "粗类数",
+      "recomputed": 40,
+      "published": 40,
+      "match": true
+    },
+    {
+      "item": "has_nutrition=0 的实例",
+      "recomputed": 98,
+      "published": 98,
+      "match": true
+    },
+    {
+      "item": "有缺失营养的盘",
+      "recomputed": 86,
+      "published": 86,
+      "match": true
+    },
+    {
+      "item": "每个可见实例都有营养数字的盘",
+      "recomputed": 970,
+      "published": 970,
+      "match": true
+    },
+    {
+      "item": "其中五个营养素不能同时对齐",
+      "recomputed": 424,
+      "published": 424,
+      "match": true
+    },
+    {
+      "item": "完整标签盘",
+      "recomputed": 546,
+      "published": 546,
+      "match": true
+    },
+    {
+      "item": "部分标签盘",
+      "recomputed": 510,
+      "published": 510,
+      "match": true
+    },
+    {
+      "item": "质量差中位数（克）",
+      "recomputed": 17.73,
+      "published": 17.73,
+      "match": true
+    },
+    {
+      "item": "质量绝对相对差中位数（%）",
+      "recomputed": 9.7,
+      "published": 9.7,
+      "match": true
+    },
+    {
+      "item": "盘子比求和重出 0.5 克",
+      "recomputed": 418,
+      "published": 418,
+      "match": true
+    },
+    {
+      "item": "求和比盘子重出 0.5 克",
+      "recomputed": 1,
+      "published": 1,
+      "match": true
+    },
+    {
+      "item": "能量对不齐",
+      "recomputed": 422,
+      "published": 422,
+      "match": true
+    },
+    {
+      "item": "脂肪对不齐",
+      "recomputed": 383,
+      "published": 383,
+      "match": true
+    },
+    {
+      "item": "质量对不齐",
+      "recomputed": 361,
+      "published": 361,
+      "match": true
+    },
+    {
+      "item": "碳水对不齐",
+      "recomputed": 284,
+      "published": 284,
+      "match": true
+    },
+    {
+      "item": "蛋白质对不齐",
+      "recomputed": 174,
+      "published": 174,
+      "match": true
+    },
+    {
+      "item": "多于一条 Hand 标注的餐盘",
+      "recomputed": 208,
+      "published": 208,
+      "match": true
+    },
+    {
+      "item": "这些餐盘上的 Hand 扫描",
+      "recomputed": 601,
+      "published": 601,
+      "match": true
+    },
+    {
+      "item": "Hand 图像级训练餐盘",
+      "recomputed": 599,
+      "published": 599,
+      "match": true
+    },
+    {
+      "item": "Hand 图像级测试餐盘",
+      "recomputed": 137,
+      "published": 137,
+      "match": true
+    },
+    {
+      "item": "Hand 物理餐盘",
+      "recomputed": 663,
+      "published": 663,
+      "match": true
+    },
+    {
+      "item": "全库物理餐盘",
+      "recomputed": 2482,
+      "published": 2482,
+      "match": true
+    },
+    {
+      "item": "全库相邻链接",
+      "recomputed": 2524,
+      "published": 2524,
+      "match": true
+    },
+    {
+      "item": "全库多次扫描餐盘",
+      "recomputed": 1142,
+      "published": 1142,
+      "match": true
+    },
+    {
+      "item": "全库多次扫描覆盖的 dish_id",
+      "recomputed": 3666,
+      "published": 3666,
+      "match": true
+    },
+    {
+      "item": "跨官方 RGB 的物理餐盘",
+      "recomputed": 2,
+      "published": 2,
+      "match": true
+    },
+    {
+      "item": "Hand 图像级划分跨盘",
+      "recomputed": 73,
+      "published": 73,
+      "match": true
+    },
+    {
+      "item": "只在 Hand 测试一侧的餐盘",
+      "recomputed": 64,
+      "published": 64,
+      "match": true
+    },
+    {
+      "item": "干净测试餐盘上的测试扫描",
+      "recomputed": 67,
+      "published": 67,
+      "match": true
+    }
+  ],
+  "labels": {
+    "complete": 546,
+    "partial": 510,
+    "partial_reasons": {
+      "sum_outside_tolerance": 424,
+      "missing_nutrition_sum_inside_tolerance": 18,
+      "missing_nutrition_and_sum_outside": 68
+    },
+    "undefined_known_sum": 3,
+    "joint_mismatch": 424
+  },
+  "nutrients": {
+    "mass": {
+      "n": 424,
+      "fail_count": 361,
+      "plate_side": 360,
+      "sum_side": 1,
+      "median_signed": 17.729873999999995,
+      "p10_signed": 1.559806999999978,
+      "p90_signed": 79.72467999999998,
+      "imbalance": 0.9944598337950139
+    },
+    "calories": {
+      "n": 424,
+      "fail_count": 422,
+      "plate_side": 419,
+      "sum_side": 3,
+      "median_signed": 42.29032480000001,
+      "p10_signed": 7.977557649999994,
+      "p90_signed": 123.75999399999998,
+      "imbalance": 0.985781990521327
+    },
+    "fat": {
+      "n": 424,
+      "fail_count": 383,
+      "plate_side": 383,
+      "sum_side": 0,
+      "median_signed": 3.449710979999999,
+      "p10_signed": 0.502835472,
+      "p90_signed": 10.4500875,
+      "imbalance": 1.0
+    },
+    "carb": {
+      "n": 424,
+      "fail_count": 284,
+      "plate_side": 284,
+      "sum_side": 0,
+      "median_signed": 1.484444644,
+      "p10_signed": 2.6999999924726126e-07,
+      "p90_signed": 7.1340448489999995,
+      "imbalance": 1.0
+    },
+    "protein": {
+      "n": 424,
+      "fail_count": 174,
+      "plate_side": 174,
+      "sum_side": 0,
+      "median_signed": 0.38059561300000144,
+      "p10_signed": 9.000000011916143e-08,
+      "p90_signed": 3.9502688040000002,
+      "imbalance": 1.0
+    }
+  },
+  "classes": [
+    {
+      "annotation_name": "leafy_greens",
+      "zh": "叶菜",
+      "instances": 327,
+      "all_nutrition_dishes": 260,
+      "mismatch_dishes": 214,
+      "mass_gap_median_g": 22.89911099999999,
+      "mass_plate_side": 214,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 213
+    },
+    {
+      "annotation_name": "berry",
+      "zh": "浆果",
+      "instances": 264,
+      "all_nutrition_dishes": 135,
+      "mismatch_dishes": 72,
+      "mass_gap_median_g": 10.994722000000024,
+      "mass_plate_side": 57,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 72
+    },
+    {
+      "annotation_name": "cruciferous",
+      "zh": "十字花科蔬菜",
+      "instances": 221,
+      "all_nutrition_dishes": 173,
+      "mismatch_dishes": 106,
+      "mass_gap_median_g": 11.706853999999993,
+      "mass_plate_side": 83,
+      "mass_sum_side": 1,
+      "energy_fail_dishes": 105
+    },
+    {
+      "annotation_name": "tuber",
+      "zh": "薯类",
+      "instances": 155,
+      "all_nutrition_dishes": 131,
+      "mismatch_dishes": 84,
+      "mass_gap_median_g": 3.9024349999999686,
+      "mass_plate_side": 48,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 84
+    },
+    {
+      "annotation_name": "pizza",
+      "zh": "披萨",
+      "instances": 125,
+      "all_nutrition_dishes": 111,
+      "mismatch_dishes": 69,
+      "mass_gap_median_g": 16.82513899999998,
+      "mass_plate_side": 62,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 68
+    },
+    {
+      "annotation_name": "poultry",
+      "zh": "禽肉",
+      "instances": 123,
+      "all_nutrition_dishes": 113,
+      "mismatch_dishes": 86,
+      "mass_gap_median_g": 28.70083799999999,
+      "mass_plate_side": 84,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 86
+    },
+    {
+      "annotation_name": "melon",
+      "zh": "瓜类",
+      "instances": 121,
+      "all_nutrition_dishes": 99,
+      "mismatch_dishes": 33,
+      "mass_gap_median_g": 7.225807000000003,
+      "mass_plate_side": 21,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 33
+    },
+    {
+      "annotation_name": "fruit_tree",
+      "zh": "仁果",
+      "instances": 120,
+      "all_nutrition_dishes": 99,
+      "mismatch_dishes": 13,
+      "mass_gap_median_g": 6.0,
+      "mass_plate_side": 7,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 13
+    },
+    {
+      "annotation_name": "root_vegetable",
+      "zh": "根菜",
+      "instances": 106,
+      "all_nutrition_dishes": 77,
+      "mismatch_dishes": 49,
+      "mass_gap_median_g": 15.329270000000008,
+      "mass_plate_side": 39,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 49
+    },
+    {
+      "annotation_name": "meat_red",
+      "zh": "红肉",
+      "instances": 98,
+      "all_nutrition_dishes": 89,
+      "mismatch_dishes": 85,
+      "mass_gap_median_g": 28.58949600000001,
+      "mass_plate_side": 85,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 85
+    },
+    {
+      "annotation_name": "nuts_seeds",
+      "zh": "坚果与种子",
+      "instances": 97,
+      "all_nutrition_dishes": 85,
+      "mismatch_dishes": 20,
+      "mass_gap_median_g": 16.324936000000037,
+      "mass_plate_side": 16,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 20
+    },
+    {
+      "annotation_name": "tomato",
+      "zh": "番茄",
+      "instances": 93,
+      "all_nutrition_dishes": 71,
+      "mismatch_dishes": 34,
+      "mass_gap_median_g": 35.07843,
+      "mass_plate_side": 33,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 34
+    },
+    {
+      "annotation_name": "fruit_tropical",
+      "zh": "热带水果",
+      "instances": 84,
+      "all_nutrition_dishes": 76,
+      "mismatch_dishes": 31,
+      "mass_gap_median_g": 15.329270000000008,
+      "mass_plate_side": 20,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 31
+    },
+    {
+      "annotation_name": "rice",
+      "zh": "米饭",
+      "instances": 78,
+      "all_nutrition_dishes": 71,
+      "mismatch_dishes": 60,
+      "mass_gap_median_g": 24.344926999999984,
+      "mass_plate_side": 56,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 60
+    },
+    {
+      "annotation_name": "egg",
+      "zh": "蛋",
+      "instances": 72,
+      "all_nutrition_dishes": 66,
+      "mismatch_dishes": 27,
+      "mass_gap_median_g": 2.8780440000000453,
+      "mass_plate_side": 13,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 27
+    },
+    {
+      "annotation_name": "fish",
+      "zh": "鱼",
+      "instances": 67,
+      "all_nutrition_dishes": 58,
+      "mismatch_dishes": 58,
+      "mass_gap_median_g": 30.33666799999999,
+      "mass_plate_side": 58,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 58
+    },
+    {
+      "annotation_name": "squash_eggplant",
+      "zh": "瓜茄类",
+      "instances": 67,
+      "all_nutrition_dishes": 49,
+      "mismatch_dishes": 46,
+      "mass_gap_median_g": 15.909828000000005,
+      "mass_plate_side": 38,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 46
+    },
+    {
+      "annotation_name": "bacon",
+      "zh": "培根",
+      "instances": 66,
+      "all_nutrition_dishes": 64,
+      "mismatch_dishes": 17,
+      "mass_gap_median_g": 4.471701999999993,
+      "mass_plate_side": 11,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 17
+    },
+    {
+      "annotation_name": "egg_whites",
+      "zh": "蛋白",
+      "instances": 66,
+      "all_nutrition_dishes": 58,
+      "mismatch_dishes": 34,
+      "mass_gap_median_g": 2.8048780000000306,
+      "mass_plate_side": 10,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 34
+    },
+    {
+      "annotation_name": "salad_prepared",
+      "zh": "预制沙拉",
+      "instances": 66,
+      "all_nutrition_dishes": 58,
+      "mismatch_dishes": 37,
+      "mass_gap_median_g": 16.68820199999999,
+      "mass_plate_side": 31,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 36
+    },
+    {
+      "annotation_name": "grain_other",
+      "zh": "其他谷物",
+      "instances": 61,
+      "all_nutrition_dishes": 48,
+      "mismatch_dishes": 46,
+      "mass_gap_median_g": 20.615155000000016,
+      "mass_plate_side": 45,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 46
+    },
+    {
+      "annotation_name": "corn",
+      "zh": "玉米",
+      "instances": 50,
+      "all_nutrition_dishes": 47,
+      "mismatch_dishes": 22,
+      "mass_gap_median_g": 34.15384900000004,
+      "mass_plate_side": 21,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 22
+    },
+    {
+      "annotation_name": "sausage",
+      "zh": "香肠",
+      "instances": 46,
+      "all_nutrition_dishes": 42,
+      "mismatch_dishes": 13,
+      "mass_gap_median_g": 2.5121920000000273,
+      "mass_plate_side": 7,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 13
+    },
+    {
+      "annotation_name": "alium_vegetable",
+      "zh": "葱蒜类",
+      "instances": 43,
+      "all_nutrition_dishes": 31,
+      "mismatch_dishes": 22,
+      "mass_gap_median_g": 32.0,
+      "mass_plate_side": 22,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 22
+    },
+    {
+      "annotation_name": "fruit_fatty",
+      "zh": "高脂水果",
+      "instances": 40,
+      "all_nutrition_dishes": 35,
+      "mismatch_dishes": 14,
+      "mass_gap_median_g": 21.811458000000016,
+      "mass_plate_side": 11,
+      "mass_sum_side": 1,
+      "energy_fail_dishes": 13
+    },
+    {
+      "annotation_name": "legumes_green",
+      "zh": "绿豆类",
+      "instances": 38,
+      "all_nutrition_dishes": 33,
+      "mismatch_dishes": 32,
+      "mass_gap_median_g": 24.344927,
+      "mass_plate_side": 30,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 32
+    },
+    {
+      "annotation_name": "peppers",
+      "zh": "辣椒",
+      "instances": 32,
+      "all_nutrition_dishes": 24,
+      "mismatch_dishes": 16,
+      "mass_gap_median_g": 26.980150999999978,
+      "mass_plate_side": 14,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 16
+    },
+    {
+      "annotation_name": "cucumber",
+      "zh": "黄瓜",
+      "instances": 28,
+      "all_nutrition_dishes": 15,
+      "mismatch_dishes": 11,
+      "mass_gap_median_g": 43.0,
+      "mass_plate_side": 11,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 11
+    },
+    {
+      "annotation_name": "cheese",
+      "zh": "奶酪",
+      "instances": 26,
+      "all_nutrition_dishes": 22,
+      "mismatch_dishes": 14,
+      "mass_gap_median_g": 12.724018000000001,
+      "mass_plate_side": 13,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 14
+    },
+    {
+      "annotation_name": "herb",
+      "zh": "香草",
+      "instances": 24,
+      "all_nutrition_dishes": 21,
+      "mismatch_dishes": 20,
+      "mass_gap_median_g": 32.55381799999998,
+      "mass_plate_side": 19,
+      "mass_sum_side": 1,
+      "energy_fail_dishes": 19
+    },
+    {
+      "annotation_name": "legumes_other",
+      "zh": "其他豆类",
+      "instances": 20,
+      "all_nutrition_dishes": 17,
+      "mismatch_dishes": 16,
+      "mass_gap_median_g": 30.025138999999996,
+      "mass_plate_side": 16,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 16
+    },
+    {
+      "annotation_name": "bread",
+      "zh": "面包",
+      "instances": 17,
+      "all_nutrition_dishes": 13,
+      "mismatch_dishes": 7,
+      "mass_gap_median_g": 19.621622000000002,
+      "mass_plate_side": 6,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 7
+    },
+    {
+      "annotation_name": "tofu",
+      "zh": "豆腐",
+      "instances": 16,
+      "all_nutrition_dishes": 5,
+      "mismatch_dishes": 4,
+      "mass_gap_median_g": 165.805876,
+      "mass_plate_side": 4,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 4
+    },
+    {
+      "annotation_name": "vegetable_other",
+      "zh": "其他蔬菜",
+      "instances": 16,
+      "all_nutrition_dishes": 13,
+      "mismatch_dishes": 10,
+      "mass_gap_median_g": 24.623946000000018,
+      "mass_plate_side": 9,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 10
+    },
+    {
+      "annotation_name": "condiment_dressing",
+      "zh": "调味酱",
+      "instances": 14,
+      "all_nutrition_dishes": 14,
+      "mismatch_dishes": 13,
+      "mass_gap_median_g": 16.410809999999998,
+      "mass_plate_side": 7,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 13
+    },
+    {
+      "annotation_name": "dessert",
+      "zh": "甜点",
+      "instances": 11,
+      "all_nutrition_dishes": 8,
+      "mismatch_dishes": 3,
+      "mass_gap_median_g": 50.202089,
+      "mass_plate_side": 3,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 3
+    },
+    {
+      "annotation_name": "mushroom",
+      "zh": "蘑菇",
+      "instances": 8,
+      "all_nutrition_dishes": 7,
+      "mismatch_dishes": 3,
+      "mass_gap_median_g": 17.897414999999995,
+      "mass_plate_side": 3,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 3
+    },
+    {
+      "annotation_name": "pasta",
+      "zh": "意面",
+      "instances": 7,
+      "all_nutrition_dishes": 6,
+      "mismatch_dishes": 6,
+      "mass_gap_median_g": 90.48492400000003,
+      "mass_plate_side": 6,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 6
+    },
+    {
+      "annotation_name": "yogurt",
+      "zh": "酸奶",
+      "instances": 5,
+      "all_nutrition_dishes": 5,
+      "mismatch_dishes": 0,
+      "mass_gap_median_g": null,
+      "mass_plate_side": 0,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 0
+    },
+    {
+      "annotation_name": "fruit_other",
+      "zh": "其他水果",
+      "instances": 4,
+      "all_nutrition_dishes": 0,
+      "mismatch_dishes": 0,
+      "mass_gap_median_g": null,
+      "mass_plate_side": 0,
+      "mass_sum_side": 0,
+      "energy_fail_dishes": 0
+    }
+  ],
+  "split": {
+    "plates": 663,
+    "train_plates": 465,
+    "validation_plates": 99,
+    "holdout_plates": 99,
+    "cross_split_plates": 0,
+    "floor": 80,
+    "meets_floor": true,
+    "holdout_percent": 15,
+    "validation_percent": 15
+  },
+  "official": {
+    "rgb_train": 4059,
+    "rgb_test": 709,
+    "rgb_overlap": 0,
+    "by_split": [
+      {
+        "split": "train",
+        "plates": 465,
+        "hand_dishes": {
+          "n": 738,
+          "official_train": 408,
+          "official_test": 330,
+          "official_both": 0,
+          "official_neither": 0
+        },
+        "metadata_scans": {
+          "n": 1375,
+          "official_train": 1035,
+          "official_test": 340,
+          "official_both": 0,
+          "official_neither": 0
+        },
+        "plates_spanning_official_rgb": 2
+      },
+      {
+        "split": "validation",
+        "plates": 99,
+        "hand_dishes": {
+          "n": 154,
+          "official_train": 81,
+          "official_test": 73,
+          "official_both": 0,
+          "official_neither": 0
+        },
+        "metadata_scans": {
+          "n": 290,
+          "official_train": 213,
+          "official_test": 77,
+          "official_both": 0,
+          "official_neither": 0
+        },
+        "plates_spanning_official_rgb": 0
+      },
+      {
+        "split": "holdout",
+        "plates": 99,
+        "hand_dishes": {
+          "n": 164,
+          "official_train": 81,
+          "official_test": 83,
+          "official_both": 0,
+          "official_neither": 0
+        },
+        "metadata_scans": {
+          "n": 301,
+          "official_train": 217,
+          "official_test": 84,
+          "official_both": 0,
+          "official_neither": 0
+        },
+        "plates_spanning_official_rgb": 0
+      }
+    ],
+    "cafe1_ids": 4768,
+    "rgb_union_equals_cafe1": true,
+    "depth_train_outside_rgb": 0,
+    "depth_test_outside_rgb": 0
+  },
+  "hand_image_split": {
+    "cross_split_plates": 73,
+    "test_only_plates": 64,
+    "train_only_plates": 526,
+    "train_plates": 599,
+    "test_plates": 137,
+    "test_dishes_on_test_only_plates": 67,
+    "used_as_evaluation_split": false
+  },
+  "blobs": {
+    "dish_start": "32ae4b8cd7c625856b5f5cf50c10392f6df0dfd3",
+    "dish_end": "32ae4b8cd7c625856b5f5cf50c10392f6df0dfd3",
+    "ingredient_start": "2cd1176104461379b04436f68b6d03f75477021a",
+    "ingredient_end": "2cd1176104461379b04436f68b6d03f75477021a",
+    "changed_during_audit": false,
+    "dish_matches_u78": true,
+    "ingredient_matches_u78": true
+  },
+  "meta_mass_max_abs": 0.0,
+  "meta_mass_within_0_5": 1056,
+  "meta_mass_n": 1056,
+  "sterling": {
+    "citation": "Sterling et al., bioRxiv 2026.07.26.740845，2026-07-29 预印本",
+    "doi": "10.64898/2026.07.26.740845",
+    "url": "https://www.biorxiv.org/content/10.64898/2026.07.26.740845v1",
+    "code_url": "https://github.com/charterer/vlm-food-benchmark",
+    "checked_on": "2026-11-13",
+    "public_corrected_labels": false
+  }
+}
