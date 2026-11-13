@@ -2,9 +2,9 @@
 
 `u2-partial-label` 检验一个尚未证实的小问题：可见食材实例的营养求和若系统性小于盘级总量，一个把可观测食材和不可观测残差分开监督的协议，能否在盘级能量与三种宏量上，稳定同时优于整盘回归，并优于把食材标签当成完整监督。残差不当作零，也不摊回可见食材。推理协议是单张俯视 RGB。这不是已经证明的方法，也不是「Nutrition5k 标签不全，因此训一个通用部分标签算法」。
 
-工作发生在 `u2-partial-label`。`main` 保持不动。当前只解锁第一阶段：冻结协议、刻画残差、预先登记按物理餐盘分组的训练 / 验证 / 留出，并写可复核审计报告。不训网络。第二阶段和新算法仍锁定。
+工作发生在 `u2-partial-label`。`main` 保持不动。第一阶段已经在 `d330531bd266b553a5a78c3a3f379c668e594b2f`（短 `d330531b`，[#80](https://github.com/sleeepyin/NutriAgent/pull/80)）完成。当前只解锁第二阶段 B1 / B2 / B3 最小对照。新算法仍锁定。不写新网络。不对 `main` 开拉取请求。
 
-执行清单见 [docs/STATUS.md](docs/STATUS.md)。方案索引见 [PLAN.md](PLAN.md)。官方可行性方案（2026-11-13，Asia/Shanghai 定稿）是[《不完整食材标签：官方可行性方案》](https://cursor.com/canvas/store-745bdf38-f3d7-4313-8d66-08e4b6903e93/e21f31e5-d6b2-48a1-85e0-e806bbe3d0d6)。
+执行清单见 [docs/STATUS.md](docs/STATUS.md)。方案索引见 [PLAN.md](PLAN.md)。官方可行性方案（2026-11-13，Asia/Shanghai 定稿）是[《不完整食材标签：官方可行性方案》](https://cursor.com/canvas/store-745bdf38-f3d7-4313-8d66-08e4b6903e93/e21f31e5-d6b2-48a1-85e0-e806bbe3d0d6)。画布页首仍写着定稿时只准备解锁第一阶段。第一阶段通过之后，允许做什么以 [docs/STATUS.md](docs/STATUS.md) 为准。
 
 ## `main` 保持清空
 
@@ -21,5 +21,7 @@
 | [`archive/v4.0`](https://github.com/sleeepyin/NutriAgent/tree/archive/v4.0) | `ce1dc0616002a2f76fcffcc8a3ef87addd8c8358` | 2026-10-26 的区间与尺度方案 |
 | [`icdl`](https://github.com/sleeepyin/NutriAgent/tree/icdl) | `6ea6e849b88288b66d76fd063509e9b394daa7b4` | ICDL。第一阶段 1400 对、692 条序列的审计可保留；第二阶段 [#76](https://github.com/sleeepyin/NutriAgent/pull/76) 已停止 |
 | [`u1-granularity`](https://github.com/sleeepyin/NutriAgent/tree/u1-granularity) | `a733641f16433bea6593abd35ee96031cd79e49a` | U1 可行性方案（[#77](https://github.com/sleeepyin/NutriAgent/pull/77)）。审计在 [#78](https://github.com/sleeepyin/NutriAgent/pull/78) / `9d7822f9`。可行性未过，未训练 |
+
+`u2-partial-label` 上第一阶段审计合并是 `d330531bd266b553a5a78c3a3f379c668e594b2f`（短 `d330531b`，[#80](https://github.com/sleeepyin/NutriAgent/pull/80)）。改写本说明之前，这一提交是该分支尖端。上表的 `28bd3c9c`、`ce1dc061`、`6ea6e849` 与 `a733641f` 仍指那些历史提交。
 
 不要从这些分支恢复或继续旧方案。U1 的可分离度与 ICDL 的组成差不是本分支的方法。`u1-granularity` 与 [#78](https://github.com/sleeepyin/NutriAgent/pull/78) 只作只读引用。
