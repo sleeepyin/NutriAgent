@@ -1,0 +1,703 @@
+{
+  "longest_sequence": {
+    "sequence_id": "cafe1-0071",
+    "cafe": "cafe1",
+    "n_stages": 8,
+    "n_scans": 8,
+    "n_pairs": 7,
+    "rgb_splits": [
+      "rgb_test"
+    ],
+    "depth_splits": [
+      "depth_test"
+    ],
+    "rgb_leak": false,
+    "depth_leak": false,
+    "stages": [
+      {
+        "cluster_index": 1846,
+        "t_min": 1560444869,
+        "t_max": 1560444869,
+        "duration_s": 0,
+        "n_scans": 1,
+        "representative_dish_id": "dish_1560444869",
+        "ingredient_mass_g": "39.000000",
+        "mass_closest_g": "39.000000",
+        "mass_range_g": "0.000000",
+        "scale_disagrees": false,
+        "fractional_grams": false,
+        "n_ingredient_ids": 1,
+        "members": [
+          {
+            "dish_id": "dish_1560444869",
+            "timestamp": 1560444869,
+            "mass_g": "39.000000",
+            "kcal": "14.040001",
+            "fat_g": "0.039000",
+            "carb_g": "3.510000",
+            "protein_g": "0.195000",
+            "n_ingredient_rows": 1,
+            "rgb": "rgb_test",
+            "depth": "depth_test"
+          }
+        ],
+        "position": 0,
+        "overhead_dish_id": "dish_1560444869",
+        "added": [],
+        "nutrition_residual": null
+      },
+      {
+        "cluster_index": 1847,
+        "t_min": 1560444892,
+        "t_max": 1560444892,
+        "duration_s": 0,
+        "n_scans": 1,
+        "representative_dish_id": "dish_1560444892",
+        "ingredient_mass_g": "90.000000",
+        "mass_closest_g": "90.000000",
+        "mass_range_g": "0.000000",
+        "scale_disagrees": false,
+        "fractional_grams": false,
+        "n_ingredient_ids": 2,
+        "members": [
+          {
+            "dish_id": "dish_1560444892",
+            "timestamp": 1560444892,
+            "mass_g": "90.000000",
+            "kcal": "39.540001",
+            "fat_g": "0.090000",
+            "carb_g": "10.139999",
+            "protein_g": "0.450000",
+            "n_ingredient_rows": 2,
+            "rgb": "rgb_test",
+            "depth": "depth_test"
+          }
+        ],
+        "position": 1,
+        "overhead_dish_id": "dish_1560444892",
+        "added": [
+          {
+            "id": "ingr_0000000038",
+            "name": "pineapple",
+            "grams": "51.000000",
+            "kcal": "25.5",
+            "fat": "0.051",
+            "carb": "6.63",
+            "protein": "0.255",
+            "copies": 1
+          }
+        ],
+        "nutrition_residual": {
+          "mass": "0.000000",
+          "kcal": "0.000000",
+          "fat": "0.000000",
+          "carb": "-0.000001",
+          "protein": "0.000000"
+        },
+        "nutrition_ok": true,
+        "intervening_dishes": 0
+      },
+      {
+        "cluster_index": 1848,
+        "t_min": 1560444914,
+        "t_max": 1560444914,
+        "duration_s": 0,
+        "n_scans": 1,
+        "representative_dish_id": "dish_1560444914",
+        "ingredient_mass_g": "166.000000",
+        "mass_closest_g": "166.000000",
+        "mass_range_g": "0.000000",
+        "scale_disagrees": false,
+        "fractional_grams": false,
+        "n_ingredient_ids": 3,
+        "members": [
+          {
+            "dish_id": "dish_1560444914",
+            "timestamp": 1560444914,
+            "mass_g": "166.000000",
+            "kcal": "62.340004",
+            "fat_g": "0.242000",
+            "carb_g": "15.915999",
+            "protein_g": "0.906000",
+            "n_ingredient_rows": 3,
+            "rgb": "rgb_test",
+            "depth": "depth_test"
+          }
+        ],
+        "position": 2,
+        "overhead_dish_id": "dish_1560444914",
+        "added": [
+          {
+            "id": "ingr_0000000121",
+            "name": "watermelon",
+            "grams": "76.000000",
+            "kcal": "22.8",
+            "fat": "0.152",
+            "carb": "5.776",
+            "protein": "0.456",
+            "copies": 1
+          }
+        ],
+        "nutrition_residual": {
+          "mass": "0.000000",
+          "kcal": "0.000003",
+          "fat": "0.000000",
+          "carb": "0.000000",
+          "protein": "0.000000"
+        },
+        "nutrition_ok": true,
+        "intervening_dishes": 0
+      },
+      {
+        "cluster_index": 1849,
+        "t_min": 1560444931,
+        "t_max": 1560444931,
+        "duration_s": 0,
+        "n_scans": 1,
+        "representative_dish_id": "dish_1560444931",
+        "ingredient_mass_g": "200.000000",
+        "mass_closest_g": "200.000000",
+        "mass_range_g": "0.000000",
+        "scale_disagrees": false,
+        "fractional_grams": false,
+        "n_ingredient_ids": 4,
+        "members": [
+          {
+            "dish_id": "dish_1560444931",
+            "timestamp": 1560444931,
+            "mass_g": "200.000000",
+            "kcal": "112.660004",
+            "fat_g": "3.982000",
+            "carb_g": "16.460001",
+            "protein_g": "4.306000",
+            "n_ingredient_rows": 4,
+            "rgb": "rgb_test",
+            "depth": "depth_test"
+          }
+        ],
+        "position": 3,
+        "overhead_dish_id": "dish_1560444931",
+        "added": [
+          {
+            "id": "ingr_0000000008",
+            "name": "scrambled eggs",
+            "grams": "34.000000",
+            "kcal": "50.32",
+            "fat": "3.74",
+            "carb": "0.544",
+            "protein": "3.4",
+            "copies": 1
+          }
+        ],
+        "nutrition_residual": {
+          "mass": "0.000000",
+          "kcal": "0.000000",
+          "fat": "0.000000",
+          "carb": "0.000002",
+          "protein": "0.000000"
+        },
+        "nutrition_ok": true,
+        "intervening_dishes": 0
+      },
+      {
+        "cluster_index": 1850,
+        "t_min": 1560444948,
+        "t_max": 1560444948,
+        "duration_s": 0,
+        "n_scans": 1,
+        "representative_dish_id": "dish_1560444948",
+        "ingredient_mass_g": "231.000002",
+        "mass_closest_g": "231.000000",
+        "mass_range_g": "0.000000",
+        "scale_disagrees": false,
+        "fractional_grams": true,
+        "n_ingredient_ids": 12,
+        "members": [
+          {
+            "dish_id": "dish_1560444948",
+            "timestamp": 1560444948,
+            "mass_g": "231.000000",
+            "kcal": "171.316879",
+            "fat_g": "10.029442",
+            "carb_g": "17.637623",
+            "protein_g": "4.611491",
+            "n_ingredient_rows": 12,
+            "rgb": "rgb_test",
+            "depth": "depth_test"
+          }
+        ],
+        "position": 4,
+        "overhead_dish_id": "dish_1560444948",
+        "added": [
+          {
+            "id": "ingr_0000000033",
+            "name": "bell peppers",
+            "grams": "7.515152",
+            "kcal": "3.0060608",
+            "fat": "0.015030304",
+            "carb": "0.67636368",
+            "protein": "0.15030304",
+            "copies": 1
+          },
+          {
+            "id": "ingr_0000000031",
+            "name": "cucumbers",
+            "grams": "7.515152",
+            "kcal": "0.7515152",
+            "fat": "0.0",
+            "carb": "0.15030304",
+            "protein": "0.07515152",
+            "copies": 1
+          },
+          {
+            "id": "ingr_0000000122",
+            "name": "garlic",
+            "grams": "0.375758",
+            "kcal": "0.55987942",
+            "fat": "0.00187879",
+            "carb": "0.12400014",
+            "protein": "0.024048512",
+            "copies": 1
+          },
+          {
+            "id": "ingr_0000000126",
+            "name": "mustard",
+            "grams": "0.375758",
+            "kcal": "0.230339654",
+            "fat": "0.012400014",
+            "carb": "0.02254548",
+            "protein": "0.013903046",
+            "copies": 1
+          },
+          {
+            "id": "ingr_0000000161",
+            "name": "olive oil",
+            "grams": "6.012121",
+            "kcal": "53.14714964",
+            "fat": "6.012121",
+            "carb": "0.0",
+            "protein": "0.0",
+            "copies": 1
+          },
+          {
+            "id": "ingr_0000000073",
+            "name": "radishes",
+            "grams": "6.012121",
+            "kcal": "0.96193936",
+            "fat": "0.006012121",
+            "carb": "0.204412114",
+            "protein": "0.042084847",
+            "copies": 1
+          },
+          {
+            "id": "ingr_0000000291",
+            "name": "salt",
+            "grams": "0.187879",
+            "kcal": "0.0",
+            "fat": "0.0",
+            "carb": "0.0",
+            "protein": "0.0",
+            "copies": 1
+          },
+          {
+            "id": "ingr_0000000189",
+            "name": "vinegar",
+            "grams": "3.006061",
+            "kcal": "0.0",
+            "fat": "0.0",
+            "carb": "0.0",
+            "protein": "0.0",
+            "copies": 1
+          }
+        ],
+        "nutrition_residual": {
+          "mass": "-0.000002",
+          "kcal": "-0.000009074",
+          "fat": "-2.29E-7",
+          "carb": "-0.000002454",
+          "protein": "3.5E-8"
+        },
+        "nutrition_ok": true,
+        "intervening_dishes": 0
+      },
+      {
+        "cluster_index": 1851,
+        "t_min": 1560444967,
+        "t_max": 1560444967,
+        "duration_s": 0,
+        "n_scans": 1,
+        "representative_dish_id": "dish_1560444967",
+        "ingredient_mass_g": "252.000002",
+        "mass_closest_g": "252.000000",
+        "mass_range_g": "0.000000",
+        "scale_disagrees": false,
+        "fractional_grams": true,
+        "n_ingredient_ids": 13,
+        "members": [
+          {
+            "dish_id": "dish_1560444967",
+            "timestamp": 1560444967,
+            "mass_g": "252.000000",
+            "kcal": "197.377884",
+            "fat_g": "10.071443",
+            "carb_g": "23.811623",
+            "protein_g": "4.947491",
+            "n_ingredient_rows": 13,
+            "rgb": "rgb_test",
+            "depth": "depth_test"
+          }
+        ],
+        "position": 5,
+        "overhead_dish_id": "dish_1560444967",
+        "added": [
+          {
+            "id": "ingr_0000000192",
+            "name": "yam",
+            "grams": "21.000000",
+            "kcal": "26.061",
+            "fat": "0.042",
+            "carb": "6.174",
+            "protein": "0.336",
+            "copies": 1
+          }
+        ],
+        "nutrition_residual": {
+          "mass": "0.000000",
+          "kcal": "0.000005",
+          "fat": "0.000001",
+          "carb": "0.000000",
+          "protein": "0.000000"
+        },
+        "nutrition_ok": true,
+        "intervening_dishes": 0
+      },
+      {
+        "cluster_index": 1852,
+        "t_min": 1560444985,
+        "t_max": 1560444985,
+        "duration_s": 0,
+        "n_scans": 1,
+        "representative_dish_id": "dish_1560444985",
+        "ingredient_mass_g": "264.000002",
+        "mass_closest_g": "264.000000",
+        "mass_range_g": "0.000000",
+        "scale_disagrees": false,
+        "fractional_grams": true,
+        "n_ingredient_ids": 14,
+        "members": [
+          {
+            "dish_id": "dish_1560444985",
+            "timestamp": 1560444985,
+            "mass_g": "264.000000",
+            "kcal": "198.937866",
+            "fat_g": "10.095443",
+            "carb_g": "24.075623",
+            "protein_g": "5.127491",
+            "n_ingredient_rows": 14,
+            "rgb": "rgb_test",
+            "depth": "depth_test"
+          }
+        ],
+        "position": 6,
+        "overhead_dish_id": "dish_1560444985",
+        "added": [
+          {
+            "id": "ingr_0000000525",
+            "name": "bok choy",
+            "grams": "12.000000",
+            "kcal": "1.56",
+            "fat": "0.024",
+            "carb": "0.264",
+            "protein": "0.18",
+            "copies": 1
+          }
+        ],
+        "nutrition_residual": {
+          "mass": "0.000000",
+          "kcal": "-0.000018",
+          "fat": "0.000000",
+          "carb": "0.000000",
+          "protein": "0.000000"
+        },
+        "nutrition_ok": true,
+        "intervening_dishes": 0
+      },
+      {
+        "cluster_index": 1853,
+        "t_min": 1560445004,
+        "t_max": 1560445004,
+        "duration_s": 0,
+        "n_scans": 1,
+        "representative_dish_id": "dish_1560445004",
+        "ingredient_mass_g": "290.000002",
+        "mass_closest_g": "290.000000",
+        "mass_range_g": "0.000000",
+        "scale_disagrees": false,
+        "fractional_grams": true,
+        "n_ingredient_ids": 15,
+        "members": [
+          {
+            "dish_id": "dish_1560445004",
+            "timestamp": 1560445004,
+            "mass_g": "290.000000",
+            "kcal": "339.597900",
+            "fat_g": "21.015444",
+            "carb_g": "24.439625",
+            "protein_g": "14.747491",
+            "n_ingredient_rows": 15,
+            "rgb": "rgb_test",
+            "depth": "depth_test"
+          }
+        ],
+        "position": 7,
+        "overhead_dish_id": "dish_1560445004",
+        "added": [
+          {
+            "id": "ingr_0000000004",
+            "name": "bacon",
+            "grams": "26.000000",
+            "kcal": "140.66",
+            "fat": "10.92",
+            "carb": "0.364",
+            "protein": "9.62",
+            "copies": 1
+          }
+        ],
+        "nutrition_residual": {
+          "mass": "0.000000",
+          "kcal": "0.000034",
+          "fat": "0.000001",
+          "carb": "0.000002",
+          "protein": "0.000000"
+        },
+        "nutrition_ok": true,
+        "intervening_dishes": 0
+      }
+    ]
+  },
+  "rgb_leak_sequences": [
+    {
+      "sequence_id": "cafe1-0168",
+      "cafe": "cafe1",
+      "n_stages": 2,
+      "n_scans": 2,
+      "n_pairs": 1,
+      "rgb_splits": [
+        "rgb_test",
+        "rgb_train"
+      ],
+      "depth_splits": [
+        "depth_test",
+        "depth_train"
+      ],
+      "rgb_leak": true,
+      "depth_leak": true,
+      "stages": [
+        {
+          "cluster_index": 2247,
+          "t_min": 1561662926,
+          "t_max": 1561662926,
+          "duration_s": 0,
+          "n_scans": 1,
+          "representative_dish_id": "dish_1561662926",
+          "ingredient_mass_g": "213.000003",
+          "mass_closest_g": "213.000000",
+          "mass_range_g": "0.000000",
+          "scale_disagrees": false,
+          "fractional_grams": true,
+          "n_ingredient_ids": 18,
+          "members": [
+            {
+              "dish_id": "dish_1561662926",
+              "timestamp": 1561662926,
+              "mass_g": "213.000000",
+              "kcal": "288.335541",
+              "fat_g": "9.284704",
+              "carb_g": "11.059766",
+              "protein_g": "39.169025",
+              "n_ingredient_rows": 18,
+              "rgb": "rgb_test",
+              "depth": "depth_test"
+            }
+          ],
+          "position": 0,
+          "overhead_dish_id": "dish_1561662926",
+          "added": [],
+          "nutrition_residual": null
+        },
+        {
+          "cluster_index": 2248,
+          "t_min": 1561662948,
+          "t_max": 1561662948,
+          "duration_s": 0,
+          "n_scans": 1,
+          "representative_dish_id": "dish_1561662948",
+          "ingredient_mass_g": "230.000003",
+          "mass_closest_g": "230.000000",
+          "mass_range_g": "0.000000",
+          "scale_disagrees": false,
+          "fractional_grams": true,
+          "n_ingredient_ids": 19,
+          "members": [
+            {
+              "dish_id": "dish_1561662948",
+              "timestamp": 1561662948,
+              "mass_g": "230.000000",
+              "kcal": "293.605499",
+              "fat_g": "9.301705",
+              "carb_g": "12.249766",
+              "protein_g": "39.475029",
+              "n_ingredient_rows": 19,
+              "rgb": "rgb_train",
+              "depth": "depth_train"
+            }
+          ],
+          "position": 1,
+          "overhead_dish_id": "dish_1561662948",
+          "added": [
+            {
+              "id": "ingr_0000000043",
+              "name": "green beans",
+              "grams": "17.000000",
+              "kcal": "5.27",
+              "fat": "0.017",
+              "carb": "1.19",
+              "protein": "0.306",
+              "copies": 1
+            }
+          ],
+          "nutrition_residual": {
+            "mass": "0.000000",
+            "kcal": "-0.000042",
+            "fat": "0.000001",
+            "carb": "0.000000",
+            "protein": "0.000004"
+          },
+          "nutrition_ok": true,
+          "intervening_dishes": 0
+        }
+      ]
+    }
+  ],
+  "repeat_leak": {
+    "cluster_index": 13,
+    "t_min": 1550705995,
+    "t_max": 1550706037,
+    "duration_s": 42,
+    "n_scans": 2,
+    "representative_dish_id": "dish_1550705995",
+    "ingredient_mass_g": "194.000000",
+    "mass_closest_g": "193.000000",
+    "mass_range_g": "0.000000",
+    "scale_disagrees": false,
+    "fractional_grams": false,
+    "n_ingredient_ids": 3,
+    "members": [
+      {
+        "dish_id": "dish_1550705995",
+        "timestamp": 1550705995,
+        "mass_g": "193.000000",
+        "kcal": "549.020020",
+        "fat_g": "39.813000",
+        "carb_g": "29.040001",
+        "protein_g": "24.340000",
+        "n_ingredient_rows": 3,
+        "rgb": "rgb_test",
+        "depth": "outside"
+      },
+      {
+        "dish_id": "dish_1550706037",
+        "timestamp": 1550706037,
+        "mass_g": "193.000000",
+        "kcal": "549.020020",
+        "fat_g": "39.813000",
+        "carb_g": "29.040001",
+        "protein_g": "24.340000",
+        "n_ingredient_rows": 3,
+        "rgb": "rgb_train",
+        "depth": "outside"
+      }
+    ],
+    "rgb_splits": [
+      "rgb_test",
+      "rgb_train"
+    ],
+    "depth_splits": [
+      "outside"
+    ],
+    "rgb_leak": true,
+    "depth_leak": false
+  },
+  "fork": {
+    "cafe": "cafe1",
+    "parent": "dish_1559844458",
+    "parent_rgb": "rgb_test",
+    "children": [
+      {
+        "dish_id": "dish_1559844479",
+        "rgb": "rgb_train",
+        "added": [
+          {
+            "id": "ingr_0000000507",
+            "name": "mandarin oranges",
+            "grams": "52.000000",
+            "kcal": "27.56",
+            "fat": "0.156",
+            "carb": "6.76",
+            "protein": "0.416",
+            "copies": 1
+          }
+        ]
+      },
+      {
+        "dish_id": "dish_1559844490",
+        "rgb": "rgb_test",
+        "added": [
+          {
+            "id": "ingr_0000000507",
+            "name": "mandarin oranges",
+            "grams": "99.000000",
+            "kcal": "52.47",
+            "fat": "0.297",
+            "carb": "12.87",
+            "protein": "0.792",
+            "copies": 1
+          }
+        ]
+      },
+      {
+        "dish_id": "dish_1559844657",
+        "rgb": "rgb_train",
+        "added": [
+          {
+            "id": "ingr_0000000005",
+            "name": "potatoes",
+            "grams": "86.000000",
+            "kcal": "66.22",
+            "fat": "0.086",
+            "carb": "14.62",
+            "protein": "1.72",
+            "copies": 1
+          }
+        ]
+      }
+    ]
+  },
+  "assembly": {
+    "dish_id": "dish_1550705504",
+    "parts": [
+      {
+        "dish_id": "dish_1550705445",
+        "ingredients": "cucumbers 40.000000 g"
+      },
+      {
+        "dish_id": "dish_1550705370",
+        "ingredients": "beef 49.000000 g"
+      },
+      {
+        "dish_id": "dish_1550705288",
+        "ingredients": "potatoes 100.000000 g"
+      }
+    ]
+  }
+}

@@ -1,0 +1,137 @@
+[
+  {
+    "gap_s": 300,
+    "cafes": {
+      "cafe1": {
+        "valid_pairs": 1328,
+        "valid_sequences": 648,
+        "rgb_leak_sequences": 2,
+        "depth_leak_sequences": 1,
+        "fork_parents": 147,
+        "assemblies": 314,
+        "ambiguous_predecessors": 62,
+        "rejected_scale_paths": 1,
+        "repeat_rgb_leak_groups": 73
+      },
+      "cafe2": {
+        "valid_pairs": 90,
+        "valid_sequences": 53,
+        "rgb_leak_sequences": 0,
+        "depth_leak_sequences": 0,
+        "fork_parents": 0,
+        "assemblies": 0,
+        "ambiguous_predecessors": 0,
+        "rejected_scale_paths": 0,
+        "repeat_rgb_leak_groups": 0
+      }
+    }
+  },
+  {
+    "gap_s": 600,
+    "cafes": {
+      "cafe1": {
+        "valid_pairs": 1320,
+        "valid_sequences": 644,
+        "rgb_leak_sequences": 3,
+        "depth_leak_sequences": 1,
+        "fork_parents": 149,
+        "assemblies": 363,
+        "ambiguous_predecessors": 24,
+        "rejected_scale_paths": 0,
+        "repeat_rgb_leak_groups": 77
+      },
+      "cafe2": {
+        "valid_pairs": 90,
+        "valid_sequences": 53,
+        "rgb_leak_sequences": 0,
+        "depth_leak_sequences": 0,
+        "fork_parents": 0,
+        "assemblies": 0,
+        "ambiguous_predecessors": 0,
+        "rejected_scale_paths": 0,
+        "repeat_rgb_leak_groups": 0
+      }
+    }
+  },
+  {
+    "gap_s": 1800,
+    "cafes": {
+      "cafe1": {
+        "valid_pairs": 1310,
+        "valid_sequences": 639,
+        "rgb_leak_sequences": 1,
+        "depth_leak_sequences": 1,
+        "fork_parents": 151,
+        "assemblies": 369,
+        "ambiguous_predecessors": 25,
+        "rejected_scale_paths": 0,
+        "repeat_rgb_leak_groups": 92
+      },
+      "cafe2": {
+        "valid_pairs": 90,
+        "valid_sequences": 53,
+        "rgb_leak_sequences": 0,
+        "depth_leak_sequences": 0,
+        "fork_parents": 0,
+        "assemblies": 0,
+        "ambiguous_predecessors": 0,
+        "rejected_scale_paths": 0,
+        "repeat_rgb_leak_groups": 0
+      }
+    }
+  },
+  {
+    "gap_s": 7200,
+    "cafes": {
+      "cafe1": {
+        "valid_pairs": 1299,
+        "valid_sequences": 636,
+        "rgb_leak_sequences": 2,
+        "depth_leak_sequences": 2,
+        "fork_parents": 152,
+        "assemblies": 385,
+        "ambiguous_predecessors": 17,
+        "rejected_scale_paths": 0,
+        "repeat_rgb_leak_groups": 104
+      },
+      "cafe2": {
+        "valid_pairs": 90,
+        "valid_sequences": 53,
+        "rgb_leak_sequences": 0,
+        "depth_leak_sequences": 0,
+        "fork_parents": 0,
+        "assemblies": 0,
+        "ambiguous_predecessors": 0,
+        "rejected_scale_paths": 0,
+        "repeat_rgb_leak_groups": 0
+      }
+    }
+  },
+  {
+    "gap_s": 86400,
+    "cafes": {
+      "cafe1": {
+        "valid_pairs": 1296,
+        "valid_sequences": 637,
+        "rgb_leak_sequences": 2,
+        "depth_leak_sequences": 2,
+        "fork_parents": 151,
+        "assemblies": 392,
+        "ambiguous_predecessors": 13,
+        "rejected_scale_paths": 0,
+        "repeat_rgb_leak_groups": 109
+      },
+      "cafe2": {
+        "valid_pairs": 90,
+        "valid_sequences": 53,
+        "rgb_leak_sequences": 0,
+        "depth_leak_sequences": 0,
+        "fork_parents": 0,
+        "assemblies": 0,
+        "ambiguous_predecessors": 0,
+        "rejected_scale_paths": 0,
+        "repeat_rgb_leak_groups": 0
+      }
+    }
+  }
+]

@@ -2,9 +2,9 @@
 
 > **2026-11-13（Asia/Shanghai）导语：自本段以下的正文是已退役的 VDR 方案，只作历史对照，不是现行开工许可。**
 >
-> 现行方法真源是 Canvas「**ICDL 官方方案（2026-11-13）：从增量组成变化学习食物营养估计**」（https://cursor.com/canvas/store-745bdf38-f3d7-4313-8d66-08e4b6903e93/47e6af29-51f8-443c-954d-56b0c453b602）。工作名 ICDL（Incremental Composition-Difference Learning）。候选英文标题（未证实）：Learning Food Nutrition from Incremental Composition Changes。旧 VDR 页只作存档：https://cursor.com/canvas/store-745bdf38-f3d7-4313-8d66-08e4b6903e93/d7be617d-d37e-4fe1-a4b5-9da2c86b27a2 。ICDL 尚未被证明。会刊瞄准 2027；MM 2026 Regular Paper 截稿已过。不编造 2027 截稿日期。不编造增量序列条数。
+> 现行方法真源是 Canvas「**ICDL 官方方案（2026-11-13）：从增量组成变化学习食物营养估计**」（https://cursor.com/canvas/store-745bdf38-f3d7-4313-8d66-08e4b6903e93/47e6af29-51f8-443c-954d-56b0c453b602）。工作名 ICDL（Incremental Composition-Difference Learning）。候选英文标题（未证实）：Learning Food Nutrition from Incremental Composition Changes。旧 VDR 页只作存档：https://cursor.com/canvas/store-745bdf38-f3d7-4313-8d66-08e4b6903e93/d7be617d-d37e-4fe1-a4b5-9da2c86b27a2 。ICDL 尚未被证明。会刊瞄准 2027；MM 2026 Regular Paper 截稿已过。不编造 2027 截稿日期。
 >
-> **当前下一步只在分支 `icdl` 的 [`docs/STATUS.md`](docs/STATUS.md)：第一阶段数据可行性审计，且只解锁这一项。Nutrition5k 是当前唯一工作对象。**
+> **第一阶段数据可行性审计已完成，到此停止。** 有效相邻阶段对 **1400**，独立餐盘序列 **692**，覆盖 **2094** / 5,006 个 dish_id。这是已经数完的增量序列，不要改回未知，也不要另编一套。下一步是等 Triste 点头；点头之后，审计拉取请求可以 squash 进 `icdl`，不得进 `main`。详情在 [`docs/STATUS.md`](docs/STATUS.md)。不要把这一段改写成新的代码项，也不要解锁第二阶段。
 >
 > **锁定**：第二阶段（三个轻量模型与跨盘随机配对负对照）、第三阶段（论文价值与外部迁移）、完整 ICDL 网络、Agent、强化学习、OmniFood8K 外测、ACETADA 外测、不完整食材监督。停止规则已写入方案，不等于解锁第三阶段，也不解锁外测。OmniFood8K 留到第三阶段做跨菜系外部泛化验证，不得提前当开发集，也不得在外部盲测前用它调参或泄漏标签。ACETADA 只作辅助外测，且须区分实际摄入量与餐前供应量，不能混合不同评价目标。505 与 Cafe2 只作历史证据与开发诊断，不再当独立验证集，不要在这两个集上调新方法。
 >
