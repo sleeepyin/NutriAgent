@@ -1,0 +1,90 @@
+{
+  "setting": "单张俯视",
+  "epochs": 12,
+  "seed": 0,
+  "batch_size": 16,
+  "train_n": 2638,
+  "test_n": 474,
+  "train_id_digest": "4e046234996e97a578e505a440d0722004580e47c85fa78f0455fce9826c11d0",
+  "test_id_digest": "b31a7724222a3dcb2de6e74bb02a93cfbcd012ff759d5bfc22749b95fd5ab1b8",
+  "train_mass_mean_g": 215.9033358605004,
+  "clean_train_mass_mae_g": 8.005789408998295,
+  "test_mass_mae_g": 30.50535950479628,
+  "n_ingredient_labels": 0,
+  "history": [
+    {
+      "loss": 0.7060066641642344,
+      "mass_mae_g": 70.60066811978771,
+      "n": 2638,
+      "epoch": 0
+    },
+    {
+      "loss": 0.40995781915580076,
+      "mass_mae_g": 40.99578278999242,
+      "n": 2638,
+      "epoch": 1
+    },
+    {
+      "loss": 0.34970804606087735,
+      "mass_mae_g": 34.97080529757392,
+      "n": 2638,
+      "epoch": 2
+    },
+    {
+      "loss": 0.2874825190557866,
+      "mass_mae_g": 28.74825270090978,
+      "n": 2638,
+      "epoch": 3
+    },
+    {
+      "loss": 0.2404452300742777,
+      "mass_mae_g": 24.04452355003791,
+      "n": 2638,
+      "epoch": 4
+    },
+    {
+      "loss": 0.21501426951192923,
+      "mass_mae_g": 21.501427454510992,
+      "n": 2638,
+      "epoch": 5
+    },
+    {
+      "loss": 0.18804231000226768,
+      "mass_mae_g": 18.804231425322214,
+      "n": 2638,
+      "epoch": 6
+    },
+    {
+      "loss": 0.15968986517602154,
+      "mass_mae_g": 15.968986921910538,
+      "n": 2638,
+      "epoch": 7
+    },
+    {
+      "loss": 0.12986566281684697,
+      "mass_mae_g": 12.98656652767248,
+      "n": 2638,
+      "epoch": 8
+    },
+    {
+      "loss": 0.1123933530185962,
+      "mass_mae_g": 11.239335552501895,
+      "n": 2638,
+      "epoch": 9
+    },
+    {
+      "loss": 0.09357725242555277,
+      "mass_mae_g": 9.357725431197878,
+      "n": 2638,
+      "epoch": 10
+    },
+    {
+      "loss": 0.08577440724262601,
+      "mass_mae_g": 8.57744088798332,
+      "n": 2638,
+      "epoch": 11
+    }
+  ],
+  "checkpoint": "/home/sdnu/nutriagent/results/experiment_a_n5k_dual_view/checkpoints/overhead.pt",
+  "predictions": "/home/sdnu/nutriagent/results/experiment_a_n5k_dual_view/predictions/overhead.jsonl"
+}

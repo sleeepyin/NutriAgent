@@ -1,0 +1,90 @@
+{
+  "setting": "双视角+食物语义约束",
+  "epochs": 12,
+  "seed": 0,
+  "batch_size": 16,
+  "train_n": 2638,
+  "test_n": 474,
+  "train_id_digest": "4e046234996e97a578e505a440d0722004580e47c85fa78f0455fce9826c11d0",
+  "test_id_digest": "b31a7724222a3dcb2de6e74bb02a93cfbcd012ff759d5bfc22749b95fd5ab1b8",
+  "train_mass_mean_g": 215.9033358605004,
+  "clean_train_mass_mae_g": 11.378950036593329,
+  "test_mass_mae_g": 31.668069330448844,
+  "n_ingredient_labels": 197,
+  "history": [
+    {
+      "loss": 1.3489084100976327,
+      "mass_mae_g": 87.5897460197119,
+      "n": 2638,
+      "epoch": 0
+    },
+    {
+      "loss": 0.9075163962083662,
+      "mass_mae_g": 53.32743792645944,
+      "n": 2638,
+      "epoch": 1
+    },
+    {
+      "loss": 0.7768414798697528,
+      "mass_mae_g": 43.74616778809704,
+      "n": 2638,
+      "epoch": 2
+    },
+    {
+      "loss": 0.6807932226471688,
+      "mass_mae_g": 37.257611093239134,
+      "n": 2638,
+      "epoch": 3
+    },
+    {
+      "loss": 0.6189702015830496,
+      "mass_mae_g": 33.82457709438969,
+      "n": 2638,
+      "epoch": 4
+    },
+    {
+      "loss": 0.5380976693118676,
+      "mass_mae_g": 27.64003997178038,
+      "n": 2638,
+      "epoch": 5
+    },
+    {
+      "loss": 0.48008823037780174,
+      "mass_mae_g": 24.08131159969674,
+      "n": 2638,
+      "epoch": 6
+    },
+    {
+      "loss": 0.4374962738285108,
+      "mass_mae_g": 21.164968703170903,
+      "n": 2638,
+      "epoch": 7
+    },
+    {
+      "loss": 0.3848747218351097,
+      "mass_mae_g": 17.573679758437752,
+      "n": 2638,
+      "epoch": 8
+    },
+    {
+      "loss": 0.34360547039525086,
+      "mass_mae_g": 14.777873874343282,
+      "n": 2638,
+      "epoch": 9
+    },
+    {
+      "loss": 0.31543429721206134,
+      "mass_mae_g": 12.97500473843821,
+      "n": 2638,
+      "epoch": 10
+    },
+    {
+      "loss": 0.29677475845388973,
+      "mass_mae_g": 11.594283074298712,
+      "n": 2638,
+      "epoch": 11
+    }
+  ],
+  "checkpoint": "/home/sdnu/nutriagent/results/experiment_a_n5k_dual_view/checkpoints/semantic_fusion.pt",
+  "predictions": "/home/sdnu/nutriagent/results/experiment_a_n5k_dual_view/predictions/semantic_fusion.jsonl"
+}

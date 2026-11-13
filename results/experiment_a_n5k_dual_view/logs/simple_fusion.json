@@ -1,0 +1,90 @@
+{
+  "setting": "双视角简单特征融合",
+  "epochs": 12,
+  "seed": 0,
+  "batch_size": 16,
+  "train_n": 2638,
+  "test_n": 474,
+  "train_id_digest": "4e046234996e97a578e505a440d0722004580e47c85fa78f0455fce9826c11d0",
+  "test_id_digest": "b31a7724222a3dcb2de6e74bb02a93cfbcd012ff759d5bfc22749b95fd5ab1b8",
+  "train_mass_mean_g": 215.9033358605004,
+  "clean_train_mass_mae_g": 8.011016946927086,
+  "test_mass_mae_g": 29.823865934766296,
+  "n_ingredient_labels": 0,
+  "history": [
+    {
+      "loss": 0.874430110817881,
+      "mass_mae_g": 68.72655657695223,
+      "n": 2638,
+      "epoch": 0
+    },
+    {
+      "loss": 0.5405403535143727,
+      "mass_mae_g": 42.35484979150872,
+      "n": 2638,
+      "epoch": 1
+    },
+    {
+      "loss": 0.417753318263962,
+      "mass_mae_g": 32.17234292077331,
+      "n": 2638,
+      "epoch": 2
+    },
+    {
+      "loss": 0.35525864554771064,
+      "mass_mae_g": 27.01763291319181,
+      "n": 2638,
+      "epoch": 3
+    },
+    {
+      "loss": 0.30655616422418935,
+      "mass_mae_g": 23.083186244313875,
+      "n": 2638,
+      "epoch": 4
+    },
+    {
+      "loss": 0.2729517192077781,
+      "mass_mae_g": 20.206957235039862,
+      "n": 2638,
+      "epoch": 5
+    },
+    {
+      "loss": 0.24990137114589914,
+      "mass_mae_g": 18.39494280927194,
+      "n": 2638,
+      "epoch": 6
+    },
+    {
+      "loss": 0.21536465094250382,
+      "mass_mae_g": 15.443645144701907,
+      "n": 2638,
+      "epoch": 7
+    },
+    {
+      "loss": 0.19116469345551895,
+      "mass_mae_g": 13.383727610879454,
+      "n": 2638,
+      "epoch": 8
+    },
+    {
+      "loss": 0.16104499474902148,
+      "mass_mae_g": 10.763618330416849,
+      "n": 2638,
+      "epoch": 9
+    },
+    {
+      "loss": 0.1447133301920381,
+      "mass_mae_g": 9.339870449988746,
+      "n": 2638,
+      "epoch": 10
+    },
+    {
+      "loss": 0.1342949512851699,
+      "mass_mae_g": 8.367853903607765,
+      "n": 2638,
+      "epoch": 11
+    }
+  ],
+  "checkpoint": "/home/sdnu/nutriagent/results/experiment_a_n5k_dual_view/checkpoints/simple_fusion.pt",
+  "predictions": "/home/sdnu/nutriagent/results/experiment_a_n5k_dual_view/predictions/simple_fusion.jsonl"
+}

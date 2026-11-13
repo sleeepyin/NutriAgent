@@ -1,0 +1,125 @@
+{
+  "test_n": 474,
+  "test_id_digest": "b31a7724222a3dcb2de6e74bb02a93cfbcd012ff759d5bfc22749b95fd5ab1b8",
+  "train_mass_mean_g": 215.9033358605004,
+  "constant_train_mean_mass_mae_g": 121.53378406477226,
+  "settings": [
+    {
+      "setting": "单张俯视",
+      "n": 474,
+      "mass_mae_g": 30.50535950479628,
+      "mass_median_ae_g": 21.125747680664062,
+      "versus_top": null
+    },
+    {
+      "setting": "单张侧视",
+      "n": 474,
+      "mass_mae_g": 33.834027479469526,
+      "mass_median_ae_g": 22.999038696289062,
+      "versus_top": {
+        "n": 474,
+        "mae_difference_g": 3.328667974673243,
+        "ci95_low_g": 1.2230982623522797,
+        "ci95_high_g": 5.4224860195369144,
+        "fraction_method_mae_lower": 0.0009,
+        "stably_beats_top": false
+      }
+    },
+    {
+      "setting": "双视角简单特征融合",
+      "n": 474,
+      "mass_mae_g": 29.823865934766296,
+      "mass_median_ae_g": 19.71202850341797,
+      "versus_top": {
+        "n": 474,
+        "mae_difference_g": -0.6814935700299871,
+        "ci95_low_g": -2.006621327782482,
+        "ci95_high_g": 0.6268849316025581,
+        "fraction_method_mae_lower": 0.8462,
+        "stably_beats_top": false
+      }
+    },
+    {
+      "setting": "双视角几何融合",
+      "n": 474,
+      "mass_mae_g": 31.818710166190748,
+      "mass_median_ae_g": 21.19635009765625,
+      "versus_top": {
+        "n": 474,
+        "mae_difference_g": 1.3133506613944652,
+        "ci95_low_g": -0.33553386881381647,
+        "ci95_high_g": 2.9749737091708273,
+        "fraction_method_mae_lower": 0.0616,
+        "stably_beats_top": false
+      }
+    },
+    {
+      "setting": "双视角+食物语义约束",
+      "n": 474,
+      "mass_mae_g": 31.668069330448844,
+      "mass_median_ae_g": 21.139572143554688,
+      "versus_top": {
+        "n": 474,
+        "mae_difference_g": 1.1627098256525612,
+        "ci95_low_g": -0.536413468841762,
+        "ci95_high_g": 2.856205023240439,
+        "fraction_method_mae_lower": 0.0882,
+        "stably_beats_top": false
+      }
+    }
+  ],
+  "train_fit": {
+    "单张俯视": {
+      "clean_train_mass_mae_g": 8.005789408998295,
+      "n_ingredient_labels": 0
+    },
+    "单张侧视": {
+      "clean_train_mass_mae_g": 8.743126907522159,
+      "n_ingredient_labels": 0
+    },
+    "双视角简单特征融合": {
+      "clean_train_mass_mae_g": 8.011016946927086,
+      "n_ingredient_labels": 0
+    },
+    "双视角几何融合": {
+      "clean_train_mass_mae_g": 10.553973584757147,
+      "n_ingredient_labels": 0
+    },
+    "双视角+食物语义约束": {
+      "clean_train_mass_mae_g": 11.378950036593329,
+      "n_ingredient_labels": 197
+    }
+  },
+  "consistency": {
+    "单张俯视与单张侧视": {
+      "mean_abs_g": 19.863268405576296,
+      "median_abs_g": 15.329986572265625
+    },
+    "双视角简单特征融合": {
+      "mean_abs_g": 28.186396828180627,
+      "median_abs_g": 19.593734741210938
+    },
+    "双视角几何融合": {
+      "mean_abs_g": 20.328098635130292,
+      "median_abs_g": 12.98959732055664
+    },
+    "双视角+食物语义约束": {
+      "mean_abs_g": 19.34704287243292,
+      "median_abs_g": 11.988731384277344
+    }
+  },
+  "simple_fusion_stably_beats_top": false,
+  "geometric_fusion_stably_beats_top": false,
+  "stop": true,
+  "decision": "停止。简单融合与几何融合没有都稳定胜过单张俯视。不把第二视角写成已经成立的增益，也不为了多模态改方案。请 Triste 判断。实验 B、实验 C 和完整联合网络不启动。Q3 仍未解。",
+  "bootstrap": {
+    "draws": 10000,
+    "seed": 0,
+    "interval": "percentile 2.5 to 97.5"
+  },
+  "stable_rule": "A setting stably beats 单张俯视 when the paired bootstrap 95% interval of (its mass MAE - 单张俯视 mass MAE) lies entirely below 0. Both 双视角简单特征融合 and 双视角几何融合 must do so. Otherwise stop.",
+  "live_claim_unchanged": "质量对 Direct 可外推（bootstrap 区间均为负）；对 Mass-only 基本打平（0.76 g 不算赢，不要当作方法优越性证据）；能量外测未稳。",
+  "q3": "未解。本轮只跑了实验 A。",
+  "depth_in_main_table": false,
+  "side_is_metric_stereo": false
+}

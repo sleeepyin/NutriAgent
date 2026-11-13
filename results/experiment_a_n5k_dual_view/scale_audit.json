@@ -1,0 +1,110 @@
+{
+  "archive": {
+    "path": "/var/tmp/nutri-downloads/nutrition5k/nutrition5k_dataset.tar.gz",
+    "size_bytes": 194804050002,
+    "members_visited": 37478
+  },
+  "rules": {
+    "rgb_min_bytes": 10000,
+    "side_min_bytes": 100000,
+    "depth_min_bytes": 1000,
+    "camera_priority": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "frame_rule": "middle decoded frame; stop at FRAME_CAP and keep the middle of that prefix",
+    "frame_cap": 300,
+    "side_long_side": 640,
+    "jpeg_quality": 90,
+    "mass_rule": "finite metadata mass strictly greater than 0 g",
+    "alignment": "exact dish_id directory name",
+    "depth_in_pair_rule": false,
+    "github_issue_12_not_used": true,
+    "paper_3_5k_not_used_as_pair_count": true
+  },
+  "official_files": {
+    "metadata/dish_metadata_cafe1.csv": {
+      "archive_member": "nutrition5k_dataset/metadata/dish_metadata_cafe1.csv",
+      "size_bytes": 2206282,
+      "sha256": "881df31f27c2343d0ce219964527e0796f6ddadd60701ce6840fa801e8c2a960",
+      "local_path": "data/nutrition5k/metadata/dish_metadata_cafe1.csv",
+      "local_sha256_match": true
+    },
+    "metadata/dish_metadata_cafe2.csv": {
+      "archive_member": "nutrition5k_dataset/metadata/dish_metadata_cafe2.csv",
+      "size_bytes": 101817,
+      "sha256": "ef9f800d7b9c2e7e9a9e7cda5cbb4cfe51c760a8c1af4c05786ccf051bf5d77d",
+      "local_path": "data/nutrition5k/metadata/dish_metadata_cafe2.csv",
+      "local_sha256_match": true
+    },
+    "rgb_train_ids.txt": {
+      "archive_member": "nutrition5k_dataset/dish_ids/splits/rgb_train_ids.txt",
+      "size_bytes": 64944,
+      "sha256": "efd34a682b5483b01e6bd0a7c1267efec28440a8194985f9d3817d8ebc8169bd",
+      "local_path": "data/nutrition5k/dish_ids/splits/rgb_train_ids.txt",
+      "local_sha256_match": true
+    },
+    "rgb_test_ids.txt": {
+      "archive_member": "nutrition5k_dataset/dish_ids/splits/rgb_test_ids.txt",
+      "size_bytes": 11344,
+      "sha256": "560ff0eedb1a2027c21f5da3a4c38a53fa201c87d108e76b11cceaa1d956ac8e",
+      "local_path": "data/nutrition5k/dish_ids/splits/rgb_test_ids.txt",
+      "local_sha256_match": true
+    },
+    "dish_ids_all.txt": {
+      "archive_member": "nutrition5k_dataset/dish_ids/dish_ids_all.txt",
+      "size_bytes": 80096,
+      "sha256": "cd71f64b9092d7917384b477e62fbe8840409e606dc488b436f05aa2b404c2f5",
+      "local_path": "data/nutrition5k/dish_ids/dish_ids_all.txt",
+      "local_sha256_match": true
+    }
+  },
+  "counts": {
+    "official_dish_ids": 5006,
+    "official_id_digest": "cd71f64b9092d7917384b477e62fbe8840409e606dc488b436f05aa2b404c2f5",
+    "rgb_train_ids": 4059,
+    "rgb_test_ids": 709,
+    "metadata_with_mass_field": 5006,
+    "metadata_mass_positive": 5006,
+    "metadata_duplicate_ids_skipped": 0,
+    "metadata_rows_skipped": 0,
+    "metadata_rows_with_trailing_fields": 0,
+    "official_overhead_rgb": 3490,
+    "overhead_not_in_official_ids": 0,
+    "official_side_video": 4793,
+    "side_not_in_official_ids": 0,
+    "other_side_files_ignored": 0,
+    "archive_pairs_positive_mass": 3289,
+    "side_decode_failed": 0,
+    "side_frames_removed_after_rules": 1504,
+    "usable_pairs": 3289,
+    "usable_id_digest": "6d41aaa7eadc12667738e886dc22412762aba2d231dafb24dc4d339e7ecfdb2b",
+    "usable_rgb_train": 2638,
+    "usable_rgb_test": 474,
+    "usable_outside_rgb_split": 177
+  },
+  "primary_exclusions": {
+    "overhead_rgb_missing": 1516,
+    "side_video_missing": 201
+  },
+  "chosen_camera": {
+    "C": 10,
+    "A": 2863,
+    "B": 416
+  },
+  "depth_appendix": {
+    "usable_pairs_with_depth": 3289,
+    "usable_with_depth_raw": 3288,
+    "usable_with_depth_color": 3289,
+    "note": "Depth is not an input to the five-way comparison."
+  },
+  "local_overhead": {
+    "files": 3490,
+    "hash_match": 3289,
+    "extracted_from_archive": 0
+  },
+  "elapsed_s": 903.2,
+  "decode_failures": {}
+}
