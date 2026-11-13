@@ -1,0 +1,34 @@
+{
+  "name": "local_color_purity",
+  "version": "2026-11-13-phase1",
+  "inputs": "one overhead RGB image",
+  "forbidden_inputs": [
+    "ingredient instance count",
+    "ground-truth mask",
+    "food code",
+    "nutrition label",
+    "depth",
+    "second view"
+  ],
+  "primary": {
+    "long_side": 160,
+    "palette_k": 3,
+    "window": 9,
+    "blur_radius": 2
+  },
+  "robustness_checks": [
+    {
+      "name": "s_sep_k5",
+      "palette_k": 5,
+      "window": 9
+    },
+    {
+      "name": "s_sep_win15",
+      "palette_k": 3,
+      "window": 15
+    }
+  ],
+  "high_low_rule": "high if score >= median of Hand train dishes with a score; low otherwise",
+  "oracle_is_not_the_switch": true,
+  "retuned_after_nutrition_error": false
+}
