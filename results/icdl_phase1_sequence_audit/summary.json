@@ -1,0 +1,702 @@
+{
+  "audit": "icdl-phase1-sequence",
+  "session_gap_s": 1800,
+  "mass_tolerance_g": "1",
+  "macro_tolerance": "0.05",
+  "counts": {
+    "official_dish_ids": 5006,
+    "valid_pairs": 1400,
+    "valid_sequences": 692,
+    "dishes_in_valid_sequences": 2094,
+    "stages_in_valid_sequences": 2092,
+    "valid_pairs_with_both_overhead": 1255,
+    "raw_consecutive_mass_decreases": 1661,
+    "valid_mass_increase": 1400,
+    "valid_mass_flat": 0,
+    "valid_mass_decrease": 0,
+    "intervening_zero": 1397,
+    "intervening_max": 1,
+    "added_one_id": 1203,
+    "added_many_ids": 197,
+    "rgb_leak_sequences": 1,
+    "depth_leak_sequences": 1,
+    "repeat_rgb_leaks": 92,
+    "repeat_rgb_leaks_strong": 67,
+    "repeat_rgb_leaks_weak": 25,
+    "scale_disagreement_clusters": 129,
+    "length_histogram": {
+      "2": 336,
+      "3": 161,
+      "4": 102,
+      "5": 47,
+      "6": 31,
+      "7": 12,
+      "8": 3
+    },
+    "longest_sequence": {
+      "sequence_id": "cafe1-0071",
+      "n_stages": 8
+    },
+    "residual_max": {
+      "cafe1": {
+        "mass": "0.000016",
+        "kcal": "0.000136",
+        "fat": "0.000007",
+        "carb": "0.000088",
+        "protein": "0.000015"
+      },
+      "cafe2": {
+        "mass": "0.000017",
+        "kcal": "514.20954952",
+        "fat": "29.590000",
+        "carb": "36.478000",
+        "protein": "36.881906606"
+      }
+    },
+    "worst_scale_cluster": {
+      "dish_ids": [
+        "dish_1551138237",
+        "dish_1551138312"
+      ],
+      "mass_range_g": "7794.000000"
+    },
+    "by_cafe": {
+      "cafe1": {
+        "dishes": 4768,
+        "valid_pairs": 1310,
+        "valid_sequences": 639,
+        "dishes_in_valid_sequences": 1951,
+        "stages_in_valid_sequences": 1949,
+        "rejected_scale_paths": 0,
+        "fork_parents": 151,
+        "assemblies": 369,
+        "ambiguous": 25,
+        "repeat_rgb_leaks": 92,
+        "rgb_leak_sequences": 1,
+        "depth_leak_sequences": 1
+      },
+      "cafe2": {
+        "dishes": 238,
+        "valid_pairs": 90,
+        "valid_sequences": 53,
+        "dishes_in_valid_sequences": 143,
+        "stages_in_valid_sequences": 143,
+        "rejected_scale_paths": 0,
+        "fork_parents": 0,
+        "assemblies": 0,
+        "ambiguous": 0,
+        "repeat_rgb_leaks": 0,
+        "rgb_leak_sequences": 0,
+        "depth_leak_sequences": 0
+      }
+    }
+  },
+  "archive": {
+    "present": true,
+    "path": "/var/tmp/nutri-downloads/nutrition5k/nutrition5k_dataset.tar.gz",
+    "bytes": 194804050002,
+    "prefix_matches_local_and_expected": true,
+    "prefix_files": {
+      "metadata/ingredients_metadata.csv": {
+        "sha256": "87a9bbd1fd2e28f09f16305a04946ddbe31eb7d9d03686d7e2fb3d8f19f3effb",
+        "bytes": 21540
+      },
+      "metadata/dish_metadata_cafe1.csv": {
+        "sha256": "881df31f27c2343d0ce219964527e0796f6ddadd60701ce6840fa801e8c2a960",
+        "bytes": 2206282
+      },
+      "metadata/dish_metadata_cafe2.csv": {
+        "sha256": "ef9f800d7b9c2e7e9a9e7cda5cbb4cfe51c760a8c1af4c05786ccf051bf5d77d",
+        "bytes": 101817
+      },
+      "dish_ids/splits/rgb_train_ids.txt": {
+        "sha256": "efd34a682b5483b01e6bd0a7c1267efec28440a8194985f9d3817d8ebc8169bd",
+        "bytes": 64944
+      },
+      "dish_ids/splits/rgb_test_ids.txt": {
+        "sha256": "560ff0eedb1a2027c21f5da3a4c38a53fa201c87d108e76b11cceaa1d956ac8e",
+        "bytes": 11344
+      },
+      "dish_ids/splits/depth_test_ids.txt": {
+        "sha256": "6e43a5334a72bd06fa9c0d4b3bc86e2f57e5342b0b260d3fa003a76f7e39eca2",
+        "bytes": 8112
+      },
+      "dish_ids/splits/depth_train_ids.txt": {
+        "sha256": "d9702b71ade32b012fcb272f1f58b1d19178acd4536eccc651857760eab4bc30",
+        "bytes": 44128
+      },
+      "dish_ids/dish_ids_cafe2.txt": {
+        "sha256": "2e8cb76a9204277701e06b11476bf5a45f20f23a65dee8fc1399e9663648fc94",
+        "bytes": 3808
+      },
+      "dish_ids/dish_ids_all.txt": {
+        "sha256": "cd71f64b9092d7917384b477e62fbe8840409e606dc488b436f05aa2b404c2f5",
+        "bytes": 80096
+      },
+      "dish_ids/dish_ids_cafe1.txt": {
+        "sha256": "bb2d2a8a918e8c4d6d212b158840d92c304d7b9757d6ffe14b4948446f7682a0",
+        "bytes": 76288
+      },
+      "dish_ids/README": {
+        "sha256": "5110e71f40fef2e5732897d4f5f34d146253ec11caaa07f466bd4faf322fb4b1",
+        "bytes": 473
+      }
+    }
+  },
+  "local_hashes": {
+    "metadata/dish_metadata_cafe1.csv": {
+      "sha256": "881df31f27c2343d0ce219964527e0796f6ddadd60701ce6840fa801e8c2a960",
+      "matches_archive_prefix": true,
+      "bytes": 2206282
+    },
+    "metadata/dish_metadata_cafe2.csv": {
+      "sha256": "ef9f800d7b9c2e7e9a9e7cda5cbb4cfe51c760a8c1af4c05786ccf051bf5d77d",
+      "matches_archive_prefix": true,
+      "bytes": 101817
+    },
+    "metadata/ingredients_metadata.csv": {
+      "sha256": "87a9bbd1fd2e28f09f16305a04946ddbe31eb7d9d03686d7e2fb3d8f19f3effb",
+      "matches_archive_prefix": true,
+      "bytes": 21540
+    },
+    "dish_ids/dish_ids_all.txt": {
+      "sha256": "cd71f64b9092d7917384b477e62fbe8840409e606dc488b436f05aa2b404c2f5",
+      "matches_archive_prefix": true,
+      "bytes": 80096
+    },
+    "dish_ids/dish_ids_cafe1.txt": {
+      "sha256": "bb2d2a8a918e8c4d6d212b158840d92c304d7b9757d6ffe14b4948446f7682a0",
+      "matches_archive_prefix": true,
+      "bytes": 76288
+    },
+    "dish_ids/dish_ids_cafe2.txt": {
+      "sha256": "2e8cb76a9204277701e06b11476bf5a45f20f23a65dee8fc1399e9663648fc94",
+      "matches_archive_prefix": true,
+      "bytes": 3808
+    },
+    "dish_ids/README": {
+      "sha256": "5110e71f40fef2e5732897d4f5f34d146253ec11caaa07f466bd4faf322fb4b1",
+      "matches_archive_prefix": true,
+      "bytes": 473
+    },
+    "dish_ids/splits/rgb_train_ids.txt": {
+      "sha256": "efd34a682b5483b01e6bd0a7c1267efec28440a8194985f9d3817d8ebc8169bd",
+      "matches_archive_prefix": true,
+      "bytes": 64944
+    },
+    "dish_ids/splits/rgb_test_ids.txt": {
+      "sha256": "560ff0eedb1a2027c21f5da3a4c38a53fa201c87d108e76b11cceaa1d956ac8e",
+      "matches_archive_prefix": true,
+      "bytes": 11344
+    },
+    "dish_ids/splits/depth_train_ids.txt": {
+      "sha256": "d9702b71ade32b012fcb272f1f58b1d19178acd4536eccc651857760eab4bc30",
+      "matches_archive_prefix": true,
+      "bytes": 44128
+    },
+    "dish_ids/splits/depth_test_ids.txt": {
+      "sha256": "6e43a5334a72bd06fa9c0d4b3bc86e2f57e5342b0b260d3fa003a76f7e39eca2",
+      "matches_archive_prefix": true,
+      "bytes": 8112
+    }
+  },
+  "archive_inventory": {
+    "members": 37478,
+    "path": "/var/tmp/nutri-downloads/nutrition5k/nutrition5k_dataset.tar.gz",
+    "bytes": 194804050002,
+    "plate_or_sequence_in_non_image_names": [],
+    "imagery_filename_buckets": {
+      "imagery/realsense_overhead/depth_color.png": 3490,
+      "imagery/realsense_overhead/depth_raw.png": 3490,
+      "imagery/realsense_overhead/rgb.png": 3490,
+      "imagery/side_angles/camera_A.h264": 4332,
+      "imagery/side_angles/camera_B.h264": 4762,
+      "imagery/side_angles/camera_C.h264": 4617,
+      "imagery/side_angles/camera_D.h264": 4775
+    },
+    "non_image_member_count": 21,
+    "skipped": false
+  },
+  "sensitivity": [
+    {
+      "gap_s": 300,
+      "cafes": {
+        "cafe1": {
+          "valid_pairs": 1328,
+          "valid_sequences": 648,
+          "rgb_leak_sequences": 2,
+          "depth_leak_sequences": 1,
+          "fork_parents": 147,
+          "assemblies": 314,
+          "ambiguous_predecessors": 62,
+          "rejected_scale_paths": 1,
+          "repeat_rgb_leak_groups": 73
+        },
+        "cafe2": {
+          "valid_pairs": 90,
+          "valid_sequences": 53,
+          "rgb_leak_sequences": 0,
+          "depth_leak_sequences": 0,
+          "fork_parents": 0,
+          "assemblies": 0,
+          "ambiguous_predecessors": 0,
+          "rejected_scale_paths": 0,
+          "repeat_rgb_leak_groups": 0
+        }
+      }
+    },
+    {
+      "gap_s": 600,
+      "cafes": {
+        "cafe1": {
+          "valid_pairs": 1320,
+          "valid_sequences": 644,
+          "rgb_leak_sequences": 3,
+          "depth_leak_sequences": 1,
+          "fork_parents": 149,
+          "assemblies": 363,
+          "ambiguous_predecessors": 24,
+          "rejected_scale_paths": 0,
+          "repeat_rgb_leak_groups": 77
+        },
+        "cafe2": {
+          "valid_pairs": 90,
+          "valid_sequences": 53,
+          "rgb_leak_sequences": 0,
+          "depth_leak_sequences": 0,
+          "fork_parents": 0,
+          "assemblies": 0,
+          "ambiguous_predecessors": 0,
+          "rejected_scale_paths": 0,
+          "repeat_rgb_leak_groups": 0
+        }
+      }
+    },
+    {
+      "gap_s": 1800,
+      "cafes": {
+        "cafe1": {
+          "valid_pairs": 1310,
+          "valid_sequences": 639,
+          "rgb_leak_sequences": 1,
+          "depth_leak_sequences": 1,
+          "fork_parents": 151,
+          "assemblies": 369,
+          "ambiguous_predecessors": 25,
+          "rejected_scale_paths": 0,
+          "repeat_rgb_leak_groups": 92
+        },
+        "cafe2": {
+          "valid_pairs": 90,
+          "valid_sequences": 53,
+          "rgb_leak_sequences": 0,
+          "depth_leak_sequences": 0,
+          "fork_parents": 0,
+          "assemblies": 0,
+          "ambiguous_predecessors": 0,
+          "rejected_scale_paths": 0,
+          "repeat_rgb_leak_groups": 0
+        }
+      }
+    },
+    {
+      "gap_s": 7200,
+      "cafes": {
+        "cafe1": {
+          "valid_pairs": 1299,
+          "valid_sequences": 636,
+          "rgb_leak_sequences": 2,
+          "depth_leak_sequences": 2,
+          "fork_parents": 152,
+          "assemblies": 385,
+          "ambiguous_predecessors": 17,
+          "rejected_scale_paths": 0,
+          "repeat_rgb_leak_groups": 104
+        },
+        "cafe2": {
+          "valid_pairs": 90,
+          "valid_sequences": 53,
+          "rgb_leak_sequences": 0,
+          "depth_leak_sequences": 0,
+          "fork_parents": 0,
+          "assemblies": 0,
+          "ambiguous_predecessors": 0,
+          "rejected_scale_paths": 0,
+          "repeat_rgb_leak_groups": 0
+        }
+      }
+    },
+    {
+      "gap_s": 86400,
+      "cafes": {
+        "cafe1": {
+          "valid_pairs": 1296,
+          "valid_sequences": 637,
+          "rgb_leak_sequences": 2,
+          "depth_leak_sequences": 2,
+          "fork_parents": 151,
+          "assemblies": 392,
+          "ambiguous_predecessors": 13,
+          "rejected_scale_paths": 0,
+          "repeat_rgb_leak_groups": 109
+        },
+        "cafe2": {
+          "valid_pairs": 90,
+          "valid_sequences": 53,
+          "rgb_leak_sequences": 0,
+          "depth_leak_sequences": 0,
+          "fork_parents": 0,
+          "assemblies": 0,
+          "ambiguous_predecessors": 0,
+          "rejected_scale_paths": 0,
+          "repeat_rgb_leak_groups": 0
+        }
+      }
+    }
+  ],
+  "unrestricted_unique_gaps": {
+    "cafe1": {
+      "n_unique": 1385,
+      "buckets": {
+        "le_5min": 1352,
+        "le_10min": 1357,
+        "le_30min": 1360,
+        "le_2h": 1360,
+        "le_24h": 1360,
+        "gt_24h": 25
+      },
+      "max_s": 17351625
+    },
+    "cafe2": {
+      "n_unique": 86,
+      "buckets": {
+        "le_5min": 86,
+        "le_10min": 86,
+        "le_30min": 86,
+        "le_2h": 86,
+        "le_24h": 86,
+        "gt_24h": 0
+      },
+      "max_s": 75
+    }
+  },
+  "visual_summary": {
+    "pixel_rule": {
+      "mae_rgb": "Mean absolute difference over RGB channels and pixels, on the 0-255 scale.",
+      "center": "Center crop keeps the middle 50% of width and height. Border is the complement.",
+      "changed_frac_gt15": "Fraction of pixels whose largest channel difference exceeds 15.",
+      "ssim_luma": "Mean windowed SSIM on Rec.601 luminance, 11-pixel uniform window, constants K1=0.01 and K2=0.03.",
+      "random_pairs": 400,
+      "random_seed": 0,
+      "network": "No network, no DINOv2, no side view, no depth."
+    },
+    "adjacent_stage": {
+      "n": 1255,
+      "shape_mismatch": 0,
+      "mae_rgb": {
+        "n": 1255,
+        "mean": 15.57960676737495,
+        "min": 2.689978298611111,
+        "p10": 6.745687934027778,
+        "p50": 13.064998914930555,
+        "p90": 27.004729817708334,
+        "max": 61.742518446180554
+      },
+      "mae_center_rgb": {
+        "n": 1255,
+        "mean": 24.636878662433592,
+        "min": 1.0979991319444444,
+        "p10": 9.204014756944444,
+        "p50": 22.557721354166667,
+        "p90": 43.33854600694445,
+        "max": 88.83976128472223
+      },
+      "mae_border_rgb": {
+        "n": 1255,
+        "mean": 12.560516135688722,
+        "min": 1.630423900462963,
+        "p10": 4.405474537037037,
+        "p50": 9.961733217592593,
+        "p90": 22.82107638888889,
+        "max": 58.66562789351852
+      },
+      "changed_frac_gt15": {
+        "n": 1255,
+        "mean": 0.2795376540712152,
+        "min": 0.02177734375,
+        "p10": 0.091455078125,
+        "p50": 0.21305989583333335,
+        "p90": 0.558671875,
+        "max": 0.9855045572916666
+      },
+      "ssim_luma": {
+        "n": 1255,
+        "mean": 0.8190576318488179,
+        "min": 0.3220411241054535,
+        "p10": 0.6868627667427063,
+        "p50": 0.8437315821647644,
+        "p90": 0.9242556691169739,
+        "max": 0.968722939491272
+      }
+    },
+    "repeat_scan": {
+      "n": 104,
+      "shape_mismatch": 0,
+      "mae_rgb": {
+        "n": 104,
+        "mean": 13.545472005208333,
+        "min": 2.0866764322916667,
+        "p10": 4.4004904513888885,
+        "p50": 12.248965928819445,
+        "p90": 20.831788194444446,
+        "max": 53.641979166666665
+      },
+      "mae_center_rgb": {
+        "n": 104,
+        "mean": 23.31478386251336,
+        "min": 2.0347916666666666,
+        "p10": 3.9372178819444446,
+        "p50": 22.279956597222224,
+        "p90": 42.01428819444445,
+        "max": 62.29152777777778
+      },
+      "mae_border_rgb": {
+        "n": 104,
+        "mean": 10.289034719439998,
+        "min": 2.1039713541666667,
+        "p10": 3.996885127314815,
+        "p50": 8.926585648148148,
+        "p90": 13.770954861111111,
+        "max": 50.758796296296296
+      },
+      "changed_frac_gt15": {
+        "n": 104,
+        "mean": 0.2475618176582531,
+        "min": 0.00203125,
+        "p10": 0.029283854166666668,
+        "p50": 0.23038736979166666,
+        "p90": 0.3617936197916667,
+        "max": 0.9064778645833333
+      },
+      "ssim_luma": {
+        "n": 104,
+        "mean": 0.8142166725144937,
+        "min": 0.4647381007671356,
+        "p10": 0.7227994799613953,
+        "p50": 0.8217407464981079,
+        "p90": 0.9683338403701782,
+        "max": 0.9863904714584351
+      }
+    },
+    "random_cross_sequence": {
+      "n": 400,
+      "shape_mismatch": 0,
+      "mae_rgb": {
+        "n": 400,
+        "mean": 60.19772738444012,
+        "min": 15.35166775173611,
+        "p10": 40.382152777777776,
+        "p50": 58.637842881944444,
+        "p90": 84.72767795138888,
+        "max": 119.38506510416667
+      },
+      "mae_center_rgb": {
+        "n": 400,
+        "mean": 62.94969930555556,
+        "min": 12.2169140625,
+        "p10": 42.57414930555556,
+        "p50": 61.647387152777775,
+        "p90": 84.351015625,
+        "max": 113.76753472222222
+      },
+      "mae_border_rgb": {
+        "n": 400,
+        "mean": 59.280403410734976,
+        "min": 11.467436342592592,
+        "p10": 35.715445601851854,
+        "p50": 57.175870949074074,
+        "p90": 87.55130208333334,
+        "max": 125.51221643518518
+      },
+      "changed_frac_gt15": {
+        "n": 400,
+        "mean": 0.8716319498697915,
+        "min": 0.26413411458333336,
+        "p10": 0.7325813802083333,
+        "p50": 0.9088932291666667,
+        "p90": 0.9661067708333333,
+        "max": 0.9837044270833334
+      },
+      "ssim_luma": {
+        "n": 400,
+        "mean": 0.39464978940784934,
+        "min": 0.13760630786418915,
+        "p10": 0.234543576836586,
+        "p50": 0.3936467170715332,
+        "p90": 0.539724588394165,
+        "max": 0.7883435487747192
+      }
+    }
+  },
+  "bootstrap": {
+    "test_n": 474,
+    "test_dish_ids_match_published_n": true,
+    "grouping": "Experiment A rgb_test dishes that share a recovered linear sequence, or a repeat-scan group, are one cluster. Fork branches stay separate. Dishes with no recovered companion stay singletons.",
+    "n_clusters": 307,
+    "multi_dish_clusters": 77,
+    "dishes_in_multi_dish_clusters": 244,
+    "largest_cluster": 8,
+    "draws": 10000,
+    "seed": 0,
+    "settings": [
+      {
+        "setting": "单张侧视",
+        "mass_mae_g": 33.834027479469526,
+        "top_mass_mae_g": 30.50535950479628,
+        "iid_bootstrap": {
+          "n": 474,
+          "mae_difference_g": 3.328667974673243,
+          "ci95_low_g": 1.2230982623522797,
+          "ci95_high_g": 5.4224860195369144,
+          "fraction_method_mae_lower": 0.0009,
+          "stably_beats_top": false
+        },
+        "iid_matches_published_comparison": true,
+        "published_versus_top": {
+          "n": 474,
+          "mae_difference_g": 3.328667974673243,
+          "ci95_low_g": 1.2230982623522797,
+          "ci95_high_g": 5.4224860195369144,
+          "fraction_method_mae_lower": 0.0009,
+          "stably_beats_top": false
+        },
+        "sequence_bootstrap": {
+          "n_dishes": 474,
+          "n_clusters": 307,
+          "mae_difference_g": 3.328667974673243,
+          "ci95_low_g": 0.9985280775273637,
+          "ci95_high_g": 5.744668899232886,
+          "fraction_method_mae_lower": 0.0022,
+          "stably_beats_top": false,
+          "draws": 10000,
+          "seed": 0,
+          "interval": "percentile 2.5 to 97.5",
+          "cluster_size_max": 8,
+          "dishes_in_multi_dish_clusters": 244,
+          "multi_dish_clusters": 77
+        }
+      },
+      {
+        "setting": "双视角简单特征融合",
+        "mass_mae_g": 29.823865934766296,
+        "top_mass_mae_g": 30.50535950479628,
+        "iid_bootstrap": {
+          "n": 474,
+          "mae_difference_g": -0.6814935700299871,
+          "ci95_low_g": -2.006621327782482,
+          "ci95_high_g": 0.6268849316025581,
+          "fraction_method_mae_lower": 0.8462,
+          "stably_beats_top": false
+        },
+        "iid_matches_published_comparison": true,
+        "published_versus_top": {
+          "n": 474,
+          "mae_difference_g": -0.6814935700299871,
+          "ci95_low_g": -2.006621327782482,
+          "ci95_high_g": 0.6268849316025581,
+          "fraction_method_mae_lower": 0.8462,
+          "stably_beats_top": false
+        },
+        "sequence_bootstrap": {
+          "n_dishes": 474,
+          "n_clusters": 307,
+          "mae_difference_g": -0.6814935700299871,
+          "ci95_low_g": -2.163728294025845,
+          "ci95_high_g": 0.8035695043541655,
+          "fraction_method_mae_lower": 0.8083,
+          "stably_beats_top": false,
+          "draws": 10000,
+          "seed": 0,
+          "interval": "percentile 2.5 to 97.5",
+          "cluster_size_max": 8,
+          "dishes_in_multi_dish_clusters": 244,
+          "multi_dish_clusters": 77
+        }
+      },
+      {
+        "setting": "双视角几何融合",
+        "mass_mae_g": 31.818710166190748,
+        "top_mass_mae_g": 30.50535950479628,
+        "iid_bootstrap": {
+          "n": 474,
+          "mae_difference_g": 1.3133506613944652,
+          "ci95_low_g": -0.33553386881381647,
+          "ci95_high_g": 2.9749737091708273,
+          "fraction_method_mae_lower": 0.0616,
+          "stably_beats_top": false
+        },
+        "iid_matches_published_comparison": true,
+        "published_versus_top": {
+          "n": 474,
+          "mae_difference_g": 1.3133506613944652,
+          "ci95_low_g": -0.33553386881381647,
+          "ci95_high_g": 2.9749737091708273,
+          "fraction_method_mae_lower": 0.0616,
+          "stably_beats_top": false
+        },
+        "sequence_bootstrap": {
+          "n_dishes": 474,
+          "n_clusters": 307,
+          "mae_difference_g": 1.3133506613944652,
+          "ci95_low_g": -0.7009762526539864,
+          "ci95_high_g": 3.312867997318232,
+          "fraction_method_mae_lower": 0.098,
+          "stably_beats_top": false,
+          "draws": 10000,
+          "seed": 0,
+          "interval": "percentile 2.5 to 97.5",
+          "cluster_size_max": 8,
+          "dishes_in_multi_dish_clusters": 244,
+          "multi_dish_clusters": 77
+        }
+      },
+      {
+        "setting": "双视角+食物语义约束",
+        "mass_mae_g": 31.668069330448844,
+        "top_mass_mae_g": 30.50535950479628,
+        "iid_bootstrap": {
+          "n": 474,
+          "mae_difference_g": 1.1627098256525612,
+          "ci95_low_g": -0.536413468841762,
+          "ci95_high_g": 2.856205023240439,
+          "fraction_method_mae_lower": 0.0882,
+          "stably_beats_top": false
+        },
+        "iid_matches_published_comparison": true,
+        "published_versus_top": {
+          "n": 474,
+          "mae_difference_g": 1.1627098256525612,
+          "ci95_low_g": -0.536413468841762,
+          "ci95_high_g": 2.856205023240439,
+          "fraction_method_mae_lower": 0.0882,
+          "stably_beats_top": false
+        },
+        "sequence_bootstrap": {
+          "n_dishes": 474,
+          "n_clusters": 307,
+          "mae_difference_g": 1.1627098256525612,
+          "ci95_low_g": -0.7229103547830319,
+          "ci95_high_g": 3.05093686638119,
+          "fraction_method_mae_lower": 0.1151,
+          "stably_beats_top": false,
+          "draws": 10000,
+          "seed": 0,
+          "interval": "percentile 2.5 to 97.5",
+          "cluster_size_max": 8,
+          "dishes_in_multi_dish_clusters": 244,
+          "multi_dish_clusters": 77
+        }
+      }
+    ]
+  }
+}

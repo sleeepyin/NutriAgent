@@ -1,0 +1,124 @@
+{
+  "present": true,
+  "path": "/var/tmp/nutri-downloads/nutrition5k/nutrition5k_dataset.tar.gz",
+  "bytes": 194804050002,
+  "members": 37478,
+  "non_image_members": [
+    {
+      "kind": "dir",
+      "bytes": 0,
+      "name": "nutrition5k_dataset"
+    },
+    {
+      "kind": "dir",
+      "bytes": 0,
+      "name": "nutrition5k_dataset/metadata"
+    },
+    {
+      "kind": "file",
+      "bytes": 21540,
+      "name": "nutrition5k_dataset/metadata/ingredients_metadata.csv"
+    },
+    {
+      "kind": "file",
+      "bytes": 2206282,
+      "name": "nutrition5k_dataset/metadata/dish_metadata_cafe1.csv"
+    },
+    {
+      "kind": "file",
+      "bytes": 101817,
+      "name": "nutrition5k_dataset/metadata/dish_metadata_cafe2.csv"
+    },
+    {
+      "kind": "dir",
+      "bytes": 0,
+      "name": "nutrition5k_dataset/dish_ids"
+    },
+    {
+      "kind": "dir",
+      "bytes": 0,
+      "name": "nutrition5k_dataset/dish_ids/splits"
+    },
+    {
+      "kind": "file",
+      "bytes": 64944,
+      "name": "nutrition5k_dataset/dish_ids/splits/rgb_train_ids.txt"
+    },
+    {
+      "kind": "file",
+      "bytes": 11344,
+      "name": "nutrition5k_dataset/dish_ids/splits/rgb_test_ids.txt"
+    },
+    {
+      "kind": "file",
+      "bytes": 8112,
+      "name": "nutrition5k_dataset/dish_ids/splits/depth_test_ids.txt"
+    },
+    {
+      "kind": "file",
+      "bytes": 44128,
+      "name": "nutrition5k_dataset/dish_ids/splits/depth_train_ids.txt"
+    },
+    {
+      "kind": "file",
+      "bytes": 3808,
+      "name": "nutrition5k_dataset/dish_ids/dish_ids_cafe2.txt"
+    },
+    {
+      "kind": "file",
+      "bytes": 80096,
+      "name": "nutrition5k_dataset/dish_ids/dish_ids_all.txt"
+    },
+    {
+      "kind": "file",
+      "bytes": 76288,
+      "name": "nutrition5k_dataset/dish_ids/dish_ids_cafe1.txt"
+    },
+    {
+      "kind": "file",
+      "bytes": 473,
+      "name": "nutrition5k_dataset/dish_ids/README"
+    },
+    {
+      "kind": "dir",
+      "bytes": 0,
+      "name": "nutrition5k_dataset/imagery"
+    },
+    {
+      "kind": "dir",
+      "bytes": 0,
+      "name": "nutrition5k_dataset/scripts"
+    },
+    {
+      "kind": "file",
+      "bytes": 236,
+      "name": "nutrition5k_dataset/scripts/extract_frames.sh"
+    },
+    {
+      "kind": "file",
+      "bytes": 2276,
+      "name": "nutrition5k_dataset/scripts/compute_eval_statistics.py"
+    },
+    {
+      "kind": "file",
+      "bytes": 295,
+      "name": "nutrition5k_dataset/scripts/extract_frames_sampled.sh"
+    },
+    {
+      "kind": "file",
+      "bytes": 73,
+      "name": "nutrition5k_dataset/README"
+    }
+  ],
+  "imagery_filename_buckets": {
+    "imagery/realsense_overhead/depth_color.png": 3490,
+    "imagery/realsense_overhead/depth_raw.png": 3490,
+    "imagery/realsense_overhead/rgb.png": 3490,
+    "imagery/side_angles/camera_A.h264": 4332,
+    "imagery/side_angles/camera_B.h264": 4762,
+    "imagery/side_angles/camera_C.h264": 4617,
+    "imagery/side_angles/camera_D.h264": 4775
+  },
+  "plate_or_sequence_in_non_image_names": [],
+  "small_text_mentioning_plate_or_incremental": {}
+}

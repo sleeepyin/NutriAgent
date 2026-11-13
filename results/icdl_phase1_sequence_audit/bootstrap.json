@@ -1,0 +1,161 @@
+{
+  "test_n": 474,
+  "test_dish_ids_match_published_n": true,
+  "grouping": "Experiment A rgb_test dishes that share a recovered linear sequence, or a repeat-scan group, are one cluster. Fork branches stay separate. Dishes with no recovered companion stay singletons.",
+  "n_clusters": 307,
+  "multi_dish_clusters": 77,
+  "dishes_in_multi_dish_clusters": 244,
+  "largest_cluster": 8,
+  "draws": 10000,
+  "seed": 0,
+  "settings": [
+    {
+      "setting": "单张侧视",
+      "mass_mae_g": 33.834027479469526,
+      "top_mass_mae_g": 30.50535950479628,
+      "iid_bootstrap": {
+        "n": 474,
+        "mae_difference_g": 3.328667974673243,
+        "ci95_low_g": 1.2230982623522797,
+        "ci95_high_g": 5.4224860195369144,
+        "fraction_method_mae_lower": 0.0009,
+        "stably_beats_top": false
+      },
+      "iid_matches_published_comparison": true,
+      "published_versus_top": {
+        "n": 474,
+        "mae_difference_g": 3.328667974673243,
+        "ci95_low_g": 1.2230982623522797,
+        "ci95_high_g": 5.4224860195369144,
+        "fraction_method_mae_lower": 0.0009,
+        "stably_beats_top": false
+      },
+      "sequence_bootstrap": {
+        "n_dishes": 474,
+        "n_clusters": 307,
+        "mae_difference_g": 3.328667974673243,
+        "ci95_low_g": 0.9985280775273637,
+        "ci95_high_g": 5.744668899232886,
+        "fraction_method_mae_lower": 0.0022,
+        "stably_beats_top": false,
+        "draws": 10000,
+        "seed": 0,
+        "interval": "percentile 2.5 to 97.5",
+        "cluster_size_max": 8,
+        "dishes_in_multi_dish_clusters": 244,
+        "multi_dish_clusters": 77
+      }
+    },
+    {
+      "setting": "双视角简单特征融合",
+      "mass_mae_g": 29.823865934766296,
+      "top_mass_mae_g": 30.50535950479628,
+      "iid_bootstrap": {
+        "n": 474,
+        "mae_difference_g": -0.6814935700299871,
+        "ci95_low_g": -2.006621327782482,
+        "ci95_high_g": 0.6268849316025581,
+        "fraction_method_mae_lower": 0.8462,
+        "stably_beats_top": false
+      },
+      "iid_matches_published_comparison": true,
+      "published_versus_top": {
+        "n": 474,
+        "mae_difference_g": -0.6814935700299871,
+        "ci95_low_g": -2.006621327782482,
+        "ci95_high_g": 0.6268849316025581,
+        "fraction_method_mae_lower": 0.8462,
+        "stably_beats_top": false
+      },
+      "sequence_bootstrap": {
+        "n_dishes": 474,
+        "n_clusters": 307,
+        "mae_difference_g": -0.6814935700299871,
+        "ci95_low_g": -2.163728294025845,
+        "ci95_high_g": 0.8035695043541655,
+        "fraction_method_mae_lower": 0.8083,
+        "stably_beats_top": false,
+        "draws": 10000,
+        "seed": 0,
+        "interval": "percentile 2.5 to 97.5",
+        "cluster_size_max": 8,
+        "dishes_in_multi_dish_clusters": 244,
+        "multi_dish_clusters": 77
+      }
+    },
+    {
+      "setting": "双视角几何融合",
+      "mass_mae_g": 31.818710166190748,
+      "top_mass_mae_g": 30.50535950479628,
+      "iid_bootstrap": {
+        "n": 474,
+        "mae_difference_g": 1.3133506613944652,
+        "ci95_low_g": -0.33553386881381647,
+        "ci95_high_g": 2.9749737091708273,
+        "fraction_method_mae_lower": 0.0616,
+        "stably_beats_top": false
+      },
+      "iid_matches_published_comparison": true,
+      "published_versus_top": {
+        "n": 474,
+        "mae_difference_g": 1.3133506613944652,
+        "ci95_low_g": -0.33553386881381647,
+        "ci95_high_g": 2.9749737091708273,
+        "fraction_method_mae_lower": 0.0616,
+        "stably_beats_top": false
+      },
+      "sequence_bootstrap": {
+        "n_dishes": 474,
+        "n_clusters": 307,
+        "mae_difference_g": 1.3133506613944652,
+        "ci95_low_g": -0.7009762526539864,
+        "ci95_high_g": 3.312867997318232,
+        "fraction_method_mae_lower": 0.098,
+        "stably_beats_top": false,
+        "draws": 10000,
+        "seed": 0,
+        "interval": "percentile 2.5 to 97.5",
+        "cluster_size_max": 8,
+        "dishes_in_multi_dish_clusters": 244,
+        "multi_dish_clusters": 77
+      }
+    },
+    {
+      "setting": "双视角+食物语义约束",
+      "mass_mae_g": 31.668069330448844,
+      "top_mass_mae_g": 30.50535950479628,
+      "iid_bootstrap": {
+        "n": 474,
+        "mae_difference_g": 1.1627098256525612,
+        "ci95_low_g": -0.536413468841762,
+        "ci95_high_g": 2.856205023240439,
+        "fraction_method_mae_lower": 0.0882,
+        "stably_beats_top": false
+      },
+      "iid_matches_published_comparison": true,
+      "published_versus_top": {
+        "n": 474,
+        "mae_difference_g": 1.1627098256525612,
+        "ci95_low_g": -0.536413468841762,
+        "ci95_high_g": 2.856205023240439,
+        "fraction_method_mae_lower": 0.0882,
+        "stably_beats_top": false
+      },
+      "sequence_bootstrap": {
+        "n_dishes": 474,
+        "n_clusters": 307,
+        "mae_difference_g": 1.1627098256525612,
+        "ci95_low_g": -0.7229103547830319,
+        "ci95_high_g": 3.05093686638119,
+        "fraction_method_mae_lower": 0.1151,
+        "stably_beats_top": false,
+        "draws": 10000,
+        "seed": 0,
+        "interval": "percentile 2.5 to 97.5",
+        "cluster_size_max": 8,
+        "dishes_in_multi_dish_clusters": 244,
+        "multi_dish_clusters": 77
+      }
+    }
+  ]
+}
