@@ -8,7 +8,7 @@
 
 https://cursor.com/canvas/store-745bdf38-f3d7-4313-8d66-08e4b6903e93/e21f31e5-d6b2-48a1-85e0-e806bbe3d0d6
 
-执行以 [docs/STATUS.md](docs/STATUS.md) 为准。当前只解锁第一阶段：冻结协议、刻画残差、预先登记按物理餐盘分组的训练 / 验证 / 留出，以及可复核审计报告。不训网络。第二阶段最小对照和新算法保持锁定。
+执行以 [docs/STATUS.md](docs/STATUS.md) 为准。第一阶段已经在 `u2-partial-label` 的 `d330531bd266b553a5a78c3a3f379c668e594b2f`（短 `d330531b`，[#80](https://github.com/sleeepyin/NutriAgent/pull/80)）完成。当前只解锁第二阶段 B1 / B2 / B3 最小对照：三个同骨干、同预算的模型，不写新网络。新算法保持锁定。`main` 保持锁定。画布页首仍是定稿时只准备解锁第一阶段的句子；允许做什么以 STATUS 为准。
 
 工作分支是 `u2-partial-label`，从空 `main`（`d43cb084eba7693a45c114dfdf06b258611463f4`，短 `d43cb08`）起。本分支不合入 `main`。不用 `icdl`，也不用 `u1-granularity` 做基线。U1 的可分离度与 ICDL 的组成差不是本计划的方法。
 
