@@ -1,0 +1,136 @@
+{
+  "budget": {
+    "backbone": "torchvision.models.resnet18",
+    "weights": "ResNet18_Weights.IMAGENET1K_V1",
+    "mass_estimator_checkpoints_loaded": false,
+    "input_size": 224,
+    "epochs": 20,
+    "batch_size": 16,
+    "learning_rate": 0.0001,
+    "weight_decay": 0.0001,
+    "grad_clip": 1.0,
+    "horizontal_flip_probability": 0.5,
+    "test_time_augmentation": false,
+    "seed": 0,
+    "bootstrap_draws": 10000,
+    "bootstrap_quantiles": [
+      0.025,
+      0.975
+    ],
+    "percentile": "linear_q_times_n_minus_1",
+    "optimizer": "AdamW",
+    "schedule": "cosine_annealing_epoch",
+    "loss": "nutrient_weighted_l1",
+    "classes": [
+      "alium_vegetable",
+      "bacon",
+      "berry",
+      "bread",
+      "cheese",
+      "condiment_dressing",
+      "corn",
+      "cruciferous",
+      "cucumber",
+      "dessert",
+      "egg",
+      "egg_whites",
+      "fish",
+      "fruit_fatty",
+      "fruit_other",
+      "fruit_tree",
+      "fruit_tropical",
+      "grain_other",
+      "herb",
+      "leafy_greens",
+      "legumes_green",
+      "legumes_other",
+      "meat_red",
+      "melon",
+      "mushroom",
+      "nuts_seeds",
+      "pasta",
+      "peppers",
+      "pizza",
+      "poultry",
+      "rice",
+      "root_vegetable",
+      "salad_prepared",
+      "sausage",
+      "squash_eggplant",
+      "tofu",
+      "tomato",
+      "tuber",
+      "vegetable_other",
+      "yogurt"
+    ],
+    "class_count": 40,
+    "q2_nutrients": [
+      "calories",
+      "fat",
+      "carb",
+      "protein"
+    ],
+    "protocol_text": "三个模型共用 torchvision ResNet-18，ImageNet-1K V1 初始权重，输入是单张俯视 RGB 缩放到 224×224。最后一层是线性读出，宽度只跟该协议要监督的目标走。不加载仓库里已有的质量估计器权重。\n\nB1 只监督 Hand 盘级表上的质量、能量、脂肪、碳水、蛋白质。损失不读取食材实例。盘级预测就是这五个输出。输出经过 ReLU。\n\nB2 把标签当成完整。有营养实例按粗类相加；缺营养实例，包括 has_nutrition=0 和空值，贡献 0，格子里若写了数字也不加进去。40 个粗类都有监督。盘级预测是类别输出求和。类别输出经过 ReLU。\n\nB3 的类别目标只累加有营养实例。没有有营养实例的粗类，类别目标是 0，表示这些实例不进入可见求和。残差目标是盘级减去有营养实例之和，只在至少有一个有营养实例时有定义。类别目标与残差目标相加等于盘级。一个有营养实例都没有时，这张扫描的类别损失和残差损失都关掉，可见求和不记成 0，残差也不记成 0。推理时盘级等于类别输出求和加残差输出。残差输出不加 ReLU，可以为负。测试时不读取真值残差。\n\n强迫加和是诊断。对每个营养素，在有营养实例上按该营养素的标注值比例把盘级总量摊回去；这些标注值之和为 0 时，改为在这些有营养实例上均分。缺营养实例不接收份额。摊回后的类别目标和等于盘级。损失形式与 B2 相同。没有有营养实例的扫描不监督。这个诊断不进入停止规则。\n\n损失在原始单位上计算，每个营养素乘以训练扫描盘级标准差的倒数。标准差只用训练扫描，分母是扫描数。B1 是五个盘级输出的加权平均绝对误差。B2 和强迫加和是全部类别格子的加权平均绝对误差。B3 是类别格子的加权平均绝对误差，加上残差五格的加权平均绝对误差，两项等权相加。\n\n每个模型都训练满 20 个 epoch。验证集按物理餐盘等权，用能量、脂肪、碳水、蛋白质四项平均绝对误差之和选择 epoch，质量不参与选择。相同分数取更早的 epoch。留出集不参与选择。\n\n主指标是留出集上按物理餐盘等权的平均绝对误差。同一只餐盘先把各次扫描的绝对误差平均成一个数。稳定优于指（方法 − 对照）的餐盘配对差，其 95% 区间上界小于 0。区间是物理餐盘有放回抽取 10000 次、种子 0，对每次抽取的配对差取平均，再取 2.5% 和 97.5% 的线性分位。线性分位的位置是 q × (次数 − 1)。抽到一只餐盘时使用该餐盘已经平均好的误差，不把重拍或增量扫描拆开重抽。Q2 只看 B3 对 B1、B3 对 B2，在能量、脂肪、碳水、蛋白质上的八个区间。质量并列记录。强迫加和的区间并列记录，不进入 Q2。\n"
+  },
+  "train_loss_weights": {
+    "weights": {
+      "mass": 0.006945428466939271,
+      "calories": 0.0052237742595007365,
+      "fat": 0.07482165748076797,
+      "carb": 0.06283292663648514,
+      "protein": 0.055740810157638605
+    },
+    "train_plate_std": {
+      "mass": {
+        "n": 738,
+        "std": 143.97959820046674,
+        "weight": 0.006945428466939271
+      },
+      "calories": {
+        "n": 738,
+        "std": 191.43246823525166,
+        "weight": 0.0052237742595007365
+      },
+      "fat": {
+        "n": 738,
+        "std": 13.365114241916363,
+        "weight": 0.07482165748076797
+      },
+      "carb": {
+        "n": 738,
+        "std": 15.915222376723273,
+        "weight": 0.06283292663648514
+      },
+      "protein": {
+        "n": 738,
+        "std": 17.940176993695204,
+        "weight": 0.055740810157638605
+      }
+    }
+  },
+  "label_facts": {
+    "dishes": {
+      "train": 738,
+      "validation": 154,
+      "holdout": 164
+    },
+    "undefined_residual_dishes": {
+      "train": 2,
+      "validation": 1,
+      "holdout": 0
+    },
+    "undefined_residual_total": 3
+  },
+  "hand_image_split": {
+    "column_counts": {
+      "train": 898,
+      "test": 158
+    },
+    "cross_split_plates": 73,
+    "test_only_plates": 64,
+    "used_as_evaluation_split": false
+  },
+  "device": "cuda",
+  "holdout_nutrition_error_computed": false,
+  "steps_per_epoch": 47
+}

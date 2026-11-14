@@ -1,0 +1,289 @@
+{
+  "q2": {
+    "pass": false,
+    "code": "q2_fail_stop_wait_triste",
+    "n_intervals": 8
+  },
+  "plate_mae": {
+    "b1": {
+      "mass": 146.76792881155657,
+      "calories": 176.25699357862428,
+      "fat": 3.6225246016167665,
+      "carb": 6.548675058252401,
+      "protein": 5.232199478926516
+    },
+    "b2": {
+      "mass": 169.70279755564252,
+      "calories": 199.37143142027028,
+      "fat": 9.726414759269547,
+      "carb": 12.307325466988075,
+      "protein": 12.414436299371886
+    },
+    "b3": {
+      "mass": 159.43417943379706,
+      "calories": 179.17570480118695,
+      "fat": 8.09922089148161,
+      "carb": 14.558184195614503,
+      "protein": 14.212712688008837
+    },
+    "forced": {
+      "mass": 169.20105580970244,
+      "calories": 199.04916795923748,
+      "fat": 8.334829966667314,
+      "carb": 12.466998721462529,
+      "protein": 12.564009563793292
+    }
+  },
+  "scan_mae": {
+    "b1": {
+      "mass": 175.6985521854424,
+      "calories": 185.4446606234217,
+      "fat": 4.113416382649965,
+      "carb": 6.992487847960181,
+      "protein": 5.857669689052169
+    },
+    "b2": {
+      "mass": 200.67811860744956,
+      "calories": 210.5310333153507,
+      "fat": 9.216251205513068,
+      "carb": 13.260799408123312,
+      "protein": 13.91061656227898
+    },
+    "b3": {
+      "mass": 190.14862830780174,
+      "calories": 189.7689347764039,
+      "fat": 7.447952385408609,
+      "carb": 16.290435712548376,
+      "protein": 15.813857235185143
+    },
+    "forced": {
+      "mass": 200.34702680398505,
+      "calories": 210.25112341895897,
+      "fat": 8.078146971040885,
+      "carb": 13.814530036504344,
+      "protein": 14.08331567895349
+    }
+  },
+  "comparisons": [
+    {
+      "method": "b3",
+      "control": "b1",
+      "nutrient": "calories",
+      "enters_q2": true,
+      "point": 2.9187112225626732,
+      "low": -1.6825516778307825,
+      "high": 7.281181610849857,
+      "stably_better": false,
+      "n_plates": 99
+    },
+    {
+      "method": "b3",
+      "control": "b1",
+      "nutrient": "fat",
+      "enters_q2": true,
+      "point": 4.476696289864844,
+      "low": 2.8103435816674214,
+      "high": 6.1509107144148,
+      "stably_better": false,
+      "n_plates": 99
+    },
+    {
+      "method": "b3",
+      "control": "b1",
+      "nutrient": "carb",
+      "enters_q2": true,
+      "point": 8.0095091373621,
+      "low": 6.045231669120945,
+      "high": 10.019278735706152,
+      "stably_better": false,
+      "n_plates": 99
+    },
+    {
+      "method": "b3",
+      "control": "b1",
+      "nutrient": "protein",
+      "enters_q2": true,
+      "point": 8.980513209082321,
+      "low": 6.5581883462796045,
+      "high": 11.544755044106504,
+      "stably_better": false,
+      "n_plates": 99
+    },
+    {
+      "method": "b3",
+      "control": "b1",
+      "nutrient": "mass",
+      "enters_q2": false,
+      "point": 12.666250622240506,
+      "low": 9.776655253234825,
+      "high": 15.461572619095703,
+      "stably_better": false,
+      "n_plates": 99
+    },
+    {
+      "method": "b3",
+      "control": "b2",
+      "nutrient": "calories",
+      "enters_q2": true,
+      "point": -20.19572661908331,
+      "low": -25.47907949031066,
+      "high": -15.114223004268387,
+      "stably_better": true,
+      "n_plates": 99
+    },
+    {
+      "method": "b3",
+      "control": "b2",
+      "nutrient": "fat",
+      "enters_q2": true,
+      "point": -1.6271938677879365,
+      "low": -2.231239367755234,
+      "high": -1.0390687790768502,
+      "stably_better": true,
+      "n_plates": 99
+    },
+    {
+      "method": "b3",
+      "control": "b2",
+      "nutrient": "carb",
+      "enters_q2": true,
+      "point": 2.2508587286264254,
+      "low": 1.2699000646005596,
+      "high": 3.2953554859024066,
+      "stably_better": false,
+      "n_plates": 99
+    },
+    {
+      "method": "b3",
+      "control": "b2",
+      "nutrient": "protein",
+      "enters_q2": true,
+      "point": 1.7982763886369515,
+      "low": 1.1758671289963492,
+      "high": 2.5172407975744147,
+      "stably_better": false,
+      "n_plates": 99
+    },
+    {
+      "method": "b3",
+      "control": "b2",
+      "nutrient": "mass",
+      "enters_q2": false,
+      "point": -10.268618121845428,
+      "low": -13.26534903435098,
+      "high": -7.421663834723905,
+      "stably_better": true,
+      "n_plates": 99
+    },
+    {
+      "method": "forced",
+      "control": "b1",
+      "nutrient": "calories",
+      "enters_q2": false,
+      "point": 22.792174380613183,
+      "low": 19.619344853846087,
+      "high": 25.989283197040976,
+      "stably_better": false,
+      "n_plates": 99
+    },
+    {
+      "method": "forced",
+      "control": "b1",
+      "nutrient": "fat",
+      "enters_q2": false,
+      "point": 4.712305365050549,
+      "low": 3.048904133129723,
+      "high": 6.4454533910351355,
+      "stably_better": false,
+      "n_plates": 99
+    },
+    {
+      "method": "forced",
+      "control": "b1",
+      "nutrient": "carb",
+      "enters_q2": false,
+      "point": 5.918323663210126,
+      "low": 4.33887822909942,
+      "high": 7.570734618137318,
+      "stably_better": false,
+      "n_plates": 99
+    },
+    {
+      "method": "forced",
+      "control": "b1",
+      "nutrient": "protein",
+      "enters_q2": false,
+      "point": 7.331810084866776,
+      "low": 5.09885655067868,
+      "high": 9.704207782701761,
+      "stably_better": false,
+      "n_plates": 99
+    },
+    {
+      "method": "forced",
+      "control": "b1",
+      "nutrient": "mass",
+      "enters_q2": false,
+      "point": 22.433126998145873,
+      "low": 19.451267746543508,
+      "high": 25.45250544620844,
+      "stably_better": false,
+      "n_plates": 99
+    },
+    {
+      "method": "forced",
+      "control": "b2",
+      "nutrient": "calories",
+      "enters_q2": false,
+      "point": -0.3222634610328012,
+      "low": -0.4809330537122665,
+      "high": -0.1715077956804463,
+      "stably_better": true,
+      "n_plates": 99
+    },
+    {
+      "method": "forced",
+      "control": "b2",
+      "nutrient": "fat",
+      "enters_q2": false,
+      "point": -1.3915847926022316,
+      "low": -2.3211296896600517,
+      "high": -0.6255982506638765,
+      "stably_better": true,
+      "n_plates": 99
+    },
+    {
+      "method": "forced",
+      "control": "b2",
+      "nutrient": "carb",
+      "enters_q2": false,
+      "point": 0.15967325447445124,
+      "low": -0.20937173325275088,
+      "high": 0.5338146723424966,
+      "stably_better": false,
+      "n_plates": 99
+    },
+    {
+      "method": "forced",
+      "control": "b2",
+      "nutrient": "protein",
+      "enters_q2": false,
+      "point": 0.14957326442140462,
+      "low": -0.06478224347263185,
+      "high": 0.378591936942994,
+      "stably_better": false,
+      "n_plates": 99
+    },
+    {
+      "method": "forced",
+      "control": "b2",
+      "nutrient": "mass",
+      "enters_q2": false,
+      "point": -0.5017417459400609,
+      "low": -0.947880378914934,
+      "high": -0.13171247472945818,
+      "stably_better": true,
+      "n_plates": 99
+    }
+  ]
+}
