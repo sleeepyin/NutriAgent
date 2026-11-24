@@ -21,6 +21,8 @@ def index_depth_files(roots: list[Path]) -> dict[str, str]:
         direct = list(root.glob("dish_*/depth_raw.png"))
         paths = direct if direct else list(root.rglob("depth_raw.png"))
         for path in paths:
+            if path.stat().st_size <= 0:
+                continue
             found.setdefault(path.parent.name, str(path))
     return found
 
