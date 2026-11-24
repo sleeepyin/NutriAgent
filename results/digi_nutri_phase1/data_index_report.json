@@ -1,0 +1,30 @@
+{
+  "depth_roots": [
+    "/home/sdnu/nutriagent-digi/data/official_depth",
+    "/home/sdnu/nutriagent/data/nutrition5k/imagery/realsense_overhead"
+  ],
+  "n_depth_files": 3489,
+  "overlap": [],
+  "plate_groups_test": 507,
+  "reshoot_tsv": null,
+  "test": {
+    "missing_counts": {},
+    "n_ids": 507,
+    "n_kept": 507
+  },
+  "test_absent_ids": [],
+  "train": {
+    "missing_counts": {
+      "depth": 1,
+      "rgb": 3
+    },
+    "n_ids": 2758,
+    "n_kept": 2754
+  },
+  "train_absent_ids": [
+    "dish_1558109714",
+    "dish_1564159636",
+    "dish_1557862384",
+    "dish_1558109511"
+  ]
+}
