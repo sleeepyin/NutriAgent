@@ -1,0 +1,14 @@
+{
+  "decision": {
+    "descriptive_q1": false,
+    "descriptive_q2": false,
+    "message": "Q0 failed. The privileged teachers are not clearly better than B1 on energy and the three macros. Stop. Do not keep distilling. Wait for Triste.",
+    "q0_pass": false,
+    "q1_opened": false,
+    "q1_pass": null,
+    "q2_opened": false,
+    "q2_pass": null,
+    "verdict": "q0_fail_stop_wait_triste"
+  },
+  "verdict": "q0_fail_stop_wait_triste"
+}
