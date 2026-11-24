@@ -216,7 +216,16 @@ class ProtocolTests(unittest.TestCase):
             with self.assertRaises(HoldoutLocked):
                 publish_holdout(path, {"again": True})
         root = Path(__file__).resolve().parents[1] / "digi_nutri"
-        banned = ["L_orth", "l_orth", "GOFF", "GatedOrthogonal", "confidence_weight", "lambda_orth"]
+        banned = [
+            "L_orth",
+            "l_orth",
+            "GOFF",
+            "GatedOrthogonal",
+            "confidence_weight",
+            "lambda_orth",
+            "DSD",
+            "w_i",
+        ]
         for path in root.rglob("*.py"):
             source = path.read_text(encoding="utf-8")
             for token in banned:
@@ -227,6 +236,30 @@ class ProtocolTests(unittest.TestCase):
         self.assertNotIn("calorie", teacher.lower())
         self.assertEqual(len(code_fingerprint()), 64)
         self.assertEqual(RESNET101_CHANNELS, (512, 1024, 2048))
+
+    def test_eval_keeps_train_exclusions(self):
+        from digi_nutri.orchestrate import assert_official_split
+
+        train = {
+            "missing": [
+                {"dish_id": "dish_1558109714", "reason": "rgb"},
+                {"dish_id": "dish_1564159636", "reason": "depth"},
+            ],
+            "n_kept": 2754,
+            "n_ids": 2758,
+        }
+        test = {"missing": [], "n_kept": 507, "n_ids": 507}
+        assert_official_split(train, test, set())
+        with self.assertRaises(SystemExit):
+            assert_official_split(
+                train,
+                {"missing": [{"dish_id": "dish_test", "reason": "rgb"}], "n_kept": 506, "n_ids": 507},
+                set(),
+            )
+        with self.assertRaises(SystemExit):
+            assert_official_split(train, {"missing": [], "n_kept": 506, "n_ids": 507}, set())
+        with self.assertRaises(SystemExit):
+            assert_official_split(train, test, {"dish_overlap"})
 
     def test_official_files_if_present(self):
         splits = Path("/home/sdnu/nutriagent/data/nutrition5k/dish_ids/splits")

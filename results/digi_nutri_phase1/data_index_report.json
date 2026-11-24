@@ -3,6 +3,41 @@
     "/home/sdnu/nutriagent-digi/data/official_depth",
     "/home/sdnu/nutriagent/data/nutrition5k/imagery/realsense_overhead"
   ],
+  "excluded": [
+    {
+      "depth_files": [],
+      "dish_id": "dish_1558109714",
+      "index_reason": "rgb",
+      "reason": "no_rgb",
+      "rgb_present": false
+    },
+    {
+      "depth_files": [
+        {
+          "bytes": 0,
+          "path": "/home/sdnu/nutriagent-digi/data/official_depth/nutrition5k_dataset/imagery/realsense_overhead/dish_1564159636/depth_raw.png"
+        }
+      ],
+      "dish_id": "dish_1564159636",
+      "index_reason": "depth",
+      "reason": "zero_byte_depth",
+      "rgb_present": true
+    },
+    {
+      "depth_files": [],
+      "dish_id": "dish_1557862384",
+      "index_reason": "rgb",
+      "reason": "no_rgb",
+      "rgb_present": false
+    },
+    {
+      "depth_files": [],
+      "dish_id": "dish_1558109511",
+      "index_reason": "rgb",
+      "reason": "no_rgb",
+      "rgb_present": false
+    }
+  ],
   "n_depth_files": 3489,
   "overlap": [],
   "plate_groups_test": 507,

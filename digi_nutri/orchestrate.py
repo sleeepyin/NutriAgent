@@ -96,6 +96,55 @@ def wait_for_depth(timeout_s: int = 6 * 3600) -> None:
     raise SystemExit("official depth was not ready before the wait expired")
 
 
+def assert_official_split(train_report: dict, test_report: dict, overlap: set) -> None:
+    """Train ids with no local RGB or depth are excluded. They are not fatal.
+
+    A missing test dish, an overlapping id, or a test count other than 507 stops
+    both training and the one-shot eval.
+    """
+
+    if overlap or test_report["missing"]:
+        sample = list(test_report["missing"])[:12]
+        raise SystemExit(
+            "official test split is incomplete or overlapping: "
+            f"{sample} overlap={sorted(overlap)[:8]}"
+        )
+    if int(test_report["n_kept"]) != 507:
+        raise SystemExit(f"kept {test_report['n_kept']} test dishes, expected 507")
+
+
+def exclusion_record(dish_id: str, index_reason: str) -> dict:
+    """Verify one excluded id on disk. Do not infer the reason from the count alone."""
+
+    rgb_path = LIVE_RGB_ROOT / dish_id / "rgb.png"
+    rgb_present = rgb_path.is_file()
+    candidates = (
+        DEPTH_ROOT / "nutrition5k_dataset" / "imagery" / "realsense_overhead" / dish_id / "depth_raw.png",
+        DEPTH_ROOT / dish_id / "depth_raw.png",
+        LIVE_RGB_ROOT / dish_id / "depth_raw.png",
+    )
+    depth_files = []
+    for path in candidates:
+        if path.exists():
+            depth_files.append({"path": str(path), "bytes": path.stat().st_size})
+    nonempty = [row for row in depth_files if row["bytes"] > 0]
+    if not rgb_present:
+        reason = "no_rgb"
+    elif depth_files and not nonempty:
+        reason = "zero_byte_depth"
+    elif not depth_files:
+        reason = "no_depth"
+    else:
+        reason = index_reason
+    return {
+        "dish_id": dish_id,
+        "reason": reason,
+        "index_reason": index_reason,
+        "rgb_present": rgb_present,
+        "depth_files": depth_files,
+    }
+
+
 def _loader(dataset, batch_size: int, seed: int, workers: int, device: torch.device):
     generator = torch.Generator()
     generator.manual_seed(seed)
@@ -241,13 +290,13 @@ def run_train(cpu: bool = False, epochs_teachers: int | None = None, epochs_stud
         "overlap": sorted(overlap),
         "train_absent_ids": [item["dish_id"] for item in train_report["missing"]],
         "test_absent_ids": [item["dish_id"] for item in test_report["missing"]],
+        "excluded": [
+            exclusion_record(item["dish_id"], item["reason"])
+            for item in train_report["missing"] + test_report["missing"]
+        ],
     }
     write_json(RESULTS / "data_index_report.json", index_report)
-    if overlap or test_report["missing"]:
-        sample = test_report["missing"][:12]
-        raise SystemExit(f"official test split is incomplete or overlapping: {sample} overlap={sorted(overlap)[:8]}")
-    if test_report["n_kept"] != 507:
-        raise SystemExit(f"kept {test_report['n_kept']} test dishes, expected 507")
+    assert_official_split(train_report, test_report, overlap)
     if train_report["missing"]:
         LOGGER.info(
             "train ids with no local official rgb and depth are excluded: %s",
@@ -439,7 +488,12 @@ def run_eval(cpu: bool = False) -> None:
         LIVE_SPLITS, "test", LIVE_METADATA, LIVE_RGB_ROOT, roots,
         metadata=metadata, depth_index=depth_index, reshoot_tsv=reshoot,
     )
-    if train_report["missing"] or test_report["missing"]:
-        raise SystemExit("official RGB-D split is incomplete")
+    overlap = {row["dish_id"] for row in _train_records} & {row["dish_id"] for row in test_records}
+    assert_official_split(train_report, test_report, overlap)
+    if train_report["missing"]:
+        LOGGER.info(
+            "eval keeps the train exclusions: %s",
+            [item["dish_id"] for item in train_report["missing"]],
+        )
     cache = load_text_cache(OUTPUTS / "text_cache.pt")
     run_official_holdout(test_records, frozen, OUTPUTS, cache, device)
