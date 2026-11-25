@@ -1,0 +1,116 @@
+{
+  "split": "official_depth_train",
+  "n": 2754,
+  "n_groups": 2744,
+  "metrics": {
+    "b1": {
+      "energy": {
+        "mae": 11.600389943706357,
+        "dataset_pmae": 4.551947478188927,
+        "plate_pmae": 6.643689258000064
+      },
+      "fat": {
+        "mae": 0.5260024605726061,
+        "dataset_pmae": 4.141848480469963,
+        "plate_pmae": 26.043449606391142
+      },
+      "carb": {
+        "mae": 1.0342619840729341,
+        "dataset_pmae": 5.348762708784602,
+        "plate_pmae": 14.755052163009813
+      },
+      "protein": {
+        "mae": 0.6469157499179363,
+        "dataset_pmae": 3.5748259674742893,
+        "plate_pmae": 13.905186324012385
+      },
+      "mass": {
+        "mae": 6.8760907941740665,
+        "dataset_pmae": 3.153566030098134,
+        "plate_pmae": 4.289418706119502
+      }
+    },
+    "t_geo": {
+      "energy": {
+        "mae": 76.08534274758337,
+        "dataset_pmae": 29.855589831693774,
+        "plate_pmae": 38.18391712031418
+      },
+      "fat": {
+        "mae": 6.801506258520971,
+        "dataset_pmae": 53.55641935799177,
+        "plate_pmae": 59.6574714761479
+      },
+      "carb": {
+        "mae": 12.935624673738047,
+        "dataset_pmae": 66.89754427331339,
+        "plate_pmae": 242.9628745406922
+      },
+      "protein": {
+        "mae": 10.864468706391627,
+        "dataset_pmae": 60.036542408107096,
+        "plate_pmae": 56.93900447326237
+      },
+      "mass": {
+        "mae": 40.40839996871173,
+        "dataset_pmae": 18.532413443393793,
+        "plate_pmae": 27.44797701226305
+      }
+    },
+    "t_ing": {
+      "energy": {
+        "mae": 6.296039684189344,
+        "dataset_pmae": 2.470541257845543,
+        "plate_pmae": 4.201920107224663
+      },
+      "fat": {
+        "mae": 0.3338912318882681,
+        "dataset_pmae": 2.6291262781037434,
+        "plate_pmae": 17.353345765686868
+      },
+      "carb": {
+        "mae": 0.8170105434342754,
+        "dataset_pmae": 4.225230739116997,
+        "plate_pmae": 6.2412816188530655
+      },
+      "protein": {
+        "mae": 0.44934036777224245,
+        "dataset_pmae": 2.483033710572708,
+        "plate_pmae": 8.3831897726431
+      },
+      "mass": {
+        "mae": 4.768702505633895,
+        "dataset_pmae": 2.187059286964705,
+        "plate_pmae": 2.6411025107222614
+      }
+    }
+  },
+  "train_gate_pass": false,
+  "train_gate_failures": [
+    {
+      "teacher": "t_geo",
+      "nutrient": "energy",
+      "teacher_mae": 76.08534274758337,
+      "b1_mae": 11.600389943706357
+    },
+    {
+      "teacher": "t_geo",
+      "nutrient": "fat",
+      "teacher_mae": 6.801506258520971,
+      "b1_mae": 0.5260024605726061
+    },
+    {
+      "teacher": "t_geo",
+      "nutrient": "carb",
+      "teacher_mae": 12.935624673738047,
+      "b1_mae": 1.0342619840729341
+    },
+    {
+      "teacher": "t_geo",
+      "nutrient": "protein",
+      "teacher_mae": 10.864468706391627,
+      "b1_mae": 0.6469157499179363
+    }
+  ],
+  "holdout_evaluated": false
+}

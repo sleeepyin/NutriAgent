@@ -1,0 +1,30 @@
+{
+  "verdict": "train_gate_fail_stop",
+  "holdout_evaluated": false,
+  "failures": [
+    {
+      "teacher": "t_geo",
+      "nutrient": "energy",
+      "teacher_mae": 76.08534274758337,
+      "b1_mae": 11.600389943706357
+    },
+    {
+      "teacher": "t_geo",
+      "nutrient": "fat",
+      "teacher_mae": 6.801506258520971,
+      "b1_mae": 0.5260024605726061
+    },
+    {
+      "teacher": "t_geo",
+      "nutrient": "carb",
+      "teacher_mae": 12.935624673738047,
+      "b1_mae": 1.0342619840729341
+    },
+    {
+      "teacher": "t_geo",
+      "nutrient": "protein",
+      "teacher_mae": 10.864468706391627,
+      "b1_mae": 0.6469157499179363
+    }
+  ]
+}
