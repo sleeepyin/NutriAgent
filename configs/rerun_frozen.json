@@ -1,0 +1,219 @@
+{
+  "image_size": 384,
+  "epochs": 60,
+  "batch_size": 32,
+  "optimizer": "AdamW",
+  "head_lr": 0.0001,
+  "backbone_lr": 3e-05,
+  "fusion_lr": 0.0001,
+  "weight_decay": 0.01,
+  "betas": [
+    0.9,
+    0.999
+  ],
+  "scheduler": "cosine",
+  "eta_min": 0.0,
+  "dropout_p": 0.3,
+  "dropout_where": "regression heads only",
+  "hflip_p": 0.5,
+  "vflip_p": 0.5,
+  "rotation_degrees": [
+    0,
+    90,
+    180,
+    270
+  ],
+  "seed": 20261125,
+  "smooth_l1_beta": 1.0,
+  "mass_floor_g": 5.0,
+  "loss_mass_weight": 0.5,
+  "loss_density_weight": 0.5,
+  "raw_unit_mm": 0.1,
+  "height_max_mm": 150.0,
+  "border_pixels": 1,
+  "morph_close": 3,
+  "exclude_border_zeros": true,
+  "nutrients": [
+    "energy",
+    "fat",
+    "carb",
+    "protein"
+  ],
+  "param_limit": 60000000,
+  "rgb_backbone": "resnet101",
+  "height_backbone": "resnet18",
+  "cab_reduction": 16,
+  "gamma_init": 0.0,
+  "head_hidden": 256,
+  "volume_dim": 25,
+  "spp_grids": [
+    1,
+    2,
+    4
+  ],
+  "bootstrap_samples": 2000,
+  "bootstrap_seed": 20261125,
+  "bootstrap_percentiles": [
+    2.5,
+    97.5
+  ],
+  "reshoot_max_gap_seconds": 120,
+  "reshoot_nutrition_atol": 0.001,
+  "plate_pmae": "mean of 100*|error|/|y| over plates with |y| > 0",
+  "dataset_pmae": "100 * sum(|error|) / sum(|y|)",
+  "pass_verdict": "q0_pass_stop_wait_triste",
+  "fail_verdict": "q0_fail_stop_wait_triste",
+  "pass_rule": "On the official 507-plate holdout, the 95% plate-grouped CI of (teacher - this run's B1) lies entirely below 0 for energy, fat, carb, and protein, on MAE, dataset PMAE, and per-plate PMAE. Both teachers are required. Mass is recorded and is not a pass condition. Either verdict stops. Distillation stays locked.",
+  "text_encoder": "learned embedding of the static dictionary token plus a linear map of the USDA per-gram prior; the OpenAI CLIP package is not used",
+  "status_commit": "c0abef27e35285a5bebdab24168b5475506154a1",
+  "max_ingredients": 48,
+  "train_device": "cuda:1",
+  "comparator": "b1 trained in this same-setting run",
+  "amp": false,
+  "rgb_root": "/home/sdnu/nutriagent/data/nutrition5k/imagery/realsense_overhead",
+  "depth_root": "/home/sdnu/nutriagent-digi/data/official_depth/nutrition5k_dataset/imagery/realsense_overhead",
+  "cache_dir": "/host/var/tmp/digi-nutri-plan-a-cache",
+  "output_dir": "outputs",
+  "sigma_mean": [
+    254.84454729738562,
+    12.699703116920844,
+    19.336471637981116,
+    18.096426388162673
+  ],
+  "sigma_mass": 218.04175744371824,
+  "init_mass": 218.04175744371824,
+  "init_density": [
+    1.1687878059924695,
+    0.0582443622992671,
+    0.08868242425064987,
+    0.08299523265782606
+  ],
+  "vocab_size": 556,
+  "param_counts": {
+    "b1": 43550533,
+    "t_geo": 56568454,
+    "t_ing": 44877893
+  },
+  "volume_feature_names": [
+    "foreground_area_ratio",
+    "height_sum",
+    "foreground_mean",
+    "foreground_p90",
+    "spp_avg_1x1",
+    "spp_avg_2x2_0",
+    "spp_avg_2x2_1",
+    "spp_avg_2x2_2",
+    "spp_avg_2x2_3",
+    "spp_avg_4x4_0",
+    "spp_avg_4x4_1",
+    "spp_avg_4x4_2",
+    "spp_avg_4x4_3",
+    "spp_avg_4x4_4",
+    "spp_avg_4x4_5",
+    "spp_avg_4x4_6",
+    "spp_avg_4x4_7",
+    "spp_avg_4x4_8",
+    "spp_avg_4x4_9",
+    "spp_avg_4x4_10",
+    "spp_avg_4x4_11",
+    "spp_avg_4x4_12",
+    "spp_avg_4x4_13",
+    "spp_avg_4x4_14",
+    "spp_avg_4x4_15"
+  ],
+  "train_exclusions": [
+    {
+      "dish_id": "dish_1558109714",
+      "split": "train",
+      "reasons": [
+        "rgb_missing",
+        "depth_missing"
+      ]
+    },
+    {
+      "dish_id": "dish_1564159636",
+      "split": "train",
+      "reasons": [
+        "depth_zero"
+      ]
+    },
+    {
+      "dish_id": "dish_1557862384",
+      "split": "train",
+      "reasons": [
+        "rgb_missing",
+        "depth_missing"
+      ]
+    },
+    {
+      "dish_id": "dish_1558109511",
+      "split": "train",
+      "reasons": [
+        "rgb_missing",
+        "depth_missing"
+      ]
+    }
+  ],
+  "n_train_file": 2758,
+  "n_train": 2754,
+  "n_test": 507,
+  "n_test_groups": 507,
+  "cross_split_reshoots": [
+    {
+      "group": "dish_1556575273",
+      "train": [
+        "dish_1556575273",
+        "dish_1556575386",
+        "dish_1556575446",
+        "dish_1556575499"
+      ],
+      "test": [
+        "dish_1556575327"
+      ]
+    },
+    {
+      "group": "dish_1558110245",
+      "train": [
+        "dish_1558110245"
+      ],
+      "test": [
+        "dish_1558110297"
+      ]
+    },
+    {
+      "group": "dish_1558639335",
+      "train": [
+        "dish_1558639335"
+      ],
+      "test": [
+        "dish_1558639440"
+      ]
+    },
+    {
+      "group": "dish_1558641200",
+      "train": [
+        "dish_1558641211"
+      ],
+      "test": [
+        "dish_1558641200"
+      ]
+    }
+  ],
+  "usda_ambiguous_names": [
+    "deprecated"
+  ],
+  "augmentation": {
+    "train_only": true,
+    "horizontal_flip_p": 0.5,
+    "vertical_flip_p": 0.5,
+    "rotation_degrees": [
+      0,
+      90,
+      180,
+      270
+    ],
+    "shared_on_rgb_and_height": true,
+    "labels": "unchanged",
+    "eval": "identity"
+  }
+}

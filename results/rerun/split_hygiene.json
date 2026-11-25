@@ -1,0 +1,87 @@
+{
+  "train_exclusions": [
+    {
+      "dish_id": "dish_1558109714",
+      "split": "train",
+      "reasons": [
+        "rgb_missing",
+        "depth_missing"
+      ]
+    },
+    {
+      "dish_id": "dish_1564159636",
+      "split": "train",
+      "reasons": [
+        "depth_zero"
+      ]
+    },
+    {
+      "dish_id": "dish_1557862384",
+      "split": "train",
+      "reasons": [
+        "rgb_missing",
+        "depth_missing"
+      ]
+    },
+    {
+      "dish_id": "dish_1558109511",
+      "split": "train",
+      "reasons": [
+        "rgb_missing",
+        "depth_missing"
+      ]
+    }
+  ],
+  "n_train_file": 2758,
+  "n_train": 2754,
+  "n_test": 507,
+  "n_test_groups": 507,
+  "max_unique_ingredients": 34,
+  "cross_split_reshoots": [
+    {
+      "group": "dish_1556575273",
+      "train": [
+        "dish_1556575273",
+        "dish_1556575386",
+        "dish_1556575446",
+        "dish_1556575499"
+      ],
+      "test": [
+        "dish_1556575327"
+      ]
+    },
+    {
+      "group": "dish_1558110245",
+      "train": [
+        "dish_1558110245"
+      ],
+      "test": [
+        "dish_1558110297"
+      ]
+    },
+    {
+      "group": "dish_1558639335",
+      "train": [
+        "dish_1558639335"
+      ],
+      "test": [
+        "dish_1558639440"
+      ]
+    },
+    {
+      "group": "dish_1558641200",
+      "train": [
+        "dish_1558641211"
+      ],
+      "test": [
+        "dish_1558641200"
+      ]
+    }
+  ],
+  "param_counts": {
+    "b1": 43550533,
+    "t_geo": 56568454,
+    "t_ing": 44877893
+  },
+  "status_commit": "c0abef27e35285a5bebdab24168b5475506154a1"
+}
