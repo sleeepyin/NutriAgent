@@ -3,7 +3,10 @@
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from digi_nutri.data import ensure_cache
 from digi_nutri.protocol import DEPTH_ROOT, RGB_ROOT, SPLIT_DIR

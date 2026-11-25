@@ -12,6 +12,15 @@ ROOT = Path(__file__).resolve().parents[1]
 PYTHON = sys.executable
 
 
+def _env(updates: dict | None = None) -> dict:
+    env = os.environ.copy()
+    previous = env.get("PYTHONPATH", "")
+    env["PYTHONPATH"] = str(ROOT) if not previous else str(ROOT) + os.pathsep + previous
+    if updates:
+        env.update(updates)
+    return env
+
+
 def _run(args: list[str], log_name: str, env: dict | None = None) -> int:
     log_path = ROOT / "outputs" / "logs" / log_name
     log_path.parent.mkdir(parents=True, exist_ok=True)
@@ -21,7 +30,7 @@ def _run(args: list[str], log_name: str, env: dict | None = None) -> int:
         process = subprocess.run(
             args,
             cwd=ROOT,
-            env=env,
+            env=_env() if env is None else env,
             stdout=handle,
             stderr=subprocess.STDOUT,
         )
@@ -29,8 +38,7 @@ def _run(args: list[str], log_name: str, env: dict | None = None) -> int:
 
 
 def _popen(model: str, gpu: str) -> subprocess.Popen:
-    env = os.environ.copy()
-    env["CUDA_VISIBLE_DEVICES"] = gpu
+    env = _env({"CUDA_VISIBLE_DEVICES": gpu})
     log_path = ROOT / "outputs" / "logs" / f"{model}.log"
     log_path.parent.mkdir(parents=True, exist_ok=True)
     handle = log_path.open("a")
@@ -77,7 +85,7 @@ def main() -> None:
     train_code = _run(
         [PYTHON, "-m", "digi_nutri.evaluate", "--split", "train", "--device", "cuda:0"],
         "eval_train.log",
-        env={**os.environ, "CUDA_VISIBLE_DEVICES": "0"},
+        env=_env({"CUDA_VISIBLE_DEVICES": "0"}),
     )
     if train_code != 0:
         raise SystemExit(f"train eval failed with {train_code}")
@@ -102,7 +110,7 @@ def main() -> None:
     holdout_code = _run(
         [PYTHON, "-m", "digi_nutri.evaluate", "--split", "holdout", "--device", "cuda:0"],
         "eval_holdout.log",
-        env={**os.environ, "CUDA_VISIBLE_DEVICES": "0"},
+        env=_env({"CUDA_VISIBLE_DEVICES": "0"}),
     )
     if holdout_code != 0:
         raise SystemExit(f"holdout eval failed with {holdout_code}")
