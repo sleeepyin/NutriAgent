@@ -136,7 +136,7 @@ https://cursor.com/canvas/store-745bdf38-f3d7-4313-8d66-08e4b6903e93/d4e76222-c2
 
 不把 `u1-granularity`、`u2-partial-label` 或 `icdl` 合进 `digi-nutri` 或 `main`。不用这三支做工作分支或基线。不从这三支拷贝方法代码。不从 `cursor/digi-nutri-phase1-abd6` 拷贝 v1 方法代码来继续蒸馏。
 
-云端不用 fast 模式。训练用自托管机器。不要杀掉 yzsong 的进程，尤其是 n013 上 GPU 1 的 Jupyter。不要 checkout 或 reset 正在使用的工作区 `/home/sdnu/nutriagent`。开训前若需要腾出 GPU，先停本地的千问 3.8 / 视觉 27B，不动 yzsong 占着的卡。
+云端不用 fast 模式。训练用自托管机器。不要杀掉 yzsong 的进程，尤其是 n013 上 GPU 1 的 Jupyter。不要 checkout 或 reset 正在使用的工作区 `/home/sdnu/nutriagent`。训练用自托管的空闲卡，不要停千问 3.8，也不要动 yzsong 的卡，尤其是 n013 GPU 1 上的 Jupyter。
 
 ## 输入与评测协议
 
@@ -298,7 +298,7 @@ v2 借的是已有机制，不是空白。下面这些工作只作相关文献�
 - **ICDL 第三阶段与完整 ICDL 网络。** 不解锁、不训练。不把组成差代码当作方法。
 - **`main`。** 不开合入 `main` 的拉取请求。不把实验代码落到 `main`。`main` 保持 `d43cb08`。本分支不合入 `main`。不对 `main` 强推。
 - **历史分支。** 不合并 `u1-granularity`、`u2-partial-label`、`icdl`。不从这三支拷贝方法代码。
-- **机器。** 云端不用 fast 模式。训练用自托管机器。不杀掉 yzsong 的进程，尤其是 n013 GPU 1 上的 Jupyter。不 checkout、不 reset `/home/sdnu/nutriagent`。开训前若需要腾出 GPU，先停本地的千问 3.8 / 视觉 27B。
+- **机器。** 云端不用 fast 模式。训练用自托管机器。不杀掉 yzsong 的进程，尤其是 n013 GPU 1 上的 Jupyter。不 checkout、不 reset `/home/sdnu/nutriagent`。训练用自托管的空闲卡，不要停千问 3.8，也不要动 yzsong 的卡，尤其是 n013 GPU 1 上的 Jupyter。
 - **这一次改动。** 只改文档。不训练，不评测，不加实验代码，不加模型代码。
 
 ## 已停下的路线
@@ -369,6 +369,6 @@ Q0 不成立时停下来排查，等 Triste，不得开蒸馏，也不得改损�
 
 测试时代码：学生不得读真值深度、食材名称、食材质量、成分级营养值或 USDA 表，也不得运行教师、文本编码器或单目深度网络，不得先预测食材再查表。学生的测试输入只有单张俯视 RGB。教师诊断可以按上表使用各自的特权输入。DPF 一类「测试时预测深度」不写进这次改动。这次代码还不写学生。
 
-训练用自托管机器。云端不用 fast 模式。不杀掉 yzsong 的进程，尤其是 n013 GPU 1 上的 Jupyter。不 checkout、不 reset `/home/sdnu/nutriagent`。开训前若需要腾出 GPU，先停本地的千问 3.8 / 视觉 27B，不动 yzsong 占着的卡。
+训练用自托管机器。云端不用 fast 模式。不杀掉 yzsong 的进程，尤其是 n013 GPU 1 上的 Jupyter。不 checkout、不 reset `/home/sdnu/nutriagent`。训练用自托管的空闲卡，不要停千问 3.8，也不要动 yzsong 的卡，尤其是 n013 GPU 1 上的 Jupyter。
 
 看到留出误差之后，不得改协议、改划分、改损失、改增强、Dropout 或学习率。本文件不宣布任何通过。
