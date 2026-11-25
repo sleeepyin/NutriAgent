@@ -1,0 +1,48 @@
+{
+  "split": "official_depth_train",
+  "n": 2754,
+  "eval_mode": true,
+  "augmentation": false,
+  "model": "t_geo_plan_a",
+  "batch_size": 32,
+  "param_count": 56562054,
+  "apply_d_table_zero_exclusion": true,
+  "metrics": {
+    "energy": {
+      "mae": 7.059960723940497,
+      "dataset_pmae": 2.7703008751778295,
+      "plate_pmae": 3.81109777014468
+    },
+    "fat": {
+      "mae": 0.29646348128059424,
+      "dataset_pmae": 2.3344126909979956,
+      "plate_pmae": 14.650353357746333
+    },
+    "carb": {
+      "mae": 0.6893843304806848,
+      "dataset_pmae": 3.565202294659128,
+      "plate_pmae": 7.951901921739312
+    },
+    "protein": {
+      "mae": 0.37676978441727665,
+      "dataset_pmae": 2.082012084673202,
+      "plate_pmae": 8.336728487304205
+    },
+    "mass": {
+      "mae": 3.5018993179782543,
+      "dataset_pmae": 1.6060681949337974,
+      "plate_pmae": 1.8856715224468008
+    }
+  },
+  "mae": {
+    "energy": 7.059960723940497,
+    "fat": 0.29646348128059424,
+    "carb": 0.6893843304806848,
+    "protein": 0.37676978441727665,
+    "mass": 3.5018993179782543
+  },
+  "train_gate_pass": true,
+  "train_gate_failures": [],
+  "verdict": "train_gate_pass",
+  "holdout_evaluated": false
+}
