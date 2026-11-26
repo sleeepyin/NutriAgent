@@ -1,0 +1,153 @@
+{
+  "split": "official_depth_test",
+  "weight_load": {
+    "swin_nutrition": {
+      "matched": 325,
+      "total": 325,
+      "note": "Recount with the same ImageNet loader, without restarting training. train_swin.py printed 'swin imagenet tensors 325'."
+    },
+    "dpf_depth_encoder": {
+      "matched": 308,
+      "total": 308,
+      "note": "Every encoder tensor except num_batches_tracked is present with a matching shape."
+    }
+  },
+  "n_test": 507,
+  "n_train": 2754,
+  "n_test_groups": 507,
+  "train_holdout_overlap": 0,
+  "holdout_evaluated_once": true,
+  "predictions_sha256": "d4d94997d810ba765f1991ab91c9dc7076da53a22f5773ec6aebb39936770a99",
+  "methods": {
+    "swin_nutrition": {
+      "status": "trained",
+      "holdout": {
+        "energy": {
+          "mae": 73.56558287929919,
+          "dataset_pmae": 28.796505345813333,
+          "plate_pmae": 70.12991392776222
+        },
+        "mass": {
+          "mae": 56.797457226634734,
+          "dataset_pmae": 28.612049216946673,
+          "plate_pmae": 50.147117405903494
+        },
+        "fat": {
+          "mae": 4.331363973450097,
+          "dataset_pmae": 33.75791615896349,
+          "plate_pmae": 170.39715690178812
+        },
+        "carb": {
+          "mae": 6.221723931024989,
+          "dataset_pmae": 31.608676292548086,
+          "plate_pmae": 103.77003575007382
+        },
+        "protein": {
+          "mae": 5.858304545114557,
+          "dataset_pmae": 33.516907169898325,
+          "plate_pmae": 67.45609187766505
+        },
+        "mean5_dataset_pmae": 31.25841083683398
+      },
+      "train": {
+        "energy": {
+          "mae": 56.028744167179596,
+          "dataset_pmae": 21.985459277572062,
+          "plate_pmae": 49.576885843928174
+        },
+        "mass": {
+          "mae": 54.404194642082885,
+          "dataset_pmae": 24.951273223949272,
+          "plate_pmae": 35.08115822774526
+        },
+        "fat": {
+          "mae": 2.568248707087553,
+          "dataset_pmae": 20.22290350760773,
+          "plate_pmae": 115.10350238644793
+        },
+        "carb": {
+          "mae": 4.31816113680802,
+          "dataset_pmae": 22.3316912084736,
+          "plate_pmae": 51.2668218439415
+        },
+        "protein": {
+          "mae": 3.91068386315684,
+          "dataset_pmae": 21.610254860677443,
+          "plate_pmae": 41.52593595197538
+        },
+        "mean5_dataset_pmae": 22.220316415656022
+      }
+    },
+    "dpf_nutrition": {
+      "status": "trained",
+      "holdout": {
+        "energy": {
+          "mae": 46.7691529637266,
+          "dataset_pmae": 18.307313156871498,
+          "plate_pmae": 22.908809385475344
+        },
+        "mass": {
+          "mae": 28.62673722968769,
+          "dataset_pmae": 14.420885274285263,
+          "plate_pmae": 19.72454030065355
+        },
+        "fat": {
+          "mae": 3.313772164088694,
+          "dataset_pmae": 25.82697819230083,
+          "plate_pmae": 74.80881219498903
+        },
+        "carb": {
+          "mae": 4.743000197736876,
+          "dataset_pmae": 24.096208634100886,
+          "plate_pmae": 48.30241802445344
+        },
+        "protein": {
+          "mae": 4.3374039912113425,
+          "dataset_pmae": 24.815433511904303,
+          "plate_pmae": 40.8938095700737
+        },
+        "mean5_dataset_pmae": 21.49336375389256
+      },
+      "train": {
+        "energy": {
+          "mae": 14.748488685609491,
+          "dataset_pmae": 5.787249066937675,
+          "plate_pmae": 6.530196617794231
+        },
+        "mass": {
+          "mae": 22.270666545252915,
+          "dataset_pmae": 10.213945625072071,
+          "plate_pmae": 11.144228449214406
+        },
+        "fat": {
+          "mae": 0.5630240176946654,
+          "dataset_pmae": 4.433363618906201,
+          "plate_pmae": 12.087416047269233
+        },
+        "carb": {
+          "mae": 1.640818785925751,
+          "dataset_pmae": 8.485616283287273,
+          "plate_pmae": 11.001996420591977
+        },
+        "protein": {
+          "mae": 1.0104248375415443,
+          "dataset_pmae": 5.583560067983857,
+          "plate_pmae": 10.927999407635326
+        },
+        "mean5_dataset_pmae": 6.900746932437414
+      }
+    }
+  },
+  "fps": {
+    "hardware": "NVIDIA GeForce RTX 4090 D",
+    "physical_gpu": 1,
+    "batch_size": 8,
+    "height": 448,
+    "width": 448,
+    "methods": {
+      "swin_nutrition": 157.67377667621074,
+      "dpf_nutrition": "measurement failed: CUDA out of memory. Tried to allocate 26.00 MiB. GPU 0 has a total capacity of 23.53 GiB of which 39.62 MiB is free. Including non-PyTorch memory, this process has 23.48 GiB memory in use. Of the allocated memory 23.06 GiB is allocated by PyTorch, and 10.08 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)"
+    }
+  },
+  "status_commit": "3c0488a242041ac7d8da6567c0f350c9e9aba63a"
+}
