@@ -1,0 +1,13 @@
+Vendored from https://github.com/isl-org/DPT (MIT License).
+
+Files: base_model.py, blocks.py, models.py, vit.py.
+Fetched from the repository main branch on 2026-11-26.
+
+Local change in vit.py only: timm 1.0.31 no longer registers the name
+`vit_base_resnet50_384`. The DPT-Hybrid factory now calls
+`vit_base_r50_s16_384`, which is the same ViT-B/ResNet-50 hybrid.
+
+This package is the depth-module architecture cited by DPF-Nutrition.
+MiDaS depth checkpoints are not loaded. The encoder is initialized from
+the public hybrid classification checkpoint named in configs/repro_frozen.json.
+The DPT decoder stays randomly initialized.

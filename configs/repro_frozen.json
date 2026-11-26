@@ -1,0 +1,159 @@
+{
+  "name": "digi-nutri-v4-same-split-dpf-swin",
+  "status_commit": "3c0488a242041ac7d8da6567c0f350c9e9aba63a",
+  "plan_url": "https://cursor.com/canvas/store-745bdf38-f3d7-4313-8d66-08e4b6903e93/d4e76222-c251-49c3-bf8e-10a7f8c2f9be",
+  "papers": {
+    "dpf_nutrition": {
+      "title": "DPF-Nutrition: Food Nutrition Estimation via Depth Prediction and Fusion",
+      "venue": "Foods 2023, 12(23), 4293",
+      "doi": "10.3390/foods12234293",
+      "arxiv": "2310.11702"
+    },
+    "swin_nutrition": {
+      "title": "Rapid Non-Destructive Analysis of Food Nutrient Content Using Swin-Nutrition",
+      "venue": "Foods 2022, 11(21), 3429",
+      "doi": "10.3390/foods11213429"
+    },
+    "dpt": {
+      "title": "Vision Transformers for Dense Prediction",
+      "doi": "10.1109/ICCV48922.2021.01196",
+      "code": "https://github.com/isl-org/DPT"
+    }
+  },
+  "seed": 20261125,
+  "label_order": ["energy", "mass", "fat", "carb", "protein"],
+  "label_units": {
+    "energy": "kcal",
+    "mass": "g",
+    "fat": "g",
+    "carb": "g",
+    "protein": "g"
+  },
+  "dataset_pmae": "100 * sum(abs(pred-gt)) / sum(abs(gt))",
+  "plate_pmae": "mean of 100*abs(pred-gt)/abs(gt) over plates with abs(gt) > 0",
+  "paths": {
+    "rgb_root": "/home/sdnu/nutriagent/data/nutrition5k/imagery/realsense_overhead",
+    "depth_root": "/home/sdnu/nutriagent-digi/data/official_depth/nutrition5k_dataset/imagery/realsense_overhead",
+    "cafe1": "/home/sdnu/nutriagent/data/nutrition5k/metadata/dish_metadata_cafe1.csv",
+    "cafe2": "/home/sdnu/nutriagent/data/nutrition5k/metadata/dish_metadata_cafe2.csv",
+    "split_dir": "/home/sdnu/nutriagent/data/nutrition5k/dish_ids/splits"
+  },
+  "split": {
+    "train_file_count": 2758,
+    "train_kept": 2754,
+    "test_count": 507,
+    "test_groups": 507,
+    "overlap": 0,
+    "train_only_exclusions": [
+      "dish_1558109714",
+      "dish_1564159636",
+      "dish_1557862384",
+      "dish_1558109511"
+    ]
+  },
+  "reshoot": {
+    "max_gap_seconds": 120,
+    "nutrition_atol": 0.001,
+    "note": "Used only to count physical-plate groups. The official split is not rewritten."
+  },
+  "gpu": {
+    "cuda_visible_devices": "1",
+    "physical_index": 1,
+    "do_not_use_physical_index": 0
+  },
+  "fps_ruler": {
+    "batch_size": 8,
+    "height": 448,
+    "width": 448,
+    "warmup_steps": 10,
+    "timed_steps": 30,
+    "includes": "model forward only, inputs already on GPU, eval mode, no grad",
+    "dpf_includes_depth_module": true
+  },
+  "weights": {
+    "swin_imagenet1k": {
+      "url": "https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_base_patch4_window7_224.pth",
+      "path": "outputs/weights/swin_base_patch4_window7_224.pth",
+      "timm_name": "swin_base_patch4_window7_224.ms_in1k",
+      "min_bytes": 100000000
+    },
+    "dpt_hybrid_encoder": {
+      "url": "https://github.com/rwightman/pytorch-image-models/releases/download/v0.1-vitjx/jx_vit_base_resnet50_384-9fd3c705.pth",
+      "path": "outputs/weights/jx_vit_base_resnet50_384.pth",
+      "timm_name": "vit_base_r50_s16_384.orig_in21k_ft_in1k",
+      "min_bytes": 395854632,
+      "pretrain": "ImageNet-21k then ImageNet-1k fine-tune. A pure ImageNet-1k hybrid checkpoint is not the public DPT encoder file. The release is 395854632 bytes; a shorter file is incomplete and must not be loaded."
+    },
+    "food2k_resnet101": {
+      "url": "https://huggingface.co/T0MYYY/dpf-nutrition/resolve/main/food2k_resnet101.pth",
+      "path": "outputs/weights/food2k_resnet101.pth",
+      "min_bytes": 50000000,
+      "required_fc_shape": [2000, 2048],
+      "required_conv1_shape": [64, 3, 7, 7],
+      "source_note": "Third-party rehost of a Food2K classification ResNet-101, not a nutrition checkpoint. Verified before training: fc [2000, 2048], conv1 [64, 3, 7, 7], 624 tensors, sha256 1ade087a459cf00ac6cbd4e91b91b7d4346189b4a551a2c0ae802fbc3c31ef2c.",
+      "sha256": "1ade087a459cf00ac6cbd4e91b91b7d4346189b4a551a2c0ae802fbc3c31ef2c"
+    }
+  },
+  "dpf": {
+    "depth_module": {
+      "architecture": "DPT-Hybrid vitb_rn50_384",
+      "epochs": 60,
+      "batch_size": 8,
+      "optimizer": "Adam",
+      "lr": 1e-5,
+      "eta_min": 1e-6,
+      "scheduler": "cosine",
+      "weight_decay": 0.0,
+      "betas": [0.9, 0.999],
+      "long_side": 384,
+      "crop": 384,
+      "normalize_mean": [0.5, 0.5, 0.5],
+      "normalize_std": [0.5, 0.5, 0.5],
+      "depth_unit": "meters = depth_raw_uint16 * 1e-4",
+      "depth_loss": "masked L1 on metric meters",
+      "horizontal_flip": false
+    },
+    "fusion_module": {
+      "backbone": "three ResNet-101",
+      "init": "Food2K classification checkpoint, fc dropped",
+      "epochs": 150,
+      "batch_size": 8,
+      "optimizer": "Adam",
+      "lr": 5e-5,
+      "lr_decay": 0.98,
+      "scheduler": "exponential_per_epoch",
+      "weight_decay": 0.0,
+      "betas": [0.9, 0.999],
+      "height": 336,
+      "width": 448,
+      "horizontal_flip_p": 0.5,
+      "imagenet_mean": [0.485, 0.456, 0.406],
+      "imagenet_std": [0.229, 0.224, 0.225],
+      "depth_vis_max_meters": 2.0,
+      "loss": "fifth root of the product of five batch-mean L1 terms",
+      "test_depth": "frozen DPT prediction, not ground-truth depth and not the DiGI height map"
+    }
+  },
+  "swin": {
+    "backbone": "swin_base_patch4_window7_224",
+    "init": "ImageNet-1k",
+    "drop_path_rate": 0.0,
+    "epochs": 40,
+    "batch_size": 64,
+    "optimizer": "Adam",
+    "lr": 1e-5,
+    "weight_decay": 1e-5,
+    "betas": [0.9, 0.999],
+    "lr_decay": 0.9,
+    "scheduler": "exponential_per_epoch",
+    "height": 224,
+    "width": 224,
+    "horizontal_flip_p": 0.5,
+    "ffm_channels": 256,
+    "uncertainty_c_init": 1.0,
+    "imagenet_mean": [0.485, 0.456, 0.406],
+    "imagenet_std": [0.229, 0.224, 0.225]
+  },
+  "selection": "last epoch only; the 507-plate holdout is not used to pick a checkpoint",
+  "holdout_metrics_path": "results/repro/holdout_metrics.json"
+}
