@@ -122,6 +122,12 @@ class DPFNutrition(nn.Module):
         return torch.cat([head(shared) for head in self.heads], dim=1)
 
 
+def _coverage(usable: dict, target: dict) -> tuple[int, int, list[str]]:
+    required = [key for key in target if "num_batches_tracked" not in key]
+    missing = [key for key in required if key not in usable]
+    return len(required) - len(missing), len(required), missing
+
+
 def _add(left: torch.Tensor, right: torch.Tensor) -> torch.Tensor:
     if left.shape != right.shape:
         raise RuntimeError(f"fusion add shape {tuple(left.shape)} vs {tuple(right.shape)}")
@@ -133,7 +139,7 @@ class DepthModule(nn.Module):
         super().__init__()
         self.dpt = DPTDepthModel(path=None, non_negative=True, backbone="vitb_rn50_384")
 
-    def load_encoder(self, path: str | Path) -> int:
+    def load_encoder(self, path: str | Path) -> tuple[int, int]:
         blob = torch.load(path, map_location="cpu")
         state = blob.get("model", blob) if isinstance(blob, dict) and "model" in blob else blob
         if not isinstance(state, dict):
@@ -143,11 +149,16 @@ class DepthModule(nn.Module):
         except Exception:
             state = {key.replace("module.", ""): value for key, value in state.items()}
         target = self.dpt.pretrained.model.state_dict()
-        usable = {key: value for key, value in state.items() if key in target and target[key].shape == value.shape}
-        if len(usable) < 100:
-            raise RuntimeError(f"encoder checkpoint matched only {len(usable)} tensors")
+        usable = {
+            key: value
+            for key, value in state.items()
+            if key in target and tuple(target[key].shape) == tuple(value.shape)
+        }
+        matched, total, missing = _coverage(usable, target)
+        if missing:
+            raise RuntimeError(f"encoder matched {matched}/{total}; missing {missing[:8]}")
         self.dpt.pretrained.model.load_state_dict(usable, strict=False)
-        return len(usable)
+        return matched, total
 
     def forward(self, rgb: torch.Tensor) -> torch.Tensor:
         pred = self.dpt(rgb)
@@ -176,7 +187,7 @@ class SwinNutrition(nn.Module):
         self.lateral = nn.ModuleList(nn.Conv2d(count, ffm_channels, kernel_size=1) for count in channels)
         self.head = nn.Linear(ffm_channels * 4, 5)
 
-    def load_imagenet(self, path: str | Path) -> int:
+    def _imagenet_usable(self, path: str | Path) -> tuple[dict, dict]:
         blob = torch.load(path, map_location="cpu")
         state = blob["model"] if isinstance(blob, dict) and "model" in blob else blob
         donor = timm.create_model(
@@ -196,10 +207,19 @@ class SwinNutrition(nn.Module):
             for key, value in renamed.items()
             if key in target and tuple(target[key].shape) == tuple(value.shape)
         }
+        return usable, target
+
+    def load_imagenet(self, path: str | Path) -> int:
+        usable, _target = self._imagenet_usable(path)
         if len(usable) < 100:
             raise RuntimeError(f"Swin checkpoint matched only {len(usable)} tensors")
         self.backbone.load_state_dict(usable, strict=False)
         return len(usable)
+
+    def imagenet_coverage(self, path: str | Path) -> dict:
+        usable, target = self._imagenet_usable(path)
+        matched, total, missing = _coverage(usable, target)
+        return {"matched": matched, "total": total, "missing": missing[:8]}
 
     def forward(self, rgb: torch.Tensor) -> torch.Tensor:
         maps = [_as_nchw(tensor) for tensor in self.backbone(rgb)]

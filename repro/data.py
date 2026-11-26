@@ -32,8 +32,28 @@ def read_depth(path: Path) -> tuple[np.ndarray, np.ndarray]:
     return meters, raw > 0
 
 
-def depth_to_resnet(meters: np.ndarray, max_meters: float, mean: list[float], std: list[float]) -> torch.Tensor:
-    scaled = np.clip(meters / max_meters, 0.0, 1.0).astype(np.float32)
+def depth_to_resnet(meters, max_meters: float, mean: list[float], std: list[float]) -> torch.Tensor:
+    """Clip depth by max_meters, replicate to 3 channels, then ImageNet-normalize.
+
+    Numpy maps are H×W meters, the fusion-training path. A torch map is B×H×W or
+    B×1×H×W meters, the FPS ruler path. Both use this same conversion.
+    """
+    if torch.is_tensor(meters):
+        single = meters.ndim == 2
+        if single:
+            meters = meters.unsqueeze(0)
+        if meters.ndim == 3:
+            meters = meters.unsqueeze(1)
+        if meters.ndim != 4 or meters.shape[1] not in (1, 3):
+            raise RuntimeError(f"depth tensor shape {tuple(meters.shape)} is not BCHW")
+        scaled = (meters / float(max_meters)).clamp(0.0, 1.0)
+        if scaled.shape[1] == 1:
+            scaled = scaled.repeat(1, 3, 1, 1)
+        mean_t = torch.tensor(mean, device=scaled.device, dtype=scaled.dtype).view(1, 3, 1, 1)
+        std_t = torch.tensor(std, device=scaled.device, dtype=scaled.dtype).view(1, 3, 1, 1)
+        out = (scaled - mean_t) / std_t
+        return out[0] if single else out
+    scaled = np.clip(np.asarray(meters, dtype=np.float32) / float(max_meters), 0.0, 1.0)
     chw = torch.from_numpy(np.repeat(scaled[None, ...], 3, axis=0))
     return imagenet_norm(chw, mean, std)
 

@@ -66,7 +66,10 @@ def main() -> None:
         stop("Food2K classification file is missing. Fusion was not trained, and ImageNet was not substituted.")
         return
     try:
-        inspected = inspect_food2k(weight_path)
+        inspected = inspect_food2k(
+            weight_path,
+            expected_sha256=config["weights"]["food2k_resnet101"]["sha256"],
+        )
     except Exception as exc:
         stop(f"Food2K file failed the classification-backbone check: {exc}. Fusion was not trained.")
         return

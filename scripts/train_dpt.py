@@ -36,8 +36,8 @@ def main() -> None:
     if size < minimum:
         raise SystemExit(f"encoder file is incomplete ({size} bytes, need {minimum})")
     model = DepthModule()
-    matched = model.load_encoder(encoder_path)
-    print(f"dpt encoder tensors {matched}", flush=True)
+    matched, total = model.load_encoder(encoder_path)
+    print(f"dpt encoder tensors {matched}/{total}", flush=True)
     model.to(device)
     optimizer = torch.optim.Adam(
         model.parameters(),

@@ -125,7 +125,7 @@ def write_report(path: Path, payload: dict, columns: list[str]) -> None:
             "",
             f"Hardware: {fps.get('hardware', 'unavailable')}. Physical GPU {fps['physical_gpu']}. Batch {fps['batch_size']}. Resolution {fps['height']}×{fps['width']}.",
             "The timed region is model forward only, inputs already on GPU, eval mode, no grad, after warmup.",
-            "DPF's forward includes the depth module and the fusion module. This is not a speed claim.",
+            "DPF's forward includes the depth module and the fusion module. Predicted depth is clipped, replicated, and ImageNet-normalized with the fusion helper before the fusion module. This is not a speed claim.",
             "",
         ]
     )
@@ -135,6 +135,15 @@ def write_report(path: Path, payload: dict, columns: list[str]) -> None:
             lines.append(f"- {name}: {value:.3f} images/s")
         else:
             lines.append(f"- {name}: {value}")
+    lines.append("")
+    loads = payload.get("weight_load", {})
+    lines.append("## Pretrained weight load")
+    lines.append("")
+    for name, item in loads.items():
+        if "matched" in item:
+            lines.append(f"- {name}: {item['matched']}/{item['total']} tensors. {item.get('note', '')}")
+        else:
+            lines.append(f"- {name}: {item}")
     lines.append("")
     lines.append("Deviations fixed before training are in `docs/DEVIATIONS.md`.")
     lines.append("")
@@ -211,6 +220,7 @@ def main() -> None:
     digest = hashlib.sha256(csv_path.read_bytes()).hexdigest()
     payload = {
         "split": "official_depth_test",
+        "weight_load": _weight_load(config),
         "n_test": len(audit.test_ids),
         "n_train": len(audit.train_ids),
         "n_test_groups": len(set(groups.values())),
@@ -225,6 +235,41 @@ def main() -> None:
     write_report(report, payload, columns)
     final.write_text(json.dumps(payload, indent=2) + "\n")
     print("holdout written", digest, flush=True)
+
+
+def _weight_load(config: dict) -> dict:
+    """Recount pretrained files. This does not touch the running Swin process."""
+    swin = SwinNutrition(drop_path_rate=0.0, ffm_channels=int(config["swin"]["ffm_channels"]))
+    swin_count = swin.imagenet_coverage(REPO / config["weights"]["swin_imagenet1k"]["path"])
+    record = {
+        "swin_nutrition": {
+            "matched": swin_count["matched"],
+            "total": swin_count["total"],
+            "note": (
+                "Recount with the same ImageNet loader, without restarting training. "
+                "train_swin.py printed 'swin imagenet tensors 325'."
+            ),
+        }
+    }
+    del swin
+    encoder = REPO / config["weights"]["dpt_hybrid_encoder"]["path"]
+    minimum = int(config["weights"]["dpt_hybrid_encoder"]["min_bytes"])
+    size = encoder.stat().st_size if encoder.exists() else 0
+    if size < minimum:
+        record["dpf_depth_encoder"] = {"note": f"encoder file incomplete ({size} bytes, need {minimum})"}
+        return record
+    depth = DepthModule()
+    try:
+        matched, total = depth.load_encoder(encoder)
+    except RuntimeError as exc:
+        record["dpf_depth_encoder"] = {"note": str(exc)}
+        return record
+    record["dpf_depth_encoder"] = {
+        "matched": matched,
+        "total": total,
+        "note": "Every encoder tensor except num_batches_tracked is present with a matching shape.",
+    }
+    return record
 
 
 def _targets(dishes: dict, dish_ids: list[str], columns: list[str]) -> np.ndarray:
@@ -301,9 +346,18 @@ def _fps(config: dict, device: torch.device, swin: SwinNutrition, dpf_done: bool
         dpt = load_dpt(config, device)
         dpf = load_dpf(device)
 
+        from repro.data import depth_to_resnet
+
+        fusion = config["dpf"]["fusion_module"]
+
         def step():
             depth = dpt(image)
-            depth3 = depth.unsqueeze(1).repeat(1, 3, 1, 1)
+            depth3 = depth_to_resnet(
+                depth,
+                float(fusion["depth_vis_max_meters"]),
+                fusion["imagenet_mean"],
+                fusion["imagenet_std"],
+            )
             return dpf(image, depth3)
 
         payload["methods"]["dpf_nutrition"] = measure_fps(
