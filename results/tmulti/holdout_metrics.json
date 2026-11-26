@@ -1,0 +1,411 @@
+{
+  "split": "official_depth_test",
+  "n": 507,
+  "n_groups": 507,
+  "eval_mode": true,
+  "augmentation": false,
+  "comparator": "frozen #91 same-setting B1",
+  "config_sha256": "3e77b03b20b2c4202c84219247601426277c76e2ed4d5c4ed33e0dc81427391d",
+  "param_counts": {
+    "t_multi": 57895814
+  },
+  "metrics": {
+    "t_multi": {
+      "energy": {
+        "mae": 44.46161894417961,
+        "dataset_pmae": 17.404052241774725,
+        "plate_pmae": 24.37150332628651
+      },
+      "fat": {
+        "mae": 3.1781849408631544,
+        "dataset_pmae": 24.77023442733254,
+        "plate_pmae": 53.99981213086374
+      },
+      "carb": {
+        "mae": 4.107538386360105,
+        "dataset_pmae": 20.867825797817787,
+        "plate_pmae": 41.16246802392113
+      },
+      "protein": {
+        "mae": 3.7286650912544124,
+        "dataset_pmae": 21.33267753136687,
+        "plate_pmae": 35.93574995629032
+      },
+      "mass": {
+        "mae": 26.115479511328232,
+        "dataset_pmae": 13.155824601807772,
+        "plate_pmae": 20.18493470609262
+      }
+    }
+  },
+  "frozen_b1_metrics": {
+    "energy": {
+      "mae": 47.85338618493097,
+      "dataset_pmae": 18.731725314679444,
+      "plate_pmae": 27.916776388568817
+    },
+    "fat": {
+      "mae": 3.468566780433925,
+      "dataset_pmae": 27.033421237787167,
+      "plate_pmae": 81.20661346249778
+    },
+    "carb": {
+      "mae": 4.676291537238658,
+      "dataset_pmae": 23.75730376712382,
+      "plate_pmae": 59.88607498582603
+    },
+    "protein": {
+      "mae": 4.601337233412228,
+      "dataset_pmae": 26.325465283524483,
+      "plate_pmae": 45.958885452029364
+    },
+    "mass": {
+      "mae": 28.264109927199215,
+      "dataset_pmae": 14.238209662861175,
+      "plate_pmae": 20.78157832725736
+    }
+  },
+  "mae": {
+    "t_multi": {
+      "energy": 44.46161894417961,
+      "fat": 3.1781849408631544,
+      "carb": 4.107538386360105,
+      "protein": 3.7286650912544124,
+      "mass": 26.115479511328232
+    }
+  },
+  "frozen_b1_mae": {
+    "energy": 47.85338618493097,
+    "fat": 3.468566780433925,
+    "carb": 4.676291537238658,
+    "protein": 4.601337233412228,
+    "mass": 28.264109927199215
+  },
+  "contrasts": {
+    "t_multi": {
+      "energy": {
+        "mae": {
+          "lo": -7.040422241166138,
+          "hi": 1.047149000866765,
+          "mean_diff": -3.3467093094465716,
+          "point_diff": -3.391767240686633,
+          "method": 44.46161894417961,
+          "baseline": 47.853386184866245,
+          "n_groups": 507,
+          "n_samples": 2000,
+          "seed": 20261125
+        },
+        "dataset_pmae": {
+          "lo": -2.7866708527525534,
+          "hi": 0.4126764152778199,
+          "mean_diff": -1.313203048214618,
+          "point_diff": -1.3276730728802626,
+          "method": 17.404052241774725,
+          "baseline": 18.731725314654987,
+          "n_groups": 507,
+          "n_samples": 2000,
+          "seed": 20261125
+        },
+        "plate_pmae": {
+          "lo": -6.015751934315157,
+          "hi": -0.7354005171733691,
+          "mean_diff": -3.5134132349217926,
+          "point_diff": -3.5452730635801686,
+          "method": 24.37150332628651,
+          "baseline": 27.91677638986668,
+          "n_groups": 507,
+          "n_samples": 2000,
+          "seed": 20261125
+        }
+      },
+      "fat": {
+        "mae": {
+          "lo": -0.5072575140618761,
+          "hi": -0.03751721601680253,
+          "mean_diff": -0.2902732264184041,
+          "point_diff": -0.2903818396542053,
+          "method": 3.1781849408631544,
+          "baseline": 3.4685667805173597,
+          "n_groups": 507,
+          "n_samples": 2000,
+          "seed": 20261125
+        },
+        "dataset_pmae": {
+          "lo": -4.112708076588127,
+          "hi": -0.2944648542924267,
+          "mean_diff": -2.275603199441034,
+          "point_diff": -2.2631868111870403,
+          "method": 24.77023442733254,
+          "baseline": 27.03342123851958,
+          "n_groups": 507,
+          "n_samples": 2000,
+          "seed": 20261125
+        },
+        "plate_pmae": {
+          "lo": -42.230042071293454,
+          "hi": -14.658708915871118,
+          "mean_diff": -27.033652384177365,
+          "point_diff": -27.206801546117653,
+          "method": 53.99981213086374,
+          "baseline": 81.20661367698139,
+          "n_groups": 507,
+          "n_samples": 2000,
+          "seed": 20261125
+        }
+      },
+      "carb": {
+        "mae": {
+          "lo": -0.8343010546072318,
+          "hi": -0.3246266691748333,
+          "mean_diff": -0.5699684894057538,
+          "point_diff": -0.5687531507832544,
+          "method": 4.107538386360105,
+          "baseline": 4.676291537143359,
+          "n_groups": 507,
+          "n_samples": 2000,
+          "seed": 20261125
+        },
+        "dataset_pmae": {
+          "lo": -4.276022974214396,
+          "hi": -1.6627863315840776,
+          "mean_diff": -2.901265453650879,
+          "point_diff": -2.8894779685850587,
+          "method": 20.867825797817787,
+          "baseline": 23.757303766402845,
+          "n_groups": 507,
+          "n_samples": 2000,
+          "seed": 20261125
+        },
+        "plate_pmae": {
+          "lo": -29.057731660076215,
+          "hi": -10.76359544103379,
+          "mean_diff": -18.72803170725018,
+          "point_diff": -18.723607106618964,
+          "method": 41.16246802392113,
+          "baseline": 59.88607513054009,
+          "n_groups": 507,
+          "n_samples": 2000,
+          "seed": 20261125
+        }
+      },
+      "protein": {
+        "mae": {
+          "lo": -1.1502311362466218,
+          "hi": -0.5959008405548808,
+          "mean_diff": -0.8722282909694269,
+          "point_diff": -0.8726721421049621,
+          "method": 3.7286650912544124,
+          "baseline": 4.6013372333593745,
+          "n_groups": 507,
+          "n_samples": 2000,
+          "seed": 20261125
+        },
+        "dataset_pmae": {
+          "lo": -6.582162995293039,
+          "hi": -3.4121399706920084,
+          "mean_diff": -4.990460209013036,
+          "point_diff": -4.992787751787411,
+          "method": 21.33267753136687,
+          "baseline": 26.32546528315428,
+          "n_groups": 507,
+          "n_samples": 2000,
+          "seed": 20261125
+        },
+        "plate_pmae": {
+          "lo": -13.690964711598292,
+          "hi": -6.507667775308746,
+          "mean_diff": -10.074712865720354,
+          "point_diff": -10.02313550166975,
+          "method": 35.93574995629032,
+          "baseline": 45.95888545796007,
+          "n_groups": 507,
+          "n_samples": 2000,
+          "seed": 20261125
+        }
+      },
+      "mass": {
+        "mae": {
+          "lo": -3.205578610420117,
+          "hi": -1.1627512469931962,
+          "mean_diff": -2.138391226758373,
+          "point_diff": -2.148630415870983,
+          "method": 26.115479511328232,
+          "baseline": 28.264109927199215,
+          "n_groups": 507,
+          "n_samples": 2000,
+          "seed": 20261125
+        },
+        "dataset_pmae": {
+          "lo": -1.5951682683916892,
+          "hi": -0.5969368151023093,
+          "mean_diff": -1.0758115155745078,
+          "point_diff": -1.0823850610534027,
+          "method": 13.155824601807772,
+          "baseline": 14.238209662861175,
+          "n_groups": 507,
+          "n_samples": 2000,
+          "seed": 20261125
+        },
+        "plate_pmae": {
+          "lo": -1.8116011302654513,
+          "hi": 0.7397469662633823,
+          "mean_diff": -0.5900670072076188,
+          "point_diff": -0.5966436211647412,
+          "method": 20.18493470609262,
+          "baseline": 20.78157832725736,
+          "n_groups": 507,
+          "n_samples": 2000,
+          "seed": 20261125
+        }
+      }
+    }
+  },
+  "intervals": [
+    {
+      "model": "t_multi",
+      "nutrient": "energy",
+      "metric": "mae",
+      "lo": -7.040422241166138,
+      "hi": 1.047149000866765,
+      "below_zero": false
+    },
+    {
+      "model": "t_multi",
+      "nutrient": "energy",
+      "metric": "dataset_pmae",
+      "lo": -2.7866708527525534,
+      "hi": 0.4126764152778199,
+      "below_zero": false
+    },
+    {
+      "model": "t_multi",
+      "nutrient": "energy",
+      "metric": "plate_pmae",
+      "lo": -6.015751934315157,
+      "hi": -0.7354005171733691,
+      "below_zero": true
+    },
+    {
+      "model": "t_multi",
+      "nutrient": "fat",
+      "metric": "mae",
+      "lo": -0.5072575140618761,
+      "hi": -0.03751721601680253,
+      "below_zero": true
+    },
+    {
+      "model": "t_multi",
+      "nutrient": "fat",
+      "metric": "dataset_pmae",
+      "lo": -4.112708076588127,
+      "hi": -0.2944648542924267,
+      "below_zero": true
+    },
+    {
+      "model": "t_multi",
+      "nutrient": "fat",
+      "metric": "plate_pmae",
+      "lo": -42.230042071293454,
+      "hi": -14.658708915871118,
+      "below_zero": true
+    },
+    {
+      "model": "t_multi",
+      "nutrient": "carb",
+      "metric": "mae",
+      "lo": -0.8343010546072318,
+      "hi": -0.3246266691748333,
+      "below_zero": true
+    },
+    {
+      "model": "t_multi",
+      "nutrient": "carb",
+      "metric": "dataset_pmae",
+      "lo": -4.276022974214396,
+      "hi": -1.6627863315840776,
+      "below_zero": true
+    },
+    {
+      "model": "t_multi",
+      "nutrient": "carb",
+      "metric": "plate_pmae",
+      "lo": -29.057731660076215,
+      "hi": -10.76359544103379,
+      "below_zero": true
+    },
+    {
+      "model": "t_multi",
+      "nutrient": "protein",
+      "metric": "mae",
+      "lo": -1.1502311362466218,
+      "hi": -0.5959008405548808,
+      "below_zero": true
+    },
+    {
+      "model": "t_multi",
+      "nutrient": "protein",
+      "metric": "dataset_pmae",
+      "lo": -6.582162995293039,
+      "hi": -3.4121399706920084,
+      "below_zero": true
+    },
+    {
+      "model": "t_multi",
+      "nutrient": "protein",
+      "metric": "plate_pmae",
+      "lo": -13.690964711598292,
+      "hi": -6.507667775308746,
+      "below_zero": true
+    }
+  ],
+  "mass_intervals": [
+    {
+      "model": "t_multi",
+      "nutrient": "mass",
+      "metric": "mae",
+      "lo": -3.205578610420117,
+      "hi": -1.1627512469931962,
+      "below_zero": true,
+      "gating": false
+    },
+    {
+      "model": "t_multi",
+      "nutrient": "mass",
+      "metric": "dataset_pmae",
+      "lo": -1.5951682683916892,
+      "hi": -0.5969368151023093,
+      "below_zero": true,
+      "gating": false
+    },
+    {
+      "model": "t_multi",
+      "nutrient": "mass",
+      "metric": "plate_pmae",
+      "lo": -1.8116011302654513,
+      "hi": 0.7397469662633823,
+      "below_zero": false,
+      "gating": false
+    }
+  ],
+  "n_intervals": 12,
+  "n_intervals_below_zero": 10,
+  "verdict": "q0_fail_stop_wait_triste",
+  "failures": [
+    {
+      "model": "t_multi",
+      "nutrient": "energy",
+      "metric": "mae",
+      "lo": -7.040422241166138,
+      "hi": 1.047149000866765
+    },
+    {
+      "model": "t_multi",
+      "nutrient": "energy",
+      "metric": "dataset_pmae",
+      "lo": -2.7866708527525534,
+      "hi": 0.4126764152778199
+    }
+  ],
+  "holdout_evaluated_once": true,
+  "distillation_started": false
+}

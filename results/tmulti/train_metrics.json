@@ -1,0 +1,57 @@
+{
+  "split": "official_depth_train",
+  "n": 2754,
+  "eval_mode": true,
+  "augmentation": false,
+  "role": "train metrics only; not a Q0 gate",
+  "config_sha256": "3e77b03b20b2c4202c84219247601426277c76e2ed4d5c4ed33e0dc81427391d",
+  "param_counts": {
+    "t_multi": 57895814
+  },
+  "metrics": {
+    "t_multi": {
+      "energy": {
+        "mae": 11.576444211354056,
+        "dataset_pmae": 4.542551266809534,
+        "plate_pmae": 7.194107461594939
+      },
+      "fat": {
+        "mae": 0.7133622540445859,
+        "dataset_pmae": 5.617156932541299,
+        "plate_pmae": 21.761733012183285
+      },
+      "carb": {
+        "mae": 1.3462014732303849,
+        "dataset_pmae": 6.961980957832257,
+        "plate_pmae": 11.005663528088796
+      },
+      "protein": {
+        "mae": 0.944890651926083,
+        "dataset_pmae": 5.221421242808759,
+        "plate_pmae": 12.284406608854324
+      },
+      "mass": {
+        "mae": 9.282370167115964,
+        "dataset_pmae": 4.257152517912522,
+        "plate_pmae": 5.8091404127022015
+      }
+    }
+  },
+  "mae": {
+    "t_multi": {
+      "energy": 11.576444211354056,
+      "fat": 0.7133622540445859,
+      "carb": 1.3462014732303849,
+      "protein": 0.944890651926083,
+      "mass": 9.282370167115964
+    }
+  },
+  "frozen_b1_mae": {
+    "energy": 19.310226560895494,
+    "fat": 1.188727033455727,
+    "carb": 1.931819591755715,
+    "protein": 1.723478975547476,
+    "mass": 13.077475172240966
+  },
+  "yhat_is_predicted_product": true
+}
