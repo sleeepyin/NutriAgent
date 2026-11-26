@@ -1,0 +1,239 @@
+{
+  "image_size": 384,
+  "epochs": 60,
+  "batch_size": 32,
+  "optimizer": "AdamW",
+  "head_lr": 0.0001,
+  "backbone_lr": 3e-05,
+  "fusion_lr": 0.0001,
+  "weight_decay": 0.01,
+  "betas": [
+    0.9,
+    0.999
+  ],
+  "scheduler": "cosine",
+  "eta_min": 0.0,
+  "dropout_p": 0.3,
+  "dropout_where": "regression heads only",
+  "hflip_p": 0.5,
+  "vflip_p": 0.5,
+  "rotation_degrees": [
+    0,
+    90,
+    180,
+    270
+  ],
+  "seed": 20261125,
+  "smooth_l1_beta": 1.0,
+  "mass_floor_g": 5.0,
+  "loss_mass_weight": 0.5,
+  "loss_density_weight": 0.5,
+  "raw_unit_mm": 0.1,
+  "height_max_mm": 150.0,
+  "border_pixels": 1,
+  "morph_close": 3,
+  "exclude_border_zeros": true,
+  "nutrients": [
+    "energy",
+    "fat",
+    "carb",
+    "protein"
+  ],
+  "param_limit": 60000000,
+  "rgb_backbone": "resnet101",
+  "height_backbone": "resnet18",
+  "cab_reduction": 16,
+  "gamma_init": 0.0,
+  "head_hidden": 256,
+  "volume_dim": 25,
+  "spp_grids": [
+    1,
+    2,
+    4
+  ],
+  "bootstrap_samples": 2000,
+  "bootstrap_seed": 20261125,
+  "bootstrap_percentiles": [
+    2.5,
+    97.5
+  ],
+  "reshoot_max_gap_seconds": 120,
+  "reshoot_nutrition_atol": 0.001,
+  "plate_pmae": "mean of 100*|error|/|y| over plates with |y| > 0",
+  "dataset_pmae": "100 * sum(|error|) / sum(|y|)",
+  "pass_verdict": "q0_pass_stop_wait_triste",
+  "fail_verdict": "q0_fail_stop_wait_triste",
+  "n_headline_intervals": 12,
+  "pass_rule": "On the official 507-plate holdout, all 12 headline 95% plate-grouped CIs of (T_multi - frozen #91 same-setting B1) lie entirely below 0 for energy, fat, carb, and protein, on MAE, dataset PMAE, and per-plate PMAE. The upper end is strictly below 0. Mass is recorded and is not a pass condition. Either verdict stops. Distillation stays locked.",
+  "text_encoder": "learned embedding of the static dictionary token plus a linear map of the USDA per-gram prior; the OpenAI CLIP package is not used",
+  "status_commit": "8f7e0294cbe5543e72268d2ff2be3e46aa43982f",
+  "max_ingredients": 48,
+  "train_device": "cuda:1",
+  "physical_gpu": "1",
+  "model": "t_multi",
+  "comparator": "frozen #91 same-setting B1",
+  "frozen_b1_sha256": "1f3e91156a195af0f4e5f036742ddd08b77be06c3023b82ef14dbf484565e3d2",
+  "frozen_b1_config_sha256": "58c6d031266e057fb87f7cee8fbf46c77f8d48f86b538b08621eff88c1291f79",
+  "frozen_b1_holdout_mae": {
+    "energy": 47.85338618465495,
+    "fat": 3.4685667804293114,
+    "carb": 4.676291537150249,
+    "protein": 4.601337233362243,
+    "mass": 28.264109927253074
+  },
+  "frozen_b1_train_mae": {
+    "energy": 19.310226560895494,
+    "fat": 1.188727033455727,
+    "carb": 1.931819591755715,
+    "protein": 1.723478975547476,
+    "mass": 13.077475172240966
+  },
+  "t_multi_params": 57895814,
+  "init": "RGB encoder and regression heads from the frozen #91 B1; mass-head columns for the height readout start at 0; height encoder is a new ImageNet ResNet-18; ingredient branch is a new T_ing structure; gamma starts at 0",
+  "amp": false,
+  "rgb_root": "/home/sdnu/nutriagent/data/nutrition5k/imagery/realsense_overhead",
+  "depth_root": "/home/sdnu/nutriagent-digi/data/official_depth/nutrition5k_dataset/imagery/realsense_overhead",
+  "cache_dir": "/host/var/tmp/digi-nutri-plan-a-cache",
+  "output_dir": "outputs",
+  "sigma_mean": [
+    254.84454729738562,
+    12.699703116920844,
+    19.336471637981116,
+    18.096426388162673
+  ],
+  "sigma_mass": 218.04175744371824,
+  "init_mass": 218.04175744371824,
+  "init_density": [
+    1.1687878059924695,
+    0.0582443622992671,
+    0.08868242425064987,
+    0.08299523265782606
+  ],
+  "vocab_size": 556,
+  "param_counts": {
+    "t_multi": 57895814
+  },
+  "volume_feature_names": [
+    "foreground_area_ratio",
+    "height_sum",
+    "foreground_mean",
+    "foreground_p90",
+    "spp_avg_1x1",
+    "spp_avg_2x2_0",
+    "spp_avg_2x2_1",
+    "spp_avg_2x2_2",
+    "spp_avg_2x2_3",
+    "spp_avg_4x4_0",
+    "spp_avg_4x4_1",
+    "spp_avg_4x4_2",
+    "spp_avg_4x4_3",
+    "spp_avg_4x4_4",
+    "spp_avg_4x4_5",
+    "spp_avg_4x4_6",
+    "spp_avg_4x4_7",
+    "spp_avg_4x4_8",
+    "spp_avg_4x4_9",
+    "spp_avg_4x4_10",
+    "spp_avg_4x4_11",
+    "spp_avg_4x4_12",
+    "spp_avg_4x4_13",
+    "spp_avg_4x4_14",
+    "spp_avg_4x4_15"
+  ],
+  "train_exclusions": [
+    {
+      "dish_id": "dish_1558109714",
+      "split": "train",
+      "reasons": [
+        "rgb_missing",
+        "depth_missing"
+      ]
+    },
+    {
+      "dish_id": "dish_1564159636",
+      "split": "train",
+      "reasons": [
+        "depth_zero"
+      ]
+    },
+    {
+      "dish_id": "dish_1557862384",
+      "split": "train",
+      "reasons": [
+        "rgb_missing",
+        "depth_missing"
+      ]
+    },
+    {
+      "dish_id": "dish_1558109511",
+      "split": "train",
+      "reasons": [
+        "rgb_missing",
+        "depth_missing"
+      ]
+    }
+  ],
+  "n_train_file": 2758,
+  "n_train": 2754,
+  "n_test": 507,
+  "n_test_groups": 507,
+  "cross_split_reshoots": [
+    {
+      "group": "dish_1556575273",
+      "train": [
+        "dish_1556575273",
+        "dish_1556575386",
+        "dish_1556575446",
+        "dish_1556575499"
+      ],
+      "test": [
+        "dish_1556575327"
+      ]
+    },
+    {
+      "group": "dish_1558110245",
+      "train": [
+        "dish_1558110245"
+      ],
+      "test": [
+        "dish_1558110297"
+      ]
+    },
+    {
+      "group": "dish_1558639335",
+      "train": [
+        "dish_1558639335"
+      ],
+      "test": [
+        "dish_1558639440"
+      ]
+    },
+    {
+      "group": "dish_1558641200",
+      "train": [
+        "dish_1558641211"
+      ],
+      "test": [
+        "dish_1558641200"
+      ]
+    }
+  ],
+  "usda_ambiguous_names": [
+    "deprecated"
+  ],
+  "frozen_b1_predictions_sha256": "091b6e7e64160edbe2a7fbf73d055e212d1519529eaa6c5b04825e4bedeb2ccd",
+  "augmentation": {
+    "train_only": true,
+    "horizontal_flip_p": 0.5,
+    "vertical_flip_p": 0.5,
+    "rotation_degrees": [
+      0,
+      90,
+      180,
+      270
+    ],
+    "shared_on_rgb_and_height": true,
+    "labels": "unchanged",
+    "eval": "identity"
+  }
+}
