@@ -2,13 +2,15 @@
 
 ## 下一步
 
-官方路线是 v4。本文件必须先 squash 合并进 `digi-nutri`，然后才可以写代码或开跑。不得从这份尚未合并的拉取请求开工。合入之后，只解锁一件事：把 DPF-Nutrition 和 Swin-Nutrition 按同一套官方划分重训并复现。每种方法在官方 2754 盘训练集上只训一次，再在 `official_depth_test` 的 507 盘上只评一次。现在不重训 DiGI-Nutri 的 B1，也不重训 `T_multi`。不开蒸馏，不跑方案 B。不要把 [#84](https://github.com/sleeepyin/NutriAgent/pull/84)、[#86](https://github.com/sleeepyin/NutriAgent/pull/86)、[#88](https://github.com/sleeepyin/NutriAgent/pull/88)、[#91](https://github.com/sleeepyin/NutriAgent/pull/91)、[#93](https://github.com/sleeepyin/NutriAgent/pull/93)、[#95](https://github.com/sleeepyin/NutriAgent/pull/95) 合进 `digi-nutri` 或 `main`。已经撤回的 v3 绝对门禁 13.5% / 15.5% 不再是硬门禁。不要预先把 16%–17% 写成新的硬门禁。
+同划分标尺已经记在本分支，见「同划分标尺记录」。DPF-Nutrition 与 Swin-Nutrition 在官方 2754 盘上各重训一次、在 `official_depth_test` 的 507 盘上各评一次。这是同划分重训一次、评测一次的记录，不是两篇论文已经发表的测试集数字，也不是新的通过线。蒸馏、方案 B、v4 教师重训仍锁。不要从这一份文档改动再训练，也不要再评测留出。不要改官方方案页。
+
+官方路线是 v4。本文件已经在 `digi-nutri` 上。同划分标尺记录已经写入，不再解锁第二次重训或第二次留出评测。写下该记录之前，本文件只解锁过一件事：把 DPF-Nutrition 和 Swin-Nutrition 按同一套官方划分重训并复现。每种方法在官方 2754 盘训练集上只训一次，再在 `official_depth_test` 的 507 盘上只评一次。现在不重训 DiGI-Nutri 的 B1，也不重训 `T_multi`。不开蒸馏，不跑方案 B。不要把 [#84](https://github.com/sleeepyin/NutriAgent/pull/84)、[#86](https://github.com/sleeepyin/NutriAgent/pull/86)、[#88](https://github.com/sleeepyin/NutriAgent/pull/88)、[#91](https://github.com/sleeepyin/NutriAgent/pull/91)、[#93](https://github.com/sleeepyin/NutriAgent/pull/93)、[#95](https://github.com/sleeepyin/NutriAgent/pull/95) 合进 `digi-nutri` 或 `main`。已经撤回的 v3 绝对门禁 13.5% / 15.5% 不再是硬门禁。不要预先把 16%–17% 写成新的硬门禁。
 
 这一步的官方同划分标尺是：按各自论文的方法，在这 2754 盘上只训一次，再在这 507 盘上只评一次。不要用留出调它们的超参。报告数据集 PMAE，定义仍是 100 × 绝对误差之和 ÷ 真值绝对值之和，项目是能量、质量、脂肪、碳水、蛋白，以及这五项的平均。再在同一台自托管机器上、用相同的 batch 和分辨率测 FPS。不要改本仓库已经冻结的官方划分、`L_task`、恒等式 `ŷ = M̂ × ρ̂` 或高度公式。不要把 DropPath、ColorJitter、Mixup、EMA 或双向门控加进这次复现。原论文已经发布的权重，直接在这 507 盘上推理，不能当作官方同划分对照，因为它们的训练集可能和这 507 盘重叠。作者正式代码若拿得到，优先用它在 2754/507 上重训。没有正式代码，就按论文实现，并在开训前写清偏差。第三方仓库的权重不能冒充论文的官方模型，也不能代替这次重训。忠实复现做不到，就停下来，写清缺什么，等 Triste。不要换一个松散近似继续。
 
 Swin-Nutrition 的公开数字来自清洗后的大量 RGB 帧，训练 207,576 张、测试 34,934 张，划分 6:1，不是这 507 盘俯视静帧。本步是把它的结构和配方放到本仓库的官方俯视静帧划分上。不得声称已经复现了那 34,934 张测试集上的公开数字。若额外报告已发布权重的迁移数字，先核对其训练划分是否碰到 `official_depth_test` 的 507 盘。有重叠，就不得写成对照。没有重叠，也只能标成跨划分迁移。它不能代替同划分重训的数字，也不能用来写下一道绝对门禁。
 
-预测、指标和 FPS 交出之后，不要自动开始新的教师训练。方案执行独立重算，然后才可以由以后的 STATUS 改写解锁下一步。下一步的同配方 B1、`T_multi`、正则和双向门控写在「仍锁的下一步」。那一节现在锁着。
+预测、指标和数据集 PMAE 的独立重算已经写在「同划分标尺记录」。这一份改写只记账，不解锁下一步。不要自动开始新的教师训练。下一步的同配方 B1、`T_multi`、正则和双向门控写在「仍锁的下一步」。那一节现在锁着。
 
 [#95](https://github.com/sleeepyin/NutriAgent/pull/95) 是独立核对过的 v3 第一步记录。它仍开放，未合并，不是通过。分支 `cursor/digi-nutri-v3-step1-de25`。结果提交 `8ea7ac399972477ef07dedec7229767b666bbfff`（短 `8ea7ac39`），父提交正好是 `41e30271534f5555f5de893ae57e078a467454ae`，该父提交的父提交正好是 `120340a6`。基线是 `digi-nutri` 的 `120340a6d32b184b4049ddf9d832e63befe0ad85`（短 `120340a6`）。超前 2、落后 0（ahead 2 / behind 0）。判定 `q0_fail_stop_wait_triste`。不要合并 #95。
 
@@ -35,20 +37,39 @@ Swin-Nutrition 的公开数字来自清洗后的大量 RGB 帧，训练 207,576 
 - [x] 同设置双教师重训已完成，官方 507 盘留出 Q0 失败。未合并的 [#91](https://github.com/sleeepyin/NutriAgent/pull/91)。判定 `q0_fail_stop_wait_triste`。这不是通过，不要合并。
 - [x] 统一教师 `T_multi` 的官方 507 盘 Q0 失败。未合并的 [#93](https://github.com/sleeepyin/NutriAgent/pull/93)。判定 `q0_fail_stop_wait_triste`。这不是通过，不要合并。
 - [x] v3 第一步的官方 507 盘 Q0 已做完，但失败。记在未合并的 [#95](https://github.com/sleeepyin/NutriAgent/pull/95)。判定 `q0_fail_stop_wait_triste`。这不是通过，不要合并。
-- [ ] **当前解锁。** 本文件已按官方 v4 页改写。squash 合并进 `digi-nutri` 之后，只解锁 DPF-Nutrition 与 Swin-Nutrition 的 2754/507 同划分重训复现。新教师重训、双向门控、正则重训和蒸馏仍锁。
-- [ ] DPF-Nutrition 与 Swin-Nutrition 的 2754/507 同划分重训复现还没做。
+- [x] **同划分标尺记录在册。** DPF-Nutrition 与 Swin-Nutrition 的 2754/507 同划分重训一次、评测一次已经记在本分支。这不是通过，不是论文公开测试数字，也不是新的通过线。[#97](https://github.com/sleeepyin/NutriAgent/pull/97) 不是官方通过门禁。新教师重训、双向门控、正则重训、蒸馏和方案 B 仍锁。
+- [x] 上述官方 507 盘数据集 PMAE 已独立重算并写入「同划分标尺记录」。训练集 PMAE 未独立重算。FPS 未独立重测，不写成速度结论。
 - [x] 蒸馏以及 Q1 / Q2 仍锁。保持锁定。
 - [x] 方案 B 仍锁。保持锁定。
 - [x] 带正则与双向门控的新教师重训仍锁。保持锁定。
 - [x] `main` 仍为空初始提交 `d43cb08`。
 
-勾上的「仍锁」只表示这道锁还锁着，不是已经评完，也不是已经通过。勾上的失败记录只表示那一步已经跑完并记下来，不是通过。
+勾上的「仍锁」只表示这道锁还锁着，不是已经评完，也不是已经通过。勾上的失败记录只表示那一步已经跑完并记下来，不是通过。勾上的同划分标尺只表示记录在册，不是通过。
+
+## 同划分标尺记录（不是通过）
+
+[#97](https://github.com/sleeepyin/NutriAgent/pull/97) 是 DPF-Nutrition 与 Swin-Nutrition 的同划分重训一次、评测一次记录。分支 `cursor/same-split-dpf-swin-8e07`，尖端 `a89be031c6be18f8e8df8568d64e0e907ebb1897`（短 `a89be03`）。父链是 `3c0488a242041ac7d8da6567c0f350c9e9aba63a` → `6e578faae298845aa3b495cce9b3e18af4f771d9` → `1274faedb26efa83ce170638cf6e121648c8def8` → `a89be03`，相对当时的 `digi-nutri` 超前 3、落后 0。本分支先快进到 `a89be03`，再用这一份只改文档的提交记下独立重算的数字。#97 不是已经通过的官方门禁。不要把 #97、#95、#93、#91、#88、#86、#84 写成通过。
+
+快进之前的 `digi-nutri` 尖端是 `3c0488a242041ac7d8da6567c0f350c9e9aba63a`。标签 `snapshot/digi-nutri` 指向该提交。
+
+官方 507 盘留出的数据集 PMAE 由已提交的 `results/repro/predictions_holdout.csv` 用仓库 `repro/metrics.py` 独立重算。507 个不重复菜品、507 个分组，没有缺失预测。保留四位小数：
+
+| 方法 | 能量 | 质量 | 脂肪 | 碳水 | 蛋白 | 五项平均 |
+|---|---:|---:|---:|---:|---:|---:|
+| Swin-Nutrition | 28.7965 | 28.6120 | 33.7579 | 31.6087 | 33.5169 | 31.2584 |
+| DPF-Nutrition | 18.3073 | 14.4209 | 25.8270 | 24.0962 | 24.8154 | 21.4934 |
+
+这些是这份官方划分上的同划分重训一次、评测一次数字，不是两篇论文已经发表的测试集数字，也不是新的通过线。不要用它们改配方，也不要把它们写成下一道绝对门禁。那一步仍锁，见「仍锁的下一步」。
+
+训练集 PMAE 没有独立重算，因为没有训练集预测 CSV。FPS 没有独立重测。提交记录里的 DPF FPS 在深度模块和融合模块一起加载之后因 CUDA OOM 失败，这不是速度结论。提交记录里的 Swin FPS 157.6738 张/秒未复核。不得声称速度优势，也不得写「比 DPF 快」。
+
+蒸馏仍锁。方案 B 仍锁。v4 教师重训仍锁。不重训 B1，不重训 `T_multi`，不加双向门控，不做正则重训。官方方案页不因这份记录改写。
 
 ## 当前工作
 
 当前工作可以叫 **DiGI-Nutri**。这只是工作名。它不表示蒸馏或完整网络已经解锁，也不表示 Q0 已经通过。方案 A 的留出 Q0 已经失败，记在未合并的 #88。同设置双教师重训的留出 Q0 也已经失败，记在未合并的 #91。ResNet-101 统一教师对照冻结 #91 B1 的留出 Q0 也已经失败，记在未合并的 #93。v3 第一步的官方 507 盘 Q0 也已经失败，记在未合并的 #95，判定 `q0_fail_stop_wait_triste`。相对门禁过了，当时的绝对门禁没过。这不是通过。
 
-本文件 squash 合并进 `digi-nutri` 之后，解锁的只有 DPF-Nutrition 与 Swin-Nutrition 的 2754/507 同划分重训复现。现在不重训 B1，不重训 `T_multi`，不加双向门控，也不做正则重训。学生蒸馏仍锁。方案 B 仍锁。新教师的配方写在「仍锁的下一步」，现在不开训。
+同划分重训复现已经作为记录写在「同划分标尺记录」。那不是通过。现在不重训 B1，不重训 `T_multi`，不加双向门控，也不做正则重训。学生蒸馏仍锁。方案 B 仍锁。v4 教师重训仍锁。新教师的配方写在「仍锁的下一步」，现在不开训。
 
 这是专用营养估计，不是营养 VLM，也不是 Agent。
 
@@ -219,7 +240,7 @@ Nutrition5k 原论文报告，质量已知时只预测每克密度，误差可�
 
 #95 的教师在官方 507 盘上相对本轮同主干 B1 已经稳定更好，能量数据集 PMAE 是 16.3029，五项平均是 19.0703。当时写下的 13.5% / 15.5% 没过。那两条门禁照的是 DPF-Nutrition、IGSMNet 在它们各自划分上的公开数字。那两个划分都不等于 `official_depth_test` 的 507 盘。从本文件起，13.5% / 15.5% 收回，不再是硬门禁。不要预先把 16%–17% 写成新的硬门禁。下一步若要重开绝对门禁，只能钉在同划分重训出来的 DPF-Nutrition 实测数字上。那一步现在锁着。
 
-当前先要做的是同划分标尺。把 DPF-Nutrition 和 Swin-Nutrition 的方法放到本仓库官方 2754/507 上各训一次、各评一次，用同一套数据集 PMAE 报告能量、质量、脂肪、碳水、蛋白和五项平均，并在同一台自托管机器、相同 batch 和分辨率下测 FPS。这不是 Q0 通过，也不重训 DiGI-Nutri 的 B1 或 `T_multi`。下面的公开数字只作文献。本文件没有独立复核论文表格。它们不是同划分结果，不是 Q0 门禁。
+同划分标尺已经记在「同划分标尺记录」。做法是把 DPF-Nutrition 和 Swin-Nutrition 的方法放到本仓库官方 2754/507 上各训一次、各评一次，用同一套数据集 PMAE 报告能量、质量、脂肪、碳水、蛋白和五项平均，并在同一台自托管机器、相同 batch 和分辨率下测 FPS。这不是 Q0 通过，也不重训 DiGI-Nutri 的 B1 或 `T_multi`。下面的公开数字只作文献。本文件没有独立复核论文表格。它们不是同划分结果，不是 Q0 门禁。
 
 DPF-Nutrition 公开的数据集 PMAE 是能量 14.7%、质量 10.6%、脂肪 22.6%、碳水 20.7%、蛋白 20.2%，五项平均 17.8%。论文里的 PMAE 定义为 MAE 除以真值均值，与本仓库的数据集 PMAE 一致。官方方案页记下它声称用 Nutrition5k 预定的 5:1 划分，评在约 3500 张 RGB-D 图上，测试期要跑深度预测。这不等于已经在 `official_depth_test` 的 507 盘上复现过。
 
@@ -233,17 +254,17 @@ IGSMNet 公开五项平均 15.0%（能量 12.2%，质量 9.4%），用俯视 RGB
 
 https://cursor.com/canvas/store-745bdf38-f3d7-4313-8d66-08e4b6903e93/d4e76222-c251-49c3-bf8e-10a7f8c2f9be
 
-写代码、写本文件都以该页和本文件为准。不要把 HTML 附件当成另一份真源。不另立方案。本文件按该页只解锁一件事：DPF-Nutrition 与 Swin-Nutrition 的 2754/507 同划分重训复现。新教师重训、双向门控、正则重训、蒸馏和方案 B 仍锁。本分支允许做什么，以本文件为准。放宽下面任一锁定之前，先改本文件。
+写代码、写本文件都以该页和本文件为准。不要把 HTML 附件当成另一份真源。不另立方案。本文件按该页只解锁过一件事：DPF-Nutrition 与 Swin-Nutrition 的 2754/507 同划分重训复现。这件事的记录已经写在「同划分标尺记录」，不再重做。新教师重训、双向门控、正则重训、蒸馏和方案 B 仍锁。本分支允许做什么，以本文件为准。放宽下面任一锁定之前，先改本文件。
 
 ## 分支
 
-工作分支是 `digi-nutri`。它从空 `main` 起。`main` 保持空初始提交 `d43cb084eba7693a45c114dfdf06b258611463f4`（短 `d43cb08`）。[#83](https://github.com/sleeepyin/NutriAgent/pull/83) squash 合并为 `09b9df0f13f9538d04ec5897342b5aabfa479985`（短 `09b9df0`）。[#85](https://github.com/sleeepyin/NutriAgent/pull/85) squash 合并为 `faad495acb679eb04eb54b710fd9add4f3144f4a`（短 `faad495`），记下 v1 的 Q0 停止，并把当时的下一步写成尚未训练的新版三位模型。[#87](https://github.com/sleeepyin/NutriAgent/pull/87) squash 合并为 `3880898533880c75c3bc772225fc93d76940ac04`（短 `38808985`），记下第一次 v2 训练的 `train_gate_fail_stop`，并把当时的下一步写成 `D_table` 排查加上方案 A 重训 `T_geo`。那一步已经发生。结果在仍开放、未合并的 [#88](https://github.com/sleeepyin/NutriAgent/pull/88)，判定 `q0_fail_stop_wait_triste`。[#89](https://github.com/sleeepyin/NutriAgent/pull/89) squash 合并为 `16c263207691c94e5f5e7b2c1d37325dabf6a6b3`（短 `16c2632`），记下方案 A 的留出失败，并把当时的下一步写成同设置重训 B1、`T_geo` 和 `T_ing`。[#90](https://github.com/sleeepyin/NutriAgent/pull/90) squash 合并为 `c0abef27e35285a5bebdab24168b5475506154a1`（短 `c0abef2`），保持那次解锁，并写上自托管空闲卡与不要停千问 3.8。那一步已经发生。结果在仍开放、未合并的 [#91](https://github.com/sleeepyin/NutriAgent/pull/91)，分支 `cursor/same-setting-dual-teacher-187d`，尖端 `5a7ea64f03f41e2836f1131d329303154259c5e9`，父提交 `f92b298ee14ab5e763f6e7be7eef5446a7b6b6b6`，判定 `q0_fail_stop_wait_triste`。[#92](https://github.com/sleeepyin/NutriAgent/pull/92) squash 合并为 `8f7e0294cbe5543e72268d2ff2be3e46aa43982f`（短 `8f7e0294`），记下 #91 的留出失败，并把当时的下一步写成 ResNet-101 的统一教师 `T_multi`，对照冻结的 #91 同设置 B1。那一步已经发生。结果在仍开放、未合并的 [#93](https://github.com/sleeepyin/NutriAgent/pull/93)，分支 `cursor/t-multi-unified-teacher-1389`，结果提交 `484de17e79e32eb85b7ae824928e85d3302c4497`（短 `484de17e`），父提交 `f4613d184f212d4207ec5bc3dae1af2a7a6ace18`（短 `f4613d18`），基线 `8f7e0294`，超前 2、落后 0，判定 `q0_fail_stop_wait_triste`。[#94](https://github.com/sleeepyin/NutriAgent/pull/94) squash 合并为 `120340a6d32b184b4049ddf9d832e63befe0ad85`（短 `120340a6`），记下 #93 的留出失败，并把当时的下一步写成 v3 第一步：新训同主干 ConvNeXt-Small B1，加上带残差 Atwater 约束的 `T_multi`。那一步已经发生。结果在仍开放、未合并的 [#95](https://github.com/sleeepyin/NutriAgent/pull/95)，分支 `cursor/digi-nutri-v3-step1-de25`，结果提交 `8ea7ac399972477ef07dedec7229767b666bbfff`（短 `8ea7ac39`），父提交正好是 `41e30271534f5555f5de893ae57e078a467454ae`，该父提交的父提交正好是 `120340a6`，基线 `digi-nutri` @ `120340a6`，超前 2、落后 0，判定 `q0_fail_stop_wait_triste`。现行解锁以本文件为准：只解锁 2754/507 同划分重训复现 DPF-Nutrition 与 Swin-Nutrition。
+工作分支是 `digi-nutri`。它从空 `main` 起。`main` 保持空初始提交 `d43cb084eba7693a45c114dfdf06b258611463f4`（短 `d43cb08`）。[#83](https://github.com/sleeepyin/NutriAgent/pull/83) squash 合并为 `09b9df0f13f9538d04ec5897342b5aabfa479985`（短 `09b9df0`）。[#85](https://github.com/sleeepyin/NutriAgent/pull/85) squash 合并为 `faad495acb679eb04eb54b710fd9add4f3144f4a`（短 `faad495`），记下 v1 的 Q0 停止，并把当时的下一步写成尚未训练的新版三位模型。[#87](https://github.com/sleeepyin/NutriAgent/pull/87) squash 合并为 `3880898533880c75c3bc772225fc93d76940ac04`（短 `38808985`），记下第一次 v2 训练的 `train_gate_fail_stop`，并把当时的下一步写成 `D_table` 排查加上方案 A 重训 `T_geo`。那一步已经发生。结果在仍开放、未合并的 [#88](https://github.com/sleeepyin/NutriAgent/pull/88)，判定 `q0_fail_stop_wait_triste`。[#89](https://github.com/sleeepyin/NutriAgent/pull/89) squash 合并为 `16c263207691c94e5f5e7b2c1d37325dabf6a6b3`（短 `16c2632`），记下方案 A 的留出失败，并把当时的下一步写成同设置重训 B1、`T_geo` 和 `T_ing`。[#90](https://github.com/sleeepyin/NutriAgent/pull/90) squash 合并为 `c0abef27e35285a5bebdab24168b5475506154a1`（短 `c0abef2`），保持那次解锁，并写上自托管空闲卡与不要停千问 3.8。那一步已经发生。结果在仍开放、未合并的 [#91](https://github.com/sleeepyin/NutriAgent/pull/91)，分支 `cursor/same-setting-dual-teacher-187d`，尖端 `5a7ea64f03f41e2836f1131d329303154259c5e9`，父提交 `f92b298ee14ab5e763f6e7be7eef5446a7b6b6b6`，判定 `q0_fail_stop_wait_triste`。[#92](https://github.com/sleeepyin/NutriAgent/pull/92) squash 合并为 `8f7e0294cbe5543e72268d2ff2be3e46aa43982f`（短 `8f7e0294`），记下 #91 的留出失败，并把当时的下一步写成 ResNet-101 的统一教师 `T_multi`，对照冻结的 #91 同设置 B1。那一步已经发生。结果在仍开放、未合并的 [#93](https://github.com/sleeepyin/NutriAgent/pull/93)，分支 `cursor/t-multi-unified-teacher-1389`，结果提交 `484de17e79e32eb85b7ae824928e85d3302c4497`（短 `484de17e`），父提交 `f4613d184f212d4207ec5bc3dae1af2a7a6ace18`（短 `f4613d18`），基线 `8f7e0294`，超前 2、落后 0，判定 `q0_fail_stop_wait_triste`。[#94](https://github.com/sleeepyin/NutriAgent/pull/94) squash 合并为 `120340a6d32b184b4049ddf9d832e63befe0ad85`（短 `120340a6`），记下 #93 的留出失败，并把当时的下一步写成 v3 第一步：新训同主干 ConvNeXt-Small B1，加上带残差 Atwater 约束的 `T_multi`。那一步已经发生。结果在仍开放、未合并的 [#95](https://github.com/sleeepyin/NutriAgent/pull/95)，分支 `cursor/digi-nutri-v3-step1-de25`，结果提交 `8ea7ac399972477ef07dedec7229767b666bbfff`（短 `8ea7ac39`），父提交正好是 `41e30271534f5555f5de893ae57e078a467454ae`，该父提交的父提交正好是 `120340a6`，基线 `digi-nutri` @ `120340a6`，超前 2、落后 0，判定 `q0_fail_stop_wait_triste`。现行状态以本文件为准：2754/507 同划分重训复现 DPF-Nutrition 与 Swin-Nutrition 已作为记录写入「同划分标尺记录」，不是通过，不再重做。
 
 `main` 保持 `d43cb08`。本分支不合入 `main`。不对 `main` 或 `digi-nutri` 强推。不开以 `main` 为基线的拉取请求。方法真正跑通之前，不把实验代码合进 `main`。
 
 不合并 [#84](https://github.com/sleeepyin/NutriAgent/pull/84)，不合并 [#86](https://github.com/sleeepyin/NutriAgent/pull/86)，不合并 [#88](https://github.com/sleeepyin/NutriAgent/pull/88)，不合并 [#91](https://github.com/sleeepyin/NutriAgent/pull/91)，不合并 [#93](https://github.com/sleeepyin/NutriAgent/pull/93)，也不合并 [#95](https://github.com/sleeepyin/NutriAgent/pull/95)。不合并 `cursor/digi-nutri-phase1-abd6`、`cursor/digi-nutri-v2-q0-a40e`、`cursor/plan-a-tgeo-9ade`、`cursor/same-setting-dual-teacher-187d`、`cursor/t-multi-unified-teacher-1389` 或 `cursor/digi-nutri-v3-step1-de25`。#86、#88 与 #91 可以只读复用数据与损失的实现。#88 里排除缺失深度 0 的高度图处理已经是冻结公式的一部分，可以只读对照。不加载 #95 的 `T_multi` 或 B1 权重。不加载 #93 的 `T_multi` 权重。不加载 #91、#88、#86 的教师或旧 B1 权重。不把 #86 的冻结 B1 当作对照。不把共享主干的 `T_geo` 当作继续训练的结构。不把 #91 的 `T_geo` 或 `T_ing` 权重复用为起点。不从 #91、#93 或 #95 的分支接着改结构、增强、Dropout、学习率、主干或残差系数。
 
-本文件合进 `digi-nutri` 之后，这一步的复现代码写在 `digi-nutri` 上，不必为这一步再开工作分支，也不要写到 `main`。不得从这份尚未合并的拉取请求开工，也不得从 #84、#86、#88、#91、#93 或 #95 的分支开工。
+同划分复现的代码和记录已经在 `digi-nutri` 上。不要为这一步再开工作分支，不要再训一次，不要再评一次，也不要写到 `main`。不得从 #84、#86、#88、#91、#93 或 #95 的分支开工。
 
 不把 `u1-granularity`、`u2-partial-label` 或 `icdl` 合进 `digi-nutri` 或 `main`。不用这三支做工作分支或基线。不从这三支拷贝方法代码。不从 `cursor/digi-nutri-phase1-abd6` 拷贝 v1 方法代码来继续蒸馏。
 
@@ -283,7 +304,7 @@ v3 写下的绝对门禁是能量数据集 PMAE ≤ 13.5%，以及能量、质�
 
 ## 当前解锁
 
-在本文件 squash 合并进 `digi-nutri` 之后，只做一件事：把 DPF-Nutrition 与 Swin-Nutrition 复现到本仓库的 `official_depth_test` 507 盘上。每种方法在官方 2754 盘上只训一次，再在 507 盘上只评一次。不要用留出调超参。不要改冻结的官方划分、`L_task`、`ŷ = M̂ × ρ̂` 或高度公式。不要重训 DiGI-Nutri 的 B1 或 `T_multi`。不要把 DropPath、ColorJitter、Mixup、EMA 或双向门控加进这次复现。看完数字后不得改协议去追数，也不得自动开始新教师训练。
+这一步的记录已经写在「同划分标尺记录」。记录在册不是通过，也不再解锁第二次训练或第二次评测。下面是这次记录所遵循的做法，不是新的开工许可。当时只做一件事：把 DPF-Nutrition 与 Swin-Nutrition 复现到本仓库的 `official_depth_test` 507 盘上。每种方法在官方 2754 盘上只训一次，再在 507 盘上只评一次。不要用留出调超参。不要改冻结的官方划分、`L_task`、`ŷ = M̂ × ρ̂` 或高度公式。不要重训 DiGI-Nutri 的 B1 或 `T_multi`。不要把 DropPath、ColorJitter、Mixup、EMA 或双向门控加进这次复现。看完数字后不得改协议去追数，也不得自动开始新教师训练。
 
 报告用本仓库的数据集 PMAE：100 × 绝对误差之和 ÷ 真值绝对值之和。项目是能量、质量、脂肪、碳水、蛋白，以及这五项的算术平均。FPS 在同一台自托管机器上测，batch 和分辨率相同。云端不用 fast 模式。用自托管的空闲卡。不要停千问 3.8。不要动 yzsong 的卡，尤其是 n013 GPU 1 上的 Jupyter。
 
@@ -296,7 +317,7 @@ v3 写下的绝对门禁是能量数据集 PMAE ≤ 13.5%，以及能量、质�
 
 忠实复现做不到，就停下来，写清缺什么，等 Triste。不要换一个松散近似模型继续。不要用第三方近似权重冒充论文模型。
 
-这一步结束后停下来。把 507 盘预测、指标和 FPS 交出。方案执行独立重算之后，才可以再改写本文件。不自动开始新教师训练，不开蒸馏，不跑方案 B。
+这一步已经停在「同划分标尺记录」。507 盘预测在 `results/repro/predictions_holdout.csv`。独立重算的数据集 PMAE 已写入该节。不自动开始新教师训练，不开蒸馏，不跑方案 B。v4 教师重训仍锁。
 
 ## 仍锁项
 
@@ -304,7 +325,7 @@ v3 写下的绝对门禁是能量数据集 PMAE ≤ 13.5%，以及能量、质�
 
 ### 仍锁的下一步：新教师 Q0
 
-**这一步现在锁着。** 同划分 DPF-Nutrition 的数字还没交进 `digi-nutri`，下一份 STATUS 也还没合并。在那之前不训练新的 B1，不训练新的 `T_multi`，不加 DropPath、ColorJitter、Mixup、EMA 或双向门控。下面的配方只是预先写清，不是开工许可。当前的 DPF / Swin 复现不要提前加上这些项。
+**这一步现在锁着。** 同划分 DPF-Nutrition 的数字已经作为记录写进 `digi-nutri`。这不是通过，也不是新教师的开工许可。下一份若要解锁新教师，必须先改本文件，并由 Triste 另作决定。在那之前不训练新的 B1，不训练新的 `T_multi`，不加 DropPath、ColorJitter、Mixup、EMA 或双向门控。下面的配方只是预先写清，不是开工许可。不要把这次 DPF / Swin 记录提前加上这些项，也不要重训它们。
 
 待同划分 DPF 的数字出来，并且以后有一份 STATUS 先合并，才新训同配方的 B1 与 `T_multi`。主干仍是 ConvNeXt-Small。`T_multi` 的参数上限仍是严格低于 70,000,000。残差 Atwater 和 `0.1 × SmoothL1(Δρ̂_cal, 0)` 不变。不要加载 #95、#93、#91、#88、#86 的教师或旧 B1 权重。
 
@@ -414,12 +435,12 @@ DropPath、ColorJitter、Mixup 和 EMA 是常规正则，不是新方法。轻�
 
 ## 硬锁定
 
-- **开工条件。** 本文件尚未 squash 合并进 `digi-nutri` 时，不训练，不写实验代码，不做复现。不得从这份尚未合并的拉取请求开工。
-- **这次只解锁一件事。** 合入之后，只把 DPF-Nutrition 与 Swin-Nutrition 按各自论文方法，在官方 2754 盘上各训一次，在 `official_depth_test` 的 507 盘上各评一次。做法写在「当前解锁」。作者正式代码优先。没有正式代码就按论文实现，开训前写清偏差。第三方权重不能冒充官方模型，也不能代替这次重训。忠实复现做不到就停，等 Triste，不要用松散近似。
+- **开工条件。** 同划分标尺记录已经在 `digi-nutri` 上。不要从这一份文档改动再训练，也不要再评测这次留出。不得把 #97 当成官方通过门禁。
+- **这次已经记下的一件事。** DPF-Nutrition 与 Swin-Nutrition 已按各自论文方法，在官方 2754 盘上各训一次，在 `official_depth_test` 的 507 盘上各评一次。数字在「同划分标尺记录」，做法留在「当前解锁」。这不是通过，不再重做。作者正式代码优先。没有正式代码就按论文实现，开训前写清偏差。第三方权重不能冒充官方模型，也不能代替这次重训。忠实复现做不到就停，等 Triste，不要用松散近似。
 - **现在不重训。** 不重训 DiGI-Nutri 的 B1，不重训 `T_multi`。不加 DropPath、ColorJitter、Mixup、EMA 或双向门控。不加载 #95、#93、#91、#88、#86 的教师或旧 B1 权重。
 - **#84、#86、#88、#91、#93、#95。** 不合并 [#84](https://github.com/sleeepyin/NutriAgent/pull/84)、[#86](https://github.com/sleeepyin/NutriAgent/pull/86)、[#88](https://github.com/sleeepyin/NutriAgent/pull/88)、[#91](https://github.com/sleeepyin/NutriAgent/pull/91)、[#93](https://github.com/sleeepyin/NutriAgent/pull/93)、[#95](https://github.com/sleeepyin/NutriAgent/pull/95)，也不把它们写成成功结果。可以只读复用数据与损失实现，以及 #88 已冻结的高度图零值处理。不继续训练共享主干的 `T_geo`。不复用未通过的教师或旧 B1 权重。#86 是 `train_gate_fail_stop`。#88、#91、#93 与 #95 都是 `q0_fail_stop_wait_triste`。#95 的相对门禁通过不是整轮通过。
 - **留出。** 复现是每种方法训一次、评一次。不在 507 盘上调超参。原论文权重在这 507 盘上的推理不是官方同划分对照。有训练划分重叠就不得写成对照。没有重叠也只标跨划分迁移，不能代替重训数字，也不能用来写下一道绝对门禁。看到数字后不改划分、`L_task`、`ŷ = M̂ × ρ̂` 或高度公式，也不把 #88、#91、#93 或 #95 的留出重开。
-- **方案 B。** 现在不跑。约 43.6M 的独立 Stem 早期融合只是备份。当前一步是同划分复现，不是方案 B，除非以后 Triste 同意并先改本文件。
+- **方案 B。** 现在不跑。约 43.6M 的独立 Stem 早期融合只是备份。当前记录是同划分复现，不是方案 B，也不是 v4 教师重训，除非以后 Triste 同意并先改本文件。
 - **已经失败的教师。** #93 的 ResNet-101 `T_multi` 对冻结 #91 B1 不得重跑，不得合并。#95 的 ConvNeXt-Small 同主干对照不得重跑，不得合并。冻结 #91 B1 的五项数据集 PMAE 平均是 22.0172，不是 21.8172。#93 的质量数据集 PMAE 是 13.1558（13.16%），不是 12.1%。
 - **下一轮教师。** 写在「仍锁的下一步」，现在不开训。主干仍是 ConvNeXt-Small。`T_multi` 仍须严格低于 70,000,000。残差 Atwater 与 0.1 系数不变。正则、EMA 和零初始化双向门控只在以后的 STATUS 合并之后才允许。看到留出后不改那组系数。绝对门禁钉同划分 DPF 的实测点估计，不再用 13.5% / 15.5%。不要写死 16%–17%。若同划分 DPF 已经低于 16.3029，教师仍须严格低于那个实测数字。DPF 复现失败就不另造数字门禁，等 Triste。同划分 Swin-Nutrition 并列记录，不单列硬门禁。
 - **损失、划分、高度图、恒等式。** 不改 `L_task` 的公式。DiGI-Nutri 在它之外保留冻结的 `0.1 × SmoothL1(Δρ̂_cal, 0)`。禁止硬 Atwater。不改官方划分。不改 `ŷ = M̂ × ρ̂`。能量密度仍是 `ρ̂_cal = 9ρ̂_fat + 4ρ̂_carb + 4ρ̂_pro + Δρ̂_cal`。不改桌面扣减、0–15 cm 截断、一次 3×3 闭运算、复制成 3 通道。计算 `D_table` 时排除缺失深度 0，已经是冻结公式的一部分。不回到逐盘小分母 PMAE 损失。不另设会改高度公式的前景阈值。复现不把 DiGI 的残差项套进 DPF 或 Swin。
@@ -472,7 +493,7 @@ DropPath、ColorJitter、Mixup 和 EMA 是常规正则，不是新方法。轻�
 
 ICDL 第一阶段是已经完成的数据审计，不是失败项。这份审计留在 `icdl`。本分支不覆盖它。组成差配对不得再作为监督或起点。
 
-既有质量估计器可以保留为一条强的纯 RGB 参照。本文件不把它解锁成新方法，也不把重训它算成 Q0 通过。当前解锁的纯 RGB 标尺是同划分重训的 DPF-Nutrition 与 Swin-Nutrition，不是冻结的 #91 ResNet-101 B1，也不是 #86 里冻结的那一版，也不是 #95 里那条已经训过的 B1。#86 冻结 B1 在 2754 盘训练集上的能量 MAE 是 11.6004。它的留出数字只出现在未合并的 #88。#91 同设置 B1 的留出 MAE 是能量 47.8534、脂肪 3.4686、碳水 4.6763、蛋白 4.6013，质量 28.2641。那是 #91 与 #93 的历史对照。#95 的对照是该轮新训的 ConvNeXt-Small B1，能量留出 MAE 48.8898，略差于 47.8534。那次相对通过不能读成相对冻结 #91 B1 的通过。下一次代码改动，在本文件 squash 合并进 `digi-nutri` 之后，只做这两份同划分重训复现。不重训 DiGI-Nutri 的 B1 或 `T_multi`。若要引用更早的质量估计器，必须在本轮冻结的官方 RGB-D 子集和官方划分上重评。不得直接搬旧划分上的数字。
+既有质量估计器可以保留为一条强的纯 RGB 参照。本文件不把它解锁成新方法，也不把重训它算成 Q0 通过。当前解锁的纯 RGB 标尺是同划分重训的 DPF-Nutrition 与 Swin-Nutrition，不是冻结的 #91 ResNet-101 B1，也不是 #86 里冻结的那一版，也不是 #95 里那条已经训过的 B1。#86 冻结 B1 在 2754 盘训练集上的能量 MAE 是 11.6004。它的留出数字只出现在未合并的 #88。#91 同设置 B1 的留出 MAE 是能量 47.8534、脂肪 3.4686、碳水 4.6763、蛋白 4.6013，质量 28.2641。那是 #91 与 #93 的历史对照。#95 的对照是该轮新训的 ConvNeXt-Small B1，能量留出 MAE 48.8898，略差于 47.8534。那次相对通过不能读成相对冻结 #91 B1 的通过。这两份同划分重训复现已经记在「同划分标尺记录」，不再重做。不重训 DiGI-Nutri 的 B1 或 `T_multi`。若要引用更早的质量估计器，必须在本轮冻结的官方 RGB-D 子集和官方划分上重评。不得直接搬旧划分上的数字。
 
 ## 主要文献
 
@@ -492,12 +513,13 @@ ICDL 第一阶段是已经完成的数据审计，不是失败项。这份审计
 - 同设置双教师重训与官方留出的记录，[#91](https://github.com/sleeepyin/NutriAgent/pull/91)。开放，未合并。分支 `cursor/same-setting-dual-teacher-187d`，尖端 `5a7ea64f03f41e2836f1131d329303154259c5e9`。留出判定 `q0_fail_stop_wait_triste`。不是通过记录。
 - 统一教师 `T_multi` 与官方留出的记录，[#93](https://github.com/sleeepyin/NutriAgent/pull/93)。开放，未合并。分支 `cursor/t-multi-unified-teacher-1389`，结果提交 `484de17e`。留出判定 `q0_fail_stop_wait_triste`。不是通过记录。不要合并。冻结 #91 B1 的五项平均是 22.0172，不是 21.8172。质量数据集 PMAE 是 13.1558（13.16%），不是 12.1%。
 - v3 第一步与官方留出的记录，[#95](https://github.com/sleeepyin/NutriAgent/pull/95)。开放，未合并。分支 `cursor/digi-nutri-v3-step1-de25`，结果提交 `8ea7ac39`。留出判定 `q0_fail_stop_wait_triste`。相对门禁过了，绝对门禁没过。不是通过记录。不要合并。
+- 同划分标尺记录，[#97](https://github.com/sleeepyin/NutriAgent/pull/97)。分支 `cursor/same-split-dpf-swin-8e07`，尖端 `a89be031c6be18f8e8df8568d64e0e907ebb1897`。本分支包含这些提交，只为留下同划分重训一次、评测一次的记录。不是通过，不是官方通过门禁。不要把 #97、#95、#93、#91、#88、#86、#84 写成通过。
 
 ## 代码编写边界
 
-本文件 squash 合并进 `digi-nutri` 之后，下一次代码改动才可以开始。不得从这份尚未合并的拉取请求开工。不得把 #84、#86、#88、#91、#93 或 #95 合并进来，也不得从它们的分支接着训。在那之前不训练，不评测，不做复现。写代码以《特权深度与成分蒸馏：官方方案（v4）》和本文件为准，不要把 HTML 附件、聊天记录或旧的「只解锁 v3 第一步训练」状态文本当成另一份真源。
+同划分复现记录已经在本分支。下一次代码改动不得再训 DPF-Nutrition 或 Swin-Nutrition，不得再评测这次留出，不得重训 v4 教师，不得开蒸馏，不得跑方案 B。不得把 #84、#86、#88、#91、#93、#95 或 #97 写成通过，也不得从 #84、#86、#88、#91、#93、#95 的分支接着训。写代码以《特权深度与成分蒸馏：官方方案（v4）》和本文件为准，不要把 HTML 附件、聊天记录或旧的「只解锁 v3 第一步训练」状态文本当成另一份真源。不要改官方方案页。
 
-下一次代码只做同划分复现：
+这次已经记下的同划分复现，做法如下，不再重做：
 
 1. 只复现 DPF-Nutrition 与 Swin-Nutrition。每种方法在官方 2754 盘上只训一次，在 `official_depth_test` 的 507 盘上只评一次。不重训 DiGI-Nutri 的 B1，不重训 `T_multi`。不实现学生。不实现方案 B。
 2. 按各自论文的方法训。作者正式代码优先。没有正式代码，就按论文实现，并在开训前把偏差写清。第三方仓库的权重不能冒充论文官方模型，也不能代替这次重训。不在 507 盘上调超参。
@@ -506,7 +528,7 @@ ICDL 第一阶段是已经完成的数据审计，不是失败项。这份审计
 5. 报告数据集 PMAE：能量、质量、脂肪、碳水、蛋白，以及五项平均。定义是 100 × 绝对误差之和 ÷ 真值绝对值之和。FPS 在同一台自托管机器上、相同 batch 和分辨率下实测。
 6. 不改冻结的官方划分。不改 `L_task`。不改 `ŷ = M̂ × ρ̂`。不改高度公式，包括计算 `D_table` 时排除缺失深度 0。不把 DiGI 的 `0.1 × SmoothL1(Δρ̂_cal, 0)`、DropPath、ColorJitter、Mixup、EMA 或双向门控加进这次复现。
 7. 忠实复现做不到，就停下来，写清缺什么，等 Triste。不要换一个松散近似继续。
-8. 预测、指标和 FPS 交出之后停下来。不要自动开始新教师训练。方案执行独立重算之后，才可以再改写本文件。
+8. 预测、指标和 FPS 已经交出。独立重算的数据集 PMAE 写在「同划分标尺记录」。停在这里。不要自动开始新教师训练。
 
 不训练「仍锁的下一步」里的新 B1 或 `T_multi`。不实现 B2a、B2b、B3。不写 `L_distill`。不写 DSD，不写 `L_orth`，不写 GOFF，不写 `w_i`，不写仍锁的 `L_total`。不写 v1 的空间亲和力蒸馏，不做整图 [0, 1] 深度归一化，不用逐盘小分母 PMAE 损失。不在当前这一步做蒸馏热身或试跑。复现做完也不自动写这些。
 
